@@ -3,11 +3,11 @@
 <FieldContainer
 	name="AbstractDocument"
 	parent="Document"
-    library="ContribUserInterface"
+    library="ContribTextDom"
     pointerfieldtypes="both"
 	structure="abstract"
     systemcomponent="true"
-    parentsystemcomponent="true"
+    parentsystemcomponent="false"
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
@@ -15,12 +15,11 @@
 >
 UI AbstractDocument.
 	<Field
-		name="RootElement"
+		name="RootElements"
 		type="Element"
 		category="pointer"
-		cardinality="single"
+		cardinality="multi"
 		visibility="external"
-		defaultValue="NULL"
 		access="protected"
 	>
 	</Field>

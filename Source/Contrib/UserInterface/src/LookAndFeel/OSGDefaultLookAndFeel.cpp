@@ -129,7 +129,7 @@ void DefaultLookAndFeel::init(void)
     UIFontRefPtr DefaultFont = UIFont::create();
     DefaultFont->setFamily("SANS");
     DefaultFont->setGap(3);
-    DefaultFont->setGlyphPixelSize(46);
+    DefaultFont->setGlyphPixelSize(14);
     DefaultFont->setSize(14);
     DefaultFont->setTextureWidth(0);
     DefaultFont->setStyle(TextFace::STYLE_PLAIN);

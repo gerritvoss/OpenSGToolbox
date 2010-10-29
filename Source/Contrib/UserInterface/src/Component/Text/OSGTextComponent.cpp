@@ -92,19 +92,23 @@ void TextComponent::initMethod(InitPhase ePhase)
 
 void TextComponent::keyTyped(KeyEventDetails* const e)
 {
-    if(e->getKey() == KeyEventDetails::KEY_C && (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND) &&
-       getParentWindow() != NULL &&
-       getParentWindow()->getParentDrawingSurface()->getEventProducer())
+    switch(e->getKey())
     {
-        getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(getSelectedText());
-    }
-    else if(e->getKey() == KeyEventDetails::KEY_A && (e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND))
-    {
-        selectAll();
-    }
-    else
-    {
+    case KeyEventDetails::KEY_C:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+        {
+            copy();
+        }
+        break;
+    case KeyEventDetails::KEY_A:
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+        {
+            selectAll();
+        }
+        break;
+    default:
         Inherited::keyTyped(e);
+        break;
     }
 }
 
@@ -276,16 +280,16 @@ void TextComponent::moveCaretToEnd(void)
     //Move the caret to the end
     if(getText().size() != getCaretPosition())
     {
-        setCaretPosition(getText().size());
+        moveCaret(getText().size() - getCaretPosition());
     }
 }
 
 void TextComponent::moveCaretToBegin(void)
 {
     //Move the caret to the begining
-    if(0 != getCaretPosition())
+    if(getCaretPosition() != 0)
     {
-        setCaretPosition(0);
+        moveCaret(-getCaretPosition());
     }
 }
 
@@ -353,12 +357,12 @@ void TextComponent::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
-	if((whichField & TextFieldMask))
+	if(whichField & TextFieldMask)
 	{
 		//Check the Caret Position
 		if(getCaretPosition() > getText().size())
 		{
-				setCaretPosition(getText().size());
+            setCaretPosition(getText().size());
 		}
 		
 		if(_TextSelectionStart > getText().size())

@@ -3,7 +3,7 @@
 <FieldContainer
 	name="Document"
 	parent="AttachmentContainer"
-    library="ContribUserInterface"
+    library="ContribTextDom"
     pointerfieldtypes="both"
 	structure="abstract"
     systemcomponent="true"
@@ -14,24 +14,28 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 UI Document.
-	<ProducedMethod
-		name="ChangedUpdate"
-		type="DocumentEventPtr"
+	<ProducedEvent
+		name="Changed"
+		detailsType="DocumentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="InsertUpdate"
-		type="DocumentEventPtr"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Insert"
+		detailsType="DocumentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
-		name="RemoveUpdate"
-		type="DocumentEventPtr"
+	</ProducedEvent>
+	<ProducedEvent
+		name="Remove"
+		detailsType="DocumentEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
-	<ProducedMethod
+	</ProducedEvent>
+	<ProducedEvent
 		name="UndoableEditHappened"
-		type="UndoableEditEventPtr"
+		detailsType="UndoableEditEventDetails"
+		consumable="true"
 	>
-	</ProducedMethod>
+	</ProducedEvent>
 </FieldContainer>

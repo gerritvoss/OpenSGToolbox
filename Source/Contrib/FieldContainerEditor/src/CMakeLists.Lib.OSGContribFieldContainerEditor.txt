@@ -58,6 +58,7 @@ OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Quaternions")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/GLEnums")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/Matricies")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/FCPtr")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/FieldEditors/MaterialMapKey")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/UndoableCommands")
 
 ##############################################################################

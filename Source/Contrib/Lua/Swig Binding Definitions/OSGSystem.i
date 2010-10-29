@@ -36,6 +36,7 @@
 #include "OSGEventDetails.h"
 #include "OSGGenericEventDetails.h"
 #include "OSGLuaActivity.h"
+#include "OSGRenderPropertiesPool.h"
     
     int createFieldContainer(lua_State*L) // my native code
     {
@@ -3996,6 +3997,33 @@ namespace OSG
         NodeRefPtr getHitObject(void) const
         {
             return $self->getHitObject();
+        }
+    };
+    
+    class RenderPropertiesPool
+    {
+      public:
+    
+      protected:
+        RenderPropertiesPool(void);
+        RenderPropertiesPool(const RenderPropertiesPool &source);
+      private:
+    };
+    %extend RenderPropertiesPool
+    {
+        static UInt64  getNamedProperty(const Char8      *szName )
+        {
+            return OSG::RenderPropertiesPool::the()->getFrom1(szName);
+        }
+        
+        static const Char8      *getPropertyName(UInt64 val    )
+        {
+            return OSG::RenderPropertiesPool::the()->findName(val);
+        }
+        
+        static UInt64 getDefault(void)
+        {
+            return OSG::RenderPropertiesPool::the()->getDefault();
         }
     };
     

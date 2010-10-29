@@ -58,6 +58,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocument : public AbstractDocumentBa
 
   public:
 
+
     typedef AbstractDocumentBase Inherited;
     typedef AbstractDocument     Self;
 
@@ -78,16 +79,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocument : public AbstractDocumentBa
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-    //Registers the given observer to begin receiving notifications when changes are made to the document.
-    virtual EventConnection addDocumentListener(DocumentListenerPtr Listener);
-    virtual void removeDocumentListener(DocumentListenerPtr Listener);
-    virtual bool isDocumentListenerAttached(DocumentListenerPtr Listener) const;
-
-    //Registers the given observer to begin receiving notifications when undoable edits are made to the document.
-    virtual EventConnection addUndoableEditListener(UndoableEditListenerPtr Listener);
-    virtual void removeUndoableEditListener(UndoableEditListenerPtr Listener);
-    virtual bool isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -116,24 +107,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractDocument : public AbstractDocumentBa
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-	
-	typedef std::set<DocumentListenerPtr> DocumentListenerSet;
-    typedef DocumentListenerSet::iterator DocumentListenerSetItor;
-    typedef DocumentListenerSet::const_iterator DocumentListenerSetConstItor;
-	
-    DocumentListenerSet       _DocumentListeners;
     
-    void produceChangedUpdate(const DocumentEventUnrecPtr e);
-    void produceInsertUpdate(const DocumentEventUnrecPtr e);
-    void produceRemoveUpdate(const DocumentEventUnrecPtr e);
-	
-	typedef std::set<UndoableEditListenerPtr> UndoableEditListenerSet;
-    typedef UndoableEditListenerSet::iterator UndoableEditListenerSetItor;
-    typedef UndoableEditListenerSet::const_iterator UndoableEditListenerSetConstItor;
-	
-    UndoableEditListenerSet       _UndoableEditListeners;
-
-    void produceUndoableEditHappened(const UndoableEditEventUnrecPtr e);
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -43,6 +43,7 @@ std::string OSG_BASE_DLLMAPPING lexical_cast(const boost::any& Source);
 
 void OSG_BASE_DLLMAPPING getLine(const std::string& Text, UInt32 TextPos, Int32& LineNumber, Int32& LineStartPos);
 
+bool OSG_BASE_DLLMAPPING isPrintableChar(UChar8 c);
 bool OSG_BASE_DLLMAPPING isAlphabetChar(UChar8 c);
 bool OSG_BASE_DLLMAPPING isNumericChar(UChar8 c);
 bool OSG_BASE_DLLMAPPING isWordChar(UChar8 c);

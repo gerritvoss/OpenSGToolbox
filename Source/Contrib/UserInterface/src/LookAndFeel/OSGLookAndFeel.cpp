@@ -85,8 +85,8 @@ void LookAndFeel::initPrototypes(void)
     {
         //Set them as their class prototypes
         getPrototypes(i)->getType().setPrototype(getPrototypes(i));
-        //SLOG << "LookAndFeel: Redefining prototype for type: " <<
-            //getPrototypes(i)->getType().getName() << std::endl;
+        SNOTICE << "LookAndFeel: Redefining prototype for type: " 
+                << getPrototypes(i)->getType().getName() << std::endl;
     }
 }
 
@@ -121,9 +121,9 @@ void LookAndFeel::initUndefinedPrototypes(void)
            *ClosestAncestorType != *UndefinedPrototypeType &&
            !UndefinedPrototypeType->isAbstract())
         {
-            SLOG << "UserInterface: LookAndFeel: Initializing undefined prototype for a derived user interface type" << std::endl
-                << "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
-                << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
+            SNOTICE << "UserInterface: LookAndFeel: Initializing undefined prototype for a derived user interface type" << std::endl
+                    << "    Undefined Prototype Type: "   << UndefinedPrototypeType->getCName() << std::endl
+                    << "    Closest Ancestor: "         << ClosestAncestorType->getCName() << std::endl;
             //For all of these types set the prototype values of all of the 
             //inherited fields to the same as the closest ancestor
             UndefinedPrototype = UndefinedPrototypeType->getPrototype();

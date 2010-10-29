@@ -133,7 +133,10 @@ void UIViewport::updateLayout(void)
 {
     if(getViewComponent() != NULL)
     {
-        getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
+        Pnt2f TopLeft, BottomRight;
+        getInsideInsetsBounds(TopLeft, BottomRight);
+
+        getViewComponent()->editPosition().setValues(TopLeft.x()-getViewPosition().x(),TopLeft.y()-getViewPosition().y());
         updateViewComponentSize();
 
         produceStateChanged();
@@ -205,7 +208,10 @@ void UIViewport::changed(ConstFieldMaskArg whichField,
 
     if((whichField & ViewPositionFieldMask) && getViewComponent() != NULL)
     {
-        getViewComponent()->editPosition().setValues(-getViewPosition().x(),-getViewPosition().y());
+        Pnt2f TopLeft, BottomRight;
+        getInsideInsetsBounds(TopLeft, BottomRight);
+
+        getViewComponent()->editPosition().setValues(TopLeft.x()-getViewPosition().x(),TopLeft.y()-getViewPosition().y());
 
         produceStateChanged();
     }

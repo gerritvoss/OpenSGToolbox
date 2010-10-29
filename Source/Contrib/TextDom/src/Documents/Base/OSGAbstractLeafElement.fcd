@@ -3,11 +3,11 @@
 <FieldContainer
 	name="AbstractLeafElement"
 	parent="AbstractElement"
-    library="ContribUserInterface"
+    library="ContribTextDom"
     pointerfieldtypes="both"
 	structure="abstract"
     systemcomponent="true"
-    parentsystemcomponent="true"
+    parentsystemcomponent="false"
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"

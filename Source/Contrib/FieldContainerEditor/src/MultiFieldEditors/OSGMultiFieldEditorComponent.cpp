@@ -76,68 +76,11 @@ void MultiFieldEditorComponent::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-//bool MultiFieldEditorComponent::attachField(FieldContainer* fc, UInt32 fieldId)
-//{
-    ////Cancel current editing
-    //cancelEditing();
 
-    ////Check that this is a valid FieldContainer
-    //if(fc == NULL)
-    //{
-        //SWARNING << "Cannot attach to a Null FieldContainer." << std::endl;
-        //return false;
-    //}
-
-    ////Check that this is a valid FieldId
-    //const FieldDescriptionBase* Desc(fc->getFieldDescription(fieldId));
-    //if(Desc == NULL)
-    //{
-        //SWARNING << "Cannot attach to field with id" << fieldId << ", on a FieldContainer with type " << fc->getType().getCName() << " because that is an invalid field id." << std::endl;
-        //return false;
-    //}
-    ////Check that this is a type to edit for this editor
-    //if(!isTypeEditable(Desc->getFieldType().getContentType()))
-    //{
-        //SWARNING << " Cannot attach to field " << Desc->getCName() 
-                 //<< ", with content type " << Desc->getFieldType().getContentType().getCName()
-                 //<< " because that content type is not supported by this editor type." << std::endl;
-        //return false;
-    //}
-
-    ////Check that there is a getFieldHandle on this field
-    //GetFieldHandlePtr TheFieldHandle = fc->getField(fieldId);
-    //if(!TheFieldHandle.get())
-    //{
-        //SWARNING << "Cannot attach to field " << Desc->getCName() 
-                 //<< ", on a FieldContainer with type " << fc->getType().getCName() << " because no GetFieldHandle is defined for that field type." << std::endl;
-        //return false;
-    //}
-
-    ////Check that this is a MultiField
-    //if(TheFieldHandle->getCardinality() != FieldType::MultiField)
-    //{
-        //SWARNING << "Cannot attach to field with id" << fieldId 
-                 //<< ", on a FieldContainer with type " << fc->getType().getCName() << " because that is not a multi-field." << std::endl;
-        //return false;
-    //}
-
-    //if(!internalAttachField(fc, fieldId))
-    //{
-        //return false;
-    //}
-
-    ////Attach to the field
-    //setEditingFC(fc);
-    //setEditingFieldId(fieldId);
-
-    ////Tell the Editor that the field has changed
-    //fieldChanged(fc, Desc->getFieldMask());
-
-    ////Attach to the Changed function callback for the container
-    //attachFieldCallback();
-
-    //return true;
-//}
+UInt32 MultiFieldEditorComponent::getNumRequestedRows(void) const
+{
+    return 4;
+}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextDomLayoutManager"
+	parent="FieldContainer"
+	library="ContribTextDom"
+	pointerfieldtypes="both"
+	structure="abstract"
+	systemcomponent="true"
+	parentsystemcomponent="true"
+	decoratable="false"
+	useLocalIncludes="true"
+	isNodeCore="false"
+    childFields="single"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+
+A UI TextDomLayoutManager
+
+	<Field
+		name="VisibleViews"
+		type="GlyphView"
+		category="pointer"
+		cardinality="multi"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
+
+	<Field
+	   name="ParentTextDomArea"
+	   type="FieldContainer"
+	   cardinality="single"
+	   visibility="external"
+	   access="none"
+       doRefCount="false"
+       passFieldMask="true"
+       category="parentpointer"
+	   >
+	  The TextDomArea this TextDomLayoutManager is contained in.
+	</Field>
+</FieldContainer>

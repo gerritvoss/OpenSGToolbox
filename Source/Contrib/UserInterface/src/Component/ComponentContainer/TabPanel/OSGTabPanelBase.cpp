@@ -106,7 +106,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var Vec2f           TabPanelBase::_sfTabBorderInsets
+/*! \var Vec4f           TabPanelBase::_sfTabBorderInsets
     
 */
 
@@ -270,8 +270,8 @@ void TabPanelBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFVec2f::Description(
-        SFVec2f::getClassType(),
+    pDesc = new SFVec4f::Description(
+        SFVec4f::getClassType(),
         "TabBorderInsets",
         "",
         TabBorderInsetsFieldId, TabBorderInsetsFieldMask,
@@ -577,12 +577,12 @@ TabPanelBase::TypeObject TabPanelBase::_type(
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"TabBorderInsets\"\n"
-    "\t\ttype=\"Vec2f\"\n"
+    "\t\ttype=\"Vec4f\"\n"
     "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
+    "\t\tdefaultValue=\"0.0f,0.0f,0.0f,0.0f\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -766,79 +766,7 @@ TabPanelBase::TypeObject TabPanelBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\n"
-    "</FieldContainer>\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"TabForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"TabDisabledForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"TabFocusedForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"TabRolloverForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"TabActiveForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"ContentForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"ContentDisabledForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n"
-    "\t<!--<Field-->\n"
-    "\t\t<!--name=\"ContentRolloverForeground\"-->\n"
-    "\t\t<!--type=\"Layer\"-->\n"
-    "\t\t<!--cardinality=\"single\"-->\n"
-    "\t\t<!--visibility=\"external\"-->\n"
-    "\t\t<!--defaultValue=\"NULL\"-->\n"
-    "\t\t<!--access=\"public\"-->\n"
-    "\t<!-->-->\n"
-    "\t<!--</Field>-->\n",
+    "</FieldContainer>\n",
     "A UI Tab Panel.\n"
     );
 
@@ -927,14 +855,14 @@ const SFUInt32 *TabPanelBase::getSFTabRotation(void) const
 }
 
 
-SFVec2f *TabPanelBase::editSFTabBorderInsets(void)
+SFVec4f *TabPanelBase::editSFTabBorderInsets(void)
 {
     editSField(TabBorderInsetsFieldMask);
 
     return &_sfTabBorderInsets;
 }
 
-const SFVec2f *TabPanelBase::getSFTabBorderInsets(void) const
+const SFVec4f *TabPanelBase::getSFTabBorderInsets(void) const
 {
     return &_sfTabBorderInsets;
 }
@@ -1668,7 +1596,6 @@ TabPanel *TabPanelBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr TabPanelBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1714,7 +1641,6 @@ FieldContainerTransitPtr TabPanelBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 TabPanelBase::TabPanelBase(void) :
@@ -1724,7 +1650,7 @@ TabPanelBase::TabPanelBase(void) :
     _sfTabPlacement           (UInt32(0)),
     _sfTabAlignment           (Real32(0.5f)),
     _sfTabRotation            (UInt32(0)),
-    _sfTabBorderInsets        (Vec2f(0.0f,0.0f)),
+    _sfTabBorderInsets        (Vec4f(0.0f,0.0f,0.0f,0.0f)),
     _sfTabBorder              (NULL),
     _sfTabBackground          (NULL),
     _sfTabDisabledBorder      (NULL),
@@ -2001,8 +1927,8 @@ EditFieldHandlePtr TabPanelBase::editHandleTabRotation    (void)
 
 GetFieldHandlePtr TabPanelBase::getHandleTabBorderInsets (void) const
 {
-    SFVec2f::GetHandlePtr returnValue(
-        new  SFVec2f::GetHandle(
+    SFVec4f::GetHandlePtr returnValue(
+        new  SFVec4f::GetHandle(
              &_sfTabBorderInsets,
              this->getType().getFieldDesc(TabBorderInsetsFieldId),
              const_cast<TabPanelBase *>(this)));
@@ -2012,8 +1938,8 @@ GetFieldHandlePtr TabPanelBase::getHandleTabBorderInsets (void) const
 
 EditFieldHandlePtr TabPanelBase::editHandleTabBorderInsets(void)
 {
-    SFVec2f::EditHandlePtr returnValue(
-        new  SFVec2f::EditHandle(
+    SFVec4f::EditHandlePtr returnValue(
+        new  SFVec4f::EditHandle(
              &_sfTabBorderInsets,
              this->getType().getFieldDesc(TabBorderInsetsFieldId),
              this));
@@ -2524,6 +2450,7 @@ EditFieldHandlePtr TabPanelBase::editHandleSelectionModel (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

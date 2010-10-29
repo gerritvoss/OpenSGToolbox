@@ -64,7 +64,7 @@
 
 #include <boost/bind.hpp>
 
-#include "OSGEvent.h"
+#include "OSGEventDetails.h"
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning
 #pragma warning(disable:4355)
@@ -109,19 +109,6 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void DocumentBase::classDescInserter(TypeObject &oType)
 {
-    FieldDescriptionBase *pDesc = NULL;
-
-    pDesc = new SFEventProducerPtr::Description(
-        SFEventProducerPtr::getClassType(),
-        "EventProducer",
-        "Event Producer",
-        EventProducerFieldId,EventProducerFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast     <FieldEditMethodSig>(&Document::invalidEditField),
-        static_cast     <FieldGetMethodSig >(&Document::invalidGetField));
-
-    oType.addInitialDesc(pDesc);
 }
 
 
@@ -152,54 +139,66 @@ DocumentBase::TypeObject DocumentBase::_type(
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
     "UI Document.\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"ChangedUpdate\"\n"
-    "\t\ttype=\"DocumentEventPtr\"\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Changed\"\n"
+    "\t\tdetailsType=\"DocumentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"InsertUpdate\"\n"
-    "\t\ttype=\"DocumentEventPtr\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Insert\"\n"
+    "\t\tdetailsType=\"DocumentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
-    "\t\tname=\"RemoveUpdate\"\n"
-    "\t\ttype=\"DocumentEventPtr\"\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"Remove\"\n"
+    "\t\tdetailsType=\"DocumentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
-    "\t<ProducedMethod\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
     "\t\tname=\"UndoableEditHappened\"\n"
-    "\t\ttype=\"UndoableEditEventPtr\"\n"
+    "\t\tdetailsType=\"UndoableEditEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
     "\t>\n"
-    "\t</ProducedMethod>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "UI Document.\n"
     );
 
-//! Document Produced Methods
+//! Document Produced Events
 
-MethodDescription *DocumentBase::_methodDesc[] =
+EventDescription *DocumentBase::_eventDesc[] =
 {
-    new MethodDescription("ChangedUpdate", 
-                    "",
-                     ChangedUpdateMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("InsertUpdate", 
-                    "",
-                     InsertUpdateMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("RemoveUpdate", 
-                    "",
-                     RemoveUpdateMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod()),
-    new MethodDescription("UndoableEditHappened", 
-                    "",
-                     UndoableEditHappenedMethodId, 
-                     SFUnrecEventPtr::getClassType(),
-                     FunctorAccessMethod())
+    new EventDescription("Changed", 
+                          "",
+                          ChangedEventId, 
+                          FieldTraits<DocumentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DocumentBase::getHandleChangedSignal)),
+
+    new EventDescription("Insert", 
+                          "",
+                          InsertEventId, 
+                          FieldTraits<DocumentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DocumentBase::getHandleInsertSignal)),
+
+    new EventDescription("Remove", 
+                          "",
+                          RemoveEventId, 
+                          FieldTraits<DocumentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DocumentBase::getHandleRemoveSignal)),
+
+    new EventDescription("UndoableEditHappened", 
+                          "",
+                          UndoableEditHappenedEventId, 
+                          FieldTraits<UndoableEditEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&DocumentBase::getHandleUndoableEditHappenedSignal))
+
 };
 
 EventProducerType DocumentBase::_producerType(
@@ -207,8 +206,8 @@ EventProducerType DocumentBase::_producerType(
     "EventProducerType",
     "",
     InitEventProducerFunctor(),
-    _methodDesc,
-    sizeof(_methodDesc));
+    _eventDesc,
+    sizeof(_eventDesc));
 
 /*------------------------------ get -----------------------------------*/
 
@@ -245,10 +244,6 @@ UInt32 DocumentBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        returnValue += _sfEventProducer.getBinSize();
-    }
 
     return returnValue;
 }
@@ -258,10 +253,6 @@ void DocumentBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyToBin(pMem);
-    }
 }
 
 void DocumentBase::copyFromBin(BinaryDataHandler &pMem,
@@ -269,28 +260,200 @@ void DocumentBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
-    if(FieldBits::NoField != (EventProducerFieldMask & whichField))
-    {
-        _sfEventProducer.copyFromBin(pMem);
-    }
 }
 
 
+
+/*------------------------- event producers ----------------------------------*/
+void DocumentBase::produceEvent(UInt32 eventId, EventDetails* const e)
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        OSG_ASSERT(dynamic_cast<ChangedEventDetailsType* const>(e));
+
+        _ChangedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ChangedEvent(dynamic_cast<ChangedEventDetailsType* const>(e), ChangedEventId);
+        break;
+    case InsertEventId:
+        OSG_ASSERT(dynamic_cast<InsertEventDetailsType* const>(e));
+
+        _InsertEvent.set_combiner(ConsumableEventCombiner(e));
+        _InsertEvent(dynamic_cast<InsertEventDetailsType* const>(e), InsertEventId);
+        break;
+    case RemoveEventId:
+        OSG_ASSERT(dynamic_cast<RemoveEventDetailsType* const>(e));
+
+        _RemoveEvent.set_combiner(ConsumableEventCombiner(e));
+        _RemoveEvent(dynamic_cast<RemoveEventDetailsType* const>(e), RemoveEventId);
+        break;
+    case UndoableEditHappenedEventId:
+        OSG_ASSERT(dynamic_cast<UndoableEditHappenedEventDetailsType* const>(e));
+
+        _UndoableEditHappenedEvent.set_combiner(ConsumableEventCombiner(e));
+        _UndoableEditHappenedEvent(dynamic_cast<UndoableEditHappenedEventDetailsType* const>(e), UndoableEditHappenedEventId);
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        break;
+    }
+}
+
+boost::signals2::connection DocumentBase::connectEvent(UInt32 eventId, 
+                                                             const BaseEventType::slot_type &listener, 
+                                                             boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        return _ChangedEvent.connect(listener, at);
+        break;
+    case InsertEventId:
+        return _InsertEvent.connect(listener, at);
+        break;
+    case RemoveEventId:
+        return _RemoveEvent.connect(listener, at);
+        break;
+    case UndoableEditHappenedEventId:
+        return _UndoableEditHappenedEvent.connect(listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+
+boost::signals2::connection  DocumentBase::connectEvent(UInt32 eventId, 
+                                                              const BaseEventType::group_type &group,
+                                                              const BaseEventType::slot_type &listener,
+                                                              boost::signals2::connect_position at)
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        return _ChangedEvent.connect(group, listener, at);
+        break;
+    case InsertEventId:
+        return _InsertEvent.connect(group, listener, at);
+        break;
+    case RemoveEventId:
+        return _RemoveEvent.connect(group, listener, at);
+        break;
+    case UndoableEditHappenedEventId:
+        return _UndoableEditHappenedEvent.connect(group, listener, at);
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        return boost::signals2::connection();
+        break;
+    }
+
+    return boost::signals2::connection();
+}
+    
+void  DocumentBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type &group)
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        _ChangedEvent.disconnect(group);
+        break;
+    case InsertEventId:
+        _InsertEvent.disconnect(group);
+        break;
+    case RemoveEventId:
+        _RemoveEvent.disconnect(group);
+        break;
+    case UndoableEditHappenedEventId:
+        _UndoableEditHappenedEvent.disconnect(group);
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        break;
+    }
+}
+
+void  DocumentBase::disconnectAllSlotsEvent(UInt32 eventId)
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        _ChangedEvent.disconnect_all_slots();
+        break;
+    case InsertEventId:
+        _InsertEvent.disconnect_all_slots();
+        break;
+    case RemoveEventId:
+        _RemoveEvent.disconnect_all_slots();
+        break;
+    case UndoableEditHappenedEventId:
+        _UndoableEditHappenedEvent.disconnect_all_slots();
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        break;
+    }
+}
+
+bool  DocumentBase::isEmptyEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        return _ChangedEvent.empty();
+        break;
+    case InsertEventId:
+        return _InsertEvent.empty();
+        break;
+    case RemoveEventId:
+        return _RemoveEvent.empty();
+        break;
+    case UndoableEditHappenedEventId:
+        return _UndoableEditHappenedEvent.empty();
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        return true;
+        break;
+    }
+}
+
+UInt32  DocumentBase::numSlotsEvent(UInt32 eventId) const
+{
+    switch(eventId)
+    {
+    case ChangedEventId:
+        return _ChangedEvent.num_slots();
+        break;
+    case InsertEventId:
+        return _InsertEvent.num_slots();
+        break;
+    case RemoveEventId:
+        return _RemoveEvent.num_slots();
+        break;
+    case UndoableEditHappenedEventId:
+        return _UndoableEditHappenedEvent.num_slots();
+        break;
+    default:
+        SWARNING << "No event defined with ID " << eventId << std::endl;
+        return 0;
+        break;
+    }
+}
 
 
 /*------------------------- constructors ----------------------------------*/
 
 DocumentBase::DocumentBase(void) :
-    _Producer(&getProducerType()),
-    Inherited(),
-    _sfEventProducer(&_Producer)
+    Inherited()
 {
 }
 
 DocumentBase::DocumentBase(const DocumentBase &source) :
-    _Producer(&source.getProducerType()),
-    Inherited(source),
-    _sfEventProducer(&_Producer)
+    Inherited(source)
 {
 }
 
@@ -301,6 +464,51 @@ DocumentBase::~DocumentBase(void)
 {
 }
 
+
+
+GetEventHandlePtr DocumentBase::getHandleChangedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ChangedEventType>(
+             const_cast<ChangedEventType *>(&_ChangedEvent),
+             _producerType.getEventDescription(ChangedEventId),
+             const_cast<DocumentBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr DocumentBase::getHandleInsertSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<InsertEventType>(
+             const_cast<InsertEventType *>(&_InsertEvent),
+             _producerType.getEventDescription(InsertEventId),
+             const_cast<DocumentBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr DocumentBase::getHandleRemoveSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<RemoveEventType>(
+             const_cast<RemoveEventType *>(&_RemoveEvent),
+             _producerType.getEventDescription(RemoveEventId),
+             const_cast<DocumentBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr DocumentBase::getHandleUndoableEditHappenedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<UndoableEditHappenedEventType>(
+             const_cast<UndoableEditHappenedEventType *>(&_UndoableEditHappenedEvent),
+             _producerType.getEventDescription(UndoableEditHappenedEventId),
+             const_cast<DocumentBase *>(this)));
+
+    return returnValue;
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT

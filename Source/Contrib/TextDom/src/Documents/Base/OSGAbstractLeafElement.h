@@ -61,6 +61,38 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractLeafElement : public AbstractLeafEle
     typedef AbstractLeafElementBase Inherited;
     typedef AbstractLeafElement     Self;
 
+	
+	////Returns the children of the receiver as an Enumeration.
+	//std::vector<std::string> 	children();
+
+	//Returns true if the receiver allows children.
+	bool getAllowsChildren() const;
+
+	//Gets a child element.
+	virtual	Element* 	getElement(UInt32 index) const;
+
+	//Returns the number of child elements.    
+	virtual	UInt32 getElementCount(void) const;
+  
+	//Gets the child element index closest to the given model offset.
+	virtual	UInt32 getElementIndex(UInt32 pos) const;
+      
+	//Gets the ending offset in the model for the element.
+	virtual	UInt32 getEndOffset(void) const;
+      
+	//Gets the element name.
+	virtual	std::string	getName(void) const;
+      
+	//Gets the starting offset in the model for the element.
+	virtual	UInt32 getStartOffset(void) const;
+      
+	//Checks whether the element is a leaf.
+	virtual	bool	isLeaf(void) const;
+      
+	//Converts the element to a string.
+	std::string toString(void) const;
+      
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

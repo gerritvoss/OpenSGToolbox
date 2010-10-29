@@ -79,6 +79,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MultiFieldEditorComponent : pub
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual UInt32 getNumRequestedRows(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

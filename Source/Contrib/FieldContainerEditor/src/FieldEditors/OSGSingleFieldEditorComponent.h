@@ -78,6 +78,7 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING SingleFieldEditorComponent : pu
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
+    virtual UInt32 getNumRequestedRows(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

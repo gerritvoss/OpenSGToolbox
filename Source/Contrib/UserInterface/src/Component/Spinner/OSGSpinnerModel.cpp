@@ -37,6 +37,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGSpinnerModel.h"
 #include "OSGNumberSpinnerModel.h"
+#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -235,6 +236,23 @@ SpinnerModelPtr createDefaultNumberSpinnerModel(GetFieldHandlePtr TheFieldHandle
     return SpinnerModelPtr();
 }
 
+std::string SpinnerModel::getValueAsString(void) const
+{
+    try
+    {
+        return lexical_cast(const_cast<SpinnerModel*>(this)->getValue());
+    }
+    catch(boost::bad_any_cast &ex)
+    {
+        SWARNING << "Bad any cast: " << ex.what();
+        return std::string("");
+    }
+    catch(boost::bad_lexical_cast &ex)
+    {
+        SWARNING << "Bad lexical cast: " << ex.what();
+        return std::string("");
+    }
+}
 
 
 OSG_END_NAMESPACE

@@ -64,12 +64,12 @@ A UI Tab Panel.
 	</Field>
 	<Field
 		name="TabBorderInsets"
-		type="Vec2f"
+		type="Vec4f"
 		category="data"
 		cardinality="single"
 		visibility="external"
 		access="public"
-		defaultValue="0.0f,0.0f"
+		defaultValue="0.0f,0.0f,0.0f,0.0f"
 	>
 	</Field>
 	<Field

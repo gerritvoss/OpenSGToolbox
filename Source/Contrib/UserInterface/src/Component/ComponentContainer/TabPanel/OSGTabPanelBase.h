@@ -91,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TabPanel);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -181,7 +183,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
     typedef SFUInt32          SFTabPlacementType;
     typedef SFReal32          SFTabAlignmentType;
     typedef SFUInt32          SFTabRotationType;
-    typedef SFVec2f           SFTabBorderInsetsType;
+    typedef SFVec4f           SFTabBorderInsetsType;
     typedef SFUnrecBorderPtr  SFTabBorderType;
     typedef SFUnrecLayerPtr   SFTabBackgroundType;
     typedef SFUnrecBorderPtr  SFTabDisabledBorderType;
@@ -238,8 +240,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
                   SFUInt32            *editSFTabRotation    (void);
             const SFUInt32            *getSFTabRotation     (void) const;
 
-                  SFVec2f             *editSFTabBorderInsets(void);
-            const SFVec2f             *getSFTabBorderInsets (void) const;
+                  SFVec4f             *editSFTabBorderInsets(void);
+            const SFVec4f             *getSFTabBorderInsets (void) const;
             const SFUnrecBorderPtr    *getSFTabBorder      (void) const;
                   SFUnrecBorderPtr    *editSFTabBorder      (void);
             const SFUnrecLayerPtr     *getSFTabBackground  (void) const;
@@ -290,8 +292,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
                   UInt32              &editTabRotation    (void);
                   UInt32               getTabRotation     (void) const;
 
-                  Vec2f               &editTabBorderInsets(void);
-            const Vec2f               &getTabBorderInsets (void) const;
+                  Vec4f               &editTabBorderInsets(void);
+            const Vec4f               &getTabBorderInsets (void) const;
 
                   Border * getTabBorder      (void) const;
 
@@ -336,7 +338,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
             void setTabPlacement   (const UInt32 value);
             void setTabAlignment   (const Real32 value);
             void setTabRotation    (const UInt32 value);
-            void setTabBorderInsets(const Vec2f &value);
+            void setTabBorderInsets(const Vec4f &value);
             void setTabBorder      (Border * const value);
             void setTabBackground  (Layer * const value);
             void setTabDisabledBorder(Border * const value);
@@ -435,7 +437,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanelBase : public ComponentContain
     SFUInt32          _sfTabPlacement;
     SFReal32          _sfTabAlignment;
     SFUInt32          _sfTabRotation;
-    SFVec2f           _sfTabBorderInsets;
+    SFVec4f           _sfTabBorderInsets;
     SFUnrecBorderPtr  _sfTabBorder;
     SFUnrecLayerPtr   _sfTabBackground;
     SFUnrecBorderPtr  _sfTabDisabledBorder;

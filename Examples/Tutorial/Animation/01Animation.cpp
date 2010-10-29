@@ -34,6 +34,7 @@
 #include "OSGKeyframeSequences.h"
 #include "OSGKeyframeAnimator.h"
 #include "OSGFieldAnimation.h"
+#include "OSGAnimationGroup.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -41,8 +42,13 @@
 OSG_USING_NAMESPACE
 
 
+ThreadRefPtr       RenderThread;
+ThreadRefPtr       ApplicationThread;
+BarrierRefPtr      SyncBarrier;
+WindowEventProducerMTRecPtr TutorialWindow;
+
 // forward declaration so we can have the interesting stuff upfront
-FieldAnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win);
+AnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win);
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
@@ -76,7 +82,7 @@ void animationCycled(AnimationEventDetails* const details)
    std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(details->getSource())->getCycles() << std::endl;
 }
 
-void keyPressed(KeyEventDetails* const details, FieldAnimation* const anim, WindowEventProducer* const win)
+void keyPressed(KeyEventDetails* const details, Animation* const anim, WindowEventProducer* const win)
 {
    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
    {
@@ -93,13 +99,13 @@ void keyPressed(KeyEventDetails* const details, FieldAnimation* const anim, Wind
        anim->start();
        break;
    case KeyEventDetails::KEY_1:
-            anim->setInterpolationType(Animator::STEP_INTERPOLATION);
+            //anim->setInterpolationType(Animator::STEP_INTERPOLATION);
        break;
    case KeyEventDetails::KEY_2:
-            anim->setInterpolationType(Animator::LINEAR_INTERPOLATION);
+            //anim->setInterpolationType(Animator::LINEAR_INTERPOLATION);
        break;
    case KeyEventDetails::KEY_3:
-            anim->setInterpolationType(Animator::CUBIC_INTERPOLATION);
+            //anim->setInterpolationType(Animator::CUBIC_INTERPOLATION);
        break;
 	//case '1':
 			//TheAnimator->setKeyframeSequence(ColorKeyframes);
@@ -134,15 +140,34 @@ void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
+void draw(void *args)
+{
+    SimpleSceneManager *mgr(reinterpret_cast<SimpleSceneManager *>(args));
+
+    //Render
+    while(true)
+    {
+        //Sync data
+        ApplicationThread->getChangeList()->applyAndClear();
+
+        //Draw
+        mgr->redraw();
+    }
+}
+
 // Initialize OpenSG and set up the scene
 int main(int argc, char **argv)
 {
+    //Set the number of aspects
+    ThreadManager::setNumAspects(2);
+    ChangeList::setReadWriteDefault(true);
+
     // OSG init
     osgInit(argc,argv);
 
     {
         // Set up Window
-        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow = createNativeWindow();
         TutorialWindow->setUseCallbackForDraw(true);
         TutorialWindow->setUseCallbackForReshape(true);
 
@@ -194,7 +219,7 @@ int main(int argc, char **argv)
         scene->setCore(Trans);
         scene->addChild(TorusNode);
 
-        FieldAnimationRecPtr TheAnimation = setupAnimation(TorusNodeTrans, TutorialWindow);
+        AnimationRecPtr TheAnimation = setupAnimation(TorusNodeTrans, TutorialWindow);
 
         TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, TheAnimation.get(), TutorialWindow.get()));
         
@@ -218,9 +243,23 @@ int main(int argc, char **argv)
         TutorialWindow->openWindow(WinPos,
                 WinSize,
                 "OpenSG 01Animation Window");
+        
+        // store a pointer to the application thread
+        ApplicationThread = dynamic_cast<OSG::Thread *>(OSG::ThreadManager::getAppThread());
+        
+        //create the thread that will run generation of new matrices
+        RenderThread =
+            OSG::dynamic_pointer_cast<OSG::Thread>(
+                OSG::ThreadManager::the()->getThread("render", true));
+        
+        //Start the render thread on aspect 1
+        RenderThread->runFunction(draw, 1, static_cast<void *>(&sceneManager));
 
         //Enter main Loop
         TutorialWindow->mainLoop();
+
+        //Stop the render thread
+        RenderThread->terminate();
     }
 
     osgExit();
@@ -240,7 +279,7 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr)
     mgr->resize(Size.x(), Size.y());
 }
 
-FieldAnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win)
+AnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventProducer* const win)
 {
     //Number Keyframe Sequence
     KeyframeNumberSequenceRecPtr NumberKeyframes = KeyframeNumberSequenceReal32::create();
@@ -314,9 +353,13 @@ FieldAnimationTransitPtr setupAnimation(Transform* const transCore, WindowEventP
     //TheAnimation->setAnimatedField(TheTorusMaterial, std::string("shininess"));
     TheAnimation->setAnimatedField(transCore, std::string("matrix"));
 
-    TheAnimation->attachUpdateProducer(win);
-    TheAnimation->start();
+    AnimationGroupRecPtr TheAnimationGroup = AnimationGroup::create();
+    TheAnimationGroup->pushToAnimations(TheAnimation);
+    TheAnimationGroup->setCycling(2);
 
-    return FieldAnimationTransitPtr(TheAnimation);
+    TheAnimationGroup->attachUpdateProducer(win);
+    TheAnimationGroup->start();
+
+    return AnimationTransitPtr(TheAnimationGroup);
 }
 

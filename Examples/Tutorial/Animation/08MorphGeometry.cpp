@@ -29,7 +29,7 @@
 // Input
 #include "OSGWindowUtils.h"
 #include "OSGWindowEventProducer.h"
-#include "OSGKeyListener.h"
+//#include "OSGKeyListener.h"
 
 //Animation
 #include "OSGKeyframeSequences.h"
@@ -49,117 +49,117 @@ void setupAnimation(void);
 void display(void);
 void reshape(Vec2f Size);
 
-class TutorialAnimationListener : public AnimationListener
-{
-public:
-   virtual void animationStarted(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Started"  << std::endl;
-   }
-
-   virtual void animationStopped(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Stopped"  << std::endl;
-   }
-
-   virtual void animationPaused(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Paused"  << std::endl;
-   }
-
-   virtual void animationUnpaused(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Unpaused"  << std::endl;
-   }
-
-   virtual void animationEnded(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Ended"  << std::endl;
-   }
-
-   virtual void animationCycled(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(e->getSource())->getCycles() << std::endl;
-   }
-
-};
+//class TutorialAnimationListener : public AnimationListener
+//{
+//public:
+//   virtual void animationStarted(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Started"  << std::endl;
+//   }
+//
+//   virtual void animationStopped(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Stopped"  << std::endl;
+//   }
+//
+//   virtual void animationPaused(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Paused"  << std::endl;
+//   }
+//
+//   virtual void animationUnpaused(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Unpaused"  << std::endl;
+//   }
+//
+//   virtual void animationEnded(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Ended"  << std::endl;
+//   }
+//
+//   virtual void animationCycled(const AnimationEventUnrecPtr e)
+//   {
+//       std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(e->getSource())->getCycles() << std::endl;
+//   }
+//
+//};
 
 // The SimpleSceneManager to manage simple applications
 SimpleSceneManager *mgr;
 WindowEventProducerUnrecPtr TutorialWindow;
 
 Time TimeLastIdle;
-TutorialAnimationListener TheAnimationListener;
+//TutorialAnimationListener TheAnimationListener;
 MorphGeometryRefPtr TheMorphGeometry;
 AnimationGroupRefPtr TheAnimationGroup;
 // Create a class to allow for the use of the keyboard shortucts 
-class TutorialKeyListener : public KeyListener
-{
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-           TutorialWindow->closeWindow();
-       }
-
-       switch(e->getKey())
-       {
-       case KeyEvent::KEY_SPACE:
-           TheAnimationGroup->pause(!TheAnimationGroup->isPaused());
-           break;
-       case KeyEvent::KEY_ENTER:
-           TheAnimationGroup->attachUpdateProducer(TutorialWindow->editEventProducer());
-           TheAnimationGroup->start();
-           break;
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-
-class TutorialMouseListener : public MouseListener
-{
-  public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialMouseMotionListener : public MouseMotionListener
-{
-  public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
+//class TutorialKeyListener : public KeyListener
+//{
+//public:
+//
+//   virtual void keyPressed(const KeyEventUnrecPtr e)
+//   {
+//       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+//       {
+//           TutorialWindow->closeWindow();
+//       }
+//
+//       switch(e->getKey())
+//       {
+//       case KeyEvent::KEY_SPACE:
+//           TheAnimationGroup->pause(!TheAnimationGroup->isPaused());
+//           break;
+//       case KeyEvent::KEY_ENTER:
+//           TheAnimationGroup->attachUpdateProducer(TutorialWindow->editEventProducer());
+//           TheAnimationGroup->start();
+//           break;
+//       }
+//   }
+//
+//   virtual void keyReleased(const KeyEventUnrecPtr e)
+//   {
+//   }
+//
+//   virtual void keyTyped(const KeyEventUnrecPtr e)
+//   {
+//   }
+//};
+//
+//class TutorialMouseListener : public MouseListener
+//{
+//  public:
+//    virtual void mouseClicked(const MouseEventUnrecPtr e)
+//    {
+//    }
+//    virtual void mouseEntered(const MouseEventUnrecPtr e)
+//    {
+//    }
+//    virtual void mouseExited(const MouseEventUnrecPtr e)
+//    {
+//    }
+//    virtual void mousePressed(const MouseEventUnrecPtr e)
+//    {
+//            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
+//    }
+//    virtual void mouseReleased(const MouseEventUnrecPtr e)
+//    {
+//           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
+//    }
+//};
+//
+//class TutorialMouseMotionListener : public MouseMotionListener
+//{
+//  public:
+//    virtual void mouseMoved(const MouseEventUnrecPtr e)
+//    {
+//            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+//    }
+//
+//    virtual void mouseDragged(const MouseEventUnrecPtr e)
+//    {
+//            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+//    }
+//};
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -175,13 +175,13 @@ int main(int argc, char **argv)
     TutorialWindow->setDisplayCallback(display);
     TutorialWindow->setReshapeCallback(reshape);
 
-    //Add Window Listener
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+    ////Add Window Listener
+    //TutorialKeyListener TheKeyListener;
+    //TutorialWindow->addKeyListener(&TheKeyListener);
+    //TutorialMouseListener TheTutorialMouseListener;
+    //TutorialMouseMotionListener TheTutorialMouseMotionListener;
+    //TutorialWindow->addMouseListener(&TheTutorialMouseListener);
+    //TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
 
     //Initialize Window
     TutorialWindow->initWindow();
@@ -318,7 +318,7 @@ void setupAnimation(void)
     TheAnimationGroup->pushToAnimations(TheAnimation1);
     TheAnimationGroup->pushToAnimations(TheAnimation2);
 
-    TheAnimationGroup->attachUpdateProducer(TutorialWindow->editEventProducer());
+    TheAnimationGroup->attachUpdateProducer(TutorialWindow);
     TheAnimationGroup->start();
 }
 

@@ -471,8 +471,8 @@ void Component::draw(Graphics* const TheGraphics, Real32 Opacity) const
 
         //Draw Internal
         drawInternal(TheGraphics, Opacity);
-
-        //Set Clipping to initial settings
+	
+        //Make sure the clipping is reset
         setupClipping(TheGraphics);
 
         //Draw My Foreground

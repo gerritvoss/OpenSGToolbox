@@ -93,7 +93,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<AbstractElement *>::_type("AbstractElementPtr", "ElementPtr");
+DataType FieldTraits<AbstractElement *>::_type("AbstractElementPtr", "ElementRefPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(AbstractElement *)
@@ -149,7 +149,7 @@ AbstractElementBase::TypeObject AbstractElementBase::_type(
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "    systemcomponent=\"true\"\n"
-    "    parentsystemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"false\"\n"
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"

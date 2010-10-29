@@ -72,6 +72,76 @@ void AbstractLeafElement::initMethod(InitPhase ePhase)
 }
 
 
+////Returns the children of the receiver as an Enumeration.
+//std::vector<std::string> AbstractLeafElement::children() 
+//{
+//	//TODO:
+//	std::vector<std::string> temp;
+//	return temp;
+//}
+
+//Returns true if the receiver allows children.
+bool AbstractLeafElement::getAllowsChildren()  const 
+{
+	//TODO:
+	return true;
+}
+
+//Gets a child element.
+Element* 	AbstractLeafElement::getElement(UInt32 index) const
+{
+	//REALLY NEED TO DO!!!:
+	return NULL;
+}
+
+//Returns the number of child elements.    
+UInt32 AbstractLeafElement::getElementCount(void) const
+{
+	//REALLY NEED TO DO!!!:
+	return 0;
+}
+
+//Gets the child element index closest to the given model offset.
+UInt32 AbstractLeafElement::getElementIndex(UInt32 pos) const
+{
+	//TODO:
+	return 0;
+}
+  
+//Gets the ending offset in the model for the element.
+UInt32 AbstractLeafElement::getEndOffset(void) const
+{
+	//TODO:
+	return 0;
+}
+  
+//Gets the element name.
+std::string	AbstractLeafElement::getName(void) const
+{
+	return "Abstract Leaf Element";
+}
+  
+//Gets the starting offset in the model for the element.
+UInt32 AbstractLeafElement::getStartOffset(void) const
+{
+	//TODO:
+	return 0;
+}
+  
+//Checks whether the element is a leaf.
+bool AbstractLeafElement::isLeaf(void) const
+{
+	//TODO:
+	return false;
+}
+  
+//Converts the element to a string.
+std::string AbstractLeafElement::toString(void) const
+{
+	//TODO:
+	return "";
+}
+  
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/

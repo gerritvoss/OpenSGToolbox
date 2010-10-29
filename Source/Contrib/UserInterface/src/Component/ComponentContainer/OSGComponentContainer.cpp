@@ -49,6 +49,7 @@
 #include "OSGUIDrawUtils.h"
 
 #include "OSGMouseEventDetails.h"
+#include "OSGNameAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -414,6 +415,40 @@ void ComponentContainer::setParentWindow(InternalWindow* const parent)
     {
         getChildren(i)->setParentWindow(getParentWindow());
     }
+}
+
+std::vector<Component*> ComponentContainer::getNamedChildren(const std::string & Name) const
+{
+    std::vector<Component*> Result;
+    
+    const Char8* ChildName;
+    for(MFChildrenType::const_iterator ChildItor(getMFChildren()->begin()) ; ChildItor != getMFChildren()->end(); ++ChildItor)
+    {
+        ChildName = getName(*ChildItor);
+        if(ChildName != NULL &&
+           Name.compare(ChildName) == 0)
+        {
+            Result.push_back(*ChildItor);
+        }
+    }
+
+    return Result;
+}
+
+std::vector<Component*> ComponentContainer::getNamedDecendents(const std::string & Name) const
+{
+    std::vector<Component*> Result(getNamedChildren(Name));
+
+    for(MFChildrenType::const_iterator ChildItor(getMFChildren()->begin()) ; ChildItor != getMFChildren()->end(); ++ChildItor)
+    {
+        if((*ChildItor)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+        {
+            std::vector<Component*> ChildDec(dynamic_cast<ComponentContainer*>(*ChildItor)->getNamedDecendents(Name));
+            Result.insert(Result.end(), ChildDec.begin(), ChildDec.end());
+        }
+    }
+
+    return Result;
 }
 
 /*-------------------------------------------------------------------------*\

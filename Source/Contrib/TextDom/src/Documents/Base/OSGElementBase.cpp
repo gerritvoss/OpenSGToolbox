@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<Element *>::_type("ElementPtr", "FieldContainerPtr");
+DataType FieldTraits<Element *>::_type("ElementRefPtr", "FieldContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(Element *)

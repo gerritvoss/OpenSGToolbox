@@ -821,7 +821,7 @@ int main(int argc, char **argv)
         CloseMenuItem->setMnemonicKey(KeyEventDetails::KEY_C);
 
         ExitMenuItem->setText("Quit");
-        ExitMenuItem->setAcceleratorKey(KeyEventDetails::KEY_Q);
+        ExitMenuItem->setAcceleratorKey(KeyEventDetails::KEY_X);
         ExitMenuItem->setAcceleratorModifiers(KeyEventDetails::KEY_MODIFIER_COMMAND);
         ExitMenuItem->setMnemonicKey(KeyEventDetails::KEY_Q);
 

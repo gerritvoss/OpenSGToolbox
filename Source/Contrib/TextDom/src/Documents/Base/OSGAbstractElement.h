@@ -61,6 +61,92 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractElement : public AbstractElementBase
     typedef AbstractElementBase Inherited;
     typedef AbstractElement     Self;
 
+	
+	//    Adds an attribute to the element.
+	void 	addAttribute(std::string name,UInt32 value);
+
+	//    Adds a set of attributes to the element.
+	void 	addAttributes(std::map<std::string,UInt32> &attr);
+      
+	//   Returns the children of the receiver as an Enumeration.
+	//virtual   std::vector<std::string> 	children(void);
+       
+	//  Checks whether a given attribute name/value is defined.
+	bool	containsAttribute(std::string name, UInt32 value) const;
+    
+	//  Checks whether the element contains all the attributes.
+	bool	containsAttributes(std::map<std::string,UInt32>& attrs) const;
+       
+	//   Copies a set of attributes.
+	std::map<std::string,UInt32> copyAttributes(void) const;
+       
+	//   Dumps a debugging representation of the element hierarchy.
+	void dump(std::ostream &OutputStream, UInt32 indentAmount) const;
+       
+	//   Returns true if the receiver allows children.
+	virtual  bool 	getAllowsChildren(void) const = 0;
+       
+	//   Gets the value of an attribute.
+	UInt32 	getAttribute(std::string attrName) const;
+       
+	//   Gets the number of attributes that are defined.
+	UInt32 getAttributeCount(void) const;
+       
+	//   Gets the names of all attributes.
+	std::vector<std::string>	getAttributeNames() const;
+       
+	//  Gets the attributes for the element.
+	std::map<std::string,UInt32>& getAttributes() const;
+       
+	//   Returns the child TreeNode at index childIndex.
+	Element* 	getChildAt(UInt32 childIndex) const;
+       
+	//   Returns the number of children TreeNode's receiver contains.
+	UInt32	getChildCount(void) const;
+       
+	//  Retrieves the underlying model.
+	Document*	getDocument(void) const;
+        
+	// Returns the index of node in the receivers children.
+	UInt32 getIndex(Element* const node) const;
+         
+	// Gets the name of the element.
+	std::string	getName(void) const;
+         
+	//Returns the parent TreeNode of the receiver.
+	Element* getParent(void) const;
+          
+	//Gets the parent of the element.
+	Element* 	getParentElement(void) const;
+          
+	 //Gets the resolving parent.
+	//std::map<std::string,UInt32>& getResolveParent();
+          
+	//Gets the starting offset in the model for the element.
+	virtual UInt32 getStartOffset(void) const=0;
+          
+	//Checks whether a given attribute is defined.
+	bool	isDefined(std::string attrName) const;
+
+	//Checks whether two attribute sets are equal.
+	bool	isEqual(std::map<std::string,UInt32> attr) const;
+    
+    //Checks whether the element is a leaf.
+	virtual	 bool	isLeaf(void) const=0;
+    
+	//Removes an attribute from the set.
+	void 	removeAttribute(std::string name);
+          
+	//Removes a set of attributes for the element.
+	void 	removeAttributes(std::map<std::string,UInt32> attrs);
+          
+	//Removes a set of attributes for the element.
+	void 	removeAttributes(std::vector<std::string> names);
+          
+	//Sets the resolving parent.
+	//void 	setResolveParent(std::map<std::string,UInt32> parent);
+          
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -121,7 +207,6 @@ typedef AbstractElement *AbstractElementP;
 
 OSG_END_NAMESPACE
 
-#include "OSGDocument.h"
 #include "OSGAbstractElementBase.inl"
 #include "OSGAbstractElement.inl"
 

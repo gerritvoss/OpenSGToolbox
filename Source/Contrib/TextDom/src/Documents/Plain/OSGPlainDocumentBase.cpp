@@ -59,6 +59,7 @@
 
 
 
+#include "OSGElement.h"
 #include "OSGPlainDocumentBase.h"
 #include "OSGPlainDocument.h"
 
@@ -130,7 +131,7 @@ PlainDocumentBase::TypeObject PlainDocumentBase::_type(
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"
-    "    parentsystemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"false\"\n"
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"

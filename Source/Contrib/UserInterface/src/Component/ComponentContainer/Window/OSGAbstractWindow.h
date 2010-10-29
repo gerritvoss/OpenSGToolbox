@@ -99,6 +99,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractWindow : public AbstractWindow
 
 	virtual void close(void) = 0;
 
+    bool isOpen(void) const;
+
     UIDrawingSurface* getParentDrawingSurface(void) const;
 
     bool operator<(const AbstractWindow& right) const;

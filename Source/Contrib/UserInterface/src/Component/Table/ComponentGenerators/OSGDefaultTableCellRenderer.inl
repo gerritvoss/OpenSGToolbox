@@ -38,6 +38,11 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+<<<<<<< HEAD
+=======
+#include <OSGConfig.h>
+
+>>>>>>> 97c77ab... Feature Addition: Undo Manager functioning
 OSG_BEGIN_NAMESPACE
 
 OSG_END_NAMESPACE

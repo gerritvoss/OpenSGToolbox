@@ -3,11 +3,11 @@
 <FieldContainer
 	name="PlainDocument"
 	parent="AbstractDocument"
-    library="ContribUserInterface"
+    library="ContribTextDom"
     pointerfieldtypes="both"
 	structure="concrete"
     systemcomponent="true"
-    parentsystemcomponent="true"
+    parentsystemcomponent="false"
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"

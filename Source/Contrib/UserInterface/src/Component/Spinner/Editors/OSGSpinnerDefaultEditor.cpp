@@ -47,7 +47,6 @@
 
 #include "OSGSpinnerDefaultEditor.h"
 #include "OSGSpinner.h"
-#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,7 +104,7 @@ void SpinnerDefaultEditor::commitEdit(void)
         std::string NewValue;
         try
         {
-            getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+            getTextField()->setText(getSpinner()->getModel()->getValueAsString());
         }
         catch(boost::bad_any_cast &)
         {
@@ -120,7 +119,7 @@ void SpinnerDefaultEditor::cancelEdit(void)
     std::string NewValue;
     try
     {
-        getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+        getTextField()->setText(getSpinner()->getModel()->getValueAsString());
     }
     catch(boost::bad_any_cast &)
     {
@@ -139,7 +138,7 @@ void SpinnerDefaultEditor::handleModelStateChanged(ChangeEventDetails* const e)
     std::string NewValue;
     try
     {
-        getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+        getTextField()->setText(getSpinner()->getModel()->getValueAsString());
     }
     catch(boost::bad_any_cast &)
     {
@@ -224,7 +223,7 @@ void SpinnerDefaultEditor::changed(ConstFieldMaskArg whichField,
 	            std::string NewValue;
                 try
                 {
-                    getTextField()->setText(lexical_cast(getSpinner()->getModel()->getValue()));
+                    getTextField()->setText(getSpinner()->getModel()->getValueAsString());
                 }
                 catch(boost::bad_any_cast &)
                 {

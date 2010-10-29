@@ -70,9 +70,6 @@ OSG_BEGIN_NAMESPACE
  *                           Class variables                               *
 \***************************************************************************/
 
-StatElemDesc<StatTimeElem> ParticleSystemCore::statParticleSortTime("ParticleSortTime", 
-                                                                    "time for particles to be sorted");
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/

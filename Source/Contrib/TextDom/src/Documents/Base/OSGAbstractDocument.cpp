@@ -44,9 +44,11 @@
 #include <cstdio>
 
 #include <OSGConfig.h>
+
 #include <boost/bind.hpp>
 
 #include "OSGAbstractDocument.h"
+#include "OSGElement.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -77,91 +79,9 @@ void AbstractDocument::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-EventConnection AbstractDocument::addDocumentListener(DocumentListenerPtr Listener)
-{
-    _DocumentListeners.insert(Listener);
-    return EventConnection(boost::bind(&AbstractDocument::isDocumentListenerAttached, this, Listener),
-                           boost::bind(&AbstractDocument::removeDocumentListener, this, Listener));
-}
-
-void AbstractDocument::removeDocumentListener(DocumentListenerPtr Listener)
-{
-    DocumentListenerSetItor EraseIter(_DocumentListeners.find(Listener));
-    if(EraseIter != _DocumentListeners.end())
-    {
-        _DocumentListeners.erase(EraseIter);
-    }
-}
-
-bool AbstractDocument::isDocumentListenerAttached(DocumentListenerPtr Listener) const
-{
-    return _DocumentListeners.find(Listener) != _DocumentListeners.end();
-}
-
-EventConnection AbstractDocument::addUndoableEditListener(UndoableEditListenerPtr Listener)
-{
-    _UndoableEditListeners.insert(Listener);
-    return EventConnection(boost::bind(&AbstractDocument::isUndoableEditListenerAttached, this, Listener),
-                           boost::bind(&AbstractDocument::removeUndoableEditListener, this, Listener));
-}
-
-void AbstractDocument::removeUndoableEditListener(UndoableEditListenerPtr Listener)
-{
-    UndoableEditListenerSetItor EraseIter(_UndoableEditListeners.find(Listener));
-    if(EraseIter != _UndoableEditListeners.end())
-    {
-        _UndoableEditListeners.erase(EraseIter);
-    }
-}
-
-bool AbstractDocument::isUndoableEditListenerAttached(UndoableEditListenerPtr Listener) const
-{
-    return _UndoableEditListeners.find(Listener) != _UndoableEditListeners.end();
-}
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
-
-void AbstractDocument::produceChangedUpdate(const DocumentEventUnrecPtr e)
-{
-    DocumentListenerSet ListenerSet(_DocumentListeners);
-    for(DocumentListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->changedUpdate(e);
-    }
-    _Producer.produceEvent(ChangedUpdateMethodId,e);
-}
-
-void AbstractDocument::produceInsertUpdate(const DocumentEventUnrecPtr e)
-{
-    DocumentListenerSet ListenerSet(_DocumentListeners);
-    for(DocumentListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->insertUpdate(e);
-    }
-    _Producer.produceEvent(InsertUpdateMethodId,e);
-}
-
-void AbstractDocument::produceRemoveUpdate(const DocumentEventUnrecPtr e)
-{
-    DocumentListenerSet ListenerSet(_DocumentListeners);
-    for(DocumentListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->removeUpdate(e);
-    }
-    _Producer.produceEvent(RemoveUpdateMethodId,e);
-}
-
-void AbstractDocument::produceUndoableEditHappened(const UndoableEditEventUnrecPtr e)
-{
-    UndoableEditListenerSet ListenerSet(_UndoableEditListeners);
-    for(UndoableEditListenerSetConstItor SetItor(ListenerSet.begin()) ; SetItor != ListenerSet.end() ; ++SetItor)
-    {
-        (*SetItor)->undoableEditHappened(e);
-    }
-    _Producer.produceEvent(UndoableEditHappenedMethodId,e);
-}
 
 
 /*----------------------- constructors & destructors ----------------------*/

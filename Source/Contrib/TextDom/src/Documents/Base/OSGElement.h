@@ -43,6 +43,7 @@
 #endif
 
 #include "OSGElementBase.h"
+#include "OSGDocument.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -60,6 +61,38 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Element : public ElementBase
 
     typedef ElementBase Inherited;
     typedef Element     Self;
+
+		//Fetches the collection of attributes this element contains.
+	virtual	 const std::map<std::string,UInt32>& getAttributes(void) const = 0;
+
+	//Fetches the document associated with this element.
+	virtual Document*	getDocument(void) const = 0;
+
+	//Fetches the child element at the given index.  
+	virtual Element*	getElement(UInt32 index) const = 0;
+
+	//Gets the number of child elements contained by this element.  
+	virtual UInt32	getElementCount(void) const = 0;
+
+	//Gets the child element index closest to the given offset.  
+	virtual UInt32	getElementIndex(UInt32 offset) const = 0;
+
+	//Fetches the offset from the beginning of the document that this element ends at.  
+	virtual UInt32	getEndOffset(void) const = 0;
+
+	//Fetches the name of the element.  
+	virtual std::string	getName(void) const = 0;
+
+	//Fetches the parent element.  
+	virtual Element* getParentElement(void) const = 0;
+
+	//Fetches the offset from the beginning of the document that this element begins at.  
+	virtual UInt32	getStartOffset(void) const = 0;
+
+	//Is this element a leaf element? An element that may have children, even if it currently has no children, would return false.  
+	virtual bool isLeaf(void) const = 0;
+      
+
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -120,6 +153,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING Element : public ElementBase
 typedef Element *ElementP;
 
 OSG_END_NAMESPACE
+
 
 #include "OSGElementBase.inl"
 #include "OSGElement.inl"

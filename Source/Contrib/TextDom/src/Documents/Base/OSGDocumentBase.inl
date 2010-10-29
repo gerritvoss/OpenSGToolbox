@@ -48,6 +48,9 @@
  *****************************************************************************
 \*****************************************************************************/
 
+#include "OSGDocumentEventDetails.h"
+#include "OSGUndoableEditEventDetails.h"
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -108,70 +111,203 @@ const Char8 *DocumentBase::getClassname(void)
 }
 
 inline
-EventConnection DocumentBase::attachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    return _Producer.attachActivity(TheActivity, ProducedEventId);
-}
-
-inline
-bool DocumentBase::isActivityAttached(ActivityRefPtr TheActivity, UInt32 ProducedEventId) const
-{
-    return _Producer.isActivityAttached(TheActivity, ProducedEventId);
-}
-
-inline
-UInt32 DocumentBase::getNumActivitiesAttached(UInt32 ProducedEventId) const
-{
-    return _Producer.getNumActivitiesAttached(ProducedEventId);
-}
-
-inline
-ActivityRefPtr DocumentBase::getAttachedActivity(UInt32 ProducedEventId, UInt32 ActivityIndex) const
-{
-    return _Producer.getAttachedActivity(ProducedEventId,ActivityIndex);
-}
-
-inline
-void DocumentBase::detachActivity(ActivityRefPtr TheActivity, UInt32 ProducedEventId)
-{
-    _Producer.detachActivity(TheActivity, ProducedEventId);
-}
-
-inline
 UInt32 DocumentBase::getNumProducedEvents(void) const
 {
-    return _Producer.getNumProducedEvents();
+    return getProducerType().getNumEventDescs();
 }
 
 inline
-const MethodDescription *DocumentBase::getProducedEventDescription(const std::string &ProducedEventName) const
+const EventDescription *DocumentBase::getProducedEventDescription(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventName);
+    return getProducerType().findEventDescription(ProducedEventName);
 }
 
 inline
-const MethodDescription *DocumentBase::getProducedEventDescription(UInt32 ProducedEventId) const
+const EventDescription *DocumentBase::getProducedEventDescription(UInt32 ProducedEventId) const
 {
-    return _Producer.getProducedEventDescription(ProducedEventId);
+    return getProducerType().getEventDescription(ProducedEventId);
 }
 
 inline
 UInt32 DocumentBase::getProducedEventId(const std::string &ProducedEventName) const
 {
-    return _Producer.getProducedEventId(ProducedEventName);
+    return getProducerType().getProducedEventId(ProducedEventName);
 }
 
 inline
-SFEventProducerPtr *DocumentBase::editSFEventProducer(void)
+boost::signals2::connection  DocumentBase::connectChanged(const ChangedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
 {
-    return &_sfEventProducer;
+    return _ChangedEvent.connect(listener, at);
 }
 
-//! Get the value of the Document::_sfEventProducer field.
 inline
-EventProducerPtr &DocumentBase::editEventProducer(void)
+boost::signals2::connection  DocumentBase::connectChanged(const ChangedEventType::group_type &group,
+                                                    const ChangedEventType::slot_type &listener, boost::signals2::connect_position at)
 {
-    return _sfEventProducer.getValue();
+    return _ChangedEvent.connect(group, listener, at);
+}
+
+inline
+void  DocumentBase::disconnectChanged(const ChangedEventType::group_type &group)
+{
+    _ChangedEvent.disconnect(group);
+}
+
+inline
+void  DocumentBase::disconnectAllSlotsChanged(void)
+{
+    _ChangedEvent.disconnect_all_slots();
+}
+
+inline
+bool  DocumentBase::isEmptyChanged(void) const
+{
+    return _ChangedEvent.empty();
+}
+
+inline
+UInt32  DocumentBase::numSlotsChanged(void) const
+{
+    return _ChangedEvent.num_slots();
+}
+
+inline
+void DocumentBase::produceChanged(ChangedEventDetailsType* const e)
+{
+    produceEvent(ChangedEventId, e);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectInsert(const InsertEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _InsertEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectInsert(const InsertEventType::group_type &group,
+                                                    const InsertEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _InsertEvent.connect(group, listener, at);
+}
+
+inline
+void  DocumentBase::disconnectInsert(const InsertEventType::group_type &group)
+{
+    _InsertEvent.disconnect(group);
+}
+
+inline
+void  DocumentBase::disconnectAllSlotsInsert(void)
+{
+    _InsertEvent.disconnect_all_slots();
+}
+
+inline
+bool  DocumentBase::isEmptyInsert(void) const
+{
+    return _InsertEvent.empty();
+}
+
+inline
+UInt32  DocumentBase::numSlotsInsert(void) const
+{
+    return _InsertEvent.num_slots();
+}
+
+inline
+void DocumentBase::produceInsert(InsertEventDetailsType* const e)
+{
+    produceEvent(InsertEventId, e);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectRemove(const RemoveEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _RemoveEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectRemove(const RemoveEventType::group_type &group,
+                                                    const RemoveEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _RemoveEvent.connect(group, listener, at);
+}
+
+inline
+void  DocumentBase::disconnectRemove(const RemoveEventType::group_type &group)
+{
+    _RemoveEvent.disconnect(group);
+}
+
+inline
+void  DocumentBase::disconnectAllSlotsRemove(void)
+{
+    _RemoveEvent.disconnect_all_slots();
+}
+
+inline
+bool  DocumentBase::isEmptyRemove(void) const
+{
+    return _RemoveEvent.empty();
+}
+
+inline
+UInt32  DocumentBase::numSlotsRemove(void) const
+{
+    return _RemoveEvent.num_slots();
+}
+
+inline
+void DocumentBase::produceRemove(RemoveEventDetailsType* const e)
+{
+    produceEvent(RemoveEventId, e);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectUndoableEditHappened(const UndoableEditHappenedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _UndoableEditHappenedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  DocumentBase::connectUndoableEditHappened(const UndoableEditHappenedEventType::group_type &group,
+                                                    const UndoableEditHappenedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _UndoableEditHappenedEvent.connect(group, listener, at);
+}
+
+inline
+void  DocumentBase::disconnectUndoableEditHappened(const UndoableEditHappenedEventType::group_type &group)
+{
+    _UndoableEditHappenedEvent.disconnect(group);
+}
+
+inline
+void  DocumentBase::disconnectAllSlotsUndoableEditHappened(void)
+{
+    _UndoableEditHappenedEvent.disconnect_all_slots();
+}
+
+inline
+bool  DocumentBase::isEmptyUndoableEditHappened(void) const
+{
+    return _UndoableEditHappenedEvent.empty();
+}
+
+inline
+UInt32  DocumentBase::numSlotsUndoableEditHappened(void) const
+{
+    return _UndoableEditHappenedEvent.num_slots();
+}
+
+inline
+void DocumentBase::produceUndoableEditHappened(UndoableEditHappenedEventDetailsType* const e)
+{
+    produceEvent(UndoableEditHappenedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(Document);

@@ -103,8 +103,6 @@ class OSG_CONTRIBPARTICLESYSTEM_DLLMAPPING ParticleSystemCore : public ParticleS
 
     virtual void fill(DrawableStatsAttachment *pStat);
 
-    static StatElemDesc<StatTimeElem    > statParticleSortTime;
-
     std::vector<UInt32> intersectLine(const Line& Ray, Real32 IntersectionDistance) const;
 	
     /*=========================  PROTECTED  ===============================*/

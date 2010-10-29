@@ -130,7 +130,7 @@ AbstractLeafElementBase::TypeObject AbstractLeafElementBase::_type(
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
     "    systemcomponent=\"true\"\n"
-    "    parentsystemcomponent=\"true\"\n"
+    "    parentsystemcomponent=\"false\"\n"
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"

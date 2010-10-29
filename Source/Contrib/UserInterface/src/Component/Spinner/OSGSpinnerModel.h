@@ -114,6 +114,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SpinnerModel
     virtual void setValue(const std::string& value) = 0;
 
     virtual std::string getModelName(void) const = 0;
+
+    //The current element of the sequence as a string
+    virtual std::string getValueAsString(void) const;
   private:
   protected:
 

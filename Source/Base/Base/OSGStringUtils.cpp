@@ -202,7 +202,9 @@ bool isNumericChar(UChar8 c)
 
 bool isWordChar(UChar8 c)
 {
-	if(isAlphabetChar(c) || isNumericChar(c))
+	if(isAlphabetChar(c) || 
+       isNumericChar(c) ||
+       c == '_')
 	{
 		return true;
 	}
@@ -253,11 +255,21 @@ bool isPunctuationChar(UChar8 c)
 
 bool isWhitespaceChar(UChar8 c)
 {
-	if(c == 0)
+	switch(c)
 	{
-		return true;
+	case ' ': 
+	case '\t':
+	case '\n':
+        return true;
 	}
 	return false;
+}
+
+bool isPrintableChar(UChar8 c)
+{
+    return (isAlphabetChar(c) ||
+            isNumericChar(c) ||
+            isPunctuationChar(c));
 }
 
 OSG_END_NAMESPACE

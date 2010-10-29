@@ -61,6 +61,47 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractBranchElement : public AbstractBranc
     typedef AbstractBranchElementBase Inherited;
     typedef AbstractBranchElement     Self;
 
+	
+	////   Returns the children of the receiver as an Enumeration.
+	//std::vector<std::string> children(void);
+	
+	//   Returns true if the receiver allows children.
+	bool getAllowsChildren(void) const;
+	
+	//  Gets a child element.
+	Element*	getElement(UInt32 index) const;
+    
+	//  Gets the number of children for the element.
+	UInt32 getElementCount(void) const;
+    
+	//  Gets the child element index closest to the given model offset.
+	UInt32 getElementIndex(UInt32 offset) const;
+    
+	//  Gets the ending offset in the model for the element.
+	UInt32 getEndOffset(void) const;
+    
+	// Gets the element name.
+	std::string getName(void) const;
+     
+	// Gets the starting offset in the model for the element.
+	UInt32 getStartOffset(void) const;
+     
+	// Checks whether the element is a leaf.
+	bool	isLeaf(void) const;
+     
+	//Gets the child element that contains the given model position.
+	Element* positionToElement(UInt32 pos) const;
+      
+	//Replaces content with a new set of elements.
+	void replace(int offset, int length, MFRecElementPtr elems);
+      
+	//Converts the element to a string.
+	std::string toString(void) const;
+      
+	void removeChildElement(UInt32 index);
+
+	void addChildElement(UInt32 index,Element* const newPtr);
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

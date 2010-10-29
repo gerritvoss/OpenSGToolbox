@@ -40,6 +40,11 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+
+
 OSG_BEGIN_NAMESPACE
 
 inline
@@ -59,7 +64,8 @@ NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(void) :
     _Value(NumberType(0.0)),
     _Maximum(100.0),
     _Minimum(0.0),
-    _StepSize(1.0)
+    _StepSize(1.0),
+    _StringOutputPrecision(4)
 {
 }
 
@@ -68,7 +74,8 @@ NumberSpinnerModel<NumberTypeT>::NumberSpinnerModel(const NumberType& value) :
     _Value(value),
     _Maximum(100.0),
     _Minimum(0.0),
-    _StepSize(1.0)
+    _StepSize(1.0),
+    _StringOutputPrecision(4)
 {
 }
 
@@ -210,6 +217,48 @@ void NumberSpinnerModel<NumberTypeT>::setMinimum(const NumberTypeT& minimum)
 void NumberSpinnerModel<NumberTypeT>::setStepSize(const NumberTypeT& stepSize)
 {
     _StepSize = stepSize;
+}
+
+template<> inline
+std::string NumberSpinnerModel<Real32>::getValueAsString(void) const
+{
+    std::ostringstream OutStream;
+    OutStream << /*std::setiosflags(std::ios::floatfield) <<*/ std::setprecision(_StringOutputPrecision) << boost::any_cast<Real32>(_Value);
+    return OutStream.str();
+}
+
+template<> inline
+std::string NumberSpinnerModel<Real64>::getValueAsString(void) const
+{
+    std::ostringstream OutStream;
+    OutStream << /*std::setiosflags(std::ios::floatfield) <<*/ std::setprecision(_StringOutputPrecision) << boost::any_cast<Real64>(_Value);
+    return OutStream.str();
+}
+
+template<> inline
+std::string NumberSpinnerModel<Fixed32>::getValueAsString(void) const
+{
+    std::ostringstream OutStream;
+    OutStream << /*std::setiosflags(std::ios::floatfield) <<*/ std::setprecision(_StringOutputPrecision) << boost::any_cast<Fixed32>(_Value);
+    return OutStream.str();
+}
+
+template<class NumberTypeT> inline
+std::string NumberSpinnerModel<NumberTypeT>::getValueAsString(void) const
+{
+    return Inherited::getValueAsString();
+}
+
+template<class NumberTypeT> inline
+Int16 NumberSpinnerModel<NumberTypeT>::getStringOutputPrecision(void) const
+{
+    return _StringOutputPrecision;
+}
+
+template<class NumberTypeT> inline
+void NumberSpinnerModel<NumberTypeT>::setStringOutputPrecision(Int16 p)
+{
+    _StringOutputPrecision = p;
 }
 
 OSG_END_NAMESPACE

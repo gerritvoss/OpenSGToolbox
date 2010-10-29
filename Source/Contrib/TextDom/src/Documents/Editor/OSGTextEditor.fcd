@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="TextEditor"
+	parent="ComponentContainer"
+	library="ContribTextDom"
+	pointerfieldtypes="both"
+	structure="concrete"
+	systemcomponent="false"
+	parentsystemcomponent="false"
+	decoratable="false"
+	useLocalIncludes="true"
+    isNodeCore="false"
+	parentProducer="Component"
+	authors="David Kabala (djkabala@gmail.com)"
+>
+A TextDom Editor
+
+This class is a component container that contains multiple AdvancedtextDomAreas
+It provides additional features :
+
+opening multiple files in multiple tabs
+splitpanel view
+displaying a copy clipboard
+search and replace window
+goto line window
+
+	<Field
+		name="AdvancedTextDomAreas"
+		type="AdvancedTextDomArea"
+		category="pointer"
+		cardinality="multi"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
+
+
+	<Field
+		name="ClipboardVisible"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+
+	<Field
+		name="isSplit"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="true"
+		access="public"
+	>
+	</Field>
+	
+	<Field
+        name="FocusedDomArea"
+        type="TextDomArea"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        access="protected"
+        defaultValue="NULL"
+    >
+    </Field>
+
+
+</FieldContainer>
