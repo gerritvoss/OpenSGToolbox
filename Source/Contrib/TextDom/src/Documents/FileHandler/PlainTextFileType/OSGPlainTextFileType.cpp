@@ -45,13 +45,9 @@
 #include "OSGConfig.h"
 
 #include "OSGPlainTextFileType.h"
-#include "windows.h"
  
 
 OSG_BEGIN_NAMESPACE
-
-
-SYSTEMTIME now;
 
 /***************************************************************************\
  *                            Description                                  *

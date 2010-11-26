@@ -268,16 +268,14 @@ void FieldAnimation::changed(ConstFieldMaskArg whichField,
             if( f == NULL )
             {
                 SWARNING << "Could not find Field ID"<< getFieldId() << " in Field Container " << getContainer()->getTypeName()  << std::endl;
-                return;
             }
             else
             {
 
-                //Check if it's the right type
+                //Check if animator supports any types
                 if(getAnimator()->getDataType() == NULL)
                 {
                     SWARNING << "Cannot update animation, because the animator attached to this animation does not work on any data types."  << std::endl;
-                    return;
                 }
                 //Check if it's the right type
                 if(getContainer()->getFieldDescription(getFieldId())->getFieldType().getContentType()
@@ -290,30 +288,29 @@ void FieldAnimation::changed(ConstFieldMaskArg whichField,
                              << " connected to this animation is not the same data type: "
                              << getAnimator()->getDataType()->getCName()
                              << ", that the animator works on."  << std::endl;
-                    return;
                 }
                 GetFieldHandlePtr TheFieldHandle = getContainer()->getField( getFieldId() );
 
-                if( getIndex() >= 0 &&
-                    TheFieldHandle->getCardinality() != FieldType::MultiField &&
-                    getIndex() < TheFieldHandle->size())
+                if( getIndex() > 0 )
                 {
-                    SWARNING << "If the Index for the field animation is > 0 then the animated field must be a multi field and the index must be less than the size of this field."
-                             << getAnimator()->getDataType()->getCName() << "."  << std::endl;
-                    return;
-                }
-                else if( getIndex() < 0 &&
-                         TheFieldHandle->getCardinality() != FieldType::SingleField)
-                {
-                    SWARNING << "If the Index for the field animation is < 0 then the animated field must be a single field."
-                             << getAnimator()->getDataType()->getCName()  << std::endl;
+                    if(TheFieldHandle->getCardinality() != FieldType::MultiField)
+                    {
+                        SWARNING << "Cannot attach to index: " << getIndex() 
+                                 << " of field " << getContainer()->getFieldDescription(getFieldId())->getName() 
+                                 << " because it has cardinality 1." << std::endl;
+                    }
+                    else if(getIndex() < TheFieldHandle->size())
+                    {
+                        SWARNING << "Cannot attach to index: " << getIndex() 
+                                 << " of field " << getContainer()->getFieldDescription(getFieldId())->getName() 
+                                 << " because that index is out of bounds on a field of size " << TheFieldHandle->size() << "." << std::endl;
+                    }
                 }
             }
         }
         else
         {
             SWARNING << "There is no Field Container defined to Animate"  << std::endl;
-            return;
         }
     }
 }

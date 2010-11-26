@@ -120,9 +120,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual UInt32 getLinesToBeDisplayed(void) const;
 	virtual void calculatePreferredSize(void);
 	virtual void updateSize(void);
-	virtual virtual void updateViews(void);
+	virtual void updateViews(void);
 	virtual bool isLastCharacterOfDocument(void) const;
-	virtual virtual Vec2f getContentRequestedSize(void) const;
+	virtual Vec2f getContentRequestedSize(void) const;
 	virtual void calculateLineHeight(void);
 	virtual UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging);
 	virtual void checkCaretVisibility(UInt32 dir);

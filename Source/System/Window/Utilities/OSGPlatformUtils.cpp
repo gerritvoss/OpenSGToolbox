@@ -27,7 +27,7 @@
 #include "OSGPlatformUtils.h"
 
 #ifdef __APPLE__
-#include "Folders.h"
+//#include "Folders.h"
 #endif
 
 #ifdef WIN32
@@ -43,13 +43,13 @@ OSG_BEGIN_NAMESPACE
 
 BoostPath getPlatformUserAppDataDir(void)
 {
-    return BoostPath("~/Library/Application Support");
+    return BoostPath(getenv("HOME")) / "/Library/Application Support";
 }
 
 BoostPath getPlatformTempDataDir(void)
 {
     //Carbon
-    FSFindFolder();
+    //FSFindFolder();
     return BoostPath("/tmp");
 }
 

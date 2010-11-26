@@ -78,7 +78,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 	    // Clipboard related
 		ListRefPtr _TheClipboardList;
 		DefaultListModelRefPtr _TheClipboardListModel;
-		ListSelectionModelPtr _TheClipboardListSelectionModel;
 		ScrollPanelRefPtr _TheClipboardScrollPanel;
 		LabelRefPtr _TheClipboardLabel;
 		PanelRefPtr _TheClipboardPanel;

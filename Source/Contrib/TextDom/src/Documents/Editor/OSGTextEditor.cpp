@@ -484,10 +484,6 @@ void TextEditor::clipboardInitialization()
     _ClipboardButtonActionConnection = _TheClipboardButton->connectActionPerformed(boost::bind(&TextEditor::handleClipboardButtonAction, this, _1));
 	_TheClipboardButton->setConstraints(ClipboardButtonConstraints);
 
-	// the Clipboard list
-    _TheClipboardListSelectionModel=DefaultListSelectionModel::create();
-	_TheClipboardListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-
 	_TheClipboardListModel = DefaultListModel::create();
 	//_TheClipboardListModel->pushBack(boost::any(std::string("Red")));
 
@@ -495,8 +491,6 @@ void TextEditor::clipboardInitialization()
 	_TheClipboardList->setPreferredSize(Vec2f(200, 400));
 	_TheClipboardList->setOrientation(List::VERTICAL_ORIENTATION);
 	_TheClipboardList->setModel(_TheClipboardListModel);
-
-	_TheClipboardList->setSelectionModel(_TheClipboardListSelectionModel);
 
 	_TheClipboardScrollPanel = ScrollPanel::create();
 	_TheClipboardScrollPanel->setPreferredSize(Vec2f(200,400));
@@ -551,7 +545,6 @@ void TextEditor::resolveLinks(void)
     _InsideDomArea = NULL;
     _TheClipboardList = NULL;
     _TheClipboardListModel = NULL;
-    _TheClipboardListSelectionModel = NULL;
     _TheClipboardScrollPanel = NULL;
     _TheClipboardLabel = NULL;
     _TheClipboardPanel = NULL;
