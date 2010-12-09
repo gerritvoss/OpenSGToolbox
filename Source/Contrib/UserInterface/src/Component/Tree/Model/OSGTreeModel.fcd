@@ -2,7 +2,7 @@
 
 <FieldContainer
 	name="TreeModel"
-	parent="FieldContainer"
+	parent="AttachmentContainer"
     library="ContribUserInterface"
     pointerfieldtypes="both"
 	structure="abstract"

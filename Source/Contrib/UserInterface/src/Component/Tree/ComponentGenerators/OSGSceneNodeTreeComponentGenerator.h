@@ -36,21 +36,21 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGFIELDCONTAINERTREEMODEL_H_
-#define _OSGFIELDCONTAINERTREEMODEL_H_
+#ifndef _OSGSCENENODETREECOMPONENTGENERATOR_H_
+#define _OSGSCENENODETREECOMPONENTGENERATOR_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGFieldContainerTreeModelBase.h"
+#include "OSGSceneNodeTreeComponentGeneratorBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief FieldContainerTreeModel class. See \ref
-           PageContribUserInterfaceFieldContainerTreeModel for a description.
+/*! \brief SceneNodeTreeComponentGenerator class. See \ref
+           PageContribUserInterfaceSceneNodeTreeComponentGenerator for a description.
 */
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public FieldContainerTreeModelBase
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING SceneNodeTreeComponentGenerator : public SceneNodeTreeComponentGeneratorBase
 {
   protected:
 
@@ -58,27 +58,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
 
   public:
 
-    typedef FieldContainerTreeModelBase Inherited;
-    typedef FieldContainerTreeModel     Self;
-
-    enum PseudoId 
-    {
-        //ATTACHMENT_MAP_ID = -1,
-        FIELD_CONTAINER_ID = 0,
-
-    };
-
-    struct ContainerFieldIdPair
-    {
-      public:
-        ContainerFieldIdPair(FieldContainer* container, UInt32 fieldId);
-        ContainerFieldIdPair(void);
-
-        FieldContainer* _Container;
-        Int32                _FieldID;
-
-        bool operator==(const ContainerFieldIdPair& right) const;
-    };
+    typedef SceneNodeTreeComponentGeneratorBase Inherited;
+    typedef SceneNodeTreeComponentGenerator     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -97,52 +78,32 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-
-	//Returns the child of parent at index index in the parent's child array.
-	virtual boost::any getChild(const boost::any& parent, const UInt32& index) const;
-
-	//Returns the number of children of parent.
-	virtual UInt32 getChildCount(const boost::any& parent) const;
-
-	//Returns the index of child in parent.
-	virtual UInt32 getIndexOfChild(const boost::any& parent, const boost::any& child) const;
-
-	//Returns the root of the tree.
-	virtual boost::any getRoot(void) const;
-
-	//Returns true if node is a leaf.
-	virtual bool isLeaf(const boost::any& node) const;
-
-	//Messaged when the user has altered the value for the item identified by path to newValue.
-	virtual void valueForPathChanged(TreePath path, const boost::any& newValue);
-
-    //Sets the root to root.
-    void setRoot(FieldContainer* const root);
-
-    //Get the Node* to the Root Node
-    FieldContainer* getRootFieldContainer(void) const;
-
-    //Returns true if these objects represent the same node in the tree
-    virtual bool isEqual(const boost::any& left, const boost::any& right) const;
+	virtual ComponentTransitPtr getTreeComponent(Tree* const Parent,
+                                             const boost::any& Value,
+                                             bool IsSelected,
+                                             bool Expanded,
+                                             bool Leaf,
+                                             UInt32 Row,
+                                             bool HasFocus);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
 
-    // Variables should all be in FieldContainerTreeModelBase.
+    // Variables should all be in SceneNodeTreeComponentGeneratorBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    FieldContainerTreeModel(void);
-    FieldContainerTreeModel(const FieldContainerTreeModel &source);
+    SceneNodeTreeComponentGenerator(void);
+    SceneNodeTreeComponentGenerator(const SceneNodeTreeComponentGenerator &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~FieldContainerTreeModel(void);
+    virtual ~SceneNodeTreeComponentGenerator(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -152,45 +113,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING FieldContainerTreeModel : public Field
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    bool isFieldAllowed(const FieldDescriptionBase* fieldDesc) const;
-    UInt32 getIndexFromFieldId(const FieldContainer* container, UInt32 index) const;
-    
-    void attachNameChangeHandler(AttachmentContainer * const TheContainer,
-                                               const TreePath& Parent, 
-                                               UInt32 ChangedIndex);
-    void dettachNameChangeHandler(AttachmentContainer * const TheContainer,
-                                               const TreePath& Parent, 
-                                               UInt32 ChangedIndex);
-
-    void handleNameChanged(FieldContainer *fc, 
-                          ConstFieldMaskArg whichField,
-                          const TreePath& Parent, 
-                          UInt32 ChangedIndex);
-
-    void handleFieldChanged(FieldContainer *fc, 
-                          ConstFieldMaskArg whichField,
-                          const TreePath& Parent, 
-                          UInt32 ChangedIndex);
-
-    virtual void setAsVisible(const TreePath& path);
-
-    virtual void setAsNotVisible(const TreePath& path);
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class FieldContainerTreeModelBase;
+    friend class SceneNodeTreeComponentGeneratorBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const FieldContainerTreeModel &source);
+    void operator =(const SceneNodeTreeComponentGenerator &source);
 };
 
-typedef FieldContainerTreeModel *FieldContainerTreeModelP;
+typedef SceneNodeTreeComponentGenerator *SceneNodeTreeComponentGeneratorP;
 
 OSG_END_NAMESPACE
 
-#include "OSGFieldContainerTreeModelBase.inl"
-#include "OSGFieldContainerTreeModel.inl"
+#include "OSGSceneNodeTreeComponentGeneratorBase.inl"
+#include "OSGSceneNodeTreeComponentGenerator.inl"
 
-#endif /* _OSGFIELDCONTAINERTREEMODEL_H_ */
+#endif /* _OSGSCENENODETREECOMPONENTGENERATOR_H_ */

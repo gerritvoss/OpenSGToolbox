@@ -225,6 +225,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModelLayout : public Abstr
 
     void insertVisiblePath(const TreePath& Path);
     void removeVisiblePath(const TreePath& Path);
+    void insertVisibleDecendents(const TreePath& Path);
+    void removeVisibleDecendents(const TreePath& Path);
     void removeExpandedPath(const TreePath& Path);
 
     void produceTreeNodesChanged(TreeModelEventDetails* const e);

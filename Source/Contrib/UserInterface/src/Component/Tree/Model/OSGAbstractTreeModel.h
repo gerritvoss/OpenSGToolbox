@@ -113,6 +113,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING AbstractTreeModel : public AbstractTre
 	void produceTreeNodesWillBeRemoved(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
 	void produceTreeStructureChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children);
     
+    void produceTreeNodeInserted(TreePath Parent, const boost::any& InsertedChild);
+    void produceTreeNodeRemoved(TreePath Parent, const boost::any& RemovedChild);
+    void produceTreeNodeWillBeRemoved(TreePath Parent, const boost::any& RemovedChild);
+    void produceTreeNodeChanged(TreePath Parent, const boost::any& ChangedChild);
+    
     /*==========================  PRIVATE  ================================*/
 
   private:

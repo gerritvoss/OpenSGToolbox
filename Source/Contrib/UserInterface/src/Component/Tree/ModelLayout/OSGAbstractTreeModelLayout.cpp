@@ -292,8 +292,11 @@ void AbstractTreeModelLayout::insertVisiblePath(const TreePath& Path)
 void AbstractTreeModelLayout::removeVisiblePath(const TreePath& Path)
 {
     _VisiblePathSet.erase(_VisiblePathSet.find(Path));
+    _TreeModel->setAsNotVisible(Path);
+
     //Remove all visible decendents of Path
-    TreePathSetItor VisibleSetItor(_VisiblePathSet.begin());
+    removeVisibleDecendents(Path);
+    /*TreePathSetItor VisibleSetItor(_VisiblePathSet.begin());
     while(VisibleSetItor != _VisiblePathSet.end())
     {
         if(Path.isDescendant((*VisibleSetItor)))
@@ -306,8 +309,43 @@ void AbstractTreeModelLayout::removeVisiblePath(const TreePath& Path)
         {
             ++VisibleSetItor;
         }
+    }*/
+}
+
+void AbstractTreeModelLayout::insertVisibleDecendents(const TreePath& Path)
+{
+    if(isVisible(Path) || (_TreeModel->getRootPath() == Path))
+    {
+        //Insert all visible decendents of Path
+        std::vector<TreePath> VisibleDecendants;
+        getVisibleDecendants(Path, VisibleDecendants);
+        for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+        {            
+            //Let the model know that this node is visible
+            _TreeModel->setAsVisible(VisibleDecendants[i]);
+
+            _VisiblePathSet.insert(VisibleDecendants[i]);
+        }
     }
 }
+
+void AbstractTreeModelLayout::removeVisibleDecendents(const TreePath& Path)
+{
+    if(isVisible(Path) || _TreeModel->getRootPath() == Path)
+    {
+        //Remove all visible decendents of Path
+        std::vector<TreePath> VisibleDecendants;
+        getVisibleDecendants(Path, VisibleDecendants);
+        for(UInt32 i(0) ; i<VisibleDecendants.size() ; ++i)
+        {            
+            //Let the model know that this node is visible
+            _TreeModel->setAsNotVisible(VisibleDecendants[i]);
+
+            _VisiblePathSet.erase(VisibleDecendants[i]);
+        }
+    }
+}
+
 void AbstractTreeModelLayout::removeExpandedPath(const TreePath& Path)
 {
     _ExpandedPathSet.erase(Path);

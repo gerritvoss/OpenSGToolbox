@@ -130,12 +130,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModel : public TreeModelBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+
+    virtual void setAsVisible(const TreePath& path);
+
+    virtual void setAsNotVisible(const TreePath& path);
+
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
     friend class TreeModelBase;
+    friend class AbstractTreeModelLayout;
 
     // prohibit default functions (move to 'public' if you need one)
     void operator =(const TreeModel &source);

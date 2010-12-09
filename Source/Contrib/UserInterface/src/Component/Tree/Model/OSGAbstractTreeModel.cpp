@@ -83,6 +83,46 @@ void AbstractTreeModel::initMethod(InitPhase ePhase)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void AbstractTreeModel::produceTreeNodeInserted(TreePath Parent, const boost::any& InsertedChild)
+{
+    //Produce an event for a created Tree Node
+    boost::any ParentNode(Parent.getLastPathComponent());
+    std::vector<UInt32> ChildIndicies(1, getIndexOfChild(ParentNode, InsertedChild));
+    std::vector<boost::any> Children(1, getChild(ParentNode, ChildIndicies.front()));
+
+    produceTreeNodesInserted(Parent, ChildIndicies, Children);
+}
+
+void AbstractTreeModel::produceTreeNodeRemoved(TreePath Parent, const boost::any& InsertedChild)
+{
+    //Produce an event for a created Tree Node
+    boost::any ParentNode(Parent.getLastPathComponent());
+    std::vector<UInt32> ChildIndicies/*(1, getIndexOfChild(ParentNode, InsertedChild))*/;
+    std::vector<boost::any> Children/*(1, getChild(ParentNode, ChildIndicies.front()))*/;
+
+    produceTreeNodesRemoved(Parent, ChildIndicies, Children);
+}
+
+void AbstractTreeModel::produceTreeNodeChanged(TreePath Parent, const boost::any& InsertedChild)
+{
+    //Produce an event for a created Tree Node
+    boost::any ParentNode(Parent.getLastPathComponent());
+    std::vector<UInt32> ChildIndicies(1, getIndexOfChild(ParentNode, InsertedChild));
+    std::vector<boost::any> Children(1, getChild(ParentNode, ChildIndicies.front()));
+
+    produceTreeNodesChanged(Parent, ChildIndicies, Children);
+}
+
+void AbstractTreeModel::produceTreeNodeWillBeRemoved(TreePath Parent, const boost::any& InsertedChild)
+{
+    //Produce an event for a created Tree Node
+    boost::any ParentNode(Parent.getLastPathComponent());
+    std::vector<UInt32> ChildIndicies(1, getIndexOfChild(ParentNode, InsertedChild));
+    std::vector<boost::any> Children(1, getChild(ParentNode, ChildIndicies.front()));
+
+    produceTreeNodesWillBeRemoved(Parent, ChildIndicies, Children);
+}
+
 void AbstractTreeModel::produceTreeNodesChanged(TreePath Parent, const std::vector<UInt32>& ChildIndices, const std::vector<boost::any>& Children)
 {
    TreeModelEventDetailsUnrecPtr Details = TreeModelEventDetails::create(this, getSystemTime(), Parent, ChildIndices, Children);

@@ -90,7 +90,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<TreeModel *>::_type("TreeModelPtr", "FieldContainerPtr");
+DataType FieldTraits<TreeModel *>::_type("TreeModelPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(TreeModel *)
@@ -127,7 +127,7 @@ TreeModelBase::TypeObject TreeModelBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"TreeModel\"\n"
-    "\tparent=\"FieldContainer\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
@@ -313,7 +313,7 @@ void TreeModelBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _TreeStructureChangedEvent(dynamic_cast<TreeStructureChangedEventDetailsType* const>(e), TreeStructureChangedEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -340,7 +340,7 @@ boost::signals2::connection TreeModelBase::connectEvent(UInt32 eventId,
         return _TreeStructureChangedEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -371,7 +371,7 @@ boost::signals2::connection  TreeModelBase::connectEvent(UInt32 eventId,
         return _TreeStructureChangedEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -399,7 +399,7 @@ void  TreeModelBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_
         _TreeStructureChangedEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -424,7 +424,7 @@ void  TreeModelBase::disconnectAllSlotsEvent(UInt32 eventId)
         _TreeStructureChangedEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -449,7 +449,7 @@ bool  TreeModelBase::isEmptyEvent(UInt32 eventId) const
         return _TreeStructureChangedEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -475,7 +475,7 @@ UInt32  TreeModelBase::numSlotsEvent(UInt32 eventId) const
         return _TreeStructureChangedEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="SceneNodeTreeComponentGenerator"
+	parent="DefaultTreeComponentGenerator"
+    library="ContribUserInterface"
+    pointerfieldtypes="both"
+	structure="concrete"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+    decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)                             "
+>
+	<Field
+		name="TravMask"
+		type="UInt32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="TypeTraits&lt;UInt32&gt;::getMax()"
+	>
+	</Field>
+</FieldContainer>

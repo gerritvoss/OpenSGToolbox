@@ -55,6 +55,7 @@
 #include "OSGChangedFunctorFieldTraits.h"
 
 #include "OSGAttachmentMapSFields.h"
+#include "OSGNameAttachment.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -408,6 +409,114 @@ bool FieldContainerTreeModel::isEqual(const boost::any& left, const boost::any& 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+void FieldContainerTreeModel::setAsVisible(const TreePath& path)
+{
+    ContainerFieldIdPair ThePair = boost::any_cast<ContainerFieldIdPair>(path.getLastPathComponent());
+
+    if(ThePair._FieldID == FIELD_CONTAINER_ID)
+    {
+        AttachmentContainer * TheContainer(dynamic_cast<AttachmentContainer *>(ThePair._Container));
+        if(TheContainer != NULL)
+        {
+            attachNameChangeHandler(TheContainer, 
+                                    path.getParentPath(),
+                                    getIndexOfChild(path.getParentPath().getLastPathComponent(),path.getLastPathComponent()));
+        }
+    }
+}
+
+void FieldContainerTreeModel::setAsNotVisible(const TreePath& path)
+{
+    ContainerFieldIdPair ThePair = boost::any_cast<ContainerFieldIdPair>(path.getLastPathComponent());
+
+    if(ThePair._FieldID == FIELD_CONTAINER_ID)
+    {
+        AttachmentContainer * TheContainer(dynamic_cast<AttachmentContainer *>(ThePair._Container));
+        if(TheContainer != NULL)
+        {
+            dettachNameChangeHandler(TheContainer, 
+                                     path.getParentPath(),
+                                     getIndexOfChild(path.getParentPath().getLastPathComponent(),path.getLastPathComponent()));
+        }
+    }
+}
+
+void FieldContainerTreeModel::attachNameChangeHandler(AttachmentContainer * const TheContainer,
+                                               const TreePath& Parent, 
+                                               UInt32 ChangedIndex)
+{
+    if(!TheContainer->hasChangedFunctor(boost::bind(&FieldContainerTreeModel::handleFieldChanged, this,_1,_2,Parent, ChangedIndex)))
+    {
+        TheContainer->addChangedFunctor(boost::bind(&FieldContainerTreeModel::handleFieldChanged, this,_1,_2,Parent, ChangedIndex),"");
+    }
+
+    Attachment* NameAttachment = TheContainer->findAttachment(Name::getClassType());
+    if(NameAttachment != NULL &&
+       !NameAttachment->hasChangedFunctor(boost::bind(&FieldContainerTreeModel::handleNameChanged, this,_1,_2,Parent, ChangedIndex)))
+    {
+        NameAttachment->addChangedFunctor(boost::bind(&FieldContainerTreeModel::handleNameChanged, this,_1,_2,Parent, ChangedIndex),"");
+    }
+}
+
+void FieldContainerTreeModel::dettachNameChangeHandler(AttachmentContainer * const TheContainer,
+                                               const TreePath& Parent, 
+                                               UInt32 ChangedIndex)
+{
+    TheContainer->subChangedFunctor(boost::bind(&FieldContainerTreeModel::handleFieldChanged, this,_1,_2,Parent, ChangedIndex));
+
+    Attachment* NameAttachment = TheContainer->findAttachment(Name::getClassType());
+    if(NameAttachment != NULL)
+    {
+        NameAttachment->subChangedFunctor(boost::bind(&FieldContainerTreeModel::handleNameChanged, this,_1,_2,Parent, ChangedIndex));
+    }
+}
+
+void FieldContainerTreeModel::handleNameChanged(FieldContainer *fc, 
+                                               ConstFieldMaskArg whichField,
+                                               const TreePath& Parent, 
+                                               UInt32 ChangedIndex)
+{
+    if(whichField & Name::SimpleFieldMask)
+    {
+        produceTreeNodeChanged(Parent, getChild(Parent.getLastPathComponent(), ChangedIndex));
+    }
+}
+
+void FieldContainerTreeModel::handleFieldChanged(FieldContainer *fc, 
+                                                  ConstFieldMaskArg whichField,
+                                                  const TreePath& Parent, 
+                                                  UInt32 ChangedIndex)
+{
+    if(whichField)
+    {
+        produceTreeNodeChanged(Parent, getChild(Parent.getLastPathComponent(), ChangedIndex));
+
+        //If this is an attachment container, and the field changed was the attachments
+        if(dynamic_cast<AttachmentContainer*>(fc) != NULL &&
+           (whichField & AttachmentContainer::AttachmentsFieldMask))
+        {
+            //If there is a name attachment
+            Attachment* NameAttachment = dynamic_cast<AttachmentContainer*>(fc)->findAttachment(Name::getClassType());
+            if(NameAttachment != NULL &&
+               !NameAttachment->hasChangedFunctor(boost::bind(&FieldContainerTreeModel::handleNameChanged, this,_1,_2,Parent, ChangedIndex)))
+            {
+                NameAttachment->addChangedFunctor(boost::bind(&FieldContainerTreeModel::handleNameChanged, this,_1,_2,Parent, ChangedIndex),"");
+            }
+        }
+
+        UInt32 NumFields(0);
+        for(UInt32 i(1) ; i<fc->getNumFields() ; ++i)
+        {
+            if((whichField & (1 << i)) &&
+               isFieldAllowed(fc->getFieldDescription(i)))
+            {
+                TreePath ContainerPath(Parent.getChildPath(ChangedIndex));
+                TreePath FieldPath(ContainerPath, ContainerFieldIdPair(fc,i-1));
+                produceTreeNodeChanged(ContainerPath, FieldPath.getLastPathComponent());
+            }
+        }
+    }
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

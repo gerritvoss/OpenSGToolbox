@@ -53,7 +53,7 @@ void Tree::addSelectionPaths(const std::vector<TreePath>& paths)
 }
 
 inline
-void Tree::addSelectionRow(const UInt32& row)
+void Tree::addSelectionRow(UInt32 row)
 {
     addSelectionPath(getModelLayout()->getPathForRow(row));
 }
@@ -71,13 +71,13 @@ void Tree::collapsePath(const TreePath& path)
 }
 
 inline
-void Tree::collapseRow(const UInt32& row)
+void Tree::collapseRow(UInt32 row)
 {
     getModelLayout()->setExpanded(getModelLayout()->getPathForRow(row), false);
 }
 
 inline
-void Tree::expandRow(const UInt32& row)
+void Tree::expandRow(UInt32 row)
 {
     getModelLayout()->setExpanded(getModelLayout()->getPathForRow(row), true);
 }
@@ -113,7 +113,7 @@ Int32 Tree::getMinSelectionRow(void) const
 }
 
 inline
-TreePath Tree::getPathForRow(const UInt32& row) const
+TreePath Tree::getPathForRow(UInt32 row) const
 {
     return getModelLayout()->getPathForRow(row);
 }
@@ -161,7 +161,7 @@ bool Tree::hasBeenExpanded(const TreePath& path) const
 }
 
 inline
-bool Tree::isCollapsed(const UInt32& row) const
+bool Tree::isCollapsed(UInt32 row) const
 {
     return !getModelLayout()->isExpanded(getModelLayout()->getPathForRow(row));
 }
@@ -173,7 +173,7 @@ bool Tree::isCollapsed(const TreePath& path) const
 }
 
 inline
-bool Tree::isExpanded(const UInt32& row) const
+bool Tree::isExpanded(UInt32 row) const
 {
     return getModelLayout()->isExpanded(getModelLayout()->getPathForRow(row));
 }
@@ -197,7 +197,7 @@ bool Tree::isPathSelected(const TreePath& path) const
 }
 
 inline
-bool Tree::isRowSelected(const UInt32& row) const
+bool Tree::isRowSelected(UInt32 row) const
 {
     return getSelectionModel()->isRowSelected(row);
 }
@@ -233,7 +233,7 @@ void Tree::removeSelectionPaths(const std::vector<TreePath>& paths)
 }
 
 inline
-void Tree::removeSelectionRow(const UInt32& row)
+void Tree::removeSelectionRow(UInt32 row)
 {
     getSelectionModel()->removeSelectionPath(getModelLayout()->getPathForRow(row));
 }
@@ -257,7 +257,7 @@ void Tree::setSelectionPaths(const std::vector<TreePath>& paths)
 }
 
 inline
-void Tree::setSelectionRow(const UInt32& row)
+void Tree::setSelectionRow(UInt32 row)
 {
     getSelectionModel()->setSelectionPath(getModelLayout()->getPathForRow(row));
 }

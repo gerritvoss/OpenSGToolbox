@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldContainer.h" // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
 
 #include "OSGTreeModelFields.h"
@@ -80,12 +80,12 @@ class TreeModel;
 
 //! \brief TreeModel Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TreeModelBase : public AttachmentContainer
 {
   public:
 
-    typedef FieldContainer Inherited;
-    typedef FieldContainer ParentContainer;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;

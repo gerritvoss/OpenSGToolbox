@@ -45,23 +45,16 @@
 
 #include <OSGConfig.h>
 
-#include "OSGDefaultTreeComponentGenerator.h"
-#include "OSGDefaultTreeComponentGenerator.h"
+#include "OSGSceneNodeTreeComponentGenerator.h"
+#include "OSGFieldContainerTreeModel.h"
+#include "OSGNameAttachment.h"
 #include "OSGTree.h"
-#include "OSGModelTreeNode.h"
-#include "OSGLabel.h"
-#include "OSGComponent.h"
-
-#include "OSGPanel.h"
-#include "OSGBoxLayout.h"
-#include "OSGEmptyBorder.h"
-#include "OSGStringUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGDefaultTreeComponentGeneratorBase.cpp file.
-// To modify it, please change the .fcd file (OSGDefaultTreeComponentGenerator.fcd) and
+// OSGSceneNodeTreeComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGSceneNodeTreeComponentGenerator.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -72,7 +65,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultTreeComponentGenerator::initMethod(InitPhase ePhase)
+void SceneNodeTreeComponentGenerator::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -86,96 +79,56 @@ void DefaultTreeComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponent(Tree* const Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
+ComponentTransitPtr SceneNodeTreeComponentGenerator::getTreeComponent(Tree* const Parent, 
+                                                                            const boost::any& Value, 
+                                                                            bool IsSelected, 
+                                                                            bool Expanded, 
+                                                                            bool Leaf, 
+                                                                            UInt32 Row, 
+                                                                            bool HasFocus)
 {
-    boost::any ValueToUse;
+    NodeUnrecPtr TheNode;
     try
     {
-        ModelTreeNodeRefPtr TheNode = boost::any_cast<ModelTreeNodeRefPtr>(Value);
-        if(TheNode != NULL)
-        {
-            ValueToUse = TheNode->getUserObject();
-        }
-        else
-        {
-            ValueToUse = Value;
-        }
+        TheNode = boost::any_cast<NodeUnrecPtr>(Value);
     }
     catch (boost::bad_any_cast &)
     {
-        //Could not convert to ModelTreeNodeRefPtr
-        ValueToUse = Value;
+        //Could not convert to FieldContinerFieldPath
+        return ComponentTransitPtr(NULL);
     }
 
-    //Setup the layout
-    /*BoxLayoutRefPtr TheLayout = BoxLayout::create();
-		TheLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
-        TheLayout->setComponentAlignment(0.5f);
-        TheLayout->setMinorAxisAlignment(0.5f);
-*/
     //Get the text for the label
     std::string LabelText("");
-    try
+    if(TheNode != NULL)
     {
-        LabelText = lexical_cast(ValueToUse);
-    }
-    catch (boost::bad_lexical_cast &)
-    {
-        //Could not convert to string
-    }
-    if(LabelText.empty())
-    {
-        LabelText = "[Unnamed]";
-    }
-
-    return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
-}
-
-ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponentText(Tree* const Parent, const std::string& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
-{
-    LabelRefPtr TheLabel = dynamic_pointer_cast<Label>(getNodeLabelPrototype()->shallowCopy());
-    if(IsSelected)
-    {
-        TheLabel->setTextColors(getSelectedTextColor());
-        TheLabel->setBackgrounds(getSelectedBackground());
-        TheLabel->setBorders(getSelectedBorder());
-    }
-    /*else
-    {
-        TheLabel->setTextColors(getNonSelectedTextColor());
-        TheLabel->setBackgrounds(getNonSelectedBackground());
-        EmptyBorderUnrecPtr TheBorder(EmptyBorder::create());
-        TheLabel->setBorders(TheBorder);
-    }*/
-    TheLabel->setText(Value);
-
-    //Create the panel, set its children and layout
-    /*PanelRefPtr ThePanel = dynamic_pointer_cast<Panel>(getNodePanelPrototype()->shallowCopy());
-
-
-        ThePanel->setLayout(TheLayout);
-        ThePanel->pushToChildren(TheLabel);*/
-
-    return ComponentTransitPtr(TheLabel.get());
-}
-
-ComponentTransitPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(Tree* const Parent, const boost::any& Value, bool IsSelected, bool Expanded, bool Leaf, UInt32 Row, bool HasFocus)
-{
-    //If node is not a leaf expanded
-    if(!Leaf)
-    {
-        UIDrawObjectCanvasRefPtr ExpandedCanvas;
-        if(Expanded)
+        const Char8* name(getName(TheNode));
+        if(name)
         {
-            ExpandedCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(getExpandedDrawObjectPrototype()->shallowCopy());
+            LabelText += std::string(name) + " ";
+        }
+        if(TheNode->getCore() != NULL)
+        {
+            LabelText += std::string("[") + TheNode->getCore()->getType().getCName() + "]";
         }
         else
         {
-            ExpandedCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(getNotExpandedDrawObjectPrototype()->shallowCopy());
+            LabelText += "[NULL core]";
         }
-        return ComponentTransitPtr(ExpandedCanvas.get());
     }
-    return ComponentTransitPtr(NULL);
+    else
+    {
+        LabelText += "NULL";
+    }
+
+    ComponentRecPtr GenComp = getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
+    if(TheNode != NULL &&
+       !(TheNode->getTravMask() & getTravMask()))
+    {
+        GenComp->setEnabled(false);
+    }
+
+    return ComponentTransitPtr(GenComp);
 }
 
 /*-------------------------------------------------------------------------*\
@@ -184,33 +137,33 @@ ComponentTransitPtr DefaultTreeComponentGenerator::getTreeExpandedComponent(Tree
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultTreeComponentGenerator::DefaultTreeComponentGenerator(void) :
+SceneNodeTreeComponentGenerator::SceneNodeTreeComponentGenerator(void) :
     Inherited()
 {
 }
 
-DefaultTreeComponentGenerator::DefaultTreeComponentGenerator(const DefaultTreeComponentGenerator &source) :
+SceneNodeTreeComponentGenerator::SceneNodeTreeComponentGenerator(const SceneNodeTreeComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-DefaultTreeComponentGenerator::~DefaultTreeComponentGenerator(void)
+SceneNodeTreeComponentGenerator::~SceneNodeTreeComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultTreeComponentGenerator::changed(ConstFieldMaskArg whichField, 
+void SceneNodeTreeComponentGenerator::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void DefaultTreeComponentGenerator::dump(      UInt32    ,
+void SceneNodeTreeComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump DefaultTreeComponentGenerator NI" << std::endl;
+    SLOG << "Dump SceneNodeTreeComponentGenerator NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
