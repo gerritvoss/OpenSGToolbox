@@ -170,11 +170,10 @@ Vec2f Button::getContentRequestedSize(void) const
 
         if(DrawnDrawObject != NULL)
         {
-            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-            DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            Vec2f DrawObjectSize = DrawnDrawObject->getRequestedSize();
 
-            Result[0] += (DrawObjectBottomRight - DrawObjectTopLeft).x();
-            Result[1] = osgMax(Result[1],(DrawObjectBottomRight - DrawObjectTopLeft).y());
+            Result[0] += DrawObjectSize.x();
+            Result[1] = osgMax(Result[1],DrawObjectSize.y());
         }
 
         if(getFont() != NULL && DrawnDrawObject != NULL)
@@ -195,11 +194,10 @@ Vec2f Button::getContentRequestedSize(void) const
 
         if(DrawnDrawObject != NULL)
         {
-            Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-            DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+            Vec2f DrawObjectSize = DrawnDrawObject->getRequestedSize();
 
-            Result[1] += (DrawObjectBottomRight - DrawObjectTopLeft).y();
-            Result[0] = osgMax(Result[0],(DrawObjectBottomRight - DrawObjectTopLeft).x());
+            Result[1] += DrawObjectSize.y();
+            Result[0] = osgMax(Result[0],DrawObjectSize.x());
         }
 
         if(getFont() != NULL && DrawnDrawObject != NULL)
@@ -356,11 +354,9 @@ void Button::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
     if(DrawnDrawObject != NULL)
     {
         //Get the Draw Object Size
-        Pnt2f DrawObjectTopLeft, DrawObjectBottomRight;
-        DrawnDrawObject->getDrawObjectBounds(DrawObjectTopLeft, DrawObjectBottomRight);
+        Vec2f DrawObjectSize = DrawnDrawObject->getRequestedSize();
 
-        Pnt2f BaseDrawObjectTopLeft, BaseDrawObjectBottomRight;
-        BaseDrawObject->getDrawObjectBounds(BaseDrawObjectTopLeft, BaseDrawObjectBottomRight);
+        Vec2f BaseDrawObjectSize = BaseDrawObject->getRequestedSize();
 
         if(getText() != "" && getFont() != NULL)
         {
@@ -374,13 +370,13 @@ void Button::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
             if(getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_LEFT_OF_TEXT || 
                getDrawObjectToTextAlignment() == ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT)
             {
-                InternalsSize.setValues((TextBottomRight.x()-TextTopLeft.x()) + (DrawObjectBottomRight.x()-DrawObjectTopLeft.x()) + getDrawObjectToTextPadding(),
-                                        osgMax((TextBottomRight.y()-TextTopLeft.y()), (DrawObjectBottomRight.y()-DrawObjectTopLeft.y())));
+                InternalsSize.setValues((TextBottomRight.x()-TextTopLeft.x()) + DrawObjectSize.x() + getDrawObjectToTextPadding(),
+                                        osgMax((TextBottomRight.y()-TextTopLeft.y()), DrawObjectSize.y()));
             }
             else
             {
-                InternalsSize.setValues(osgMax((TextBottomRight.x()-TextTopLeft.x()), (DrawObjectBottomRight.x()-DrawObjectTopLeft.x())),
-                                        (TextBottomRight.y()-TextTopLeft.y()) + (DrawObjectBottomRight.y()-DrawObjectTopLeft.y()) + getDrawObjectToTextPadding());
+                InternalsSize.setValues(osgMax((TextBottomRight.x()-TextTopLeft.x()), DrawObjectSize.x()),
+                                        (TextBottomRight.y()-TextTopLeft.y()) + DrawObjectSize.y() + getDrawObjectToTextPadding());
             }
 
             Pnt2f InternalAlignment;
@@ -391,16 +387,16 @@ void Button::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
             switch(getDrawObjectToTextAlignment())
             {
                 case ALIGN_DRAW_OBJECT_LEFT_OF_TEXT:
-                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.5f, 0.0);
+                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, DrawObjectSize,0.5f, 0.0);
                     break;
                 case ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT:
-                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.5f, 1.0);
+                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, DrawObjectSize,0.5f, 1.0);
                     break;
                 case ALIGN_DRAW_OBJECT_ABOVE_TEXT:
-                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),0.0f, 0.5);
+                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, DrawObjectSize,0.0f, 0.5);
                     break;
                 case ALIGN_DRAW_OBJECT_BELOW_TEXT:
-                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),1.0f, 0.5);
+                    DrawObjectAlignedPosition = calculateAlignment(InternalAlignment, InternalsSize, DrawObjectSize,1.0f, 0.5);
                     break;
             }
             //If active then translate the Text by the Active Offset
@@ -432,7 +428,7 @@ void Button::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
         {
             //Just Draw the Draw Object
             Pnt2f AlignedPosition;
-            AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), (BaseDrawObjectBottomRight - BaseDrawObjectTopLeft),getAlignment().y(), getAlignment().x());
+            AlignedPosition = calculateAlignment(TopLeft, (BottomRight-TopLeft), BaseDrawObjectSize,getAlignment().y(), getAlignment().x());
 
             //If active then translate the Text by the Active Offset
             AlignedPosition = AlignedPosition + getDrawnOffset();
@@ -853,31 +849,31 @@ void Button::changed(ConstFieldMaskArg whichField,
 	if(whichField & DrawObjectFieldMask &&
 		getDrawObject() != NULL)
 	{
-			getDrawObject()->setSize(getDrawObject()->getPreferredSize());
+        getDrawObject()->setSize(getDrawObject()->getPreferredSize());
 	}
 	
 	if(whichField & ActiveDrawObjectFieldMask &&
 		getActiveDrawObject() != NULL)
 	{
-			getActiveDrawObject()->setSize(getActiveDrawObject()->getPreferredSize());
+        getActiveDrawObject()->setSize(getActiveDrawObject()->getPreferredSize());
 	}
 	
 	if(whichField & RolloverDrawObjectFieldMask &&
 		getRolloverDrawObject() != NULL)
 	{
-			getRolloverDrawObject()->setSize(getRolloverDrawObject()->getPreferredSize());
+        getRolloverDrawObject()->setSize(getRolloverDrawObject()->getPreferredSize());
 	}
 	
 	if(whichField & DisabledDrawObjectFieldMask &&
 		getDisabledDrawObject() != NULL)
 	{
-			getDisabledDrawObject()->setSize(getDisabledDrawObject()->getPreferredSize());
+        getDisabledDrawObject()->setSize(getDisabledDrawObject()->getPreferredSize());
 	}
 	
 	if(whichField & FocusedDrawObjectFieldMask &&
 		getFocusedDrawObject() != NULL)
 	{
-			getFocusedDrawObject()->setSize(getFocusedDrawObject()->getPreferredSize());
+        getFocusedDrawObject()->setSize(getFocusedDrawObject()->getPreferredSize());
 	}
 }
 
