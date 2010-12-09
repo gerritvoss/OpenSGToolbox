@@ -128,7 +128,7 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObj
         try
         {
             while(index < _FieldList.size() && 
-                  *boost::any_cast<FieldContainerType*>(_FieldList[index]) == *boost::any_cast<FieldContainerType*>(anObject))
+                  *boost::any_cast<FieldContainerType*>(_FieldList[index]) != *boost::any_cast<FieldContainerType*>(anObject))
             {
                 ++index;
             }
@@ -161,12 +161,14 @@ void DerivedFieldContainerComboBoxModel::setSelectedItem(const boost::any& anObj
 /*----------------------- constructors & destructors ----------------------*/
 
 DerivedFieldContainerComboBoxModel::DerivedFieldContainerComboBoxModel(void) :
-    Inherited()
+    Inherited(),
+    _SelectedIndex(-1)
 {
 }
 
 DerivedFieldContainerComboBoxModel::DerivedFieldContainerComboBoxModel(const DerivedFieldContainerComboBoxModel &source) :
-    Inherited(source)
+    Inherited(source),
+    _SelectedIndex(-1)
 {
 }
 
