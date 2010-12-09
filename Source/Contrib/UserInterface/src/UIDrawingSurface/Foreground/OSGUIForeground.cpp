@@ -77,7 +77,7 @@ void UIForeground::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-void UIForeground::draw(DrawEnv * env, Viewport * port)
+void UIForeground::draw(DrawEnv * env)
 {
     if(!getDrawingSurface() ||
        !getDrawingSurface()->getGraphics() ||
@@ -86,10 +86,10 @@ void UIForeground::draw(DrawEnv * env, Viewport * port)
         return;
     }
 
-    if(getDrawingSurface()->getSize().x() != port->getPixelWidth() ||
-       getDrawingSurface()->getSize().y() != port->getPixelHeight())
+    if(getDrawingSurface()->getSize().x() != env->getPixelWidth() ||
+       getDrawingSurface()->getSize().y() != env->getPixelHeight())
     {
-        getDrawingSurface()->setSize(Vec2f(port->getPixelWidth(), port->getPixelHeight()));
+        getDrawingSurface()->setSize(Vec2f(env->getPixelWidth(), env->getPixelHeight()));
     }
 
 	glPushMatrix();
@@ -98,7 +98,7 @@ void UIForeground::draw(DrawEnv * env, Viewport * port)
     glPushMatrix();
     glLoadIdentity();
      
-    glOrtho(0, port->getPixelWidth(), port->getPixelHeight(), 0 , 0, 1);
+    glOrtho(0, env->getPixelWidth(), env->getPixelHeight(), 0 , 0, 1);
 	
 	glMatrixMode(GL_MODELVIEW);
 

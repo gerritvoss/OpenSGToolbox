@@ -80,7 +80,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForeground : public UIForegroundBase
 
     /*! \}                                                                 */
 
-	virtual void draw(DrawEnv * env, Viewport * port);
+	virtual void draw(DrawEnv * env);
 
     /*=========================  PROTECTED  ===============================*/
 
