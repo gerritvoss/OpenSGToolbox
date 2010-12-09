@@ -194,8 +194,6 @@ void MenuBar::updateClipBounds(void)
 void MenuBar::addMenu(Menu* const menu)
 {
     pushToChildren(menu);
-    menu->setTopLevelMenu(true);
-    _PopupMenuCanceledConnections[menu] = menu->getInternalPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuBar::handleMenuArmedPopupMenuCanceled, this, _1));
 }
 
 void MenuBar::addMenu(Menu* const menu, const UInt32& Index)
@@ -203,35 +201,19 @@ void MenuBar::addMenu(Menu* const menu, const UInt32& Index)
     if(Index < getMFChildren()->size())
     {
         insertIntoChildren(Index, menu);
-        menu->setTopLevelMenu(true);
-        _PopupMenuCanceledConnections[menu] = menu->getInternalPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuBar::handleMenuArmedPopupMenuCanceled, this, _1));
     }
 }
 
 void MenuBar::removeMenu(Menu* const menu)
 {
     removeObjFromChildren(menu);
-    menu->setTopLevelMenu(false);
-    if(_PopupMenuCanceledConnections.find(menu) != _PopupMenuCanceledConnections.end())
-    {
-        _PopupMenuCanceledConnections[menu].disconnect();
-        _PopupMenuCanceledConnections.erase(_PopupMenuCanceledConnections.find(menu));
-    }
 }
 
 void MenuBar::removeMenu(const UInt32& Index)
 {
     if(Index < getMFChildren()->size())
     {
-        MenuRefPtr Item(dynamic_cast<Menu*>(getChildren(Index)));
         removeFromChildren(Index);
-
-        Item->setTopLevelMenu(false);
-        if(_PopupMenuCanceledConnections.find(Item) != _PopupMenuCanceledConnections.end())
-        {
-            _PopupMenuCanceledConnections[Item].disconnect();
-            _PopupMenuCanceledConnections.erase(_PopupMenuCanceledConnections.find(Item));
-        }
     }
 }
 
@@ -255,17 +237,8 @@ void MenuBar::mousePressed(MouseEventDetails* const e)
 void MenuBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _SelectionChangedConnection.disconnect();
     _MouseMovedConnection.disconnect();
     _MouseDraggedConnection.disconnect();
-    for(std::map<Menu*, boost::signals2::connection>::iterator MapItor(_PopupMenuCanceledConnections.begin()) ;
-        MapItor != _PopupMenuCanceledConnections.end();
-        ++MapItor)
-    {
-        MapItor->second.disconnect();
-    }
-    _PopupMenuCanceledConnections.clear();
-    _KeyTypedConnection.disconnect();
 }
 
 void MenuBar::setParentWindow(InternalWindow* const parent)
@@ -326,6 +299,25 @@ void MenuBar::changed(ConstFieldMaskArg whichField,
         if(getSelectionModel() != NULL)
         {
             _SelectionChangedConnection = getSelectionModel()->connectSelectionChanged(boost::bind(&MenuBar::handleMenuArmedSelectionChanged, this, _1));
+        }
+    }
+
+    if(whichField & ChildrenFieldMask)
+    {
+        for(std::map<Menu*, boost::signals2::connection>::iterator MapItor(_PopupMenuCanceledConnections.begin()) ;
+            MapItor != _PopupMenuCanceledConnections.end();
+            ++MapItor)
+        {
+            MapItor->second.disconnect();
+        }
+        _PopupMenuCanceledConnections.clear();
+
+        MenuUnrecPtr TheMenu;
+        for(UInt32 i(0) ; i<getMFChildren()->size(); ++i)
+        {
+            TheMenu = dynamic_cast<Menu*>(getChildren(i));
+            TheMenu->setTopLevelMenu(true);
+            _PopupMenuCanceledConnections[TheMenu] = TheMenu->getInternalPopupMenu()->connectPopupMenuCanceled(boost::bind(&MenuBar::handleMenuArmedPopupMenuCanceled, this, _1));
         }
     }
 }
