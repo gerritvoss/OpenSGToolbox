@@ -191,7 +191,6 @@ void MenuItem::actionPreformed(ActionEventDetails* const e)
 void MenuItem::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _AcceleratorTypedConnection.disconnect();
     _FlashUpdateConnection.disconnect();
 }
 

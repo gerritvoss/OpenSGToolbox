@@ -462,9 +462,7 @@ Pnt2f Slider::calculateSliderAlignment(const Pnt2f& Position1, const Vec2f& Size
 void Slider::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _RangeModelStateChangedConnection.disconnect();
     _KnobDragMouseDraggedConnection.disconnect();
-    _KnobMousePressedConnection.disconnect();
     _KnobDragMouseReleasedConnection.disconnect();
     _KnobDragkeyTypedConnection.disconnect();
 }

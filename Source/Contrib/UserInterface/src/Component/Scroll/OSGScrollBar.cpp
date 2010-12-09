@@ -395,14 +395,8 @@ Button* ScrollBar::getScrollBar(void) const
 void ScrollBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _RangeModelConnection.disconnect();
     _ScrollBarDragMouseDraggedConnection.disconnect();
     _ScrollBarDragMouseReleasedConnection.disconnect();
-
-    _MinActionConnection.disconnect();
-    _MaxActionConnection.disconnect();
-    _ScrollBarMousePressedConnection.disconnect();
-    _ScrollFieldActionConnection.disconnect();
 }
 
 void ScrollBar::setRangeModel(BoundedRangeModel * const value)

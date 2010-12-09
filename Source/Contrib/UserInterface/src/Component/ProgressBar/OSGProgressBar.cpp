@@ -186,7 +186,6 @@ void ProgressBar::drawInternal(Graphics* const Graphics, Real32 Opacity) const
 void ProgressBar::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
-    _ProgressStateChangedConnection.disconnect();
     _ProgressUpdateConnection.disconnect();
 
 }
