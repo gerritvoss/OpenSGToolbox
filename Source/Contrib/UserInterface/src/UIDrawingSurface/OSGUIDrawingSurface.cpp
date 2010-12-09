@@ -294,7 +294,9 @@ void UIDrawingSurface::handleMouseClicked(MouseEventDetails* const e)
                 break;
             }
 
-            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
+            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)) &&
+               (getInternalWindows(i) == _mfInternalWindows.back() ||
+                !_mfInternalWindows.back()->getModal()))
             {
                 getInternalWindows(i)->mouseClicked(TransformedMouseEvent);
                 break;
@@ -352,6 +354,7 @@ void UIDrawingSurface::handleMousePressed(MouseEventDetails* const e)
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
+        InternalWindow* MoveToTopWindow(NULL);
         for(Int32 i(_mfInternalWindows.size()-1) ; i>=0 ; --i)
         {
             //If the event is consumed then stop sending the event
@@ -363,13 +366,24 @@ void UIDrawingSurface::handleMousePressed(MouseEventDetails* const e)
 
             if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
             {
-                if(getInternalWindows(i) != getFocusedWindow())
+                if(getInternalWindows(i) != getFocusedWindow() &&
+                   MoveToTopWindow != NULL)
                 {
-                    moveWindowToTop(getInternalWindows(i));
+                    MoveToTopWindow = getInternalWindows(i);
                 }
-                _mfInternalWindows.back()->mousePressed(TransformedMouseEvent);
-                break;
+
+                if(getInternalWindows(i) == _mfInternalWindows.back() ||
+                   !_mfInternalWindows.back()->getModal())
+                {
+                    getInternalWindows(i)->mousePressed(TransformedMouseEvent);
+                    break;
+                }
             }
+        }
+        if(MoveToTopWindow != NULL)
+        {
+            moveWindowToTop(MoveToTopWindow);
+            MoveToTopWindow->takeFocus();
         }
     }
 
@@ -398,7 +412,9 @@ void UIDrawingSurface::handleMouseReleased(MouseEventDetails* const e)
                 break;
             }
 
-            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
+            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)) &&
+               (getInternalWindows(i) == _mfInternalWindows.back() ||
+                !_mfInternalWindows.back()->getModal()))
             {
                 getInternalWindows(i)->mouseReleased(TransformedMouseEvent);
                 break;
@@ -432,7 +448,9 @@ void UIDrawingSurface::handleMouseMoved(MouseEventDetails* const e)
                 break;
             }
 
-            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
+            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)) &&
+               (getInternalWindows(i) == _mfInternalWindows.back() ||
+                !_mfInternalWindows.back()->getModal()))
             {
                 getInternalWindows(i)->mouseMoved(TransformedMouseEvent);
                 break;
@@ -465,7 +483,9 @@ void UIDrawingSurface::handleMouseDragged(MouseEventDetails* const e)
                 break;
             }
 
-            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
+            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)) &&
+               (getInternalWindows(i) == _mfInternalWindows.back() ||
+                !_mfInternalWindows.back()->getModal()))
             {
                 getInternalWindows(i)->mouseDragged(TransformedMouseEvent);
                 break;
@@ -498,7 +518,9 @@ void UIDrawingSurface::handleMouseWheelMoved(MouseWheelEventDetails* const e)
                 break;
             }
 
-            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)))
+            if(isContainedClipBounds(TransformedMouseEvent->getLocation(), getInternalWindows(i)) &&
+               (getInternalWindows(i) == _mfInternalWindows.back() ||
+                !_mfInternalWindows.back()->getModal()))
             {
                 getInternalWindows(i)->mouseWheelMoved(TransformedMouseEvent);
                 break;
@@ -588,8 +610,10 @@ void UIDrawingSurface::detachFromEventProducer(void)
             getInternalWindows(i)->detachFromEventProducer();
         }
     }
-
-    setEventProducer(NULL);
+    else
+    {
+        setEventProducer(NULL);
+    }
 }
     
 void UIDrawingSurface::closeWindows(void)
@@ -699,6 +723,12 @@ void UIDrawingSurface::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    if( (whichField & EventProducerFieldMask) &&
+        getEventProducer() == NULL)
+    {
+        detachFromEventProducer();
+    }
 
     if( (whichField & EventProducerFieldMask) ||
         (whichField & ActiveFieldMask) ||
