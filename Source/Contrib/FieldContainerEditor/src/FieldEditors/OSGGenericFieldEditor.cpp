@@ -152,16 +152,8 @@ void GenericFieldEditor::internalFieldChanged (void)
         {
             TheFieldHandle->pushIndexedValueToStream(TheOutStream, getEditingFieldIndex());
         }
-
-        //Remove quotes from strings
-        if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
-        {
-            _EditingTextField->setText(StrStream.str().substr(1,StrStream.str().size()-2));
-        }
-        else
-        {
-            _EditingTextField->setText(StrStream.str());
-        }
+            
+        _EditingTextField->setText(StrStream.str());
     }
 
 }

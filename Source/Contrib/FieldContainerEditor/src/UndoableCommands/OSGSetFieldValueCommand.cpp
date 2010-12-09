@@ -165,12 +165,6 @@ void SetFieldValueCommand::execute(void)
                 _PrevValue = StrStream.str();
             }
         }
-
-        //Remove quotes from strings
-        if(TheFieldHandle->getType().getContentType() == FieldTraits<std::string>::getType())
-        {
-            _PrevValue = _PrevValue.substr(1,StrStream.str().size()-2);
-        }
     }
 
     //Set the value

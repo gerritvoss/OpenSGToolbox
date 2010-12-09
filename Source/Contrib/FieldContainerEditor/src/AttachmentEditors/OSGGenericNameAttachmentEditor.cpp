@@ -143,6 +143,14 @@ void GenericNameAttachmentEditor::stopEditing  (void)
         NameUnrecPtr  NameAttachment  = 
             dynamic_cast<Name*>(dynamic_cast<AttachmentContainer*>(getEditingFC())->findAttachment(Name::getClassType().getGroupId()));
 
+        if(NameAttachment == NULL)
+        {
+            setName(dynamic_cast<AttachmentContainer*>(getEditingFC()),"");
+            attachFieldCallback();
+            NameAttachment  = 
+                dynamic_cast<Name*>(dynamic_cast<AttachmentContainer*>(getEditingFC())->findAttachment(Name::getClassType().getGroupId()));
+        }
+
         //Call the command to set the Field
         SetFieldValueCommandPtr SetCommand =
             SetFieldValueCommand::create(NameAttachment,
@@ -160,10 +168,12 @@ void GenericNameAttachmentEditor::fieldChanged(FieldContainer *fc, ConstFieldMas
         const Char8* name(getName(dynamic_cast<AttachmentContainer*>(getEditingFC())));
         if(!name)
         {
-            setName(dynamic_cast<AttachmentContainer*>(getEditingFC()),"");
-            name = getName(dynamic_cast<AttachmentContainer*>(getEditingFC()));
+            _EditingTextField->setText("");
         }
-        _EditingTextField->setText(name);
+        else
+        {
+            _EditingTextField->setText(name);
+        }
     }
 }
 
@@ -203,8 +213,11 @@ void GenericNameAttachmentEditor::attachFieldCallback(void)
         NameUnrecPtr  NameAttachment  = 
             dynamic_cast<Name*>(dynamic_cast<AttachmentContainer*>(getEditingFC())->findAttachment(Name::getClassType().getGroupId()));
         
-        //Attach to the Changed function callback for the container
-        NameAttachment->addChangedFunctor(boost::bind(&GenericNameAttachmentEditor::fieldChanged, this, _1, _2),"");
+        if(NameAttachment != NULL)
+        {
+            //Attach to the Changed function callback for the container
+            NameAttachment->addChangedFunctor(boost::bind(&GenericNameAttachmentEditor::fieldChanged, this, _1, _2),"");
+        }
     }
 }
 
@@ -216,8 +229,11 @@ void GenericNameAttachmentEditor::dettachFieldCallback(void)
         NameUnrecPtr  NameAttachment  = 
             dynamic_cast<Name*>(dynamic_cast<AttachmentContainer*>(getEditingFC())->findAttachment(Name::getClassType().getGroupId()));
         
-        //Attach to the Changed function callback for the container
-        NameAttachment->subChangedFunctor(boost::bind(&GenericNameAttachmentEditor::fieldChanged, this, _1, _2));
+        if(NameAttachment != NULL)
+        {
+            //Attach to the Changed function callback for the container
+            NameAttachment->subChangedFunctor(boost::bind(&GenericNameAttachmentEditor::fieldChanged, this, _1, _2));
+        }
     }
 }
 
