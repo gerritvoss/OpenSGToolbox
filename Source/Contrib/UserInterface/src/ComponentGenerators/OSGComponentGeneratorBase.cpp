@@ -88,7 +88,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<ComponentGenerator *>::_type("ComponentGeneratorPtr", "FieldContainerPtr");
+DataType FieldTraits<ComponentGenerator *>::_type("ComponentGeneratorPtr", "AttachmentContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(ComponentGenerator *)
@@ -125,7 +125,7 @@ ComponentGeneratorBase::TypeObject ComponentGeneratorBase::_type(
     "\n"
     "<FieldContainer\n"
     "\tname=\"ComponentGenerator\"\n"
-    "\tparent=\"FieldContainer\"\n"
+    "\tparent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
@@ -191,7 +191,6 @@ void ComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ComponentGeneratorBase::ComponentGeneratorBase(void) :
@@ -210,6 +209,7 @@ ComponentGeneratorBase::ComponentGeneratorBase(const ComponentGeneratorBase &sou
 ComponentGeneratorBase::~ComponentGeneratorBase(void)
 {
 }
+
 
 
 

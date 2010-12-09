@@ -63,7 +63,7 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGFieldContainer.h" // Parent
+#include "OSGAttachmentContainer.h" // Parent
 
 
 #include "OSGComponentGeneratorFields.h"
@@ -74,17 +74,19 @@ class ComponentGenerator;
 
 //! \brief ComponentGenerator Base Class.
 
-class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentGeneratorBase : public FieldContainer
+class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentGeneratorBase : public AttachmentContainer
 {
   public:
 
-    typedef FieldContainer Inherited;
-    typedef FieldContainer ParentContainer;
+    typedef AttachmentContainer Inherited;
+    typedef AttachmentContainer ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(ComponentGenerator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
