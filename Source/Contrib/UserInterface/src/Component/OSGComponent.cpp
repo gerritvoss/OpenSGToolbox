@@ -135,13 +135,7 @@ bool Component::useBoundsForClipping(void) const
 
 void Component::detachFromEventProducer(void)
 {
-    _MouseEnterConnection.disconnect();
-    _MouseExitConnection.disconnect();
     _UpdateConnection.disconnect();
-    _ActiveTooltipClickConnection.disconnect();
-    _ActiveTooltipExitConnection.disconnect();
-    _ActiveTooltipPressConnection.disconnect();
-    _ActiveTooltipReleaseConnection.disconnect();
 }
 
 Pnt2f Component::getClipTopLeft(void) const
@@ -705,22 +699,78 @@ Int32 Component::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, co
 
 bool Component::getScrollableTracksViewportHeight(void)
 {
-    return false;
+    return getScrollTrackingCharacteristics() & SCROLLABLE_TRACKS_VIEWPORT_HEIGHT;
 }
 
 bool Component::getScrollableTracksViewportWidth(void)
 {
-    return false;
+    return getScrollTrackingCharacteristics() & SCROLLABLE_TRACKS_VIEWPORT_WIDTH;
 }
 
 bool Component::getScrollableHeightMinTracksViewport(void)
 {
-    return false;
+    return getScrollTrackingCharacteristics() & SCROLLABLE_HEIGHT_MIN_TRACKS_VIEWPORT;
 }
 
 bool Component::getScrollableWidthMinTracksViewport(void)
 {
-    return false;
+    return getScrollTrackingCharacteristics() & SCROLLABLE_WIDTH_MIN_TRACKS_VIEWPORT;
+}
+
+void Component::setScrollableTracksViewportHeight(bool enable)
+{
+    UInt32 NewMask(getScrollTrackingCharacteristics());
+    if(enable)
+    {
+        NewMask |= static_cast<UInt16>(SCROLLABLE_TRACKS_VIEWPORT_HEIGHT);
+    }
+    else
+    {
+        NewMask &= ~static_cast<UInt16>(SCROLLABLE_TRACKS_VIEWPORT_HEIGHT);
+    }
+    setScrollTrackingCharacteristics(NewMask);
+}
+
+void Component::setScrollableTracksViewportWidth(bool enable)
+{
+    UInt32 NewMask(getScrollTrackingCharacteristics());
+    if(enable)
+    {
+        NewMask |= static_cast<UInt16>(SCROLLABLE_TRACKS_VIEWPORT_WIDTH);
+    }
+    else
+    {
+        NewMask &= ~static_cast<UInt16>(SCROLLABLE_TRACKS_VIEWPORT_WIDTH);
+    }
+    setScrollTrackingCharacteristics(NewMask);
+}
+
+void Component::setScrollableHeightMinTracksViewport(bool enable)
+{
+    UInt32 NewMask(getScrollTrackingCharacteristics());
+    if(enable)
+    {
+        NewMask |= static_cast<UInt16>(SCROLLABLE_HEIGHT_MIN_TRACKS_VIEWPORT);
+    }
+    else
+    {
+        NewMask &= ~static_cast<UInt16>(SCROLLABLE_HEIGHT_MIN_TRACKS_VIEWPORT);
+    }
+    setScrollTrackingCharacteristics(NewMask);
+}
+
+void Component::setScrollableWidthMinTracksViewport(bool enable)
+{
+    UInt32 NewMask(getScrollTrackingCharacteristics());
+    if(enable)
+    {
+        NewMask |= static_cast<UInt16>(SCROLLABLE_WIDTH_MIN_TRACKS_VIEWPORT);
+    }
+    else
+    {
+        NewMask &= ~static_cast<UInt16>(SCROLLABLE_WIDTH_MIN_TRACKS_VIEWPORT);
+    }
+    setScrollTrackingCharacteristics(NewMask);
 }
 
 Int32 Component::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -750,6 +800,24 @@ void Component::scrollToPoint(const Pnt2f& PointInComponent)
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void Component::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    if(getParentWindow() != NULL)
+    {
+        getParentWindow()->setActiveToolTip(NULL);
+    }
+
+    _UpdateConnection.disconnect();
+    _MouseEnterConnection.disconnect();
+    _MouseExitConnection.disconnect();
+    _ActiveTooltipClickConnection.disconnect();
+    _ActiveTooltipExitConnection.disconnect();
+    _ActiveTooltipPressConnection.disconnect();
+    _ActiveTooltipReleaseConnection.disconnect();
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

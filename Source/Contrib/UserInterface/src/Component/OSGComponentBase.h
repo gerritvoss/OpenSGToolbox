@@ -70,7 +70,6 @@
 #include "OSGLayoutConstraintsFields.h" // Constraints type
 #include "OSGBorderFields.h"            // Border type
 #include "OSGLayerFields.h"             // Background type
-#include "OSGTransferHandlerFields.h"   // TransferHandler type
 #include "OSGBaseFields.h"              // ToolTipText type
 #include "OSGFieldContainerFields.h"    // ParentContainer type
 #include "OSGPopupMenuFields.h"         // PopupMenu type
@@ -168,8 +167,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         DisabledBorderFieldId = BackgroundFieldId + 1,
         DisabledBackgroundFieldId = DisabledBorderFieldId + 1,
         DragEnabledFieldId = DisabledBackgroundFieldId + 1,
-        TransferHandlerFieldId = DragEnabledFieldId + 1,
-        FocusedBorderFieldId = TransferHandlerFieldId + 1,
+        ScrollTrackingCharacteristicsFieldId = DragEnabledFieldId + 1,
+        FocusedBorderFieldId = ScrollTrackingCharacteristicsFieldId + 1,
         FocusedBackgroundFieldId = FocusedBorderFieldId + 1,
         RolloverBorderFieldId = FocusedBackgroundFieldId + 1,
         RolloverBackgroundFieldId = RolloverBorderFieldId + 1,
@@ -216,8 +215,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << DisabledBackgroundFieldId);
     static const OSG::BitVector DragEnabledFieldMask =
         (TypeTraits<BitVector>::One << DragEnabledFieldId);
-    static const OSG::BitVector TransferHandlerFieldMask =
-        (TypeTraits<BitVector>::One << TransferHandlerFieldId);
+    static const OSG::BitVector ScrollTrackingCharacteristicsFieldMask =
+        (TypeTraits<BitVector>::One << ScrollTrackingCharacteristicsFieldId);
     static const OSG::BitVector FocusedBorderFieldMask =
         (TypeTraits<BitVector>::One << FocusedBorderFieldId);
     static const OSG::BitVector FocusedBackgroundFieldMask =
@@ -264,7 +263,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFUnrecBorderPtr  SFDisabledBorderType;
     typedef SFUnrecLayerPtr   SFDisabledBackgroundType;
     typedef SFBool            SFDragEnabledType;
-    typedef SFUnrecTransferHandlerPtr SFTransferHandlerType;
+    typedef SFUInt16          SFScrollTrackingCharacteristicsType;
     typedef SFUnrecBorderPtr  SFFocusedBorderType;
     typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
     typedef SFUnrecBorderPtr  SFRolloverBorderType;
@@ -366,8 +365,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     virtual       SFBool              *editSFDragEnabled    (void);
     virtual const SFBool              *getSFDragEnabled     (void) const;
-    virtual const SFUnrecTransferHandlerPtr *getSFTransferHandler(void) const;
-    virtual       SFUnrecTransferHandlerPtr *editSFTransferHandler(void);
+
+    virtual       SFUInt16            *editSFScrollTrackingCharacteristics(void);
+    virtual const SFUInt16            *getSFScrollTrackingCharacteristics (void) const;
     virtual const SFUnrecBorderPtr    *getSFFocusedBorder  (void) const;
     virtual       SFUnrecBorderPtr    *editSFFocusedBorder  (void);
     virtual const SFUnrecLayerPtr     *getSFFocusedBackground(void) const;
@@ -437,7 +437,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual       bool                &editDragEnabled    (void);
     virtual       bool                 getDragEnabled     (void) const;
 
-    virtual       TransferHandler * getTransferHandler(void) const;
+    virtual       UInt16              &editScrollTrackingCharacteristics(void);
+    virtual       UInt16               getScrollTrackingCharacteristics (void) const;
 
     virtual       Border * getFocusedBorder  (void) const;
 
@@ -488,7 +489,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual void setDisabledBorder (Border * const value);
     virtual void setDisabledBackground(Layer * const value);
     virtual void setDragEnabled    (const bool value);
-    virtual void setTransferHandler(TransferHandler * const value);
+    virtual void setScrollTrackingCharacteristics(const UInt16 value);
     virtual void setFocusedBorder  (Border * const value);
     virtual void setFocusedBackground(Layer * const value);
     virtual void setRolloverBorder (Border * const value);
@@ -819,7 +820,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFUnrecBorderPtr  _sfDisabledBorder;
     SFUnrecLayerPtr   _sfDisabledBackground;
     SFBool            _sfDragEnabled;
-    SFUnrecTransferHandlerPtr _sfTransferHandler;
+    SFUInt16          _sfScrollTrackingCharacteristics;
     SFUnrecBorderPtr  _sfFocusedBorder;
     SFUnrecLayerPtr   _sfFocusedBackground;
     SFUnrecBorderPtr  _sfRolloverBorder;
@@ -911,8 +912,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     EditFieldHandlePtr editHandleDisabledBackground(void);
     GetFieldHandlePtr  getHandleDragEnabled     (void) const;
     EditFieldHandlePtr editHandleDragEnabled    (void);
-    GetFieldHandlePtr  getHandleTransferHandler (void) const;
-    EditFieldHandlePtr editHandleTransferHandler(void);
+    GetFieldHandlePtr  getHandleScrollTrackingCharacteristics (void) const;
+    EditFieldHandlePtr editHandleScrollTrackingCharacteristics(void);
     GetFieldHandlePtr  getHandleFocusedBorder   (void) const;
     EditFieldHandlePtr editHandleFocusedBorder  (void);
     GetFieldHandlePtr  getHandleFocusedBackground (void) const;

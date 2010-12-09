@@ -239,8 +239,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
 
     virtual       SFBool              *editSFDragEnabled    (void);
     virtual const SFBool              *getSFDragEnabled     (void) const;
-    virtual const SFUnrecTransferHandlerPtr *getSFTransferHandler(void) const;
-    virtual       SFUnrecTransferHandlerPtr *editSFTransferHandler(void);
+
+    virtual       SFUInt16            *editSFScrollTrackingCharacteristics(void);
+    virtual const SFUInt16            *getSFScrollTrackingCharacteristics (void) const;
     virtual const SFUnrecBorderPtr    *getSFFocusedBorder  (void) const;
     virtual       SFUnrecBorderPtr    *editSFFocusedBorder  (void);
     virtual const SFUnrecLayerPtr     *getSFFocusedBackground(void) const;
@@ -311,7 +312,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual       bool                &editDragEnabled    (void);
     virtual       bool                 getDragEnabled     (void) const;
 
-    virtual       TransferHandler * getTransferHandler(void) const;
+    virtual       UInt16              &editScrollTrackingCharacteristics(void);
+    virtual       UInt16               getScrollTrackingCharacteristics (void) const;
 
     virtual       Border * getFocusedBorder  (void) const;
 
@@ -363,7 +365,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual void setDisabledBorder (Border * const value);
     virtual void setDisabledBackground(Layer * const value);
     virtual void setDragEnabled    (const bool value);
-    virtual void setTransferHandler(TransferHandler * const value);
+    virtual void setScrollTrackingCharacteristics(const UInt16 value);
     virtual void setFocusedBorder  (Border * const value);
     virtual void setFocusedBackground(Layer * const value);
     virtual void setRolloverBorder (Border * const value);
@@ -760,8 +762,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     EditFieldHandlePtr editHandleDisabledBackground(void);
     GetFieldHandlePtr  getHandleDragEnabled     (void) const;
     EditFieldHandlePtr editHandleDragEnabled    (void);
-    GetFieldHandlePtr  getHandleTransferHandler (void) const;
-    EditFieldHandlePtr editHandleTransferHandler(void);
+    GetFieldHandlePtr  getHandleScrollTrackingCharacteristics (void) const;
+    EditFieldHandlePtr editHandleScrollTrackingCharacteristics(void);
     GetFieldHandlePtr  getHandleFocusedBorder   (void) const;
     EditFieldHandlePtr editHandleFocusedBorder  (void);
     GetFieldHandlePtr  getHandleFocusedBackground (void) const;

@@ -146,8 +146,8 @@ void ComponentBase::execSync (      ComponentBase *pFrom,
     if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
         _sfDragEnabled.syncWith(pFrom->_sfDragEnabled);
 
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
-        _sfTransferHandler.syncWith(pFrom->_sfTransferHandler);
+    if(FieldBits::NoField != (ScrollTrackingCharacteristicsFieldMask & whichField))
+        _sfScrollTrackingCharacteristics.syncWith(pFrom->_sfScrollTrackingCharacteristics);
 
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
         _sfFocusedBorder.syncWith(pFrom->_sfFocusedBorder);

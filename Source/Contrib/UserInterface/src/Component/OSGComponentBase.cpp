@@ -62,7 +62,6 @@
 #include "OSGLayoutConstraints.h"       // Constraints Class
 #include "OSGBorder.h"                  // Border Class
 #include "OSGLayer.h"                   // Background Class
-#include "OSGTransferHandler.h"         // TransferHandler Class
 #include "OSGFieldContainer.h"          // ParentContainer Class
 #include "OSGPopupMenu.h"               // PopupMenu Class
 
@@ -151,7 +150,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var TransferHandler * ComponentBase::_sfTransferHandler
+/*! \var UInt16          ComponentBase::_sfScrollTrackingCharacteristics
     
 */
 
@@ -431,15 +430,15 @@ void ComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecTransferHandlerPtr::Description(
-        SFUnrecTransferHandlerPtr::getClassType(),
-        "TransferHandler",
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "ScrollTrackingCharacteristics",
         "",
-        TransferHandlerFieldId, TransferHandlerFieldMask,
+        ScrollTrackingCharacteristicsFieldId, ScrollTrackingCharacteristicsFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleTransferHandler),
-        static_cast<FieldGetMethodSig >(&Component::getHandleTransferHandler));
+        static_cast<FieldEditMethodSig>(&Component::editHandleScrollTrackingCharacteristics),
+        static_cast<FieldGetMethodSig >(&Component::getHandleScrollTrackingCharacteristics));
 
     oType.addInitialDesc(pDesc);
 
@@ -637,6 +636,7 @@ ComponentBase::TypeObject ComponentBase::_type(
     "    decoratable=\"true\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
+    "    fieldsUnmarkedOnCreate=\"EnabledFieldMask\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     "    childFields=\"multi\"\n"
     ">\n"
@@ -793,12 +793,12 @@ ComponentBase::TypeObject ComponentBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"TransferHandler\"\n"
-    "\t\ttype=\"TransferHandler\"\n"
-    "\t\tcategory=\"pointer\"\n"
+    "\t\tname=\"ScrollTrackingCharacteristics\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "\t\tcategory=\"data\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\tdefaultValue=\"Component::SCROLLABLE_TRACKING_OFF\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -1429,18 +1429,18 @@ const SFBool *ComponentBase::getSFDragEnabled(void) const
 }
 
 
-//! Get the Component::_sfTransferHandler field.
-const SFUnrecTransferHandlerPtr *ComponentBase::getSFTransferHandler(void) const
+SFUInt16 *ComponentBase::editSFScrollTrackingCharacteristics(void)
 {
-    return &_sfTransferHandler;
+    editSField(ScrollTrackingCharacteristicsFieldMask);
+
+    return &_sfScrollTrackingCharacteristics;
 }
 
-SFUnrecTransferHandlerPtr *ComponentBase::editSFTransferHandler(void)
+const SFUInt16 *ComponentBase::getSFScrollTrackingCharacteristics(void) const
 {
-    editSField(TransferHandlerFieldMask);
-
-    return &_sfTransferHandler;
+    return &_sfScrollTrackingCharacteristics;
 }
+
 
 //! Get the Component::_sfFocusedBorder field.
 const SFUnrecBorderPtr *ComponentBase::getSFFocusedBorder(void) const
@@ -1682,9 +1682,9 @@ UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfDragEnabled.getBinSize();
     }
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollTrackingCharacteristicsFieldMask & whichField))
     {
-        returnValue += _sfTransferHandler.getBinSize();
+        returnValue += _sfScrollTrackingCharacteristics.getBinSize();
     }
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
@@ -1811,9 +1811,9 @@ void ComponentBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfDragEnabled.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollTrackingCharacteristicsFieldMask & whichField))
     {
-        _sfTransferHandler.copyToBin(pMem);
+        _sfScrollTrackingCharacteristics.copyToBin(pMem);
     }
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
@@ -1938,9 +1938,9 @@ void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
     {
         _sfDragEnabled.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (TransferHandlerFieldMask & whichField))
+    if(FieldBits::NoField != (ScrollTrackingCharacteristicsFieldMask & whichField))
     {
-        _sfTransferHandler.copyFromBin(pMem);
+        _sfScrollTrackingCharacteristics.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
@@ -2122,7 +2122,7 @@ void ComponentBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _ComponentDisabledEvent(dynamic_cast<ComponentDisabledEventDetailsType* const>(e), ComponentDisabledEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -2191,7 +2191,7 @@ boost::signals2::connection ComponentBase::connectEvent(UInt32 eventId,
         return _ComponentDisabledEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -2264,7 +2264,7 @@ boost::signals2::connection  ComponentBase::connectEvent(UInt32 eventId,
         return _ComponentDisabledEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -2334,7 +2334,7 @@ void  ComponentBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_
         _ComponentDisabledEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -2401,7 +2401,7 @@ void  ComponentBase::disconnectAllSlotsEvent(UInt32 eventId)
         _ComponentDisabledEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -2468,7 +2468,7 @@ bool  ComponentBase::isEmptyEvent(UInt32 eventId) const
         return _ComponentDisabledEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -2536,7 +2536,7 @@ UInt32  ComponentBase::numSlotsEvent(UInt32 eventId) const
         return _ComponentDisabledEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }
@@ -2564,7 +2564,7 @@ ComponentBase::ComponentBase(void) :
     _sfDisabledBorder         (NULL),
     _sfDisabledBackground     (NULL),
     _sfDragEnabled            (bool(false)),
-    _sfTransferHandler        (NULL),
+    _sfScrollTrackingCharacteristics(UInt16(Component::SCROLLABLE_TRACKING_OFF)),
     _sfFocusedBorder          (NULL),
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
@@ -2601,7 +2601,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfDisabledBorder         (NULL),
     _sfDisabledBackground     (NULL),
     _sfDragEnabled            (source._sfDragEnabled            ),
-    _sfTransferHandler        (NULL),
+    _sfScrollTrackingCharacteristics(source._sfScrollTrackingCharacteristics),
     _sfFocusedBorder          (NULL),
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
@@ -2750,8 +2750,6 @@ void ComponentBase::onCreate(const Component *source)
         pThis->setDisabledBorder(source->getDisabledBorder());
 
         pThis->setDisabledBackground(source->getDisabledBackground());
-
-        pThis->setTransferHandler(source->getTransferHandler());
 
         pThis->setFocusedBorder(source->getFocusedBorder());
 
@@ -3163,30 +3161,27 @@ EditFieldHandlePtr ComponentBase::editHandleDragEnabled    (void)
     return returnValue;
 }
 
-GetFieldHandlePtr ComponentBase::getHandleTransferHandler (void) const
+GetFieldHandlePtr ComponentBase::getHandleScrollTrackingCharacteristics (void) const
 {
-    SFUnrecTransferHandlerPtr::GetHandlePtr returnValue(
-        new  SFUnrecTransferHandlerPtr::GetHandle(
-             &_sfTransferHandler,
-             this->getType().getFieldDesc(TransferHandlerFieldId),
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfScrollTrackingCharacteristics,
+             this->getType().getFieldDesc(ScrollTrackingCharacteristicsFieldId),
              const_cast<ComponentBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr ComponentBase::editHandleTransferHandler(void)
+EditFieldHandlePtr ComponentBase::editHandleScrollTrackingCharacteristics(void)
 {
-    SFUnrecTransferHandlerPtr::EditHandlePtr returnValue(
-        new  SFUnrecTransferHandlerPtr::EditHandle(
-             &_sfTransferHandler,
-             this->getType().getFieldDesc(TransferHandlerFieldId),
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfScrollTrackingCharacteristics,
+             this->getType().getFieldDesc(ScrollTrackingCharacteristicsFieldId),
              this));
 
-    returnValue->setSetMethod(
-        boost::bind(&Component::setTransferHandler,
-                    static_cast<Component *>(this), _1));
 
-    editSField(TransferHandlerFieldMask);
+    editSField(ScrollTrackingCharacteristicsFieldMask);
 
     return returnValue;
 }
@@ -3801,8 +3796,6 @@ void ComponentBase::resolveLinks(void)
 
     static_cast<Component *>(this)->setDisabledBackground(NULL);
 
-    static_cast<Component *>(this)->setTransferHandler(NULL);
-
     static_cast<Component *>(this)->setFocusedBorder(NULL);
 
     static_cast<Component *>(this)->setFocusedBackground(NULL);
@@ -4126,19 +4119,28 @@ void ComponentBase::setDragEnabled(const bool value)
 
     _sfDragEnabled.setValue(value);
 }
+//! Get the value of the Component::_sfScrollTrackingCharacteristics field.
 
-//! Get the value of the Component::_sfTransferHandler field.
-TransferHandler * ComponentBase::getTransferHandler(void) const
+UInt16 &ComponentBase::editScrollTrackingCharacteristics(void)
 {
-    return _sfTransferHandler.getValue();
+    editSField(ScrollTrackingCharacteristicsFieldMask);
+
+    return _sfScrollTrackingCharacteristics.getValue();
 }
 
-//! Set the value of the Component::_sfTransferHandler field.
-void ComponentBase::setTransferHandler(TransferHandler * const value)
+//! Get the value of the Component::_sfScrollTrackingCharacteristics field.
+      UInt16  ComponentBase::getScrollTrackingCharacteristics(void) const
 {
-    editSField(TransferHandlerFieldMask);
+    return _sfScrollTrackingCharacteristics.getValue();
+}
 
-    _sfTransferHandler.setValue(value);
+
+//! Set the value of the Component::_sfScrollTrackingCharacteristics field.
+void ComponentBase::setScrollTrackingCharacteristics(const UInt16 value)
+{
+    editSField(ScrollTrackingCharacteristicsFieldMask);
+
+    _sfScrollTrackingCharacteristics.setValue(value);
 }
 
 //! Get the value of the Component::_sfFocusedBorder field.

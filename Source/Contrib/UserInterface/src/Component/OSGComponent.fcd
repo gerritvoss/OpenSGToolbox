@@ -168,12 +168,12 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="TransferHandler"
-		type="TransferHandler"
-		category="pointer"
+		name="ScrollTrackingCharacteristics"
+		type="UInt16"
+		category="data"
 		cardinality="single"
 		visibility="external"
-		defaultValue="NULL"
+		defaultValue="Component::SCROLLABLE_TRACKING_OFF"
 		access="public"
 	>
 	</Field>

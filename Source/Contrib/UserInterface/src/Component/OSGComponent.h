@@ -63,6 +63,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     /*==========================  PUBLIC  =================================*/
 
   public:
+    enum ScrollTrackingMasks
+    {
+        SCROLLABLE_TRACKING_OFF               = 0,
+        SCROLLABLE_TRACKS_VIEWPORT_HEIGHT     = 1,
+        SCROLLABLE_TRACKS_VIEWPORT_WIDTH      = 2,
+        SCROLLABLE_HEIGHT_MIN_TRACKS_VIEWPORT = 4,
+        SCROLLABLE_WIDTH_MIN_TRACKS_VIEWPORT  = 8
+    };
 
     typedef ComponentBase Inherited;
     typedef Component     Self;
@@ -159,6 +167,18 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
     virtual bool getScrollableWidthMinTracksViewport(void);
 
+    //Sets whether a viewport should always force the height of this Scrollable to match the height of the viewport.
+    void setScrollableTracksViewportHeight(bool enable);
+
+    //Sets whether a viewport should always force the width of this Scrollable to match the width of the viewport.
+    void setScrollableTracksViewportWidth(bool enable);
+
+    //Sets whether a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
+    void setScrollableHeightMinTracksViewport(bool enable);
+
+    //Sets whether a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
+    void setScrollableWidthMinTracksViewport(bool enable);
+
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one new row or column, depending on the value of orientation.
     virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 
@@ -208,6 +228,13 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     /*! \{                                                                 */
 
     static void initMethod(InitPhase ePhase);
+
+    /*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
 
     /*! \}                                                                 */
 
