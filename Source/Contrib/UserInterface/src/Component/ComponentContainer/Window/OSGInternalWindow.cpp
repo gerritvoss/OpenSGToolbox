@@ -782,16 +782,13 @@ void InternalWindow::detachFromEventProducer(void)
 {
     Inherited::detachFromEventProducer();
     destroyPopupMenu();
-    _TitleBarMousePressedConnection.disconnect();
+
     _TitlebarDragMouseDraggedConnection.disconnect();
     _TitlebarDragMouseReleasedConnection.disconnect();
     _TitlebarDragKeyPressedConnection.disconnect();
     _BorderDragMouseDraggedConnection.disconnect();
-    _BorderDragMouseReleasedConnection.disconnect();
+    _BorderDragMouseDraggedConnection.disconnect();
     _BorderDragKeyPressedConnection.disconnect();
-    _CloseButtonActionConnection.disconnect();
-    _MaximizeButtonActionConnection.disconnect();
-    _IconifyButtonActionConnection.disconnect();
 }
 
 
@@ -995,6 +992,8 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
     if( (whichField & ActiveToolTipFieldMask) &&
         getActiveToolTip() != NULL)
     {
+        getActiveToolTip()->setVisible(true);
+        getActiveToolTip()->setEnabled(true);
         getActiveToolTip()->updateClipBounds();
     }
 
@@ -1005,7 +1004,7 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
         for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
         {
             getActivePopupMenus(i)->setParentWindow(this);
-            _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseClicked(boost::bind(&InternalWindow::popupMenuMousePressed, this, _1)))));
+            _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseClicked(boost::bind(&InternalWindow::popupMenuMouseClicked, this, _1)))));
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMousePressed(boost::bind(&InternalWindow::popupMenuMousePressed, this, _1)))));
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&InternalWindow::popupMenuMouseReleased, this, _1)))));
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectKeyPressed(boost::bind(&InternalWindow::popupMenuKeyPressed, this, _1)))));
