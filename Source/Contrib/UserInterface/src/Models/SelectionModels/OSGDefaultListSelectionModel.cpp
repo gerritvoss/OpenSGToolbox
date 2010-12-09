@@ -601,18 +601,24 @@ void DefaultListSelectionModel::changed(ConstFieldMaskArg whichField,
 
     if(whichField & SelectionModeFieldMask)
     {
-        // if there were objects selected, since they might not fit into
-	    // the new mode, just clear them all out
-	    if (!_RangeSelectionList.empty())
-	    {   
-            // only necessary to do anything if it isn't already empty
-            std::vector<UInt32> PrevSelectedIndexes(getSelectedIndexes());
-		    _RangeSelectionList.clear();
-		    updateMinMax();
-            std::vector<UInt32> SelectedIndexes(getSelectedIndexes());
-		    ListSelectionEventDetailsUnrecPtr Details = ListSelectionEventDetails::create(this, getSystemTime(), _MinSelectionIndex, _MaxSelectionIndex, SelectedIndexes, PrevSelectedIndexes, _ValueIsAdjusting);
-		    produceSelectionChanged(Details);
-	    }
+		switch (getSelectionMode())
+		{
+			case SINGLE_SELECTION:
+                if(getMinSelectionIndex() != -1)
+                {
+                    setSelectionInterval(getMinSelectionIndex(),getMinSelectionIndex());
+                }
+                break;
+			case SINGLE_INTERVAL_SELECTION:
+                if(getMinSelectionIndex() != -1)
+                {
+                    setSelectionInterval(getMinSelectionIndex(),getMinSelectionIndex());
+                }
+                break;
+			case MULTIPLE_INTERVAL_SELECTION:
+                //No need to do anything
+                break;
+        }
     }
 }
 
