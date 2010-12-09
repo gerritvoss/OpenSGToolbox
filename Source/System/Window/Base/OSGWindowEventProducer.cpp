@@ -162,9 +162,12 @@ ViewportUnrecPtr WindowEventProducer::windowToViewport(const Pnt2f& WindowPoint,
 	for(UInt32 i(0) ; i<getMFPort()->size() ; ++i)
 	{
 		ThePort = getPort(i);
-        ViewportPoint.setValues(WindowPoint.x() - ThePort->getPixelLeft(), WindowPoint.y() - ThePort->getPixelBottom());
-		
-        return ThePort;
+        if(ThePort->getEnabled())
+        {
+            ViewportPoint.setValues(WindowPoint.x() - ThePort->getPixelLeft(), WindowPoint.y() - ThePort->getPixelBottom());
+    		
+            return ThePort;
+        }
 		
 	}
 	return NULL;
@@ -246,19 +249,20 @@ void WindowEventProducer::produceMouseReleased(const MouseEventDetails::MouseBut
 
 	TimeStamp t(getSystemTime());
 	validateClickCount(Button, t, Location);
-   Pnt2f ViewportLocation;
-   ViewportUnrecPtr ResultViewport;
-   ResultViewport = windowToViewport(Location, ViewportLocation);
-   if(_ButtonClickMap[Button] == Location)
-   {
-	   produceMouseClicked(Button, Location);
-   }
-   if(ResultViewport != NULL)
-   {
-	   MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
+    Pnt2f ViewportLocation;
+    Real32 DriftAllowance(InputSettings::the()->getMultipleClickMouseDriftAllowance());
+    if(Location.dist2(_ButtonClickMap[Button]) <= (DriftAllowance * DriftAllowance))
+    {
+        produceMouseClicked(Button, Location);
+    }
+    ViewportUnrecPtr ResultViewport;
+    ResultViewport = windowToViewport(Location, ViewportLocation);
+    if(ResultViewport != NULL)
+    {
+        MouseEventDetailsUnrecPtr Details = MouseEventDetails::create(this, t, Button, _ButtonClickCountMap[Button].size(), ViewportLocation, ResultViewport );
 
-       WindowEventProducerBase::produceMouseReleased(Details);
-   }
+        WindowEventProducerBase::produceMouseReleased(Details);
+    }
 }
 
 
