@@ -78,18 +78,20 @@ Action::ResultE updateOsgOde(Node* const node)
         AttachmentUnrecPtr a = node->findAttachment(PhysicsBody::getClassType());
         if(a!=NULL)
         {
-            Matrix m,r;
+            Matrix m;
             PhysicsBodyUnrecPtr body = dynamic_pointer_cast<PhysicsBody>(a);
             body->updateToODEState();
 
-            //update the position
-            m.setIdentity();
-            r.setIdentity();
-            Vec3f p = body->getPosition();
-            Quaternion q = body->getQuaternion();
-            r.setRotate(q);
-            m.setTransform(p);
-            m.mult(r);
+            //update the position and rotation, but keep the scaling
+
+            Vec3f Translation, Scale;
+            Quaternion Rotation, ScaleOrientation;
+            t->getMatrix().getTransform(Translation,Rotation,Scale,ScaleOrientation);
+            Translation = body->getPosition();
+            Rotation = body->getQuaternion();
+            
+            m.setTransform(Translation,Rotation,Scale,ScaleOrientation);
+
             t->setMatrix(m);
             //update BB
             node->updateVolume();

@@ -53,6 +53,7 @@
 #include "OSGChunkMaterial.h"
 #include "OSGMaterialChunk.h"
 #include "OSGBlendChunk.h"
+#include "OSGDepthChunk.h"
 #include "OSGPolygonChunk.h"
 #include "OSGAction.h"
 
@@ -104,18 +105,31 @@ MaterialUnrecPtr PhysicsCharacteristicsDrawable::getDefaultMaterial(void) const
     if(_DefaultMaterial == NULL)
     {
         BlendChunkUnrecPtr TheBlend = BlendChunk::create();
-            TheBlend->setSrcFactor(GL_SRC_ALPHA);
-            TheBlend->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+        TheBlend->setSrcFactor(GL_SRC_ALPHA);
+        TheBlend->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 
         PolygonChunkUnrecPtr ThePolyChunk = PolygonChunk::create();
-            ThePolyChunk->setCullFace(GL_BACK);
-            ThePolyChunk->setOffsetFactor(-1.0f);
-            ThePolyChunk->setOffsetBias(2.0f);
-            ThePolyChunk->setOffsetFill(true);
+        ThePolyChunk->setCullFace(GL_BACK);
+        ThePolyChunk->setOffsetFactor(-1.0f);
+        ThePolyChunk->setOffsetBias(2.0f);
+        ThePolyChunk->setOffsetFill(true);
+
+        MaterialChunkUnrecPtr TheMaterialChunk = MaterialChunk::create();
+        TheMaterialChunk->setAmbient(Color4f(0.2f,0.2f,0.2f,1.0f));
+        TheMaterialChunk->setDiffuse(Color4f(0.8f,0.8f,0.8f,1.0f));
+        TheMaterialChunk->setSpecular(Color4f(1.0f,1.0f,1.0f,1.0f));
+        TheMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+        TheMaterialChunk->setLit(true);
+
+        DepthChunkUnrecPtr TheDepthChunk = DepthChunk::create();
+        TheDepthChunk->setEnable(true);
+        TheDepthChunk->setReadOnly(false);
 
         _DefaultMaterial = ChunkMaterial::create();
-            dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(TheBlend);
-            dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(ThePolyChunk);
+        dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(TheBlend);
+        dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(ThePolyChunk);
+        dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(TheMaterialChunk);
+        dynamic_pointer_cast<ChunkMaterial>(_DefaultMaterial)->addChunk(TheDepthChunk);
 
     }
 
@@ -168,10 +182,10 @@ Action::ResultE PhysicsCharacteristicsDrawable::enter(Node*& node)
     }
     if(getDrawJoints())
     {
-        dropPhysicsBody(_DrawAction, node,getDefaultMaterial());
     }
     if(getDrawBodies())
     {
+        dropPhysicsBody(_DrawAction, node,getDefaultMaterial());
     }
     if(getDrawSpaces())
     {

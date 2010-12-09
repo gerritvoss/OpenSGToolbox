@@ -106,6 +106,10 @@ PhysicsBodyUnrecPtr PhysicsBody::create(PhysicsWorldUnrecPtr World)
 
 dBodyID PhysicsBody::getBodyID(void)
 {
+    if(_BodyID == 0 && getWorld() != NULL)
+    {
+        _BodyID = dBodyCreate(getWorld()->getWorldID());
+    }
     return _BodyID;
 }
 
@@ -625,7 +629,7 @@ void PhysicsBody::changed(ConstFieldMaskArg whichField,
                 || (whichField & WorldFieldMask))
             && getWorld() != NULL)
     {
-        dBodySetFiniteRotationMode(_BodyID, getGravityMode());
+        dBodySetGravityMode(_BodyID, getGravityMode());
     }
     if(   ((whichField & LinearDampingFieldMask)
                 || (whichField & WorldFieldMask))
@@ -680,14 +684,30 @@ void PhysicsBody::changed(ConstFieldMaskArg whichField,
                 || (whichField & WorldFieldMask))
             && getWorld() != NULL)
     {
-        dMass TheMass;
-        dBodyGetMass(_BodyID, &TheMass);
+        //dMass TheMass;
+        //dBodyGetMass(_BodyID, &TheMass);
 
-        TheMass.c[0] = getMassCenterOfGravity().x();
-        TheMass.c[1] = getMassCenterOfGravity().y();
-        TheMass.c[2] = getMassCenterOfGravity().z();
+        ////TheMass.c[0] = getMassCenterOfGravity().x();
+        ////TheMass.c[1] = getMassCenterOfGravity().y();
+        ////TheMass.c[2] = getMassCenterOfGravity().z();
 
-        dBodySetMass(_BodyID, &TheMass);
+        //Vec4f v1 =  getMassInertiaTensor()[0];
+        //Vec4f v2 =  getMassInertiaTensor()[1];
+        //Vec4f v3 =  getMassInertiaTensor()[2];
+        //TheMass.I[0]   = v1.x();
+        //TheMass.I[1]   = v1.y();
+        //TheMass.I[2]   = v1.z();
+        //TheMass.I[3]   = getMassCenterOfGravity().x();
+        //TheMass.I[4]   = v2.x();
+        //TheMass.I[5]   = v2.y();
+        //TheMass.I[6]   = v2.z();
+        //TheMass.I[7]   = getMassCenterOfGravity().y();
+        //TheMass.I[8]   = v3.x();
+        //TheMass.I[9]   = v3.y();
+        //TheMass.I[10]  = v3.z();
+        //TheMass.I[11]  = getMassCenterOfGravity().z();
+
+        //dBodySetMass(_BodyID, &TheMass);
     }
     if(   ((whichField & MassInertiaTensorFieldMask)
                 || (whichField & WorldFieldMask))

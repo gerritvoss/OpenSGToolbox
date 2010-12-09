@@ -18,6 +18,9 @@ void drawPhysicsGeom(const PhysicsBoxGeomUnrecPtr geom)
           p100(p111.x(), p000.y(), p000.z()),
           p101(p111.x(), p000.y(), p111.z()),
           p110(p111.x(), p111.y(), p000.z());
+    Vec3f PosX(1.0f,0.0f,0.0f),
+          PosY(0.0f,1.0f,0.0f),
+          PosZ(0.0f,0.0f,1.0f);
     
     //Transform by the bodies position and rotation
     Matrix m(geom->getTransformation());
@@ -31,38 +34,51 @@ void drawPhysicsGeom(const PhysicsBoxGeomUnrecPtr geom)
     m.mult(p110,p110);
     m.mult(p111,p111);
 
+    m.mult(PosX,PosX);
+    m.mult(PosY,PosY);
+    m.mult(PosZ,PosZ);
+    Vec3f NegX(-PosX),
+          NegY(-PosY),
+          NegZ(-PosZ);
+
     glBegin(GL_QUADS);
         // Front Face
+        glNormal3fv(NegZ.getValues());
         glVertex3fv(p110.getValues());
         glVertex3fv(p100.getValues());
         glVertex3fv(p000.getValues());
         glVertex3fv(p010.getValues());
 
         // Back Face
+        glNormal3fv(PosZ.getValues());
         glVertex3fv(p111.getValues());
         glVertex3fv(p011.getValues());
         glVertex3fv(p001.getValues());
         glVertex3fv(p101.getValues());
 
         // Top Face
+        glNormal3fv(NegY.getValues());
         glVertex3fv(p101.getValues());
         glVertex3fv(p001.getValues());
         glVertex3fv(p000.getValues());
         glVertex3fv(p100.getValues());
         
         // Bottom Face
+        glNormal3fv(PosY.getValues());
         glVertex3fv(p111.getValues());
         glVertex3fv(p110.getValues());
         glVertex3fv(p010.getValues());
         glVertex3fv(p011.getValues());
 
         // Right face
+        glNormal3fv(NegX.getValues());
         glVertex3fv(p011.getValues());
         glVertex3fv(p010.getValues());
         glVertex3fv(p000.getValues());
         glVertex3fv(p001.getValues());
 
         // Left Face
+        glNormal3fv(PosX.getValues());
         glVertex3fv(p111.getValues());
         glVertex3fv(p101.getValues());
         glVertex3fv(p100.getValues());
@@ -99,33 +115,46 @@ void drawPhysicsGeom(const PhysicsCapsuleGeomUnrecPtr geom)
     glEnd();
 
     //Draw the Caps
-    int lats(12);
-    int longs(12);
+    Real32 r(geom->getRadius());
+    Real32 lats(12.0f);
+    Real32 longs(12.0f);
 
-    int i, j;
-    for(i = 0; i <= lats; i++)
+    Real32 i, j;
+    Vec3f Norm1, Norm0;
+    Pnt3f Pos0, Pos1;
+    Pnt3f p;
+    for(i = 0.0f; i <= lats; ++i)
     {
-        double lat0 = M_PI * (-0.5 + (double) (i - 1) / lats);
-        double z0  = Radius * sin(lat0);
-        if(i>lats/2) z0 += HalfLength;
-        else  z0 -= HalfLength;
-        double zr0 =  cos(lat0);
+        p.setValues(0.0f,0.0f,0.0f);
+        if(i>lats/2.0f) p[2] += HalfLength;
+        else  p[2] -= HalfLength;
 
-        double lat1 = M_PI * (-0.5 + (double) i / lats);
-        double z1 = Radius * sin(lat1);
-        if(i>lats/2) z1 += HalfLength;
-        else  z1 -= HalfLength;
-        double zr1 = osgCos(lat1);
+        Real32 lat0 = M_PI * (-0.5f + (i - 1.0f) / lats);
+        Norm0[2]  = osgSin(lat0);
+        Real32 zr0 =  osgCos(lat0);
+
+        Real32 lat1 = M_PI * (-0.5f + i / lats);
+        Norm1[2]  = osgSin(lat1);
+        Real32 zr1 = osgCos(lat1);
 
         glBegin(GL_QUAD_STRIP);
-        for(j = 0; j <= longs; j++)
+        for(j = 0.0f; j <= longs; ++j)
         {
-            double lng = TWO_PI * (double) (j - 1) / longs;
-            double x = Radius * cos(lng);
-            double y = Radius * sin(lng);
+            Real32 lng = 2.0f * M_PI * (j - 1.0f) / longs;
+            Real32 CosLng = osgCos(lng);
+            Real32 SinLng = osgSin(lng);
+            Norm0[0] = CosLng * zr0;
+            Norm0[1] = SinLng * zr0;
+            Norm1[0] = CosLng * zr1;
+            Norm1[1] = SinLng * zr1;
+            Pos0 = p + (Norm0 * r);
+            Pos1 = p + (Norm1 * r);
 
-            glVertex3f(x * zr1, y * zr1, z1);
-            glVertex3f(x * zr0, y * zr0, z0);
+            glNormal3fv(Norm1.getValues());
+            glVertex3fv(Pos1.getValues());
+
+            glNormal3fv(Norm0.getValues());
+            glVertex3fv(Pos0.getValues());
         }
         glEnd();
     }
@@ -136,19 +165,19 @@ void drawPhysicsGeom(const PhysicsCapsuleGeomUnrecPtr geom)
 void drawPhysicsGeom(const PhysicsPlaneGeomUnrecPtr geom)
 {
     Vec3f n(geom->getParameters().x(),geom->getParameters().y(), geom->getParameters().z());
-    Pnt3f p(Pnt3f(0.0,0.0,0.0) + n*geom->getParameters().w());
+    Pnt3f p(Pnt3f(0.0f,0.0f,0.0f) + n*geom->getParameters().w());
 
     //Calculate vectors that are perpendicular to the planes normal
-    Vec3f t(1.0,0.0,0.0);
-    if(n.dot(t) < 0.001)
+    Vec3f t(1.0f,0.0f,0.0f);
+    if(n.dot(t) < 0.001f)
     {
-        t.setValues(0.0,1.0,0.0);
+        t.setValues(0.0f,1.0f,0.0f);
     }
 
     Vec3f b(n.cross(t));
     t = b.cross(n);
 
-    Real32 Length(100000.0);
+    Real32 Length(100000.0f);
 
     t *= Length;
     b *= Length;
@@ -160,12 +189,14 @@ void drawPhysicsGeom(const PhysicsPlaneGeomUnrecPtr geom)
     
     glBegin(GL_QUADS);
         //Front Side
+        glNormal3fv(n.getValues());
         glVertex3fv(p1.getValues());
         glVertex3fv(p2.getValues());
         glVertex3fv(p3.getValues());
         glVertex3fv(p4.getValues());
 
         //Back side
+        glNormal3f(-n.x(), -n.y(), -n.z());
         glVertex3fv(p1.getValues());
         glVertex3fv(p4.getValues());
         glVertex3fv(p3.getValues());
@@ -201,32 +232,41 @@ void drawPhysicsGeom(const PhysicsSphereGeomUnrecPtr geom)
         Matrix m(geom->getBody()->getTransformation());
         m.mult(p,p);
     }
-    double r(geom->getRadius());
-    int lats(12);
-    int longs(12);
+    Real32 r(geom->getRadius());
+    Real32 lats(12.0f);
+    Real32 longs(12.0f);
 
-    int i, j;
-    for(i = 0; i <= lats; i++)
+    Real32 i, j;
+    Vec3f Norm1, Norm0;
+    Pnt3f Pos0, Pos1;
+    for(i = 0.0f; i <= lats; i++)
     {
-        double lat0 = M_PI * (-0.5 + (double) (i - 1) / lats);
-        double z0  = r * osgSin(lat0);
-        double zr0 =  osgCos(lat0);
+        Real32 lat0 = M_PI * (-0.5f + (i - 1.0f) / lats);
+        Norm0[2]  = osgSin(lat0);
+        Real32 zr0 =  osgCos(lat0);
 
-        double lat1 = M_PI * (-0.5 + (double) i / lats);
-        double z1 = r * osgSin(lat1);
-        double zr1 = osgCos(lat1);
+        Real32 lat1 = M_PI * (-0.5f + i / lats);
+        Norm1[2]  = osgSin(lat1);
+        Real32 zr1 = osgCos(lat1);
 
         glBegin(GL_QUAD_STRIP);
-        for(j = 0; j <= longs; j++)
+        for(j = 0.0f; j <= longs; j++)
         {
-            double lng = 2 * M_PI * (double) (j - 1) / longs;
-            double x = r * osgCos(lng);
-            double y = r * osgSin(lng);
+            Real32 lng = 2.0f * M_PI * (j - 1.0f) / longs;
+            Real32 CosLng = osgCos(lng);
+            Real32 SinLng = osgSin(lng);
+            Norm0[0] = CosLng * zr0;
+            Norm0[1] = SinLng * zr0;
+            Norm1[0] = CosLng * zr1;
+            Norm1[1] = SinLng * zr1;
+            Pos0 = p + (Norm0 * r);
+            Pos1 = p + (Norm1 * r);
 
-            //glNormal3f(p.x() + x * zr1, p.y() + y * zr1, p.z() + z1);
-            //glNormal3f(p.x() + x * zr0, p.y() + y * zr0, p.z() + z0);
-            glVertex3f(p.x() + x * zr1, p.y() + y * zr1, p.z() + z1);
-            glVertex3f(p.x() + x * zr0, p.y() + y * zr0, p.z() + z0);
+            glNormal3fv(Norm1.getValues());
+            glVertex3fv(Pos1.getValues());
+
+            glNormal3fv(Norm0.getValues());
+            glVertex3fv(Pos0.getValues());
         }
         glEnd();
     }
@@ -239,11 +279,15 @@ void drawPhysicsGeom(const PhysicsTriMeshGeomUnrecPtr geom)
     UInt32 TriCount(geom->getTriangleCount());
     Vec3f v1,v2,v3;
 
+    Vec3f Norm;
     glBegin(GL_TRIANGLES);
         for(UInt32 i(0) ; i<TriCount ; ++i)
         {
             //The Tris returned are already in world-space
             geom->getTriangle(i,v1,v2,v3);
+            Norm = (v1-v2).cross(v1-v3);
+            Norm.normalize();
+            glNormal3fv(Norm.getValues());
             glVertex3fv(v1.getValues());
             glVertex3fv(v2.getValues());
             glVertex3fv(v3.getValues());
@@ -308,7 +352,8 @@ class PhysicsGeomDrawWrapper
     {
         if(_mat == NULL)
         {
-            _mat = getDefaultUnlitMaterial();
+            //_mat = getDefaultUnlitMaterial();
+            _mat = getDefaultMaterial();
         }
     }
     

@@ -127,7 +127,7 @@ void PhysicsTriMeshGeom::createODEGeometry(NodeUnrecPtr node)
         {
             dGeomTriMeshDataBuildSingle(_TriMeshData, (Real32*)&_Positions.front(), 
                 VertexStride, VertexCount, &_TriIndexes[0], _TriIndexes.size(), 
-                IndexStride/* just can't use this, (Real32*)&normals->front()*/);
+                IndexStride/* , (Real32*)&normals->front()*/);
             setData(_TriMeshData);
                 
             /* use this method if you build with single precision
