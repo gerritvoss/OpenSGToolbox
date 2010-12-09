@@ -87,6 +87,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var bool            GLViewportBase::_sfAllwaysRedrawViewport
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -124,6 +128,18 @@ void GLViewportBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&GLViewport::editHandlePort),
         static_cast<FieldGetMethodSig >(&GLViewport::getHandlePort));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "AllwaysRedrawViewport",
+        "",
+        AllwaysRedrawViewportFieldId, AllwaysRedrawViewportFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GLViewport::editHandleAllwaysRedrawViewport),
+        static_cast<FieldGetMethodSig >(&GLViewport::getHandleAllwaysRedrawViewport));
 
     oType.addInitialDesc(pDesc);
 }
@@ -166,6 +182,16 @@ GLViewportBase::TypeObject GLViewportBase::_type(
     "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"AllwaysRedrawViewport\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"true\"\n"
+    "\t>\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
     "An OpenSG Viewport Component.\n"
     );
@@ -203,6 +229,19 @@ SFUnrecViewportPtr  *GLViewportBase::editSFPort           (void)
     return &_sfPort;
 }
 
+SFBool *GLViewportBase::editSFAllwaysRedrawViewport(void)
+{
+    editSField(AllwaysRedrawViewportFieldMask);
+
+    return &_sfAllwaysRedrawViewport;
+}
+
+const SFBool *GLViewportBase::getSFAllwaysRedrawViewport(void) const
+{
+    return &_sfAllwaysRedrawViewport;
+}
+
+
 
 
 
@@ -217,6 +256,10 @@ UInt32 GLViewportBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfPort.getBinSize();
     }
+    if(FieldBits::NoField != (AllwaysRedrawViewportFieldMask & whichField))
+    {
+        returnValue += _sfAllwaysRedrawViewport.getBinSize();
+    }
 
     return returnValue;
 }
@@ -230,6 +273,10 @@ void GLViewportBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfPort.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (AllwaysRedrawViewportFieldMask & whichField))
+    {
+        _sfAllwaysRedrawViewport.copyToBin(pMem);
+    }
 }
 
 void GLViewportBase::copyFromBin(BinaryDataHandler &pMem,
@@ -240,6 +287,10 @@ void GLViewportBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PortFieldMask & whichField))
     {
         _sfPort.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (AllwaysRedrawViewportFieldMask & whichField))
+    {
+        _sfAllwaysRedrawViewport.copyFromBin(pMem);
     }
 }
 
@@ -315,7 +366,6 @@ GLViewport *GLViewportBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr GLViewportBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -361,18 +411,19 @@ FieldContainerTransitPtr GLViewportBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 GLViewportBase::GLViewportBase(void) :
     Inherited(),
-    _sfPort                   (NULL)
+    _sfPort                   (NULL),
+    _sfAllwaysRedrawViewport  (bool(true))
 {
 }
 
 GLViewportBase::GLViewportBase(const GLViewportBase &source) :
     Inherited(source),
-    _sfPort                   (NULL)
+    _sfPort                   (NULL),
+    _sfAllwaysRedrawViewport  (source._sfAllwaysRedrawViewport  )
 {
 }
 
@@ -422,6 +473,32 @@ EditFieldHandlePtr GLViewportBase::editHandlePort           (void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr GLViewportBase::getHandleAllwaysRedrawViewport (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfAllwaysRedrawViewport,
+             this->getType().getFieldDesc(AllwaysRedrawViewportFieldId),
+             const_cast<GLViewportBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GLViewportBase::editHandleAllwaysRedrawViewport(void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfAllwaysRedrawViewport,
+             this->getType().getFieldDesc(AllwaysRedrawViewportFieldId),
+             this));
+
+
+    editSField(AllwaysRedrawViewportFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

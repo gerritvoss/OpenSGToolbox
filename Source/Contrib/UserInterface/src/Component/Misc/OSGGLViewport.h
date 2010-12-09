@@ -47,6 +47,7 @@
 #include "OSGRenderAction.h"
 #include "OSGNavigator.h"
 #include "OSGVector.h"
+#include "OSGTransformFields.h"
 
 #include "OSGGLViewportBase.h"
 
@@ -87,38 +88,30 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
     const Matrix& getViewMatrix(void);
 
     void showAll(void);
+    void show(Node* const FocusNode);
     void lookAt(const Pnt3f& From, const Pnt3f& At, const Vec3f& Up);
     void set(const Matrix& m);
     void setMode(Navigator::Mode TheMode);
+    void setMotionFactor(Real32 Factor);
+
+    Node* grabNode(const Pnt2f& Location, UInt32 TravMask = TypeTraits<UInt32>::getMax(), Real32 MaxDistance = Inf) const;
 
     virtual void mousePressed(MouseEventDetails* const e);
     virtual void keyTyped(KeyEventDetails* const e);
     virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
-    void setMultipliers(Real32 YawMultiplier,Real32 PitchMultiplier,Real32 RollMultiplier);
-    void setClamps(Vec2f YawClamp,Vec2f PitchClamp,Vec2f RollClamp);
-    void setYaw(Real32 Yaw);
-    void setRoll(Real32 Roll);
-    void setPitch(Real32 Pitch);
-    Real32 getYaw(void) const;
-    Real32 getRoll(void) const;
-    Real32 getPitch(void) const;
-
-    void setOffset(const Vec3f& Offset);
-    void setOffsetMultipliers(const Vec3f& OffsetMultipliers);
-    void setMinOffset(const Vec3f& MinOffset);
-    void setMaxOffset(const Vec3f& MaxOffset);
-    const Vec3f& getOffset(void) const;
-    const Vec3f& getOffsetMultipliers(void) const;
-    const Vec3f& getMinOffset(void) const;
-    const Vec3f& getMaxOffset(void) const;
-
-
-    void updateNavigatorConnections(void);
-
     virtual void detachFromEventProducer(void);
 
     void copyView(const GLViewport& TheViewport);
+
+    void setCamera(Camera* TheCamera);
+    Camera* getCamera(void) const;
+
+    virtual void setParentWindow(InternalWindow* const parent);
+
+    RenderAction* getRenderAction(void) const;
+
+    Viewport* getDrawingViewport(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -147,24 +140,31 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+	/*---------------------------------------------------------------------*/
+	/*! \name                   Class Specific                             */
+	/*! \{                                                                 */
+	void onCreate(const GLViewport *Id = NULL);
+	void onDestroy();
+	
+	/*! \}                                                                 */
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
 	virtual void drawInternal(Graphics* const Graphics, Real32 Opacity = 1.0f) const;
 
-    RenderAction* _Action;
+    void updateDrawingViewport(void);
+    void attachDrawingViewport(void);
+    void dettachDrawingViewport(void);
+    void drawViewport(DrawEnv* dEnv) const;
+
 	mutable Navigator _Navigator;
-    Matrix _DefaultView;
-    Real32 _Yaw, _Pitch, _Roll;
-    Real32 _InitialYaw, _InitialPitch, _InitialRoll;
-    Real32 _YawMultiplier, _PitchMultiplier, _RollMultiplier;
-    Vec2f _YawClamp, _PitchClamp, _RollClamp;
-
-    Vec3f _Offset;
-    Vec3f _OffsetMultipliers;
-    Vec3f _MinOffset;
-    Vec3f _MaxOffset;
-
-    Pnt2f _InitialMousePos;
-
-    void updateView(void);
+    CameraRecPtr      _NavCamera;
+    TransformRecPtr   _NavCameraTransform;
+    NodeRecPtr        _NavCameraBeacon;
 
 	void handleNavMouseReleased(MouseEventDetails* const e);
 	void handleNavMouseDragged(MouseEventDetails* const e);
@@ -173,6 +173,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewport : public GLViewportBase
                                 _NavMouseDraggedConnection,
                                 _NavKeyPressedConnection;
     Matrix _InitialMat;
+
+    ViewportRecPtr   _DrawingViewport;
+    boost::scoped_ptr<RenderAction> _RenderAction;
 
     /*==========================  PRIVATE  ================================*/
 

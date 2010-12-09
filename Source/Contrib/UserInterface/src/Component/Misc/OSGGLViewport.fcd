@@ -24,4 +24,14 @@ An OpenSG Viewport Component.
 		defaultValue="NULL"
 	>
 	</Field>
+	<Field
+		name="AllwaysRedrawViewport"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="true"
+	>
+	</Field>
 </FieldContainer>

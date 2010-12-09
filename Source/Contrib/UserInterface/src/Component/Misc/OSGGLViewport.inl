@@ -41,69 +41,52 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-Real32 GLViewport::getYaw(void) const
-{
-    return _Yaw;
-}
-
-inline
-Real32 GLViewport::getRoll(void) const
-{
-    return _Roll;
-}
-
-inline
-Real32 GLViewport::getPitch(void) const
-{
-    return _Pitch;
-}
-
-inline
-const Vec3f& GLViewport::getOffset(void) const
-{
-    return _Offset;
-}
-
-inline
-const Vec3f& GLViewport::getOffsetMultipliers(void) const
-{
-    return _OffsetMultipliers;
-}
-
-inline
-const Vec3f& GLViewport::getMinOffset(void) const
-{
-    return _MinOffset;
-}
-
-inline
-const Vec3f& GLViewport::getMaxOffset(void) const
-{
-    return _MaxOffset;
-}
- 
-inline
-void GLViewport::setOffsetMultipliers(const Vec3f& OffsetMultipliers)
-{
-    _OffsetMultipliers= OffsetMultipliers;
-}
-
-inline
-void GLViewport::setMinOffset(const Vec3f& MinOffset)
-{
-    _MinOffset = MinOffset;
-}
-
-inline
-void GLViewport::setMaxOffset(const Vec3f& MaxOffset)
-{
-    _MaxOffset = MaxOffset;
-}
-
-inline
 void GLViewport::setMode(Navigator::Mode TheMode)
 {
     _Navigator.setMode(TheMode);
+}
+
+inline
+void GLViewport::setCamera(Camera* TheCamera)
+{
+    _NavCamera = TheCamera;
+    if(_DrawingViewport != NULL)
+    {
+        _DrawingViewport->setCamera(_NavCamera);
+    }
+}
+
+inline
+Camera* GLViewport::getCamera(void) const
+{
+    return _NavCamera;
+}
+
+inline
+RenderAction* GLViewport::getRenderAction(void) const
+{
+    return _RenderAction.get();
+}
+
+inline
+void GLViewport::showAll(void)
+{
+    if(getPort() != NULL)
+    {
+        show(getPort()->getRoot());
+    }
+}
+
+inline
+void GLViewport::setMotionFactor(Real32 Factor)
+{
+    _Navigator.setMotionFactor(Factor);
+}
+
+inline
+Viewport* GLViewport::getDrawingViewport(void) const
+{
+    return _DrawingViewport;
 }
 
 OSG_END_NAMESPACE

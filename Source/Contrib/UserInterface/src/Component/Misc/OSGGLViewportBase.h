@@ -66,6 +66,7 @@
 #include "OSGComponent.h" // Parent
 
 #include "OSGViewportFields.h"          // Port type
+#include "OSGSysFields.h"               // AllwaysRedrawViewport type
 
 #include "OSGGLViewportFields.h"
 
@@ -86,6 +87,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(GLViewport);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -94,15 +97,19 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
     enum
     {
         PortFieldId = Inherited::NextFieldId,
-        NextFieldId = PortFieldId + 1
+        AllwaysRedrawViewportFieldId = PortFieldId + 1,
+        NextFieldId = AllwaysRedrawViewportFieldId + 1
     };
 
     static const OSG::BitVector PortFieldMask =
         (TypeTraits<BitVector>::One << PortFieldId);
+    static const OSG::BitVector AllwaysRedrawViewportFieldMask =
+        (TypeTraits<BitVector>::One << AllwaysRedrawViewportFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecViewportPtr SFPortType;
+    typedef SFBool            SFAllwaysRedrawViewportType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -130,8 +137,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
             const SFUnrecViewportPtr  *getSFPort           (void) const;
                   SFUnrecViewportPtr  *editSFPort           (void);
 
+                  SFBool              *editSFAllwaysRedrawViewport(void);
+            const SFBool              *getSFAllwaysRedrawViewport (void) const;
+
 
                   Viewport * getPort           (void) const;
+
+                  bool                &editAllwaysRedrawViewport(void);
+                  bool                 getAllwaysRedrawViewport (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -139,6 +152,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
     /*! \{                                                                 */
 
             void setPort           (Viewport * const value);
+            void setAllwaysRedrawViewport(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -204,6 +218,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
     /*! \{                                                                 */
 
     SFUnrecViewportPtr _sfPort;
+    SFBool            _sfAllwaysRedrawViewport;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -234,6 +249,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING GLViewportBase : public Component
 
     GetFieldHandlePtr  getHandlePort            (void) const;
     EditFieldHandlePtr editHandlePort           (void);
+    GetFieldHandlePtr  getHandleAllwaysRedrawViewport (void) const;
+    EditFieldHandlePtr editHandleAllwaysRedrawViewport(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

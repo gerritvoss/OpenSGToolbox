@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -89,6 +90,31 @@ void GLViewportBase::setPort(Viewport * const value)
 
     _sfPort.setValue(value);
 }
+//! Get the value of the GLViewport::_sfAllwaysRedrawViewport field.
+
+inline
+bool &GLViewportBase::editAllwaysRedrawViewport(void)
+{
+    editSField(AllwaysRedrawViewportFieldMask);
+
+    return _sfAllwaysRedrawViewport.getValue();
+}
+
+//! Get the value of the GLViewport::_sfAllwaysRedrawViewport field.
+inline
+      bool  GLViewportBase::getAllwaysRedrawViewport(void) const
+{
+    return _sfAllwaysRedrawViewport.getValue();
+}
+
+//! Set the value of the GLViewport::_sfAllwaysRedrawViewport field.
+inline
+void GLViewportBase::setAllwaysRedrawViewport(const bool value)
+{
+    editSField(AllwaysRedrawViewportFieldMask);
+
+    _sfAllwaysRedrawViewport.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -103,6 +129,9 @@ void GLViewportBase::execSync (      GLViewportBase *pFrom,
 
     if(FieldBits::NoField != (PortFieldMask & whichField))
         _sfPort.syncWith(pFrom->_sfPort);
+
+    if(FieldBits::NoField != (AllwaysRedrawViewportFieldMask & whichField))
+        _sfAllwaysRedrawViewport.syncWith(pFrom->_sfAllwaysRedrawViewport);
 }
 #endif
 
