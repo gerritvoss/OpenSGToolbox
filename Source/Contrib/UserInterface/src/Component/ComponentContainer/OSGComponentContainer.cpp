@@ -300,7 +300,10 @@ void ComponentContainer::mouseReleased(MouseEventDetails* const e)
             break;
         }
     }
-    Component::mouseReleased(e);
+    if(!e->isConsumed())
+    {
+        Component::mouseReleased(e);
+    }
 }
 
 
@@ -348,7 +351,7 @@ void ComponentContainer::mouseDragged(MouseEventDetails* const e)
 void ComponentContainer::mouseWheelMoved(MouseWheelEventDetails* const e)
 {
     bool isContained;
-    for(Int32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(Int32 i(getMFChildren()->size()-1) ; i>=0 ; --i)
     {
         //If the event is consumed then stop sending the event
         if(e->isConsumed()) return;
@@ -516,17 +519,6 @@ void ComponentContainer::changed(ConstFieldMaskArg whichField,
     {
         //Layout needs to be recalculated
         updateLayout();
-    }
-
-    if(whichField & EnabledFieldMask)
-    {
-        for(UInt32 i(0) ; i< getMFChildren()->size() ; ++i)
-        {
-            if(getChildren(i)->getEnabled() != getEnabled())
-            {
-                getChildren(i)->setEnabled(getEnabled());
-            }
-        }
     }
     Inherited::changed(whichField, origin, details);
 }
