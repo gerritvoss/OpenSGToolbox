@@ -652,7 +652,7 @@ void TextArea::changed(ConstFieldMaskArg whichField,
         PreferredSize[1] = osgMax<UInt32>(getMinSize().y(), _LineContents.back()._VerticalOffset + TempBottomRight.y());
         if(getPreferredSize() != PreferredSize)
         {
-                setPreferredSize(PreferredSize);
+            setPreferredSize(PreferredSize + getBorderingLength());
         }
     }
     
