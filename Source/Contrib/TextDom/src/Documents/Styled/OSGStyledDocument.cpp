@@ -281,7 +281,7 @@ void StyledDocument::getDocumentElementAttribute(Int32 offset, Int32 length, std
 	txt = getDocumentElementAttribute(offset, length);
 }
 
-std::vector<DocumentElementAttribute>& StyledDocument::getDocumentElementAttribute(Int32 offset, Int32 length) const
+std::vector<DocumentElementAttribute> StyledDocument::getDocumentElementAttribute(Int32 offset, Int32 length) const
 {
 	std::vector<DocumentElementAttribute> result;
 	std::string stringToReturn="";

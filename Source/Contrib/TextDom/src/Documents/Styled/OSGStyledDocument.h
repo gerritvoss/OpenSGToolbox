@@ -96,7 +96,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING StyledDocument : public StyledDocumentBase
     UInt64 getStartPosition(void) const;
 
     //Fetches the text with properties contained within the given portion of the document.
-    std::vector<DocumentElementAttribute>& getDocumentElementAttribute(Int32 offset, Int32 length) const;
+    std::vector<DocumentElementAttribute> getDocumentElementAttribute(Int32 offset, Int32 length) const;
 
     //Fetches the text with properties contained within the given portion of the document.
     void getDocumentElementAttribute(Int32 offset, Int32 length, std::vector<DocumentElementAttribute>& txt) const;
