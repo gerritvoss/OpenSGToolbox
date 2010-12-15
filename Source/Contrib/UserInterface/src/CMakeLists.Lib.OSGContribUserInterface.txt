@@ -3,6 +3,21 @@ OSG_ADD_PROJECT("OSGContribUserInterface")
 OSG_SELECT_PROJECT()
 
 ##############################################################################
+# Version and revision values
+##############################################################################
+
+FILE(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/VERSION VersionFile)
+STRING(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+).*" VersionMatch ${VersionFile})
+
+SET(${PROJECT_NAME}_MAJOR_VERSION ${CMAKE_MATCH_1})
+SET(${PROJECT_NAME}_MINOR_VERSION ${CMAKE_MATCH_2})
+SET(${PROJECT_NAME}_PATCH_VERSION ${CMAKE_MATCH_3})
+SET(${PROJECT_NAME}_VERSION ${CMAKE_MATCH_0})
+
+FILE(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/REVISION RevisionFile)
+SET(${PROJECT_NAME}_REVISION ${RevisionFile})
+
+##############################################################################
 # dependencies
 ##############################################################################
 
@@ -112,6 +127,11 @@ OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/UIDrawingSurface/NodeCore")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/UndoableEdit")
 
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Util")
+
+#Library def source
+CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Def.cpp.in"
+               "${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}/${PROJECT_NAME}Def.cpp")
+OSG_ADD_DIRECTORY("${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}")
 
 ##############################################################################
 # setup build

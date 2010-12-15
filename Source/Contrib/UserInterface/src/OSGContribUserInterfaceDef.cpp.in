@@ -44,14 +44,13 @@
 #include "OSGConfig.h"
 #include "OSGBaseInitFunctions.h"
 
-#define SVN_REVISION "382"
-
 /*! Append our version to the library versions string 
 */
 static bool versionAdder(void)
 {
-    OSG::addLibraryVersion("OSGContribTextDom:           " OSG_VERSION_STRING 
-                           "\tRev: "               SVN_REVISION );    
+    OSG::addLibraryVersion("OSGContribUserInterface",
+                           "@OSGContribUserInterface_VERSION@",
+                           "@OSGContribUserInterface_REVISION@" );    
     return true;
 }
 

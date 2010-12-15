@@ -44,16 +44,14 @@
 #include "OSGConfig.h"
 #include "OSGBaseInitFunctions.h"
 
-#define SVN_REVISION "382"
-
 /*! Append our version to the library versions string 
 */
 static bool versionAdder(void)
 {
-    OSG::addLibraryVersion("OSGContribParticleTrail:           " OSG_VERSION_STRING 
-                           "\tRev: "               SVN_REVISION );    
+    OSG::addLibraryVersion("OSGTBAnimation",    
+                           "@OSGTBAnimation_VERSION@",
+                           "@OSGTBAnimation_REVISION@" );
     return true;
 }
 
 static OSG::StaticInitFuncWrapper versionAdderWrapper(versionAdder);
-
