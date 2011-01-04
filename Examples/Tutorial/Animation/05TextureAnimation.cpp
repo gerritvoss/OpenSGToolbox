@@ -41,184 +41,142 @@
 // with OSG::, but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-ChunkMaterialUnrecPtr TheBoxMaterial;
-
 // forward declaration so we can have the interesting stuff upfront
-void setupAnimation(void);
-void display(void);
-void reshape(Vec2f Size);
+AnimationTransitPtr setupAnimation(ChunkMaterial* const TheBoxMaterial);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-class TutorialAnimationListener : public AnimationListener
+void animationCycled(AnimationEventDetails* const details)
 {
-public:
-   virtual void animationStarted(const AnimationEventUnrecPtr e)
-   {
-   }
-
-   virtual void animationStopped(const AnimationEventUnrecPtr e)
-   {
-   }
-
-   virtual void animationPaused(const AnimationEventUnrecPtr e)
-   {
-   }
-
-   virtual void animationUnpaused(const AnimationEventUnrecPtr e)
-   {
-   }
-
-   virtual void animationEnded(const AnimationEventUnrecPtr e)
-   {
-   }
-
-   virtual void animationCycled(const AnimationEventUnrecPtr e)
-   {
-       std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(e->getSource())->getCycles() << std::endl;
-   }
-
-};
+    std::cout << "Animation Cycled.  Cycle Count: " << dynamic_cast<Animation*>(details->getSource())->getCycles() << std::endl;
+}
 
 // The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerUnrecPtr TutorialWindow;
-
-FieldAnimationUnrecPtr TutorialTextureAnimation;
-TutorialAnimationListener TutorialTextureAnimationListener;
-
-KeyframeAnimatorUnrecPtr TutorialTextureAnimator;
-
-// Create a class to allow for the use of the keyboard shortcuts 
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details, WindowEventProducer* const TutorialWindow)
 {
-public:
-
-    virtual void keyPressed(const KeyEventUnrecPtr e)
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+        TutorialWindow->closeWindow();
+    }
+}
+
+void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
         {
-            TutorialWindow->closeWindow();
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
-
-    virtual void keyReleased(const KeyEventUnrecPtr e)
+    else if(details->getUnitsToScroll() < 0)
     {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
     }
-
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-    }
-};
-
-class TutorialMouseListener : public MouseListener
-{
-public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialMouseMotionListener : public MouseMotionListener
-{
-public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
+}
 
 // Initialize GLUT & OpenSG and set up the scene
 int main(int argc, char **argv)
 {
-	OSG::preloadSharedObject("OSGFileIO");
+    OSG::preloadSharedObject("OSGFileIO");
     OSG::preloadSharedObject("OSGImageFileIO");
     // OSG init
     osgInit(argc,argv);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
+        //Initialize Window
+        TutorialWindow->initWindow();
 
-    //Initialize Window
-    TutorialWindow->initWindow();
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    //Add Window Listener
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+        //Attach to events
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, TutorialWindow.get()));
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        //Box Geometry
+        GeometryUnrecPtr BoxGeometry = makeBoxGeo(1.0,1.0,1.0,1,1,1);
+        ChunkMaterialUnrecPtr TheBoxMaterial = ChunkMaterial::create();
+        BoxGeometry->setMaterial(TheBoxMaterial);
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
+        NodeUnrecPtr BoxGeometryNode = Node::create();
+        BoxGeometryNode->setCore(BoxGeometry);
 
-    //Setup the Animation
-    setupAnimation();
+        //Make Box Node
+        NodeUnrecPtr BoxNode = Node::create();
+        TransformUnrecPtr BoxNodeTrans;
+        BoxNodeTrans = Transform::create();
 
-    //Box Geometry
-    GeometryUnrecPtr BoxGeometry = makeBoxGeo(1.0,1.0,1.0,1,1,1);
-    BoxGeometry->setMaterial(TheBoxMaterial);
-    
-    NodeUnrecPtr BoxGeometryNode = Node::create();
-    BoxGeometryNode->setCore(BoxGeometry);
+        BoxNode->setCore(BoxNodeTrans);
+        BoxNode->addChild(BoxGeometryNode);
 
-    //Make Box Node
-    NodeUnrecPtr BoxNode = Node::create();
-    TransformUnrecPtr BoxNodeTrans;
-    BoxNodeTrans = Transform::create();
+        //Make Main Scene Node
+        NodeUnrecPtr scene = Node::create();
+        ComponentTransformUnrecPtr Trans;
+        Trans = ComponentTransform::create();
+        scene->setCore(Trans);
 
-    BoxNode->setCore(BoxNodeTrans);
-    BoxNode->addChild(BoxGeometryNode);
+        // add the torus as a child
+        scene->addChild(BoxNode);
 
-    //Make Main Scene Node
-    NodeUnrecPtr scene = Node::create();
-    ComponentTransformUnrecPtr Trans;
-    Trans = ComponentTransform::create();
-    scene->setCore(Trans);
+        //Setup the Animation
+        AnimationUnrecPtr TheAnimation = setupAnimation(TheBoxMaterial);
+        TheAnimation->attachUpdateProducer(TutorialWindow);
+        TheAnimation->start();
 
-    // add the torus as a child
-    scene->addChild(BoxNode);
+        // tell the manager what to manage
+        sceneManager.setRoot  (scene);
 
-    // tell the manager what to manage
-    mgr->setRoot  (scene);
+        // show the whole scene
+        sceneManager.showAll();
 
-    // show the whole scene
-    mgr->showAll();
-    
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
 
-    TutorialWindow->openWindow(WinPos,
-                               WinSize,
-                               "05TextureAnimation");
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "05TextureAnimation");
 
-    //Main Loop
-    TutorialWindow->mainLoop();
+        //Main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -226,20 +184,20 @@ int main(int argc, char **argv)
 }
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
 
-std::vector<ImageUnrecPtr> _Images;
-void setupAnimation(void)
+AnimationTransitPtr setupAnimation(ChunkMaterial* const TheBoxMaterial)
 {
+    std::vector<ImageUnrecPtr> _Images;
     std::vector<BoostPath> _ImagePaths;
     _ImagePaths.push_back(BoostPath("./Data/Anim001.jpg"));
     _ImagePaths.push_back(BoostPath("./Data/Anim002.jpg"));
@@ -251,10 +209,10 @@ void setupAnimation(void)
     for(UInt32 i(0) ; i<_ImagePaths.size(); ++i)
     {
         ImageUnrecPtr AnimFrameImage = ImageFileHandler::the()->read(_ImagePaths[i].string().c_str());
-           
+
         _Images.push_back(AnimFrameImage);
     }
-    
+
     TextureObjChunkUnrecPtr AnimFrameTexture = TextureObjChunk::create();
     AnimFrameTexture->setImage(_Images.front());
 
@@ -264,30 +222,26 @@ void setupAnimation(void)
     TheMaterialChunk->setDiffuse(Color4f(0.8,0.8,0.8,1.0));
     TheMaterialChunk->setSpecular(Color4f(1.0,1.0,1.0,1.0));
 
-    TheBoxMaterial = ChunkMaterial::create();
     TheBoxMaterial->addChunk(AnimFrameTexture);
 
     //Texture Keyframe Sequence
-    KeyframeFCPtrSequenceUnrecPtr TextureKeyframes = KeyframeFCPtrSequenceImage::create();
+    KeyframeFCPtrSequenceUnrecPtr TextureKeyframes = KeyframeFCPtrSequence::create();
     for(UInt32 i(0) ; i<_Images.size(); ++i)
     {
         TextureKeyframes->addKeyframe(_Images[i],static_cast<Real32>(i)*0.5f);
     }
-    
+
     //Animator
-    TutorialTextureAnimator = KeyframeAnimator::create();
+    KeyframeAnimatorUnrecPtr TutorialTextureAnimator = KeyframeAnimator::create();
     TutorialTextureAnimator->setKeyframeSequence(TextureKeyframes);
-    
+
     //Animation
-    TutorialTextureAnimation = FieldAnimation::create();
+    FieldAnimationUnrecPtr TutorialTextureAnimation = FieldAnimation::create();
     TutorialTextureAnimation->setAnimator(TutorialTextureAnimator);
     TutorialTextureAnimation->setInterpolationType(Animator::STEP_INTERPOLATION);
     TutorialTextureAnimation->setCycling(-1);
     TutorialTextureAnimation->setAnimatedField(AnimFrameTexture,TextureObjChunk::ImageFieldId);
 
-    //Animation Listener
-    TutorialTextureAnimation->addAnimationListener(&TutorialTextureAnimationListener);
-
-    TutorialTextureAnimation->attachUpdateProducer(TutorialWindow->editEventProducer());
-    TutorialTextureAnimation->start();
+    return AnimationTransitPtr(TutorialTextureAnimation);
 }
+
