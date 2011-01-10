@@ -48,10 +48,12 @@
 
 #include "OSGPhysicsSpaceFields.h"
 #include "OSGPhysicsWorldFields.h"
+#include "OSGPhysicsGeomFields.h"
 #include "OSGPhysicsBoxGeomFields.h"
 #include "OSGCollisionEventDetailsFields.h"
 
 #include "OSGNodeFields.h"
+#include "OSGGraphOp.h"
 
 #include <boost/shared_ptr.hpp>
 
@@ -114,8 +116,6 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
     void buildTree(bool uniformSideLengths = true);
 
     void setRootNode(Node* const);
-    void setSpace(PhysicsSpace* const);
-    void setWorld(PhysicsWorld* const);
     OTNodePtr getRoot(void) const;
 
     void setMinNodeVolume(const Vec3f& min);
@@ -123,9 +123,77 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     UInt32 getDepth(void) const;
 
+    class AddCollisionGeomGraphOp : public GraphOp
+    {
+        /*==========================  PUBLIC  =================================*/
+      public:
+        /*---------------------------------------------------------------------*/
+        /*! \name Types                                                        */
+        /*! \{                                                                 */
+
+        typedef GraphOp                                 Inherited;
+        typedef AddCollisionGeomGraphOp                 Self;
+
+        OSG_GEN_INTERNAL_MEMOBJPTR(AddCollisionGeomGraphOp);
+
+        /*! \}                                                                 */
+        /*---------------------------------------------------------------------*/
+        /*! \name Classname                                                    */
+        /*! \{                                                                 */
+
+        static const char *getClassname(void) { return "AddCollisionGeomGraphOp"; };
+
+        /*! \}                                                                 */
+        /*---------------------------------------------------------------------*/
+        /*! \name Constructors                                                 */
+        /*! \{                                                                 */
+
+        static ObjTransitPtr      create(UInt32  travMask);
+
+        virtual GraphOpTransitPtr clone (void                             );
+
+        /*! \}                                                                 */
+        /*---------------------------------------------------------------------*/
+        /*! \name Parameters                                                   */
+        /*! \{                                                                 */
+
+        void        setParams(const std::string params);
+        std::string usage    (void                    );
+
+        /*! \}                                                                 */
+        virtual bool traverse(Node *root);
+        void           destroyObjs(void);
+        PhysicsSpace*  getSpace(void) const;
+        PhysicsWorld*  getWorld(void) const;
+        /*=========================  PROTECTED  ===============================*/
+      protected:
+        /*---------------------------------------------------------------------*/
+        /*! \name Constructors/Destructor                                      */
+        /*! \{                                                                 */
+
+        AddCollisionGeomGraphOp(UInt32  travMask);
+        virtual ~AddCollisionGeomGraphOp(void                                    );
+
+        /*! \}                                                                 */
+        /*==========================  PRIVATE  ================================*/
+      private:
+        Action::ResultE traverseEnter(Node * const node);
+        Action::ResultE traverseLeave(Node * const node, Action::ResultE res);
+
+        UInt32 _TravMask;
+        std::vector<PhysicsGeomUnrecPtr> _CreatedGeoms;
+        PhysicsSpaceRecPtr _PhysSpace;
+        PhysicsWorldRecPtr _PhysWorld;
+    };
+    OSG_GEN_MEMOBJPTR(AddCollisionGeomGraphOp);
+
   private:
     //construct the octree
-    void build(OTNodePtr, PhysicsBoxGeom* const VolumeBoxGeom);
+    void build(OTNodePtr,
+               PhysicsBoxGeom* const VolumeBoxGeom,
+               PhysicsSpace* const Space,
+               PhysicsWorld* const World);
+
     void buildNewNodes(OTNodePtr);
 
     Pnt3f getVolMin(Octant, OTNodeVolume&, Vec3f&) const;
@@ -140,14 +208,13 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
     //scene info
     NodeRecPtr _SceneRoot;
     UInt32     _CollidableMask;
-    PhysicsSpaceRecPtr _PhysSpace;
-    PhysicsWorldRecPtr _PhysWorld;
 
     //octree
     OTNodePtr _Root;
     Vec3f _MinNodeVolume;
     UInt32 _Depth;
 };
+
 
 OSG_END_NAMESPACE
 

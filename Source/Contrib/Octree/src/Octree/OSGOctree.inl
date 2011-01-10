@@ -64,18 +64,6 @@ void Octree::setRootNode(Node* const n)
 }
 
 inline
-void Octree::setSpace(PhysicsSpace* const s)
-{
-    _PhysSpace = s;
-}
-
-inline
-void Octree::setWorld(PhysicsWorld* const w)
-{
-    _PhysWorld = w;
-}
-
-inline
 Octree::OTNodePtr Octree::getRoot(void) const
 {
     return _Root;

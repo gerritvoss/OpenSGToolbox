@@ -34,10 +34,6 @@
 
 #include "OSGOctree.h"
 #include "OSGOctreeUtils.h"
-#include "OSGPhysicsHashSpace.h"
-#include "OSGPhysicsWorld.h"
-#include "OSGPhysicsBoxGeom.h"
-#include "OSGPhysicsTriMeshGeom.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -124,10 +120,6 @@ int main(int argc, char **argv)
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
 
-
-        PhysicsWorldRecPtr world = PhysicsWorld::create();
-        PhysicsHashSpaceRecPtr space = PhysicsHashSpace::create();
-
         //Make Base Geometry Node
         NodeRecPtr SceneGeometryNode = SceneFileHandler::the()->read(".//ER.osb");
         if(SceneGeometryNode == NULL)
@@ -135,26 +127,14 @@ int main(int argc, char **argv)
             SceneGeometryNode = makeTorus(1.0, 10.0, 24, 24);
         }
 
-        //create ODE data
-        PhysicsTriMeshGeomRecPtr triGeom = PhysicsTriMeshGeom::create();
-        //add geom to space for collision
-        triGeom->setSpace(space);
-        //set the geometryNode to fill the ode-triMesh
-        triGeom->setGeometryNode(SceneGeometryNode);
-
-        //add attachments
-        SceneGeometryNode->addAttachment(triGeom);
-
         NodeRecPtr RootNode = makeCoredNode<Group>();
         RootNode->addChild(SceneGeometryNode);
 
         //Create the Octree
 		Octree TheOctree;
 		TheOctree.setRootNode(RootNode);
-		TheOctree.setSpace(space);
-		TheOctree.setWorld(world);
-        TheOctree.setMinNodeVolume(Vec3f(1.5f,1.5f,1.5f));
-        //TheOctree.setMinNodeVolume(Vec3f(0.5f,0.5f,0.5f));
+        //TheOctree.setMinNodeVolume(Vec3f(1.5f,1.5f,1.5f));
+        TheOctree.setMinNodeVolume(Vec3f(0.5f,0.5f,0.5f));
         //TheOctree.setMinNodeVolume(Vec3f(0.25f,0.25f,0.25f));
         //TheOctree.setMinNodeVolume(Vec3f(0.15f,0.15f,0.15f));
         commitChanges();

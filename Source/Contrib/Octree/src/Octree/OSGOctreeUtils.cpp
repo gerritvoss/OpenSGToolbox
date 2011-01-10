@@ -64,7 +64,7 @@ NodeTransitPtr OctreeVisualization::createOctreeVisualization(const Octree& tree
     OTNodeIsVisibleFunc IsVisibleFunc;
 
     IsVisibleFunc = boost::bind(&OctreeVisualization::isNodeLeaf,_1, _2,
-                                true);
+                                false);
 
     NodeRecPtr VisRootNode = makeCoredNode<Group>();
 
