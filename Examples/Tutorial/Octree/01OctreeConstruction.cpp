@@ -17,6 +17,9 @@
 
 // A little helper to simplify rootNode management and interaction
 #include "OSGSimpleSceneManager.h"
+#include "OSGSceneFileHandler.h"
+
+#include "OSGSolidBackground.h"
 
 #include "OSGComponentTransform.h"
 #include "OSGTransform.h"
@@ -45,11 +48,36 @@ OSG_USING_NAMESPACE
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-void keyPressed(KeyEventDetails* const details)
+void keyPressed(KeyEventDetails* const details,
+                Node* const sceneGeoNode,
+                Node* const octreeNode)
 {
     if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+    switch(details->getKey())
+    {
+        case KeyEventDetails::KEY_1:
+            if(sceneGeoNode->getTravMask() != 0)
+            {
+                sceneGeoNode->setTravMask(0);
+            }
+            else
+            {
+                sceneGeoNode->setTravMask(1);
+            }
+            break;
+        case KeyEventDetails::KEY_2:
+            if(octreeNode->getTravMask() != 0)
+            {
+                octreeNode->setTravMask(0);
+            }
+            else
+            {
+                octreeNode->setTravMask(1);
+            }
+            break;
     }
 }
 
@@ -88,7 +116,6 @@ int main(int argc, char **argv)
         TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
         //Attach to events
-        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1));
         TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
@@ -102,37 +129,61 @@ int main(int argc, char **argv)
         PhysicsHashSpaceRecPtr space = PhysicsHashSpace::create();
 
         //Make Base Geometry Node
-        NodeRecPtr TriGeometryBase = makeTorus(1.0, 10.0, 24, 24);
+        NodeRecPtr SceneGeometryNode = SceneFileHandler::the()->read(".//ER.osb");
+        if(SceneGeometryNode == NULL)
+        {
+            SceneGeometryNode = makeTorus(1.0, 10.0, 24, 24);
+        }
 
         //create ODE data
         PhysicsTriMeshGeomRecPtr triGeom = PhysicsTriMeshGeom::create();
         //add geom to space for collision
         triGeom->setSpace(space);
         //set the geometryNode to fill the ode-triMesh
-        triGeom->setGeometryNode(TriGeometryBase);
+        triGeom->setGeometryNode(SceneGeometryNode);
 
         //add attachments
-        TriGeometryBase->addAttachment(triGeom);
+        SceneGeometryNode->addAttachment(triGeom);
 
         NodeRecPtr RootNode = makeCoredNode<Group>();
-        RootNode->addChild(TriGeometryBase);
+        RootNode->addChild(SceneGeometryNode);
 
         //Create the Octree
 		Octree TheOctree;
 		TheOctree.setRootNode(RootNode);
 		TheOctree.setSpace(space);
 		TheOctree.setWorld(world);
-
+        TheOctree.setMinNodeVolume(Vec3f(1.5f,1.5f,1.5f));
+        //TheOctree.setMinNodeVolume(Vec3f(0.5f,0.5f,0.5f));
+        //TheOctree.setMinNodeVolume(Vec3f(0.25f,0.25f,0.25f));
+        //TheOctree.setMinNodeVolume(Vec3f(0.15f,0.15f,0.15f));
         commitChanges();
 
+        SLOG << "Started Building Octree" << std::endl;
+        Time StartTime;
+        StartTime = getSystemTime();
 		TheOctree.buildTree();
+        SLOG << "Building Octree: " << getSystemTime() - StartTime << " s" << std::endl;
 
         //Create a visualization of the octree
-        NodeRecPtr OctreeVisNode = createOctreeVisualization(TheOctree, 100);
+        SLOG << "Started Building Visualization" << std::endl;
+        StartTime = getSystemTime();
+        NodeRecPtr OctreeVisNode = OctreeVisualization::createOctreeVisualization(TheOctree, 100);
+        SLOG << "Building Visualization: " << getSystemTime() - StartTime << " s" << std::endl;
         RootNode->addChild(OctreeVisNode);
+
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed,
+                                                      _1,
+                                                      SceneGeometryNode.get(),
+                                                      OctreeVisNode.get()));
+
+        //Set the background
+        SolidBackgroundRecPtr TheBackground = SolidBackground::create();
+        TheBackground->setColor(Color3f(0.0f,0.0f,0.0f));
 
         // tell the manager what to manage
         sceneManager.setRoot  (RootNode);
+        sceneManager.getWindow()->getPort(0)->setBackground(TheBackground);
 
         // show the whole RootNode
         sceneManager.showAll();

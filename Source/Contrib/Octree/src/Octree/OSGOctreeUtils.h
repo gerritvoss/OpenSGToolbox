@@ -50,34 +50,111 @@
 #include "OSGBlendChunkFields.h"
 #include "OSGPolygonChunkFields.h"
 #include "OSGGeometryFields.h"
+#include "OSGMaterialFields.h"
+#include "OSGLineChunkFields.h"
+
+#include <boost/function.hpp>
 
 OSG_BEGIN_NAMESPACE
 
-NodeTransitPtr OSG_CONTRIBOCTREE_DLLMAPPING createOctreeVisualization(const Octree& tree,
-                                                                      Int32 MaxDepth,
-                                                                      const Color3f& CoolColor = Color3f(0.0f,0.0f,1.0f),
-                                                                      const Color3f& HotColor = Color3f(1.0f,0.0f,0.0f));
+class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
+{
+    /*==========================  PUBLIC  =================================*/
+  public:
 
-void OSG_CONTRIBOCTREE_DLLMAPPING createOctreeVisualizationRec(const Octree::OTNodePtr node,
-                                                               Node* const VisNode,
-                                                               Int32 MaxDepth,
-                                                               const Color3f& CoolColor,
-                                                               const Color3f& HotColor,
-                                                               const Node* BaseBox,
-                                                               BlendChunk* BaseBlendChunk,
-                                                               PolygonChunk* BasePolygonChunk);
+    typedef boost::function<NodeTransitPtr (const Octree&, const Octree::OTNodePtr, Material*)> OTNodeGeometryCreateFunc;
+    typedef boost::function<MaterialTransitPtr (const Octree&, const Octree::OTNodePtr)> OTNodeMaterialCreateFunc;
+    typedef boost::function<bool           (const Octree&, const Octree::OTNodePtr)> OTNodeIsVisibleFunc;
 
-NodeTransitPtr OSG_CONTRIBOCTREE_DLLMAPPING
-createOctreeNodeVisualization(Octree::OTNodeVolume &vol,
-                              UInt32 Depth,
-                              UInt32 MaxDepth,
-                              const Color3f& CoolColor,
-                              const Color3f& HotColor,
-                              const Node* BaseBox,
-                              BlendChunk* BaseBlendChunk,
-                              PolygonChunk* BasePolygonChunk
-                             );
+    //Methods for visualizing octrees
+    //
+    //Methods for drawing nodes
+    //Render each node as a box
+    //Render each node as a the bounding box lines
+    //
+    //Methods for choosing which nodes to draw
+    //Render only the leaf nodes
+    //Render only the nodes of depth i...j
+    //Use LOD Nodes to draw only nodes a specific distance from the view
+    //
+    /*---------------------------------------------------------------------*/
+    /*! \name                       Init                                   */
+    /*! \{                                                                 */
+    static NodeTransitPtr createOctreeVisualization(const Octree& tree,
+                                                    Int32 MaxDepth,
+                                                    //Render as Filled box or lined box
+                                                    bool filledGeometry = true,
+                                                    //Which nodes to draw: OnlyLeaf, NodeDepthRange, LOD
+                                                    bool onlyLeaf = true);
+    /*! \}                                                                 */
 
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Create Node Queries                         */
+    /*! \{                                                                 */
+    static bool isNodeLeaf  (const Octree&,
+                             const Octree::OTNodePtr,
+                             bool EmptyLeavesVisible);
+
+    static bool isNodeDepthRange  (const Octree&,
+                                   const Octree::OTNodePtr,
+                                   Int32 MinDepth,
+                                   Int32 MaxDepth);
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                   Node Creation                              */
+    /*! \{                                                                 */
+    static NodeTransitPtr createNodeGeo(const Octree&,
+                                        const Octree::OTNodePtr,
+                                        Material*,
+                                        const Node* BaseGeo);
+
+    static NodeTransitPtr createNodeDistanceLOD(const Octree&,
+                                                const Octree::OTNodePtr,
+                                                Material*,
+                                                const Node* BaseGeo,
+                                                Real32 Range
+                                               );
+    /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                    Material Creation                         */
+    /*! \{                                                                 */
+    static MaterialTransitPtr createMatFilled(const Octree&,
+                                              const Octree::OTNodePtr,
+                                              const Color3f& CoolColor,
+                                              const Color3f& HotColor,
+                                              Real32 Alpha,
+                                              BlendChunk* BaseBlendChunk,
+                                              PolygonChunk* BasePolygonChunk
+                                             );
+
+    static MaterialTransitPtr createMatLine(const Octree&,
+                                            const Octree::OTNodePtr,
+                                            const Color3f& CoolColor,
+                                            const Color3f& HotColor,
+                                            Real32 Alpha,
+                                            BlendChunk* BaseBlendChunk,
+                                            LineChunk* BaseLineChunk
+                                           );
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
+  protected:
+    /*=========================  PRIVATE  =================================*/
+  private:
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  Recursive Func                              */
+    /*! \{                                                                 */
+    static void createOctreeVisualizationRec(const Octree& tree,
+                                             const Octree::OTNodePtr node,
+                                             Node* const VisNode,
+                                             Int32 MaxDepth,
+                                             OTNodeGeometryCreateFunc GeoCreateFunc,
+                                             OTNodeMaterialCreateFunc MatCreateFunc,
+                                             OTNodeIsVisibleFunc IsVisibleFunc);
+    /*! \}                                                                 */
+};
 OSG_END_NAMESPACE
 
 #endif /* _OSGOCTREEUTILS_H_ */

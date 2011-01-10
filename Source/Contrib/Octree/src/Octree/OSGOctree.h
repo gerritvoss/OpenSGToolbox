@@ -111,7 +111,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     Octree(void);
     Octree(Node* const, PhysicsSpace* const, PhysicsWorld* const);
-    void buildTree(void);
+    void buildTree(bool uniformSideLengths = true);
 
     void setRootNode(Node* const);
     void setSpace(PhysicsSpace* const);

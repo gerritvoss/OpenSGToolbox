@@ -74,7 +74,7 @@ OSG_BEGIN_NAMESPACE
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Octree::buildTree(void)
+void Octree::buildTree(bool uniformSideLengths)
 {
     Real32 x, y, z;
     Pnt3f center, max, min;
@@ -82,7 +82,17 @@ void Octree::buildTree(void)
     _SceneRoot->getWorldVolume(vol);
     vol.getSize(x,y,z);
     vol.getCenter(center);
-    vol.getBounds(min, max);
+    if(uniformSideLengths)
+    {
+        x = y = z = osgMax(x,osgMax(y,z));
+
+        min = center - 0.5f * Vec3f(x); 
+        max = center + 0.5f * Vec3f(x); 
+    }
+    else
+    {
+        vol.getBounds(min, max);
+    }
 
     //set _Root
     _Root->vol.lengths = Vec3f(x, y, z);
