@@ -34,6 +34,7 @@
 
 #include "OSGOctree.h"
 #include "OSGOctreeUtils.h"
+#include <boost/filesystem/convenience.hpp>
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -120,8 +121,20 @@ int main(int argc, char **argv)
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
 
+        BoostPath ModelFilePath(".//Data//CellParts.osb");
+
+        if(argc >= 2)
+        {
+            ModelFilePath = BoostPath(argv[1]);
+            if(!boost::filesystem::exists(ModelFilePath))
+            {
+                ModelFilePath = BoostPath(".//Data//CellParts.osb");
+            }
+        }
+
         //Make Base Geometry Node
-        NodeRecPtr SceneGeometryNode = SceneFileHandler::the()->read(".//ER.osb");
+        NodeRecPtr SceneGeometryNode =
+            SceneFileHandler::the()->read(ModelFilePath.string().c_str());
         if(SceneGeometryNode == NULL)
         {
             SceneGeometryNode = makeTorus(1.0, 10.0, 24, 24);
@@ -129,20 +142,15 @@ int main(int argc, char **argv)
 
         NodeRecPtr RootNode = makeCoredNode<Group>();
         RootNode->addChild(SceneGeometryNode);
+        commitChanges();
 
         //Create the Octree
-		Octree TheOctree;
-		TheOctree.setRootNode(RootNode);
-        //TheOctree.setMinNodeVolume(Vec3f(1.5f,1.5f,1.5f));
-        TheOctree.setMinNodeVolume(Vec3f(0.5f,0.5f,0.5f));
-        //TheOctree.setMinNodeVolume(Vec3f(0.25f,0.25f,0.25f));
-        //TheOctree.setMinNodeVolume(Vec3f(0.15f,0.15f,0.15f));
-        commitChanges();
 
         SLOG << "Started Building Octree" << std::endl;
         Time StartTime;
         StartTime = getSystemTime();
-		TheOctree.buildTree();
+		OctreePtr TheOctree = Octree::buildTree(RootNode,1,10,1.5f,true);
+
         SLOG << "Building Octree: " << getSystemTime() - StartTime << " s" << std::endl;
 
         //Create a visualization of the octree

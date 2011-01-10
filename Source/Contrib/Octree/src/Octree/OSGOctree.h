@@ -59,6 +59,10 @@
 
 OSG_BEGIN_NAMESPACE
 
+class Octree;
+
+typedef boost::shared_ptr<Octree> OctreePtr;
+
 class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 {
   public:
@@ -111,15 +115,14 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         bool containsObstacles;
     };
 
-    Octree(void);
-    Octree(Node* const, PhysicsSpace* const, PhysicsWorld* const);
-    void buildTree(bool uniformSideLengths = true);
 
-    void setRootNode(Node* const);
+    static OctreePtr buildTree(Node* const RootNode,
+                                   UInt32 TravMask,
+                                   UInt32 MaxDepth,
+                                   Real32 MinSideLength = 1.0f,
+                                   bool uniformSideLengths = true);
+
     OTNodePtr getRoot(void) const;
-
-    void setMinNodeVolume(const Vec3f& min);
-    const Vec3f& getMinNodeVolume(void) const;
 
     UInt32 getDepth(void) const;
 
@@ -148,7 +151,9 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         /*! \name Constructors                                                 */
         /*! \{                                                                 */
 
-        static ObjTransitPtr      create(UInt32  travMask);
+        static ObjTransitPtr      create(UInt32 travMask,
+                                         UInt32 catMask,
+                                         UInt32 colMask);
 
         virtual GraphOpTransitPtr clone (void                             );
 
@@ -171,7 +176,9 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         /*! \name Constructors/Destructor                                      */
         /*! \{                                                                 */
 
-        AddCollisionGeomGraphOp(UInt32  travMask);
+        AddCollisionGeomGraphOp(UInt32 travMask,
+                                UInt32 catMask,
+                                UInt32 colMask);
         virtual ~AddCollisionGeomGraphOp(void                                    );
 
         /*! \}                                                                 */
@@ -181,6 +188,8 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         Action::ResultE traverseLeave(Node * const node, Action::ResultE res);
 
         UInt32 _TravMask;
+        UInt32 _CategoryMask;
+        UInt32 _CollisionMask;
         std::vector<PhysicsGeomUnrecPtr> _CreatedGeoms;
         PhysicsSpaceRecPtr _PhysSpace;
         PhysicsWorldRecPtr _PhysWorld;
@@ -189,10 +198,15 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
   private:
     //construct the octree
+    Octree(void);
+    Octree(Node* const, PhysicsSpace* const, PhysicsWorld* const);
+
     void build(OTNodePtr,
                PhysicsBoxGeom* const VolumeBoxGeom,
                PhysicsSpace* const Space,
-               PhysicsWorld* const World);
+               PhysicsWorld* const World,
+               UInt32 MaxDepth,
+               Real32 MinSideLength);
 
     void buildNewNodes(OTNodePtr);
 
@@ -205,16 +219,10 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     bool _CollisionOccured;
 
-    //scene info
-    NodeRecPtr _SceneRoot;
-    UInt32     _CollidableMask;
-
     //octree
     OTNodePtr _Root;
-    Vec3f _MinNodeVolume;
     UInt32 _Depth;
 };
-
 
 OSG_END_NAMESPACE
 

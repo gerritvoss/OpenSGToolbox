@@ -40,27 +40,9 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void Octree::setMinNodeVolume(const Vec3f& min)
-{
-    _MinNodeVolume = min;
-}
-
-inline
-const Vec3f& Octree::getMinNodeVolume(void) const
-{
-    return _MinNodeVolume;
-}
-
-inline
 UInt32 Octree::getDepth(void) const
 {
     return _Depth;
-}
-
-inline
-void Octree::setRootNode(Node* const n)
-{
-    _SceneRoot = n;
 }
 
 inline

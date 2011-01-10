@@ -54,7 +54,7 @@
 
 OSG_BEGIN_NAMESPACE
 
-NodeTransitPtr OctreeVisualization::createOctreeVisualization(const Octree& tree,
+NodeTransitPtr OctreeVisualization::createOctreeVisualization(OctreePtr tree,
                                                               Int32 MaxDepth,
                                                               bool filledGeometry,
                                                               bool onlyLeaf)
@@ -90,9 +90,9 @@ NodeTransitPtr OctreeVisualization::createOctreeVisualization(const Octree& tree
                                     DefaultPolygonChunk.get());
 
         createOctreeVisualizationRec(tree,
-                                     tree.getRoot(),
+                                     tree->getRoot(),
                                      VisRootNode,
-                                     osgMin<UInt32>(tree.getDepth(),MaxDepth),
+                                     osgMin<UInt32>(tree->getDepth(),MaxDepth),
                                      GeoCreateFunc,
                                      MatCreateFunc,
                                      IsVisibleFunc);
@@ -187,9 +187,9 @@ NodeTransitPtr OctreeVisualization::createOctreeVisualization(const Octree& tree
                                     DefaultLineChunk.get());
 
         createOctreeVisualizationRec(tree,
-                                     tree.getRoot(),
+                                     tree->getRoot(),
                                      VisRootNode,
-                                     osgMin<UInt32>(tree.getDepth(),MaxDepth),
+                                     osgMin<UInt32>(tree->getDepth(),MaxDepth),
                                      GeoCreateFunc,
                                      MatCreateFunc,
                                      IsVisibleFunc);
@@ -199,7 +199,7 @@ NodeTransitPtr OctreeVisualization::createOctreeVisualization(const Octree& tree
     return NodeTransitPtr(VisRootNode);
 }
 
-void OctreeVisualization::createOctreeVisualizationRec(const Octree& tree,
+void OctreeVisualization::createOctreeVisualizationRec(OctreePtr tree,
                                                        const Octree::OTNodePtr node,
                                                        Node* const VisNode,
                                                        Int32 MaxDepth,
@@ -229,7 +229,7 @@ void OctreeVisualization::createOctreeVisualizationRec(const Octree& tree,
     }
 }
 
-bool OctreeVisualization::isNodeLeaf  (const Octree& tree,
+bool OctreeVisualization::isNodeLeaf  (OctreePtr tree,
                                        const Octree::OTNodePtr node,
                                        bool EmptyLeafsVisible)
 {
@@ -237,7 +237,7 @@ bool OctreeVisualization::isNodeLeaf  (const Octree& tree,
            (EmptyLeafsVisible || node->containsObstacles);
 }
 
-bool OctreeVisualization::isNodeDepthRange  (const Octree& tree,
+bool OctreeVisualization::isNodeDepthRange  (OctreePtr tree,
                                              const Octree::OTNodePtr node,
                                              Int32 MinDepth,
                                              Int32 MaxDepth)
@@ -246,7 +246,7 @@ bool OctreeVisualization::isNodeDepthRange  (const Octree& tree,
            (MaxDepth < 0 || node->depth <= MaxDepth);
 }
 
-NodeTransitPtr OctreeVisualization::createNodeGeo(const Octree&,
+NodeTransitPtr OctreeVisualization::createNodeGeo(OctreePtr,
                                                   const Octree::OTNodePtr node,
                                                   Material* GeoMaterial,
                                                   const Node* BaseGeo)
@@ -269,7 +269,7 @@ NodeTransitPtr OctreeVisualization::createNodeGeo(const Octree&,
     return NodeTransitPtr(trans_node);
 }
 
-NodeTransitPtr OctreeVisualization::createNodeDistanceLOD(const Octree&,
+NodeTransitPtr OctreeVisualization::createNodeDistanceLOD(OctreePtr,
                                                           const Octree::OTNodePtr node,
                                                           Material* GeoMaterial,
                                                           const Node* BaseGeo,
@@ -300,7 +300,7 @@ NodeTransitPtr OctreeVisualization::createNodeDistanceLOD(const Octree&,
     return NodeTransitPtr(trans_node);
 }
 
-MaterialTransitPtr OctreeVisualization::createMatFilled(const Octree& tree,
+MaterialTransitPtr OctreeVisualization::createMatFilled(OctreePtr tree,
                                                         const Octree::OTNodePtr node,
                                                         const Color3f& CoolColor,
                                                         const Color3f& HotColor,
@@ -310,7 +310,7 @@ MaterialTransitPtr OctreeVisualization::createMatFilled(const Octree& tree,
                                                        )
 {
     //Calculate the Color
-    //Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree.getDepth());
+    //Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree->getDepth());
     //Color3f NodeColor(t*HotColor + (1.0f-t)*CoolColor);
     Color3f NodeColor;
     Color4f NodeColorWithAlpha;
@@ -338,7 +338,7 @@ MaterialTransitPtr OctreeVisualization::createMatFilled(const Octree& tree,
     return MaterialTransitPtr(NodeMat);
 }
 
-MaterialTransitPtr OctreeVisualization::createMatLine(const Octree& tree,
+MaterialTransitPtr OctreeVisualization::createMatLine(OctreePtr tree,
                                                       const Octree::OTNodePtr node,
                                                       const Color3f& CoolColor,
                                                       const Color3f& HotColor,
@@ -348,7 +348,7 @@ MaterialTransitPtr OctreeVisualization::createMatLine(const Octree& tree,
                                                      )
 {
     //Calculate the Color
-    Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree.getDepth());
+    Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree->getDepth());
     Color3f NodeColor(t*HotColor + (1.0f-t)*CoolColor);
     Color4f NodeColorWithAlpha(NodeColor.red(),NodeColor.green(),NodeColor.blue(),Alpha);
 

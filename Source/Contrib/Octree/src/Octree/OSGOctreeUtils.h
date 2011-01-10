@@ -62,9 +62,9 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*==========================  PUBLIC  =================================*/
   public:
 
-    typedef boost::function<NodeTransitPtr (const Octree&, const Octree::OTNodePtr, Material*)> OTNodeGeometryCreateFunc;
-    typedef boost::function<MaterialTransitPtr (const Octree&, const Octree::OTNodePtr)> OTNodeMaterialCreateFunc;
-    typedef boost::function<bool           (const Octree&, const Octree::OTNodePtr)> OTNodeIsVisibleFunc;
+    typedef boost::function<NodeTransitPtr (OctreePtr, const Octree::OTNodePtr, Material*)> OTNodeGeometryCreateFunc;
+    typedef boost::function<MaterialTransitPtr (OctreePtr, const Octree::OTNodePtr)> OTNodeMaterialCreateFunc;
+    typedef boost::function<bool           (OctreePtr, const Octree::OTNodePtr)> OTNodeIsVisibleFunc;
 
     //Methods for visualizing octrees
     //
@@ -80,7 +80,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*---------------------------------------------------------------------*/
     /*! \name                       Init                                   */
     /*! \{                                                                 */
-    static NodeTransitPtr createOctreeVisualization(const Octree& tree,
+    static NodeTransitPtr createOctreeVisualization(OctreePtr tree,
                                                     Int32 MaxDepth,
                                                     //Render as Filled box or lined box
                                                     bool filledGeometry = true,
@@ -91,11 +91,11 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*---------------------------------------------------------------------*/
     /*! \name                  Create Node Queries                         */
     /*! \{                                                                 */
-    static bool isNodeLeaf  (const Octree&,
+    static bool isNodeLeaf  (OctreePtr,
                              const Octree::OTNodePtr,
                              bool EmptyLeavesVisible);
 
-    static bool isNodeDepthRange  (const Octree&,
+    static bool isNodeDepthRange  (OctreePtr,
                                    const Octree::OTNodePtr,
                                    Int32 MinDepth,
                                    Int32 MaxDepth);
@@ -104,12 +104,12 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*---------------------------------------------------------------------*/
     /*! \name                   Node Creation                              */
     /*! \{                                                                 */
-    static NodeTransitPtr createNodeGeo(const Octree&,
+    static NodeTransitPtr createNodeGeo(OctreePtr,
                                         const Octree::OTNodePtr,
                                         Material*,
                                         const Node* BaseGeo);
 
-    static NodeTransitPtr createNodeDistanceLOD(const Octree&,
+    static NodeTransitPtr createNodeDistanceLOD(OctreePtr,
                                                 const Octree::OTNodePtr,
                                                 Material*,
                                                 const Node* BaseGeo,
@@ -120,7 +120,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*---------------------------------------------------------------------*/
     /*! \name                    Material Creation                         */
     /*! \{                                                                 */
-    static MaterialTransitPtr createMatFilled(const Octree&,
+    static MaterialTransitPtr createMatFilled(OctreePtr,
                                               const Octree::OTNodePtr,
                                               const Color3f& CoolColor,
                                               const Color3f& HotColor,
@@ -129,7 +129,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
                                               PolygonChunk* BasePolygonChunk
                                              );
 
-    static MaterialTransitPtr createMatLine(const Octree&,
+    static MaterialTransitPtr createMatLine(OctreePtr,
                                             const Octree::OTNodePtr,
                                             const Color3f& CoolColor,
                                             const Color3f& HotColor,
@@ -146,7 +146,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING OctreeVisualization
     /*---------------------------------------------------------------------*/
     /*! \name                  Recursive Func                              */
     /*! \{                                                                 */
-    static void createOctreeVisualizationRec(const Octree& tree,
+    static void createOctreeVisualizationRec(OctreePtr tree,
                                              const Octree::OTNodePtr node,
                                              Node* const VisNode,
                                              Int32 MaxDepth,

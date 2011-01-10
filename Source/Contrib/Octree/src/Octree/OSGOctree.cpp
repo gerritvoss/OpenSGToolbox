@@ -77,12 +77,17 @@ OSG_BEGIN_NAMESPACE
  *                           Instance methods                              *
 \***************************************************************************/
 
-void Octree::buildTree(bool uniformSideLengths)
+OctreePtr Octree::buildTree(Node* const RootNode,
+                                   UInt32 TravMask,
+                                   UInt32 MaxDepth,
+                                   Real32 MinSideLength,
+                                   bool uniformSideLengths)
 {
+    OctreePtr TheTree = OctreePtr(new Octree());
     Real32 x, y, z;
     Pnt3f center, max, min;
     BoxVolume vol;
-    _SceneRoot->getWorldVolume(vol);
+    RootNode->getWorldVolume(vol);
     vol.getSize(x,y,z);
     vol.getCenter(center);
     if(uniformSideLengths)
@@ -98,35 +103,46 @@ void Octree::buildTree(bool uniformSideLengths)
     }
 
     //set _Root
-    _Root->vol.lengths = Vec3f(x, y, z);
-    _Root->vol.max = max;
-    _Root->vol.min = min;
-    _Root->vol.position = center;
-    _Root->depth = 0;
-    //_Root->parent = NULL;
-    _Root->containsObstacles = false;
+    TheTree->_Root->vol.lengths = Vec3f(x, y, z);
+    TheTree->_Root->vol.max = max;
+    TheTree->_Root->vol.min = min;
+    TheTree->_Root->vol.position = center;
+    TheTree->_Root->depth = 0;
+    //TheTree->_Root->parent = NULL;
+    TheTree->_Root->containsObstacles = false;
 
     //Add collision geometry to the geometry nodes
     Octree::AddCollisionGeomGraphOpRefPtr AddCollisionOp =
-        AddCollisionGeomGraphOp::create(_CollidableMask);
-    AddCollisionOp->traverse(_SceneRoot);
+        AddCollisionGeomGraphOp::create(TravMask,1,0);
+    AddCollisionOp->traverse(RootNode);
+
+    commitChanges();
 
     PhysicsBoxGeomUnrecPtr VolumeBoxGeom = PhysicsBoxGeom::create();
     VolumeBoxGeom->setSpace(AddCollisionOp->getSpace());
+    VolumeBoxGeom->setCategoryBits(0);
+    VolumeBoxGeom->setCollideBits(1);
 
     //Add a collision callback to the physics Space
     boost::signals2::connection CollisionConnection =
-        AddCollisionOp->getSpace()->connectCollision(boost::bind(&Octree::handleCollision, this, _1),0.0,1.0);
+        AddCollisionOp->getSpace()->connectCollision(boost::bind(&Octree::handleCollision,
+                                                                 TheTree.get(), _1),0.0,1.0);
 
-    build(_Root,VolumeBoxGeom,AddCollisionOp->getSpace(),AddCollisionOp->getWorld());
+    TheTree->build(TheTree->_Root,
+                   VolumeBoxGeom,
+                   AddCollisionOp->getSpace(),
+                   AddCollisionOp->getWorld(),
+                   MaxDepth,
+                   MinSideLength);
 
     //Disconnect the collision callback
     CollisionConnection.disconnect();
 
     AddCollisionOp->getSpace()->RemoveGeom(VolumeBoxGeom->getGeomID());
 
-    beginSearchForNeighbors(_Root.get());
+    TheTree->beginSearchForNeighbors(TheTree->_Root.get());
 
+    return TheTree;
 }
 
 /*-------------------------------------------------------------------------*\
@@ -441,8 +457,15 @@ void Octree::buildNewNodes(OTNodePtr node)
 void Octree::build(OTNodePtr node,
                    PhysicsBoxGeom* const VolumeBoxGeom,
                    PhysicsSpace* const Space,
-                   PhysicsWorld* const World)
+                   PhysicsWorld* const World,
+                   UInt32 MaxDepth,
+                   Real32 MinSideLength)
 {
+    if(node->depth >= MaxDepth)
+    {
+        return;
+    }
+
     VolumeBoxGeom->setLengths(node->vol.lengths);
     VolumeBoxGeom->setPosition(Vec3f(node->vol.position.x(),
                                node->vol.position.y(),
@@ -458,15 +481,22 @@ void Octree::build(OTNodePtr node,
         node->containsObstacles = true;
     }
 
-    if(_CollisionOccured  && (node->vol.lengths.x() > _MinNodeVolume.x() && node->vol.lengths.y() > _MinNodeVolume.y() && node->vol.lengths.z() > _MinNodeVolume.z()))
+    if(_CollisionOccured  &&
+       (node->vol.lengths.x() > MinSideLength &&
+        node->vol.lengths.y() > MinSideLength &&
+        node->vol.lengths.z() > MinSideLength))
     {//ToDo: better way to check minVolume
         /*node->containsObstacles = true;*/
 
         buildNewNodes(node);
-        //Int8 numChildren = 8;
         for(Int8 i = 0; i < node->children.size(); i++)
         {
-            build(node->children[i], VolumeBoxGeom, Space, World);
+            build(node->children[i],
+                  VolumeBoxGeom,
+                  Space,
+                  World,
+                  MaxDepth,
+                  MinSideLength);
         }
     }
 }
@@ -474,8 +504,6 @@ void Octree::build(OTNodePtr node,
 /*----------------------- constructors & destructors ----------------------*/
 
 Octree::Octree(void) : _CollisionOccured(false),
-                       _CollidableMask(TypeTraits<UInt32>::getMax()),
-                       _MinNodeVolume(0.2f, 0.2f, 0.2f),
                        _Depth(0)
 {
     _Root = OTNodePtr(new OTNode);
@@ -483,9 +511,6 @@ Octree::Octree(void) : _CollisionOccured(false),
 
 Octree::Octree(Node* const n, PhysicsSpace* const s, PhysicsWorld* const w) :
     _CollisionOccured(false),
-    _CollidableMask(TypeTraits<UInt32>::getMax()),
-    _SceneRoot(n),
-    _MinNodeVolume(0.2f, 0.2f, 0.2f),
     _Depth(0)
 
 {
@@ -498,7 +523,8 @@ namespace
     //! Register the GraphOp with the factory
     static bool registerOp(void)
     {
-        GraphOpRefPtr newOp = Octree::AddCollisionGeomGraphOp::create(TypeTraits<UInt32>::getMax());
+        GraphOpRefPtr newOp =
+            Octree::AddCollisionGeomGraphOp::create(TypeTraits<UInt32>::getMax(),TypeTraits<UInt32>::getMax(),TypeTraits<UInt32>::getMax());
 
         GraphOpFactory::the()->registerOp(newOp);
         return true;
@@ -509,9 +535,13 @@ namespace
 } // namespace
 
 
-Octree::AddCollisionGeomGraphOp::AddCollisionGeomGraphOp(UInt32  travMask)
+Octree::AddCollisionGeomGraphOp::AddCollisionGeomGraphOp(UInt32 travMask,
+                                                         UInt32 catMask,
+                                                         UInt32 colMask)
     : GraphOp("AddCollisionGeomGraphOp")
     , _TravMask  (travMask)
+    , _CategoryMask  (catMask)
+    , _CollisionMask  (colMask)
 {
 }
 
@@ -520,14 +550,16 @@ Octree::AddCollisionGeomGraphOp::~AddCollisionGeomGraphOp(void)
 }
 
 Octree::AddCollisionGeomGraphOpTransitPtr
-Octree::AddCollisionGeomGraphOp::create(UInt32  travMask)
+Octree::AddCollisionGeomGraphOp::create(UInt32 travMask,
+                                        UInt32 catMask,
+                                        UInt32 colMask)
 {
-    return AddCollisionGeomGraphOpTransitPtr(new AddCollisionGeomGraphOp(travMask));
+    return AddCollisionGeomGraphOpTransitPtr(new AddCollisionGeomGraphOp(travMask,catMask,colMask));
 }
 
 GraphOpTransitPtr Octree::AddCollisionGeomGraphOp::clone(void)
 {
-    return GraphOpTransitPtr(new AddCollisionGeomGraphOp(_TravMask));
+    return GraphOpTransitPtr(new AddCollisionGeomGraphOp(_TravMask,_CategoryMask,_CollisionMask));
 }
 
 void Octree::AddCollisionGeomGraphOp::setParams(const std::string params)
@@ -535,6 +567,8 @@ void Octree::AddCollisionGeomGraphOp::setParams(const std::string params)
     ParamSet ps(params);
     
     ps("travMask",  _TravMask);
+    ps("categoryMask",  _CategoryMask);
+    ps("collisionMask",  _CollisionMask);
 
     std::string out = ps.getUnusedParams();
     if(out.length())
@@ -551,7 +585,11 @@ std::string Octree::AddCollisionGeomGraphOp::usage(void)
     "  Adds Collision geometry as attachments to nodes\n"
     "Params: name (type, default)\n"
     "  travMask   (UInt32, 4294967295): \n"
-    "                    traversal mask\n";
+    "                    traversal mask\n"
+    "  categoryMask   (UInt32, 4294967295): \n"
+    "                    category mask to assign geoms\n"
+    "  collisionMask   (UInt32, 4294967295): \n"
+    "                    collision mask to assign geoms\n";
 }
 
 bool Octree::AddCollisionGeomGraphOp::traverse(Node *root)
@@ -569,6 +607,8 @@ Action::ResultE Octree::AddCollisionGeomGraphOp::traverseEnter(Node * const node
            node->getCore()->getType().isDerivedFrom(Geometry::getClassType()))
         {
             PhysicsTriMeshGeomRecPtr TriGeom = PhysicsTriMeshGeom::create();
+            TriGeom->setCategoryBits(_CategoryMask);
+            TriGeom->setCollideBits(_CollisionMask);
 
             //add geom to space for collision
             TriGeom->setSpace(_PhysSpace);
