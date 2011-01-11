@@ -207,7 +207,7 @@ void OctreeVisualization::createOctreeVisualizationRec(OctreePtr tree,
                                                        OTNodeMaterialCreateFunc MatCreateFunc,
                                                        OTNodeIsVisibleFunc IsVisibleFunc)
 {
-    if(node->depth <= MaxDepth)
+    if(node->getDepth() <= MaxDepth)
     {
         if(IsVisibleFunc(tree, node))
         {
@@ -216,10 +216,10 @@ void OctreeVisualization::createOctreeVisualizationRec(OctreePtr tree,
             VisNode->addChild(NewVisNode);
         }
 
-        for(UInt32 i(0) ; i<node->children.size() ; ++i)
+        for(UInt32 i(0) ; i<node->getChildren().size() ; ++i)
         {
             createOctreeVisualizationRec(tree,
-                                         node->children[i],
+                                         node->getChildren(i),
                                          VisNode,
                                          MaxDepth,
                                          GeoCreateFunc,
@@ -233,8 +233,8 @@ bool OctreeVisualization::isNodeLeaf  (OctreePtr tree,
                                        const Octree::OTNodePtr node,
                                        bool EmptyLeafsVisible)
 {
-    return node->children.size() == 0 && 
-           (EmptyLeafsVisible || node->containsObstacles);
+    return node->getChildren().size() == 0 && 
+           (EmptyLeafsVisible || node->getContainsObstacles());
 }
 
 bool OctreeVisualization::isNodeDepthRange  (OctreePtr tree,
@@ -242,8 +242,8 @@ bool OctreeVisualization::isNodeDepthRange  (OctreePtr tree,
                                              Int32 MinDepth,
                                              Int32 MaxDepth)
 {
-    return (MinDepth < 0 || node->depth >= MinDepth) &&
-           (MaxDepth < 0 || node->depth <= MaxDepth);
+    return (MinDepth < 0 || node->getDepth() >= MinDepth) &&
+           (MaxDepth < 0 || node->getDepth() <= MaxDepth);
 }
 
 NodeTransitPtr OctreeVisualization::createNodeGeo(OctreePtr,
@@ -259,10 +259,10 @@ NodeTransitPtr OctreeVisualization::createNodeGeo(OctreePtr,
     Matrix m;
     TransformRecPtr box_trans;
     NodeRecPtr trans_node = makeCoredNode<Transform>(&box_trans);
-    m.setTranslate( node->vol.position.x(), node->vol.position.y(), node->vol.position.z());
+    m.setTranslate( node->getVolume().getPosition().x(), node->getVolume().getPosition().y(), node->getVolume().getPosition().z());
 
     const Real32 Offset(0.0f);
-    m.setScale(node->vol.lengths.x()-(node->vol.lengths.x()*Offset), node->vol.lengths.y()-(node->vol.lengths.y()*Offset), node->vol.lengths.z()-(node->vol.lengths.z()*Offset));
+    m.setScale(node->getVolume().getLengths().x()-(node->getVolume().getLengths().x()*Offset), node->getVolume().getLengths().y()-(node->getVolume().getLengths().y()*Offset), node->getVolume().getLengths().z()-(node->getVolume().getLengths().z()*Offset));
     box_trans->setMatrix(m);
     trans_node->addChild(box);
 
@@ -290,10 +290,14 @@ NodeTransitPtr OctreeVisualization::createNodeDistanceLOD(OctreePtr,
     Matrix m;
     TransformRecPtr box_trans;
     NodeRecPtr trans_node = makeCoredNode<Transform>(&box_trans);
-    m.setTranslate(node->vol.position.x(), node->vol.position.y(), node->vol.position.z());
+    m.setTranslate(node->getVolume().getPosition().x(),
+                   node->getVolume().getPosition().y(),
+                   node->getVolume().getPosition().z());
 
     const Real32 Offset(0.0f);
-    m.setScale(node->vol.lengths.x()-(node->vol.lengths.x()*Offset), node->vol.lengths.y()-(node->vol.lengths.y()*Offset), node->vol.lengths.z()-(node->vol.lengths.z()*Offset));
+    m.setScale(node->getVolume().getLengths().x()-(node->getVolume().getLengths().x()*Offset),
+               node->getVolume().getLengths().y()-(node->getVolume().getLengths().y()*Offset),
+               node->getVolume().getLengths().z()-(node->getVolume().getLengths().z()*Offset));
     box_trans->setMatrix(m);
     trans_node->addChild(LODNode);
 
@@ -310,11 +314,11 @@ MaterialTransitPtr OctreeVisualization::createMatFilled(OctreePtr tree,
                                                        )
 {
     //Calculate the Color
-    //Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree->getDepth());
+    //Real32 t = static_cast<Real32>(node->getDepth())/static_cast<Real32>(tree->getDepth());
     //Color3f NodeColor(t*HotColor + (1.0f-t)*CoolColor);
     Color3f NodeColor;
     Color4f NodeColorWithAlpha;
-    if(node->containsObstacles)
+    if(node->getContainsObstacles())
     {
         NodeColor = HotColor;
         NodeColorWithAlpha.setValuesRGBA(NodeColor.red(),NodeColor.green(),NodeColor.blue(),0.55);
@@ -348,7 +352,7 @@ MaterialTransitPtr OctreeVisualization::createMatLine(OctreePtr tree,
                                                      )
 {
     //Calculate the Color
-    Real32 t = static_cast<Real32>(node->depth)/static_cast<Real32>(tree->getDepth());
+    Real32 t = static_cast<Real32>(node->getDepth())/static_cast<Real32>(tree->getDepth());
     Color3f NodeColor(t*HotColor + (1.0f-t)*CoolColor);
     Color4f NodeColorWithAlpha(NodeColor.red(),NodeColor.green(),NodeColor.blue(),Alpha);
 

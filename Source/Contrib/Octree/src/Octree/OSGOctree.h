@@ -89,12 +89,19 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         FRONT  = 5
     };
 
-    struct OTNodeVolume
+    class OTNodeVolume
     {
-        Vec3f lengths;
-        Pnt3f position,
-              min,
-              max;
+      public:
+        const Pnt3f& getMin(void) const;
+        const Pnt3f& getMax(void) const;
+        Pnt3f getPosition(void) const;
+        Vec3f getLengths(void) const;
+
+        void setMin(const Pnt3f& min);
+        void setMax(const Pnt3f& max);
+      private:
+        Pnt3f _Min,
+              _Max;
     };
 
 
@@ -105,26 +112,70 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     struct OTNode
     {
-        OTNodeVolume vol;
-        std::vector<OTNodePtr> children;
-        std::vector<OTNodeWeakPtr> neighbors;
-        bool neighborsToSide[6];
-        OTNodeWeakPtr parent;
-        Octant octant;
-        Int32 depth;
-        bool containsObstacles;
+      public:
+        friend class Octree;
+
+        const OTNodeVolume& getVolume(void) const;
+        const std::vector<OTNodePtr>& getChildren(void) const;
+        OTNodePtr getChildren(UInt32 Index);
+        std::vector<OTNodePtr> getNeighbors(void) const;
+        OTNodePtr getNeighbor(UInt32 Index);
+        std::vector<bool> getNeighborsToSide(void) const;
+        OTNodePtr getParent(void) const;
+        const Octant& getOctant(void) const;
+        Int32 getDepth(void) const;
+
+        UInt32 getNodeCount(void) const;
+        UInt32 getLeafNodeCount(void) const;
+        UInt32 getBranchNodeCount(void) const;
+        UInt32 getIntersectingNodeCount(void) const;
+        UInt32 getIntersectingLeafNodeCount(void) const;
+
+        bool getContainsObstacles(void) const;
+
+        void setVolume(const OTNodeVolume& Volume);
+        void setChildren(const std::vector<OTNodePtr>& Children);
+        void setNeighbors(const std::vector<OTNodePtr>& Neighbors);
+        void setNeighborsToSide(const std::vector<bool>& NeighborsToSide);
+        void setParent(OTNodePtr Parent);
+        void setOctant(Octant TheOctant);
+        void setDepth(Int32 Depth);
+        void setContainsObstacles(bool ContainsObs);
+
+      private:
+        OTNodeVolume& editVolume(void);
+        void addChild(OTNodePtr Child);
+        void addNeighbor(OTNodePtr Neighbor);
+
+        OTNodeVolume _Volume;
+        std::vector<OTNodePtr> _Children;
+        std::vector<OTNodeWeakPtr> _Neighbors;
+        bool _NeighborsToSide[6];
+        OTNodeWeakPtr _Parent;
+        Octant _Octant;
+        Int32 _Depth;
+        bool _ContainsObstacles;
     };
 
 
     static OctreePtr buildTree(Node* const RootNode,
                                    UInt32 TravMask,
                                    UInt32 MaxDepth,
-                                   Real32 MinSideLength = 1.0f,
+                                   Real32 MinSideLength = 0.0f,
                                    bool uniformSideLengths = true);
 
     OTNodePtr getRoot(void) const;
 
+    OTNodePtr getNodeThatContains(const Pnt3f Location) const;
+
     UInt32 getDepth(void) const;
+
+    UInt32 getNodeCount(void) const;
+    UInt32 getLeafNodeCount(void) const;
+    UInt32 getBranchNodeCount(void) const;
+
+    UInt32 getIntersectingNodeCount(void) const;
+    UInt32 getIntersectingLeafNodeCount(void) const;
 
     class AddCollisionGeomGraphOp : public GraphOp
     {
@@ -210,8 +261,8 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     void buildNewNodes(OTNodePtr);
 
-    Pnt3f getVolMin(Octant, OTNodeVolume&, Vec3f&) const;
-    Pnt3f getVolMax(Octant, OTNodeVolume&, Vec3f&) const;
+    Pnt3f getVolMin(Octant, const OTNodeVolume&, const Vec3f&) const;
+    Pnt3f getVolMax(Octant, const OTNodeVolume&, const Vec3f&) const;
     void beginSearchForNeighbors(OTNode*);
     void findNeighbors(OTNode*, OTNode*, Int8); //TODO:  void traverse();
     bool areNeighbors(OTNode*, OTNode*) const;

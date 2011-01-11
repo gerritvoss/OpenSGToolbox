@@ -73,10 +73,6 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
 OctreePtr Octree::buildTree(Node* const RootNode,
                                    UInt32 TravMask,
                                    UInt32 MaxDepth,
@@ -84,18 +80,20 @@ OctreePtr Octree::buildTree(Node* const RootNode,
                                    bool uniformSideLengths)
 {
     OctreePtr TheTree = OctreePtr(new Octree());
-    Real32 x, y, z;
-    Pnt3f center, max, min;
+    Pnt3f max, min;
     BoxVolume vol;
     RootNode->getWorldVolume(vol);
-    vol.getSize(x,y,z);
-    vol.getCenter(center);
     if(uniformSideLengths)
     {
-        x = y = z = osgMax(x,osgMax(y,z));
+        Real32 x, y, z;
+        vol.getSize(x,y,z);
+        Pnt3f center;
+        vol.getCenter(center);
 
-        min = center - 0.5f * Vec3f(x); 
-        max = center + 0.5f * Vec3f(x); 
+        Real32 MaxSide = osgMax(x,osgMax(y,z));
+
+        min = center - 0.5f * Vec3f(MaxSide,MaxSide,MaxSide); 
+        max = center + 0.5f * Vec3f(MaxSide,MaxSide,MaxSide); 
     }
     else
     {
@@ -103,13 +101,10 @@ OctreePtr Octree::buildTree(Node* const RootNode,
     }
 
     //set _Root
-    TheTree->_Root->vol.lengths = Vec3f(x, y, z);
-    TheTree->_Root->vol.max = max;
-    TheTree->_Root->vol.min = min;
-    TheTree->_Root->vol.position = center;
-    TheTree->_Root->depth = 0;
-    //TheTree->_Root->parent = NULL;
-    TheTree->_Root->containsObstacles = false;
+    TheTree->_Root->editVolume().setMax(max);
+    TheTree->_Root->editVolume().setMin(min);
+    TheTree->_Root->setDepth(0);
+    TheTree->_Root->setContainsObstacles(false);
 
     //Add collision geometry to the geometry nodes
     Octree::AddCollisionGeomGraphOpRefPtr AddCollisionOp =
@@ -145,6 +140,92 @@ OctreePtr Octree::buildTree(Node* const RootNode,
     return TheTree;
 }
 
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+Octree::OTNodePtr Octree::getNodeThatContains(const Pnt3f Location) const
+{
+    //TODO: Implement
+    assert(false && "NYI");
+    return OTNodePtr();
+}
+
+UInt32 Octree::getNodeCount(void) const
+{
+    return (_Root ? _Root->getNodeCount(): 0);
+}
+
+UInt32 Octree::getLeafNodeCount(void) const
+{
+    return (_Root ? _Root->getLeafNodeCount(): 0);
+}
+
+UInt32 Octree::getBranchNodeCount(void) const
+{
+    return (_Root ? _Root->getBranchNodeCount(): 0);
+}
+
+UInt32 Octree::getIntersectingNodeCount(void) const
+{
+    return (_Root ? _Root->getIntersectingNodeCount(): 0);
+}
+
+UInt32 Octree::getIntersectingLeafNodeCount(void) const
+{
+    return (_Root ? _Root->getIntersectingLeafNodeCount(): 0);
+}
+
+UInt32 Octree::OTNode::getNodeCount(void) const
+{
+    UInt32 Result(1);
+    for(UInt32 i(0) ; i<_Children.size() ; ++i)
+    {
+        Result += _Children[i]->getNodeCount();
+    }
+    return Result;
+}
+
+UInt32 Octree::OTNode::getLeafNodeCount(void) const
+{
+    UInt32 Result(_Children.size() == 0 ? 1 : 0);
+    for(UInt32 i(0) ; i<_Children.size() ; ++i)
+    {
+        Result += _Children[i]->getLeafNodeCount();
+    }
+    return Result;
+}
+
+UInt32 Octree::OTNode::getBranchNodeCount(void) const
+{
+    UInt32 Result(_Children.size() == 0 ? 0 : 1);
+    for(UInt32 i(0) ; i<_Children.size() ; ++i)
+    {
+        Result += _Children[i]->getBranchNodeCount();
+    }
+    return Result;
+}
+
+UInt32 Octree::OTNode::getIntersectingNodeCount(void) const
+{
+    UInt32 Result(_ContainsObstacles ? 1 : 0);
+    for(UInt32 i(0) ; i<_Children.size() ; ++i)
+    {
+        Result += _Children[i]->getIntersectingNodeCount();
+    }
+    return Result;
+}
+
+UInt32 Octree::OTNode::getIntersectingLeafNodeCount(void) const
+{
+    UInt32 Result(_Children.size() == 0 && _ContainsObstacles ? 1 : 0);
+    for(UInt32 i(0) ; i<_Children.size() ; ++i)
+    {
+        Result += _Children[i]->getIntersectingLeafNodeCount();
+    }
+    return Result;
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
@@ -154,49 +235,49 @@ void Octree::handleCollision(CollisionEventDetails *const e)
     _CollisionOccured = true;
 }
 
-Pnt3f Octree::getVolMin(Octant octant, OTNodeVolume& vol, Vec3f& newLengths) const
+Pnt3f Octree::getVolMin(Octant octant, const OTNodeVolume& vol, const Vec3f& newLengths) const
 {
     switch(octant)
     {
         case(OCT_000)://lower left front
-            return Pnt3f(vol.min[0], vol.min[1], vol.min[2]+newLengths.z());
+            return Pnt3f(vol.getMin()[0], vol.getMin()[1], vol.getMin()[2]+newLengths.z());
         case(OCT_100)://lower right front
-            return Pnt3f(vol.min[0] + newLengths.x(), vol.min[1], vol.min[2]+newLengths.z());
+            return Pnt3f(vol.getMin()[0] + newLengths.x(), vol.getMin()[1], vol.getMin()[2]+newLengths.z());
         case(OCT_010)://top left front
-            return Pnt3f(vol.min[0], vol.min[1] + newLengths.y(), vol.min[2]+newLengths.z());
+            return Pnt3f(vol.getMin()[0], vol.getMin()[1] + newLengths.y(), vol.getMin()[2]+newLengths.z());
         case(OCT_110)://top right front
-            return Pnt3f(vol.min[0] + newLengths.x(), vol.min[1] + newLengths.y(), vol.min[2]+newLengths.z());
+            return Pnt3f(vol.getMin()[0] + newLengths.x(), vol.getMin()[1] + newLengths.y(), vol.getMin()[2]+newLengths.z());
         case(OCT_001)://lower left back
-            return Pnt3f(vol.min[0], vol.min[1], vol.min[2]);
+            return Pnt3f(vol.getMin()[0], vol.getMin()[1], vol.getMin()[2]);
         case(OCT_101)://lower right back
-            return Pnt3f(vol.min[0] + newLengths.x(), vol.min[1], vol.min[2]);
+            return Pnt3f(vol.getMin()[0] + newLengths.x(), vol.getMin()[1], vol.getMin()[2]);
         case(OCT_011)://top left back
-            return Pnt3f(vol.min[0], vol.min[1] + newLengths.y(), vol.min[2]);
+            return Pnt3f(vol.getMin()[0], vol.getMin()[1] + newLengths.y(), vol.getMin()[2]);
         case(OCT_111)://top right back
-            return Pnt3f(vol.min[0] + newLengths.x(), vol.min[1] + newLengths.y(), vol.min[2]);
+            return Pnt3f(vol.getMin()[0] + newLengths.x(), vol.getMin()[1] + newLengths.y(), vol.getMin()[2]);
     };	
 }
 
-Pnt3f Octree::getVolMax(Octant octant, OTNodeVolume& vol, Vec3f& newLengths) const
+Pnt3f Octree::getVolMax(Octant octant, const OTNodeVolume& vol, const Vec3f& newLengths) const
 {
     switch(octant)
     {
         case(OCT_000)://lower left front
-            return Pnt3f(vol.max[0] - newLengths.x(), vol.max[1] - newLengths.y(), vol.max[2]);
+            return Pnt3f(vol.getMax()[0] - newLengths.x(), vol.getMax()[1] - newLengths.y(), vol.getMax()[2]);
         case(OCT_100)://lower right front
-            return Pnt3f(vol.max[0], vol.max[1] - newLengths.y(), vol.max[2]);
+            return Pnt3f(vol.getMax()[0], vol.getMax()[1] - newLengths.y(), vol.getMax()[2]);
         case(OCT_010)://top left front
-            return Pnt3f(vol.max[0] - newLengths.x(), vol.max[1], vol.max[2]);
+            return Pnt3f(vol.getMax()[0] - newLengths.x(), vol.getMax()[1], vol.getMax()[2]);
         case(OCT_110)://top right front
-            return Pnt3f(vol.max[0], vol.max[1], vol.max[2]);
+            return Pnt3f(vol.getMax()[0], vol.getMax()[1], vol.getMax()[2]);
         case(OCT_001)://lower left back
-            return Pnt3f(vol.max[0] - newLengths.x(), vol.max[1]-newLengths.y(), vol.max[2] - newLengths.z());
+            return Pnt3f(vol.getMax()[0] - newLengths.x(), vol.getMax()[1]-newLengths.y(), vol.getMax()[2] - newLengths.z());
         case(OCT_101)://lower right back
-            return Pnt3f(vol.max[0], vol.max[1]-newLengths.y(), vol.max[2] - newLengths.z());
+            return Pnt3f(vol.getMax()[0], vol.getMax()[1]-newLengths.y(), vol.getMax()[2] - newLengths.z());
         case(OCT_011)://top left back
-            return Pnt3f(vol.max[0] - newLengths.x(), vol.max[1], vol.max[2] - newLengths.z());
+            return Pnt3f(vol.getMax()[0] - newLengths.x(), vol.getMax()[1], vol.getMax()[2] - newLengths.z());
         case(OCT_111)://top right back
-            return Pnt3f(vol.max[0], vol.max[1], vol.max[2] - newLengths.z());
+            return Pnt3f(vol.getMax()[0], vol.getMax()[1], vol.getMax()[2] - newLengths.z());
     };
 }
 
@@ -206,56 +287,38 @@ void Octree::beginSearchForNeighbors(OTNode* node)
     //const Int8 maxNeighbors = 6;
 
 
-    /*if(node->children.size() == 0)
+    /*if(node->getChildren().size() == 0)
       {
       return;
       }*/
 
-    //node->depth < _Depth
-    if(node->depth >= _Depth)
+    //node->getDepth() < _Depth
+    if(node->getDepth() >= _Depth)
     {
         return;
     }
 
-    if(node->children.size() != 0)
+    if(node->getChildren().size() != 0)
     {
-        for(Int8 i = 0; i < node->children.size(); i++)
+        for(Int8 i = 0; i < node->getChildren().size(); i++)
         {
-            findNeighbors(node->children[i].get(), _Root.get(), 0);
-            beginSearchForNeighbors(node->children[i].get());
+            findNeighbors(node->getChildren()[i].get(), _Root.get(), 0);
+            beginSearchForNeighbors(node->getChildren()[i].get());
         }
     }
 }
 
 void Octree::findNeighbors(OTNode* node, OTNode* target, Int8 numNeighbors)
 {
-    ////const Int8 maxChildren = 8;
-    //const Int8 maxNeighbors = 6;
-
-    //node->depth > target->depth && numNeighbors <= maxNeighbors  /// || node->neighbors.size() > maxNeighbors
-    /*if(node->depth < target->depth)
-      {	
-      return;
-      }*/
-
-    /*if(node->neighbors.size() >= maxNeighbors)
-      {
-      return;
-      }*/
-
-    if(target->children.size() != 0)
+    if(target->getChildren().size() != 0)
     {
-        for(Int8 i = 0; i < target->children.size(); i++)
+        for(Int8 i = 0; i < target->getChildren().size(); i++)
         {
-            //findNeighbors(node, target->children[i], numNeighbors);
-
-            if(areNeighbors(node, target->children[i].get()))
+            if(areNeighbors(node, target->getChildren(i).get()))
             {
-                node->neighbors.push_back(target->children[i]);
-                //numNeighbors++;
+                node->addNeighbor(target->getChildren(i));
             }
-            //areNeighbors(node, target->children[i]);
-            findNeighbors(node, target->children[i].get(), numNeighbors);
+            findNeighbors(node, target->getChildren(i).get(), numNeighbors);
         }
     }
 
@@ -265,155 +328,64 @@ bool Octree::areNeighbors(OTNode* node, OTNode* target) const
 {
 
     if(node == target)//if they are the same node
+    {
         return false;
+    }
 
-    //if(node->depth < target->depth)//target is too small to be a neighbor
-    //	return false;
-
-    Pnt3f min1 = node->vol.min;
-    Pnt3f max1 = node->vol.max;
-    Pnt3f min2 = target->vol.min;
-    Pnt3f max2 = target->vol.max;
+    Pnt3f min1 = node->getVolume().getMin();
+    Pnt3f max1 = node->getVolume().getMax();
+    Pnt3f min2 = target->getVolume().getMin();
+    Pnt3f max2 = target->getVolume().getMax();
 
     //left
-    //if(!node->neighborsToSide[LEFT])
-    //{
     if( (min1.x() == max2.x()) && 
         ((min1.y() >= min2.y() && max1.y() <= max2.y()) || (min2.y() >= min1.y() && max2.y() <= max1.y())) && 
         ((min1.z() >= min2.z() && max1.z() <= max2.z()) || (min2.z() >= min1.z() && max2.z() <= max1.z())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[LEFT] = true;
-        //	//return true;
-        //}
-
         return true;
-        /*node->neighborsToSide[LEFT] = true;
-          return true;*/
     }
-    //}
 
     //right
-    //if(!node->neighborsToSide[RIGHT])
-    //{
     if( (max1.x() == min2.x()) && 
         ((min1.y() >= min2.y() && max1.y() <= max2.y()) || (min2.y() >= min1.y() && max2.y() <= max1.y())) && 
         ((min1.z() >= min2.z() && max1.z() <= max2.z()) || (min2.z() >= min1.z() && max2.z() <= max1.z())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[RIGHT] = true;
-        //	//return true;
-        //}
-
         return true;
-        /*node->neighborsToSide[RIGHT] = true;
-          return true;*/
     }
-    //}
 
 
     //bottom
-    //if(!node->neighborsToSide[BOTTOM])
-    //{
     if( (min1.y() == max2.y()) && 
         ((min1.x() >= min2.x() && max1.x() <= max2.x()) || (min2.x() >= min1.x() && max2.x() <= max1.x())) && 
         ((min1.z() >= min2.z() && max1.z() <= max2.z()) || (min2.z() >= min1.z() && max2.z() <= max1.z())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[BOTTOM] = true;
-        //	//return true;
-        //}
-
         return true;
-        /*node->neighborsToSide[BOTTOM] = true;
-          return true;*/
     }
-    //}
 
     //top
-    //if(!node->neighborsToSide[TOP])
-    //{
     if( (max1.y() == min2.y()) && 
         ((min1.x() >= min2.x() && max1.x() <= max2.x()) || (min2.x() >= min1.x() && max2.x() <= max1.x())) && 
         ((min1.z() >= min2.z() && max1.z() <= max2.z()) || (min2.z() >= min1.z() && max2.z() <= max1.z())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[TOP] = true;
-        //	//return true;
-        //}
-
         return true;
-        /*node->neighborsToSide[TOP] = true;
-          return true;*/
     }
-    //}
-
-    //front
-    //if(!node->neighborsToSide[FRONT])
-    //{
     if( (max1.z() == min2.z()) && 
         ((min1.x() >= min2.x() && max1.x() <= max2.x()) || (min2.x() >= min1.x() && max2.x() <= max1.x())) && 
         ((min1.y() >= min2.y() && max1.y() <= max2.y()) || (min2.y() >= min1.y() && max2.y() <= max1.y())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[FRONT] = true;
-        //	//return true;
-        //}
 
         return true;
-        /*node->neighborsToSide[FRONT] = true;
-          return true;*/
     }
-    //}
 
 
     //back
-    //if(!node->neighborsToSide[BACK]))
-    //{
     if( (max2.z() == min1.z()) && 
         ((min1.x() >= min2.x() && max1.x() <= max2.x()) || (min2.x() >= min1.x() && max2.x() <= max1.x())) && 
         ((min1.y() >= min2.y() && max1.y() <= max2.y()) || (min2.y() >= min1.y() && max2.y() <= max1.y())) )
     {
-        //if(target->children.size() !=0)
-        //{
-        //	for(Int8 i = 0; i < target->children.size(); i++)
-        //		areNeighbors(node, target->children[i]);
-        //}else{
-        //	node->neighbors.push_back(target);
-        //	node->neighborsToSide[BACK] = true;
-        //	//return true;
-        //}
 
         return true;
-        /*node->neighborsToSide[BACK] = true;
-          return true;*/
     }
-    //}
 
     return false;
 }
@@ -423,35 +395,34 @@ void Octree::buildNewNodes(OTNodePtr node)
     const Int8 numChildren = 8;
     const Int8 maxNeighbors = 6;
 
-    OTNodeVolume vol = node->vol;
-    Vec3f newLengths = Vec3f( vol.lengths.x()*0.5, vol.lengths.y()*0.5, vol.lengths.z()*0.5 );
+    OTNodeVolume vol = node->getVolume();
+    Vec3f newLengths = Vec3f( vol.getLengths().x()*0.5, vol.getLengths().y()*0.5, vol.getLengths().z()*0.5 );
     Pnt3f newPos, newMin, newMax;
 
     for(Int8 i = 0; i < numChildren; i++)
     {
         OTNodePtr newNode = OTNodePtr(new OTNode);
-        newNode->parent = node;
-        newNode->depth = node->depth+1;
-        newNode->octant = Octant(i);
+        newNode->setParent(node);
+        newNode->setDepth(node->getDepth()+1);
+        newNode->setOctant(Octant(i));
         for(Int8 n = 0; n < maxNeighbors; n++)
-            newNode->neighborsToSide[n] = false;
+        {
+            newNode->getNeighborsToSide()[n] = false;
+        }
 
         newMin = getVolMin(Octant(i), vol, newLengths);
         newMax = getVolMax(Octant(i), vol, newLengths);
-        newPos = newMin + (newMax-newMin) * 0.5;
 
-        newNode->vol.lengths = newLengths;
-        newNode->vol.position = newPos;
-        newNode->vol.min = newMin;
-        newNode->vol.max = newMax;
-        newNode->containsObstacles = false;
+        newNode->editVolume().setMin(newMin);
+        newNode->editVolume().setMax(newMax);
+        newNode->setContainsObstacles(false);
 
-        node->children.push_back(newNode);
+        node->addChild(newNode);
     }
 
     //update my _Depth
-    if(_Depth < node->depth + 1)
-        _Depth = node->depth+1;
+    if(_Depth < node->getDepth() + 1)
+        _Depth = node->getDepth()+1;
 }
 
 void Octree::build(OTNodePtr node,
@@ -461,15 +432,15 @@ void Octree::build(OTNodePtr node,
                    UInt32 MaxDepth,
                    Real32 MinSideLength)
 {
-    if(node->depth >= MaxDepth)
+    if(node->getDepth() > MaxDepth)
     {
         return;
     }
 
-    VolumeBoxGeom->setLengths(node->vol.lengths);
-    VolumeBoxGeom->setPosition(Vec3f(node->vol.position.x(),
-                               node->vol.position.y(),
-                               node->vol.position.z()));
+    VolumeBoxGeom->setLengths(node->getVolume().getLengths());
+    VolumeBoxGeom->setPosition(Vec3f(node->getVolume().getPosition().x(),
+                               node->getVolume().getPosition().y(),
+                               node->getVolume().getPosition().z()));
 
     commitChanges();
 
@@ -478,20 +449,21 @@ void Octree::build(OTNodePtr node,
 
     if(_CollisionOccured)
     {
-        node->containsObstacles = true;
+        node->setContainsObstacles(true);
     }
 
-    if(_CollisionOccured  &&
-       (node->vol.lengths.x() > MinSideLength &&
-        node->vol.lengths.y() > MinSideLength &&
-        node->vol.lengths.z() > MinSideLength))
+    if(_CollisionOccured  && (
+       (node->getVolume().getLengths().x() > MinSideLength &&
+        node->getVolume().getLengths().y() > MinSideLength &&
+        node->getVolume().getLengths().z() > MinSideLength) ||
+       MinSideLength == 0.0f))
     {//ToDo: better way to check minVolume
         /*node->containsObstacles = true;*/
 
         buildNewNodes(node);
-        for(Int8 i = 0; i < node->children.size(); i++)
+        for(Int8 i = 0; i < node->getChildren().size(); i++)
         {
-            build(node->children[i],
+            build(node->getChildren(i),
                   VolumeBoxGeom,
                   Space,
                   World,
