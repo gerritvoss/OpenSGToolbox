@@ -51,7 +51,7 @@ std::vector<Pnt3f> OctreeAStarAlgorithm::search(OctreePtr Tree,
                                                 const Pnt3f& Goal)
 {
     return search(Tree, Start, Goal,
-                  boost::bind(&OctreeAStarAlgorithm::euclideanDistanceCost, this, _2, _3,
+                  boost::bind(&OctreeAStarAlgorithm::euclideanDistanceCost, _2, _3,
                               1.0f));
 }
 
@@ -147,15 +147,27 @@ std::vector<Pnt3f> OctreeAStarAlgorithm::search(OctreePtr Tree,
 	return _SolutionPath;
 }
 
-//protected functions
 Real32 OctreeAStarAlgorithm::euclideanDistanceCost(Octree::OTNodePtr node,
                                                    const Pnt3f& Location,
                                                    Real32 CostPerUnit)
 {
-    Pnt3f Center;
-    node->getVolume().getCenter(Center);
-	return CostPerUnit * Location.dist(Center);
+    Pnt3f Target;
+    node->getVolume().getCenter(Target);
+	return CostPerUnit * Location.dist(Target);
 }
+
+Real32 OctreeAStarAlgorithm::manhattanDistanceCost(Octree::OTNodePtr node,
+                                                   const Pnt3f& Location,
+                                                   Real32 CostPerUnit)
+{
+    Pnt3f Target;
+    node->getVolume().getCenter(Target);
+	return CostPerUnit * (osgAbs(Location.x() - Target.x())
+                        + osgAbs(Location.y() - Target.y())
+                        + osgAbs(Location.z() - Target.z()));
+}
+
+//protected functions
 
 void OctreeAStarAlgorithm::constructPath(ASNodePtr node)
 {

@@ -74,6 +74,13 @@ class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
     /*! \{                                                                 */
     OctreeAStarAlgorithm(void);
     /*! \}                                                                 */
+
+    /*---------------------------------------------------------------------*/
+    /*! \name Cost Heuristic Methods                                       */
+    /*! \{                                                                 */
+    static Real32 euclideanDistanceCost(Octree::OTNodePtr, const Pnt3f&, Real32 CostPerUnit);
+    static Real32 manhattanDistanceCost(Octree::OTNodePtr, const Pnt3f&, Real32 CostPerUnit);
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
   protected:
 
@@ -90,11 +97,6 @@ class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
         Octree::OTNodePtr _OctreeNode;
     };
 
-    /*---------------------------------------------------------------------*/
-    /*! \name Cost Heuristic Methods                                       */
-    /*! \{                                                                 */
-    Real32 euclideanDistanceCost(Octree::OTNodePtr, const Pnt3f&, Real32 CostPerUnit);
-    /*! \}                                                                 */
 
     /*---------------------------------------------------------------------*/
     /*! \name Algorithm helpers                                            */
