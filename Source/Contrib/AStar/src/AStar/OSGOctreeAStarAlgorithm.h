@@ -49,19 +49,32 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
 {
+    /*==========================  PUBLIC  =================================*/
   public:
-    OctreeAStarAlgorithm(void);
 
     typedef boost::function<Real32 (OctreePtr,
-                                    const Octree::OTNodePtr,
+                                    Octree::OTNodePtr,
                                     const Pnt3f& Goal)> PathCostHeuristicFunc;
 
-    void setCostHeuristic(PathCostHeuristicFunc CostHeuristicFunc);
+    /*---------------------------------------------------------------------*/
+    /*! \name Search                                                       */
+    /*! \{                                                                 */
+    std::vector<Pnt3f> search(OctreePtr Tree,
+                              const Pnt3f& Start,
+                              const Pnt3f& Goal);
 
-    std::vector<Pnt3f> search(OctreePtr Tree,const Pnt3f& Start,const Pnt3f& Goal);
+    std::vector<Pnt3f> search(OctreePtr Tree,
+                              const Pnt3f& Start,
+                              const Pnt3f& Goal,
+                              PathCostHeuristicFunc CostHeuristicFunc);
+    /*! \}                                                                 */
 
-    const std::vector<Pnt3f>& getPath(void) const;
-
+    /*---------------------------------------------------------------------*/
+    /*! \name Constructors/Destructor                                      */
+    /*! \{                                                                 */
+    OctreeAStarAlgorithm(void);
+    /*! \}                                                                 */
+    /*=========================  PROTECTED  ===============================*/
   protected:
 
     struct ASNode;
@@ -71,36 +84,38 @@ class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
 
     struct ASNode
     {
-        Real32 costFromStart;
-        Real32 costToGoal;
-        Real32 totalCost;
-        ASNodeWeakPtr parent;
-        Octree::OTNodePtr OT_Node;
+        Real32 _CostFromStart;
+        Real32 _CostToGoal;
+        ASNodeWeakPtr _Parent;
+        Octree::OTNodePtr _OctreeNode;
     };
 
-    void setAgent(Octree::OTNodePtr);
-    void setGoal(Octree::OTNodePtr);
+    /*---------------------------------------------------------------------*/
+    /*! \name Cost Heuristic Methods                                       */
+    /*! \{                                                                 */
+    Real32 euclideanDistanceCost(Octree::OTNodePtr, const Pnt3f&, Real32 CostPerUnit);
+    /*! \}                                                                 */
 
-    void setTree(OctreePtr Tree);
-
-    void setAgent(const Pnt3f& Location);
-    void setGoal(const Pnt3f& Location);
-
-    Real32 findCostToGoal(const Pnt3f&);
-    Real32 findCostFromStart(const Pnt3f&);
+    /*---------------------------------------------------------------------*/
+    /*! \name Algorithm helpers                                            */
+    /*! \{                                                                 */
     void constructPath(ASNodePtr);
     Int32 inOpen(const Octree::OTNodePtr);
     Int32 inClosed(const Octree::OTNodePtr);
     void pushOnOpen(ASNodePtr);
+    /*! \}                                                                 */
 
 
-    //instance variables
-    std::vector<ASNodePtr> open, closed;//, path;
-    std::vector<Pnt3f> path;
-    Octree::OTNodePtr agent, goal;
-    OctreePtr _Tree;
+    std::vector<ASNodePtr> _OpenNodes;
+    std::vector<ASNodePtr> _ClosedNodes;
 
-    PathCostHeuristicFunc _CostHeuristicFunc;
+    std::vector<Pnt3f>     _SolutionPath;
+    Octree::OTNodePtr      _StartNode;
+    Octree::OTNodePtr      _GoalNode;
+    OctreePtr              _Tree;
+
+    PathCostHeuristicFunc  _CostHeuristicFunc;
+    /*==========================  PRIVATE  ================================*/
   private:
 };
 
