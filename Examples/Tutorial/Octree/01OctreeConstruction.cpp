@@ -121,14 +121,14 @@ int main(int argc, char **argv)
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
 
-        BoostPath ModelFilePath(".//Data//CellParts.osb");
+        BoostPath ModelFilePath("..//AStar//Data//CellParts.osb");
 
         if(argc >= 2)
         {
             ModelFilePath = BoostPath(argv[1]);
             if(!boost::filesystem::exists(ModelFilePath))
             {
-                ModelFilePath = BoostPath(".//Data//CellParts.osb");
+                ModelFilePath = BoostPath("..//AStar//Data//CellParts.osb");
             }
         }
 
