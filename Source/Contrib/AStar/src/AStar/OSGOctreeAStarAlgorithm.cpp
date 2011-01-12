@@ -66,14 +66,30 @@ void OctreeAStarAlgorithm::setGoal(const Pnt3f& Location)
     setGoal(_Tree->getNodeThatContains(Location));
 }
 
+void OctreeAStarAlgorithm::setTree(OctreePtr Tree)
+{
+    _Tree = Tree; 
+}
+
 void OctreeAStarAlgorithm::setCostHeuristic(PathCostHeuristicFunc CostHeuristicFunc)
 {
     _CostHeuristicFunc = CostHeuristicFunc;
 }
 
-bool OctreeAStarAlgorithm::search(void)
+std::vector<Pnt3f> OctreeAStarAlgorithm::search(OctreePtr Tree,const Pnt3f& Start,const Pnt3f& Goal)
 {
+    setTree(Tree);
+    setAgent(Start);
+    setGoal(Goal);
+
+    if(!agent ||
+       !goal)
+    {
+        return path;
+    }
+
 	//clear lists
+    path.clear();
 	open.clear();
 	closed.clear();
 
@@ -81,7 +97,9 @@ bool OctreeAStarAlgorithm::search(void)
 	ASNodePtr startNode = ASNodePtr(new ASNode);
 	startNode->OT_Node = agent;
 	startNode->costFromStart = 0;
-	startNode->costToGoal = findCostToGoal(agent->getVolume().getPosition());
+    Pnt3f Center;
+    agent->getVolume().getCenter(Center);
+	startNode->costToGoal = findCostToGoal(Center);
 	startNode->parent.reset();
 	startNode->totalCost = startNode->costToGoal + startNode->costToGoal;
 	open.push_back(startNode);
@@ -94,7 +112,7 @@ bool OctreeAStarAlgorithm::search(void)
 		if(Node->OT_Node == goal)
         {
 			constructPath(Node);
-			return true;//success
+			return path;//success
 		}
         else
         {
@@ -102,7 +120,8 @@ bool OctreeAStarAlgorithm::search(void)
             {
 				if(!Node->OT_Node->getNeighbor(i)->getContainsObstacles())
                 {//Node->OT_Node->getNeighbor(i)->children.size() == 0
-					Real32 NewCost = Node->costFromStart + findCostFromStart(Node->OT_Node->getNeighbor(i)->getVolume().getPosition());
+                    Node->OT_Node->getNeighbor(i)->getVolume().getCenter(Center);
+					Real32 NewCost = Node->costFromStart + findCostFromStart(Center);
 					Int32 locInOpen = inOpen(Node->OT_Node->getNeighbor(i));
 					Int32 locInClosed = inClosed(Node->OT_Node->getNeighbor(i));
 					if((locInOpen >= 0 && open[locInOpen]->costFromStart <= NewCost) || (locInClosed >= 0 && closed[locInClosed]->costFromStart <= NewCost))
@@ -114,8 +133,9 @@ bool OctreeAStarAlgorithm::search(void)
 						//initialize a new node
 						ASNodePtr NewNode = ASNodePtr(new ASNode);
 						NewNode->OT_Node = Node->OT_Node->getNeighbor(i);
-						NewNode->costFromStart = findCostFromStart(NewNode->OT_Node->getVolume().getPosition());
-						NewNode->costToGoal = findCostToGoal(NewNode->OT_Node->getVolume().getPosition());
+                        NewNode->OT_Node->getVolume().getCenter(Center);
+						NewNode->costFromStart = findCostFromStart(Center);
+						NewNode->costToGoal = findCostToGoal(Center);
 						NewNode->parent = Node;
 						NewNode->totalCost = NewNode->costFromStart + NewNode->costToGoal;
 
@@ -143,7 +163,7 @@ bool OctreeAStarAlgorithm::search(void)
 		closed.push_back(Node);
 	}//end while loop
 
-	return false;
+	return path;
 }
 
 const std::vector<Pnt3f>& OctreeAStarAlgorithm::getPath(void) const 
@@ -155,24 +175,39 @@ const std::vector<Pnt3f>& OctreeAStarAlgorithm::getPath(void) const
 Real32 OctreeAStarAlgorithm::findCostToGoal(const Pnt3f& pos)
 {
 	Real32 tCost = 1;
-	return tCost * pos.dist(goal->getVolume().getPosition());
+    Pnt3f Center;
+    goal->getVolume().getCenter(Center);
+	return tCost * pos.dist(Center);
 }
 
 Real32 OctreeAStarAlgorithm::findCostFromStart(const Pnt3f& pos)
 {
 	Real32 tCost = 1;
-	return tCost * pos.dist( agent->getVolume().getPosition());
+    Pnt3f Center;
+    agent->getVolume().getCenter(Center);
+	return tCost * pos.dist(Center);
 }
 
 void OctreeAStarAlgorithm::constructPath(ASNodePtr node)
 {
 	ASNodePtr temp = node;
 
-	while(!temp)
+    std::deque<Pnt3f> ThePath;
+    Pnt3f Center;
+	while(temp)
     {
-		path.push_back(temp->OT_Node->getVolume().getPosition());
-		temp = ASNodePtr(temp->parent);
+        temp->OT_Node->getVolume().getCenter(Center);
+		ThePath.push_front(Center);
+        if(!temp->parent.expired())
+        {
+            temp = ASNodePtr(temp->parent);
+        }
+        else
+        {
+            temp.reset();
+        }
 	}
+    path.insert(path.end(), ThePath.begin(), ThePath.end());
 
 }
 

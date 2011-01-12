@@ -52,7 +52,7 @@ Octree::OTNodePtr Octree::getRoot(void) const
 }
 
 inline
-const Octree::OTNodeVolume& Octree::OTNode::getVolume(void) const
+const BoxVolume& Octree::OTNode::getVolume(void) const
 {
     return _Volume;
 }
@@ -125,7 +125,7 @@ bool Octree::OTNode::getContainsObstacles(void) const
 }
 
 inline
-void Octree::OTNode::setVolume(const OTNodeVolume& Volume)
+void Octree::OTNode::setVolume(const BoxVolume& Volume)
 {
     _Volume = Volume;
 }
@@ -182,7 +182,7 @@ void Octree::OTNode::setContainsObstacles(bool ContainsObs)
 }
 
 inline
-Octree::OTNodeVolume& Octree::OTNode::editVolume(void)
+BoxVolume& Octree::OTNode::editVolume(void)
 {
     return _Volume;
 }
@@ -200,40 +200,21 @@ void Octree::OTNode::addNeighbor(OTNodePtr Neighbor)
 }
 
 inline
-const Pnt3f& Octree::OTNodeVolume::getMin(void) const
+bool Octree::OTNode::isLeaf(void) const
 {
-    return _Min;
+    return _Children.size() == 0;
 }
 
 inline
-const Pnt3f& Octree::OTNodeVolume::getMax(void) const
+bool Octree::OTNode::isBranch(void) const
 {
-    return _Max;
+    return !isLeaf();
 }
 
 inline
-Pnt3f Octree::OTNodeVolume::getPosition(void) const
+bool Octree::OTNode::isEmpty(void) const
 {
-    return (_Max + Vec3f(_Min)) * 0.5f;
-}
-
-inline
-Vec3f Octree::OTNodeVolume::getLengths(void) const
-{
-    return _Max - _Min;
-}
-
-inline
-
-void Octree::OTNodeVolume::setMin(const Pnt3f& min)
-{
-    _Min = min;
-}
-
-inline
-void Octree::OTNodeVolume::setMax(const Pnt3f& max)
-{
-    _Max = max;
+    return !getContainsObstacles();
 }
 
 OSG_END_NAMESPACE

@@ -101,8 +101,7 @@ OctreePtr Octree::buildTree(Node* const RootNode,
     }
 
     //set _Root
-    TheTree->_Root->editVolume().setMax(max);
-    TheTree->_Root->editVolume().setMin(min);
+    TheTree->_Root->editVolume().setBounds(min,max);
     TheTree->_Root->setDepth(0);
     TheTree->_Root->setContainsObstacles(false);
 
@@ -146,9 +145,29 @@ OctreePtr Octree::buildTree(Node* const RootNode,
 
 Octree::OTNodePtr Octree::getNodeThatContains(const Pnt3f Location) const
 {
-    //TODO: Implement
-    assert(false && "NYI");
-    return OTNodePtr();
+    OTNodePtr TestNode(_Root);
+    bool Intersected;
+    while(TestNode &&
+          TestNode->isBranch())
+    {
+        Intersected = false;
+        //Find the node that the location is in
+        for(UInt32 i(0) ; i<TestNode->getChildren().size() ; ++i)
+        {
+            if(TestNode->getChildren(i)->getVolume().intersect(Location))
+            {
+                TestNode = TestNode->getChildren(i);
+                Intersected = true;
+                break;
+            }
+        }
+        if(!Intersected)
+        {
+            TestNode.reset();
+        }
+    }
+
+    return TestNode;
 }
 
 UInt32 Octree::getNodeCount(void) const
@@ -235,7 +254,7 @@ void Octree::handleCollision(CollisionEventDetails *const e)
     _CollisionOccured = true;
 }
 
-Pnt3f Octree::getVolMin(Octant octant, const OTNodeVolume& vol, const Vec3f& newLengths) const
+Pnt3f Octree::getVolMin(Octant octant, const BoxVolume& vol, const Vec3f& newLengths) const
 {
     switch(octant)
     {
@@ -258,7 +277,7 @@ Pnt3f Octree::getVolMin(Octant octant, const OTNodeVolume& vol, const Vec3f& new
     };	
 }
 
-Pnt3f Octree::getVolMax(Octant octant, const OTNodeVolume& vol, const Vec3f& newLengths) const
+Pnt3f Octree::getVolMax(Octant octant, const BoxVolume& vol, const Vec3f& newLengths) const
 {
     switch(octant)
     {
@@ -395,8 +414,10 @@ void Octree::buildNewNodes(OTNodePtr node)
     const Int8 numChildren = 8;
     const Int8 maxNeighbors = 6;
 
-    OTNodeVolume vol = node->getVolume();
-    Vec3f newLengths = Vec3f( vol.getLengths().x()*0.5, vol.getLengths().y()*0.5, vol.getLengths().z()*0.5 );
+    BoxVolume vol = node->getVolume();
+    Vec3f Size;
+    vol.getSize(Size);
+    Vec3f newLengths = Vec3f( Size.x()*0.5, Size.y()*0.5, Size.z()*0.5 );
     Pnt3f newPos, newMin, newMax;
 
     for(Int8 i = 0; i < numChildren; i++)
@@ -413,8 +434,7 @@ void Octree::buildNewNodes(OTNodePtr node)
         newMin = getVolMin(Octant(i), vol, newLengths);
         newMax = getVolMax(Octant(i), vol, newLengths);
 
-        newNode->editVolume().setMin(newMin);
-        newNode->editVolume().setMax(newMax);
+        newNode->editVolume().setBounds(newMin,newMax);
         newNode->setContainsObstacles(false);
 
         node->addChild(newNode);
@@ -437,10 +457,14 @@ void Octree::build(OTNodePtr node,
         return;
     }
 
-    VolumeBoxGeom->setLengths(node->getVolume().getLengths());
-    VolumeBoxGeom->setPosition(Vec3f(node->getVolume().getPosition().x(),
-                               node->getVolume().getPosition().y(),
-                               node->getVolume().getPosition().z()));
+    Vec3f Size;
+    node->getVolume().getSize(Size);
+    VolumeBoxGeom->setLengths(Size);
+
+    Pnt3f Center;
+    node->getVolume().getCenter(Center);
+
+    VolumeBoxGeom->setPosition(Vec3f(Center));
 
     commitChanges();
 
@@ -453,9 +477,9 @@ void Octree::build(OTNodePtr node,
     }
 
     if(_CollisionOccured  && (
-       (node->getVolume().getLengths().x() > MinSideLength &&
-        node->getVolume().getLengths().y() > MinSideLength &&
-        node->getVolume().getLengths().z() > MinSideLength) ||
+       (Size.x() > MinSideLength &&
+        Size.y() > MinSideLength &&
+        Size.z() > MinSideLength) ||
        MinSideLength == 0.0f))
     {//ToDo: better way to check minVolume
         /*node->containsObstacles = true;*/
@@ -601,7 +625,14 @@ Action::ResultE Octree::AddCollisionGeomGraphOp::traverseEnter(Node * const node
 
 Action::ResultE Octree::AddCollisionGeomGraphOp::traverseLeave(Node * const node, Action::ResultE res)
 {
-    return res;
+    if(node->getTravMask() & _TravMask)
+    {
+        return res;
+    }
+    else
+    {
+        return Action::Skip;
+    }
 }
 
 void Octree::AddCollisionGeomGraphOp::destroyObjs(void)

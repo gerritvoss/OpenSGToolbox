@@ -29,6 +29,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGContribPhysics 
                    OSGContribOctree 
                    OSGContribAStar 
+                   OSGTBAnimation 
                    )
 
 IF(UNIX)

@@ -39,6 +39,12 @@
 #include "OSGTypedGeoIntegralProperty.h"
 #include "OSGTypedGeoVectorProperty.h"
 
+//Animation
+#include "OSGKeyframeSequences.h"
+#include "OSGKeyframeAnimator.h"
+#include "OSGFieldAnimation.h"
+#include "OSGAnimationGroup.h"
+
 #include "OSGLineChunk.h"
 #include "OSGMaterialChunk.h"
 #include "OSGChunkMaterial.h"
@@ -48,15 +54,43 @@
 OSG_USING_NAMESPACE
 
 // forward declaration so we can have the interesting stuff upfront
+std::vector<Pnt3f> smooth(const std::vector<Pnt3f>& Path, UInt32 SubDivs = 1);
 NodeTransitPtr createPathGeometry(const std::vector<Pnt3f>& Path);
+AnimationTransitPtr setupAnimation(const std::vector<Pnt3f>& Path,
+                                   Transform* const transCore);
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-void keyPressed(KeyEventDetails* const details)
+void keyPressed(KeyEventDetails* const details,
+                Node* const sceneGeoNode,
+                Node* const octreeNode)
 {
     if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+    switch(details->getKey())
+    {
+        case KeyEventDetails::KEY_1:
+            if(sceneGeoNode->getTravMask() != 0)
+            {
+                sceneGeoNode->setTravMask(0);
+            }
+            else
+            {
+                sceneGeoNode->setTravMask(1);
+            }
+            break;
+        case KeyEventDetails::KEY_2:
+            if(octreeNode->getTravMask() != 0)
+            {
+                octreeNode->setTravMask(0);
+            }
+            else
+            {
+                octreeNode->setTravMask(1);
+            }
+            break;
     }
 }
 
@@ -99,12 +133,12 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
-        TutorialWindow->connectKeyPressed(boost::bind(keyPressed,_1));
 
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
 
         UInt32 SceneMask(1),
+               NanobotMask(2),
                PathMask(4);
 
         BoostPath SceneFilePath(".//Data//CellParts.osb");
@@ -127,9 +161,27 @@ int main(int argc, char **argv)
             SceneGeometryNode = makeTorus(1.0, 10.0, 24, 24);
         }
 
+        //Make the Nanobot Node
+        BoostPath NanobotFilePath(".//Data//Nanobot.osb");
+        NodeRecPtr NanobotGeoNode =
+            SceneFileHandler::the()->read(NanobotFilePath.string().c_str());
+
+        //Get the Transform node for the Nanobot
+        TransformRecPtr NanobotTransform = Transform::create();
+        Matrix NanobotMatrix;
+        NanobotMatrix.setTranslate(0.0f,0.0f,12.0f);
+        NanobotMatrix.setScale(0.06f);
+        NanobotTransform->setMatrix(NanobotMatrix);
+        NodeRecPtr NanobotNode = makeNodeFor(NanobotTransform);
+        NanobotNode->addChild(NanobotGeoNode);
+        NanobotNode->setTravMask(NanobotMask);
+
+
+
         //Construct the Root Node
         NodeRecPtr RootNode = makeCoredNode<Group>();
         RootNode->addChild(SceneGeometryNode);
+        RootNode->addChild(NanobotNode);
         commitChanges();
 
         //Create the Octree
@@ -139,7 +191,7 @@ int main(int argc, char **argv)
         Time StartTime;
         StartTime = getSystemTime();
 		OctreePtr TheOctree =
-            Octree::buildTree(RootNode,SceneMask,6,1.5,true);
+            Octree::buildTree(RootNode,SceneMask,6,0.5,true);
 
         SLOG << "Building Octree: " << getSystemTime() - StartTime << " s" << std::endl;
         Pnt3f Min,Max;
@@ -153,19 +205,27 @@ int main(int argc, char **argv)
              << "    IntersectingNodeCount: " << TheOctree->getIntersectingNodeCount() << std::endl
              << "    IntersectingLeafNodeCount: " << TheOctree->getIntersectingLeafNodeCount() << std::endl;
 
+        //Create a visualization of the octree
+        SLOG << "Started Building Visualization" << std::endl;
+        StartTime = getSystemTime();
+        NodeRecPtr OctreeVisNode = OctreeVisualization::createOctreeVisualization(TheOctree, 100);
+        SLOG << "Building Visualization: " << getSystemTime() - StartTime << " s" << std::endl;
+        RootNode->addChild(OctreeVisNode);
+
         //Create the Path Geometry
         //Generate the Path
         OctreeAStarAlgorithm AlgorithmObj;
         SLOG << "Started AStar Search" << std::endl;
         StartTime = getSystemTime();
-        Pnt3f Start(-4.01f,1.01f,10.01f),Goal(-4.01f,-0.01f,-7.01f);
-        std::vector<Pnt3f> Path =
+        Pnt3f Start(-2.01f,1.01f,10.01f),Goal(-3.01f,-0.01f,-7.01f);
+        std::vector<Pnt3f> NanobotPath =
             AlgorithmObj.search(TheOctree,Start,Goal);
-        Path.front() = Start;
-        Path.back() = Goal;
+        NanobotPath.front() = Start;
+        NanobotPath.back() = Goal;
+        NanobotPath = smooth(NanobotPath,4);
         SLOG << "Finished AStar Search: " << getSystemTime() - StartTime << " s" << std::endl;
 
-        NodeRecPtr PathNode = createPathGeometry(Path);
+        NodeRecPtr PathNode = createPathGeometry(NanobotPath);
         PathNode->setTravMask(PathMask);
         RootNode->addChild(PathNode);
 
@@ -191,6 +251,14 @@ int main(int argc, char **argv)
         GoalNodeTransformNode->setTravMask(PathMask);
         RootNode->addChild(GoalNodeTransformNode);
 
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed,
+                                                      _1,
+                                                      SceneGeometryNode.get(),
+                                                      OctreeVisNode.get()));
+
+        AnimationRecPtr TheAnimation = setupAnimation(NanobotPath, NanobotTransform);
+        TheAnimation->attachUpdateProducer(TutorialWindow);
+        TheAnimation->start();
 
         //Set the background
         SolidBackgroundRecPtr TheBackground = SolidBackground::create();
@@ -282,5 +350,96 @@ NodeTransitPtr createPathGeometry(const std::vector<Pnt3f>& Path)
     PathGeo->setMaterial(DefaultChunkMaterial);
 
     return makeNodeFor(PathGeo);
+}
+
+std::vector<Pnt3f> smooth(const std::vector<Pnt3f>& Path, UInt32 SubDivs)
+{
+    assert(Path.size() >= 2);
+
+    std::vector<Pnt3f> Result;
+    Result.push_back(Path.front());
+    Pnt3f prevPos, curPos, nextPos;
+    Vec3f curTan;
+    Vec3f nextTan;
+    Real32 c(0.1f);
+    for(UInt32 i(1) ; i<Path.size()-2 ; ++i)
+    {
+        prevPos = Path[i-1];
+        curPos = Path[i];
+        nextPos = Path[i+1];
+        curTan = (1.0f - c)*(nextPos - prevPos);
+        nextTan = (1.0f - c)*(Path[i+2] - curPos);
+        Real32 h00,h01,h02,h03;
+
+        Result.push_back(Path[i]);
+        //tangent.normalize();
+        for(UInt32 j = 0; j < SubDivs; ++j)
+        {
+            Real32 t(static_cast<Real32>(j+1)/static_cast<Real32>(SubDivs+1)),
+                   t2(t*t),
+                   t3(t2*t);;
+
+            h00 = 2.0f*t3 - 3.0f*t2 + 1.0f;
+            h01 = t3 - 2.0*t2 + t;
+            h02 = -2.0f*t3 + 3.0f*t2;
+            h03 = t3 - t2;             
+
+            Pnt3f Pos = (h00 * curPos
+                      + h01 * curTan).subZero() 
+                      + (h02 * nextPos 
+                      + h03 * nextTan).subZero();
+            Result.push_back(Pos);
+        }
+    }
+    Result.push_back(Path.back());
+
+    return Result;
+}
+
+AnimationTransitPtr setupAnimation(const std::vector<Pnt3f>& Path, Transform* const transCore)
+{
+    //Transformation Keyframe Sequence
+    KeyframeTransformationSequenceRecPtr TransformationKeyframes = KeyframeTransformationSequenceMatrix4f::create();
+    Matrix TempMat;
+    TempMat.setScale(0.1f);
+    Real32 TotalTime(20.0f);
+    Real32 SeqTime;
+    Real32 TotalPathDistance(0.0f);
+    for(UInt32 i(0) ; i<Path.size()-1 ; ++i)
+    {
+        TotalPathDistance += Path[i].dist(Path[(i+1)]);
+    }
+
+    Real32 CumPathDistance(0.0f);
+    Quaternion Rotation;
+    Vec3f Direction;
+    for(UInt32 i(0) ; i<Path.size() ; ++i)
+    {
+        SeqTime = (CumPathDistance/TotalPathDistance) *TotalTime;
+        Direction = Path[(i+1)%Path.size()]-Path[i];
+        Direction[1] = 0.0f;
+        Direction.normalize();
+        Rotation = Quaternion(Vec3f(0.0f,0.0f,1.0f),Direction);
+        TempMat.setTransform(Vec3f(Path[i]),Rotation,Vec3f(0.1f,0.1f,0.1f));
+        TransformationKeyframes->addKeyframe(TempMat,SeqTime);
+
+        if(i<Path.size()-1)
+        {
+            CumPathDistance += Path[i].dist(Path[(i+1)]);
+        }
+    }
+
+    //Animator
+    KeyframeAnimatorRecPtr TheAnimator = KeyframeAnimator::create();
+    TheAnimator->setKeyframeSequence(TransformationKeyframes);
+
+    //Animation
+    FieldAnimationRecPtr TheAnimation = FieldAnimation::create();
+    TheAnimation->setAnimator(TheAnimator);
+    TheAnimation->setInterpolationType(Animator::CUBIC_INTERPOLATION);
+    TheAnimation->setCycling(-1);
+    TheAnimation->setAnimatedField(transCore, std::string("matrix"));
+
+    return AnimationTransitPtr(TheAnimation);
 }
 

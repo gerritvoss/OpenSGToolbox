@@ -50,24 +50,19 @@ OSG_BEGIN_NAMESPACE
 class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
 {
   public:
+    OctreeAStarAlgorithm(void);
+
     typedef boost::function<Real32 (OctreePtr,
                                     const Octree::OTNodePtr,
                                     const Pnt3f& Goal)> PathCostHeuristicFunc;
 
-
-    void setAgent(const Pnt3f& Location);
-    void setGoal(const Pnt3f& Location);
-
-    void setAgent(Octree::OTNodePtr);
-    void setGoal(Octree::OTNodePtr);
-
     void setCostHeuristic(PathCostHeuristicFunc CostHeuristicFunc);
 
-    bool search(void);
+    std::vector<Pnt3f> search(OctreePtr Tree,const Pnt3f& Start,const Pnt3f& Goal);
+
     const std::vector<Pnt3f>& getPath(void) const;
 
   protected:
-    OctreeAStarAlgorithm(void);
 
     struct ASNode;
 
@@ -82,6 +77,14 @@ class OSG_CONTRIBASTAR_DLLMAPPING OctreeAStarAlgorithm
         ASNodeWeakPtr parent;
         Octree::OTNodePtr OT_Node;
     };
+
+    void setAgent(Octree::OTNodePtr);
+    void setGoal(Octree::OTNodePtr);
+
+    void setTree(OctreePtr Tree);
+
+    void setAgent(const Pnt3f& Location);
+    void setGoal(const Pnt3f& Location);
 
     Real32 findCostToGoal(const Pnt3f&);
     Real32 findCostFromStart(const Pnt3f&);

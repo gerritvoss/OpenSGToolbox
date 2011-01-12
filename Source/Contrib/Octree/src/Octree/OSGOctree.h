@@ -89,22 +89,6 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         FRONT  = 5
     };
 
-    class OTNodeVolume
-    {
-      public:
-        const Pnt3f& getMin(void) const;
-        const Pnt3f& getMax(void) const;
-        Pnt3f getPosition(void) const;
-        Vec3f getLengths(void) const;
-
-        void setMin(const Pnt3f& min);
-        void setMax(const Pnt3f& max);
-      private:
-        Pnt3f _Min,
-              _Max;
-    };
-
-
     struct OTNode;
 
     typedef boost::shared_ptr<OTNode> OTNodePtr;
@@ -115,7 +99,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
       public:
         friend class Octree;
 
-        const OTNodeVolume& getVolume(void) const;
+        const BoxVolume& getVolume(void) const;
         const std::vector<OTNodePtr>& getChildren(void) const;
         OTNodePtr getChildren(UInt32 Index);
         std::vector<OTNodePtr> getNeighbors(void) const;
@@ -133,7 +117,7 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
         bool getContainsObstacles(void) const;
 
-        void setVolume(const OTNodeVolume& Volume);
+        void setVolume(const BoxVolume& Volume);
         void setChildren(const std::vector<OTNodePtr>& Children);
         void setNeighbors(const std::vector<OTNodePtr>& Neighbors);
         void setNeighborsToSide(const std::vector<bool>& NeighborsToSide);
@@ -142,12 +126,16 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
         void setDepth(Int32 Depth);
         void setContainsObstacles(bool ContainsObs);
 
+        bool isLeaf(void) const;
+        bool isBranch(void) const;
+        bool isEmpty(void) const;
+
       private:
-        OTNodeVolume& editVolume(void);
+        BoxVolume& editVolume(void);
         void addChild(OTNodePtr Child);
         void addNeighbor(OTNodePtr Neighbor);
 
-        OTNodeVolume _Volume;
+        BoxVolume _Volume;
         std::vector<OTNodePtr> _Children;
         std::vector<OTNodeWeakPtr> _Neighbors;
         bool _NeighborsToSide[6];
@@ -261,8 +249,8 @@ class OSG_CONTRIBOCTREE_DLLMAPPING Octree
 
     void buildNewNodes(OTNodePtr);
 
-    Pnt3f getVolMin(Octant, const OTNodeVolume&, const Vec3f&) const;
-    Pnt3f getVolMax(Octant, const OTNodeVolume&, const Vec3f&) const;
+    Pnt3f getVolMin(Octant, const BoxVolume&, const Vec3f&) const;
+    Pnt3f getVolMax(Octant, const BoxVolume&, const Vec3f&) const;
     void beginSearchForNeighbors(OTNode*);
     void findNeighbors(OTNode*, OTNode*, Int8); //TODO:  void traverse();
     bool areNeighbors(OTNode*, OTNode*) const;

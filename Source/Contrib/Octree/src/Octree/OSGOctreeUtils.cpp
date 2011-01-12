@@ -259,10 +259,14 @@ NodeTransitPtr OctreeVisualization::createNodeGeo(OctreePtr,
     Matrix m;
     TransformRecPtr box_trans;
     NodeRecPtr trans_node = makeCoredNode<Transform>(&box_trans);
-    m.setTranslate( node->getVolume().getPosition().x(), node->getVolume().getPosition().y(), node->getVolume().getPosition().z());
+    Pnt3f Center;
+    node->getVolume().getCenter(Center);
+    m.setTranslate( Center.x(), Center.y(), Center.z());
 
     const Real32 Offset(0.0f);
-    m.setScale(node->getVolume().getLengths().x()-(node->getVolume().getLengths().x()*Offset), node->getVolume().getLengths().y()-(node->getVolume().getLengths().y()*Offset), node->getVolume().getLengths().z()-(node->getVolume().getLengths().z()*Offset));
+    Vec3f Size;
+    node->getVolume().getSize(Size);
+    m.setScale(Size.x()-(Size.x()*Offset), Size.y()-(Size.y()*Offset), Size.z()-(Size.z()*Offset));
     box_trans->setMatrix(m);
     trans_node->addChild(box);
 
@@ -290,14 +294,18 @@ NodeTransitPtr OctreeVisualization::createNodeDistanceLOD(OctreePtr,
     Matrix m;
     TransformRecPtr box_trans;
     NodeRecPtr trans_node = makeCoredNode<Transform>(&box_trans);
-    m.setTranslate(node->getVolume().getPosition().x(),
-                   node->getVolume().getPosition().y(),
-                   node->getVolume().getPosition().z());
+    Pnt3f Center;
+    node->getVolume().getCenter(Center);
+    m.setTranslate(Center.x(),
+                   Center.y(),
+                   Center.z());
 
     const Real32 Offset(0.0f);
-    m.setScale(node->getVolume().getLengths().x()-(node->getVolume().getLengths().x()*Offset),
-               node->getVolume().getLengths().y()-(node->getVolume().getLengths().y()*Offset),
-               node->getVolume().getLengths().z()-(node->getVolume().getLengths().z()*Offset));
+    Vec3f Size;
+    node->getVolume().getSize(Size);
+    m.setScale(Size.x()-(Size.x()*Offset),
+               Size.y()-(Size.y()*Offset),
+               Size.z()-(Size.z()*Offset));
     box_trans->setMatrix(m);
     trans_node->addChild(LODNode);
 
