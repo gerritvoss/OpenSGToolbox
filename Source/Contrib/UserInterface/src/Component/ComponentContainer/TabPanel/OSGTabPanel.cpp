@@ -81,6 +81,15 @@ void TabPanel::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Component* TabPanel::getNextSiblingOfChild(Component* const Child) const
+{
+    return NULL;
+}
+
+Component* TabPanel::getPrevSiblingOfChild(Component* const Child) const
+{
+    return NULL;
+}
 
 void TabPanel::calculateTabBorderLengths(Border* const TheBorder, Real32& Left, Real32& Right, Real32& Top, Real32& Bottom) const
 {

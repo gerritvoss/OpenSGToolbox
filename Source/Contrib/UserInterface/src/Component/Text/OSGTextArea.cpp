@@ -262,6 +262,9 @@ void TextArea::keyTyped(KeyEventDetails* const e)//broken
     case KeyEventDetails::KEY_PAGE_DOWN:
         moveCaretLine(numVisibleLines());
         break;
+    case KeyEventDetails::KEY_TAB:
+        e->consume();
+        break;
 	}
 	Inherited::keyTyped(e);
 }

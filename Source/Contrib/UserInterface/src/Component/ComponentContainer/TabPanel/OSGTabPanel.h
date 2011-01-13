@@ -110,6 +110,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase
     Int32 getSelectedIndex(void) const;
     //Returns the currently selected index for this tabpanel.
     void setSelectedIndex(const Int32& Index);
+
+    virtual Component* getNextSiblingOfChild(Component* const Child) const;
+
+    virtual Component* getPrevSiblingOfChild(Component* const Child) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

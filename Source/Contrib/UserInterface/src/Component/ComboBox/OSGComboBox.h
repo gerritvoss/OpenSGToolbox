@@ -163,6 +163,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComboBox : public ComboBoxBase
 	virtual void keyTyped(KeyEventDetails* const e);
     virtual void mouseClicked(MouseEventDetails* const e);
 
+
+    virtual bool isFocusInteractable(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

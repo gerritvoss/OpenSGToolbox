@@ -78,6 +78,10 @@ void EditableTextComponent::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+bool EditableTextComponent::isFocusInteractable(void) const
+{
+    return getEnabled() && getEditable();
+}
 
 void EditableTextComponent::keyPressed(KeyEventDetails* const e)
 {

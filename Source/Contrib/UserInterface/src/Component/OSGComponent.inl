@@ -60,4 +60,16 @@ bool Component::getMouseContained(void)
 	return _MouseInComponentLastMouse;
 }
 
+inline
+void Component::moveFocusNext(void)
+{
+    moveFocus(1);
+}
+
+inline
+void Component::moveFocusPrev(void)
+{
+    moveFocus(-1);
+}
+
 OSG_END_NAMESPACE

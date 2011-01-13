@@ -85,6 +85,11 @@ void Spinner::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+bool Spinner::isFocusInteractable(void) const
+{
+    return getEnabled() && getEditable();
+}
+
 void Spinner::updateLayout(void)
 {
     Pnt2f Pos;

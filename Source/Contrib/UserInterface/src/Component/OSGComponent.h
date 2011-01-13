@@ -138,7 +138,33 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 	bool getMouseContained(void);
 
     virtual bool takeFocus(bool Temporary = false);
+
+    //Focus
+	virtual void moveFocus(Int32 MoveAmount);
+	void moveFocusNext(void);
+	void moveFocusPrev(void);
+
+	virtual void moveFocusPosX(void);
+	virtual void moveFocusNegX(void);
+	virtual void moveFocusPosY(void);
+	virtual void moveFocusNegY(void);
+
+    virtual bool isFocusInteractable(void) const;
+
+    //Component graph
+    Component* getNextSibling(void) const;
+    Component* getPrevSibling(void) const;
+    Component* getLeftmostDecendent(void) const;
+    Component* getRightmostDecendent(void) const;
+    Component* getNextDepthFirstComponent(void) const;
+    Component* getPrevDepthFirstComponent(void) const;
     
+	Component* getNextSiblingInPosX(void) const;
+	Component* getNextSiblingInNegX(void) const;
+	Component* getNextSiblingInPosY(void) const;
+	Component* getNextSiblingInNegY(void) const;
+    bool isAncestor(Component* const TheComponent) const;
+
     virtual bool isContained(const Pnt2f& p, bool TestAgainstClipBounds = true) const;
 
     virtual Real32 getBaseline(const Real32& x, const Real32& y) const;

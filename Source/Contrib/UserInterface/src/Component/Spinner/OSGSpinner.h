@@ -119,6 +119,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Spinner : public SpinnerBase
 	//This is only relevent when the Editor is a derived class of SpinnerEditor
 	bool getEditable(void) const;
 
+    virtual bool isFocusInteractable(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

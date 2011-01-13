@@ -88,6 +88,11 @@ void ComboBox::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool ComboBox::isFocusInteractable(void) const
+{
+    return getEnabled() && getEditable();
+}
+
 void ComboBox::setEmptyDescText(const std::string& text)
 {
     if(getEditor() != NULL &&

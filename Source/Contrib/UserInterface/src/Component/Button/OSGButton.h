@@ -98,6 +98,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     virtual void mousePressed(MouseEventDetails* const e);
     virtual void mouseReleased(MouseEventDetails* const e);
 
+    virtual void keyTyped(KeyEventDetails* const e);
+
     void setTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setFocusedTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
@@ -130,6 +132,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     virtual void setTextColors( const Color4f &value );
 
     virtual void detachFromEventProducer(void);
+
+    virtual bool isFocusInteractable(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

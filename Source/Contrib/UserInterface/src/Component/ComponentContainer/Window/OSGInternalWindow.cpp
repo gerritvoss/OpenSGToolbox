@@ -295,7 +295,7 @@ void InternalWindow::keyTyped(KeyEventDetails* const e)
                 ParentContainer = dynamic_cast<ComponentContainer*>(ParentContainer->getParentContainer());
             }
         }
-        Component::keyTyped(e);
+        produceKeyTyped(e);
     }
 }
 

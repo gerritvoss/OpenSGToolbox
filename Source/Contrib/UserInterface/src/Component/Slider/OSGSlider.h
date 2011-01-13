@@ -124,6 +124,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Slider : public SliderBase
 	void setValueIsAdjusting(bool b);
 
     virtual void detachFromEventProducer(void);
+
+    virtual bool isFocusInteractable(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

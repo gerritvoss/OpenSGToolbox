@@ -121,6 +121,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
     std::vector<Component*> getNamedChildren(const std::string & Name) const;
 
     std::vector<Component*> getNamedDecendents(const std::string & Name) const;
+
+    virtual Component* getNextSiblingOfChild(Component* const Child) const;
+
+    virtual Component* getPrevSiblingOfChild(Component* const Child) const;
+
+    bool isDecendent(Component* const TheComponent) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

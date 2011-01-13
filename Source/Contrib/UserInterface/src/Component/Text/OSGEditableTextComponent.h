@@ -89,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING EditableTextComponent : public Editabl
     void cut(void);
     void paste(void);
 
+    virtual bool isFocusInteractable(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

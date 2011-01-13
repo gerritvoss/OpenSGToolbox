@@ -113,6 +113,359 @@ void Component::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+bool Component::isAncestor(Component* const TheComponent) const
+{
+    const Component* TestComponent(getParentContainer());
+    while(TestComponent != NULL)
+    {
+        if(TestComponent = TheComponent)
+        {
+            return true;
+        }
+        TestComponent = TestComponent->getParentContainer();
+    }
+    return false;
+}
+
+void Component::moveFocus(Int32 MoveAmount)
+{
+    //Follow a depth first search of Components that are isFocusInteractable 
+    ComponentUnrecPtr ComponentToFocus = ComponentUnrecPtr(this);
+    if(MoveAmount > 0)
+    {
+        //Focus forward the the given amount
+        for(Int32 i(0) ; i<MoveAmount ; ++i)
+        {
+            //Find the next component that is Focus Interactable
+            do
+            {
+                ComponentToFocus = ComponentToFocus->getNextDepthFirstComponent();
+            }while(ComponentToFocus != NULL &&               //None found
+                  ComponentToFocus != this &&               //Looped back to this component
+                  !ComponentToFocus->isFocusInteractable());
+
+            //Has the Depth first order reached the end
+            if(ComponentToFocus == NULL &&
+               getParentWindow() != NULL)
+            {
+                ComponentToFocus = getParentWindow()->getLeftmostDecendent();
+            }
+        }
+    }
+    else if(MoveAmount < 0)
+    {
+        //Focus forward the the given amount
+        for(Int32 i(0) ; i>MoveAmount ; --i)
+        {
+            //Find the next component that is Focus Interactable
+            do
+            {
+                ComponentToFocus = ComponentToFocus->getPrevDepthFirstComponent();
+            }while(ComponentToFocus != NULL &&               //None found
+                  ComponentToFocus != this &&               //Looped back to this component
+                  !ComponentToFocus->isFocusInteractable());
+
+            //Has the Depth first order reached the first
+            if(ComponentToFocus == NULL &&
+               getParentWindow() != NULL)
+            {
+                ComponentToFocus = getParentWindow()->getRightmostDecendent();
+            }
+        }
+    }
+
+    //If a component was found to move to
+    if(ComponentToFocus != NULL &&
+       ComponentToFocus != this)
+    {
+        ComponentToFocus->takeFocus();
+    }
+}
+
+
+void Component::moveFocusPosX(void)
+{
+    ComponentUnrecPtr ComponentToFocus(getNextSiblingInPosX());
+
+    //If a component was found to move to
+    if(ComponentToFocus != NULL)
+    {
+        ComponentToFocus->takeFocus();
+    }
+}
+
+void Component::moveFocusNegX(void)
+{
+    ComponentUnrecPtr ComponentToFocus(getNextSiblingInNegX());
+
+    //If a component was found to move to
+    if(ComponentToFocus != NULL)
+    {
+        ComponentToFocus->takeFocus();
+    }
+}
+
+void Component::moveFocusPosY(void)
+{
+    ComponentUnrecPtr ComponentToFocus(getNextSiblingInPosY());
+
+    //If a component was found to move to
+    if(ComponentToFocus != NULL)
+    {
+        ComponentToFocus->takeFocus();
+    }
+}
+
+void Component::moveFocusNegY(void)
+{
+    ComponentUnrecPtr ComponentToFocus(getNextSiblingInNegY());
+
+    //If a component was found to move to
+    if(ComponentToFocus != NULL)
+    {
+        ComponentToFocus->takeFocus();
+    }
+}
+
+bool Component::isFocusInteractable(void) const
+{
+    return false;
+}
+
+Component* Component::getNextDepthFirstComponent(void) const
+{
+    if(getParentContainer() != NULL)
+    {
+        Component* TestComp(getNextSibling());
+        if(TestComp == NULL)
+        {
+            TestComp = getParentContainer();
+            while(TestComp != NULL &&
+                  TestComp->getNextSibling() == NULL)
+            {
+                TestComp = TestComp->getParentContainer();
+            }
+            
+            if(TestComp != NULL)
+            {
+                TestComp = TestComp->getNextSibling();
+            }
+        }
+
+        if(TestComp != NULL &&
+           TestComp->getType().isDerivedFrom(ComponentContainer::getClassType()))
+        {
+            return TestComp->getLeftmostDecendent();
+        }
+        else
+        {
+            return TestComp;
+        }
+    }
+
+    return NULL;
+}
+
+Component* Component::getPrevDepthFirstComponent(void) const
+{
+    if(getParentContainer() != NULL)
+    {
+        Component* TestComp(getPrevSibling());
+        if(TestComp == NULL)
+        {
+            TestComp = getParentContainer();
+            while(TestComp != NULL &&
+                  TestComp->getPrevSibling() == NULL)
+            {
+                TestComp = TestComp->getParentContainer();
+            }
+            
+            if(TestComp != NULL)
+            {
+                TestComp = TestComp->getPrevSibling();
+            }
+        }
+
+        if(TestComp != NULL &&
+           TestComp->getType().isDerivedFrom(ComponentContainer::getClassType()))
+        {
+                return TestComp->getRightmostDecendent();
+        }
+        else
+        {
+            return TestComp;
+        }
+    }
+
+    return NULL;
+}
+
+Component* Component::getNextSibling(void) const
+{
+    if(getParentContainer() != NULL)
+    {
+        return getParentContainer()->getNextSiblingOfChild(const_cast<Component*const>(this));
+    }
+
+    return NULL;
+}
+
+Component* Component::getPrevSibling(void) const
+{
+    if(getParentContainer() != NULL)
+    {
+        return getParentContainer()->getPrevSiblingOfChild(const_cast<Component*const>(this));
+    }
+
+    return NULL;
+}
+
+Component* Component::getLeftmostDecendent(void) const
+{
+    if(getType().isDerivedFrom(ComponentContainer::getClassType()))
+    {
+        const ComponentContainer* ThisCast(dynamic_cast<const ComponentContainer*>(this));
+        if(ThisCast->getMFChildren()->size() > 0)
+        {
+            if(!ThisCast->getChildren(0)->getType().isDerivedFrom(ComponentContainer::getClassType()) )
+            {
+                return ThisCast->getChildren(0);
+            }
+            else
+            {
+                return ThisCast->getChildren(0)->getLeftmostDecendent();
+            }
+        }
+    }
+
+    return NULL;
+}
+
+Component* Component::getRightmostDecendent(void) const
+{
+    if(getType().isDerivedFrom(ComponentContainer::getClassType()))
+    {
+        const ComponentContainer* ThisCast(dynamic_cast<const ComponentContainer*>(this));
+        if(ThisCast->getMFChildren()->size() > 0)
+        {
+            if(!ThisCast->getMFChildren()->back()->getType().isDerivedFrom(ComponentContainer::getClassType()) )
+            {
+                return ThisCast->getMFChildren()->back();
+            }
+            else
+            {
+                return ThisCast->getMFChildren()->back()->getRightmostDecendent();
+            }
+        }
+    }
+
+    return NULL;
+}
+
+Component* Component::getNextSiblingInPosX(void) const
+{
+    Component* TestComponent(NULL);
+    if(getParentContainer() != NULL)
+    {
+        for(UInt32 i(0) ; getParentContainer()->getMFChildren()->size(); ++i)
+        {
+            if(getParentContainer()->getChildren(i)->getPosition().x() >= getPosition().x() &&
+               (TestComponent == NULL ||
+                getParentContainer()->getChildren(i)->getPosition().x() <= TestComponent->getPosition().x()))
+            {
+                TestComponent = getParentContainer()->getChildren(i);
+            }
+        }
+    }
+
+    if(TestComponent != this)
+    {
+        return TestComponent;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+Component* Component::getNextSiblingInNegX(void) const
+{
+    Component* TestComponent(NULL);
+    if(getParentContainer() != NULL)
+    {
+        for(UInt32 i(0) ; getParentContainer()->getMFChildren()->size(); ++i)
+        {
+            if(getParentContainer()->getChildren(i)->getPosition().x() <= getPosition().x() &&
+               (TestComponent == NULL ||
+               getParentContainer()->getChildren(i)->getPosition().x() >= TestComponent->getPosition().x()))
+            {
+                TestComponent = getParentContainer()->getChildren(i);
+            }
+        }
+    }
+
+    if(TestComponent != this)
+    {
+        return TestComponent;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+Component* Component::getNextSiblingInPosY(void) const
+{
+    Component* TestComponent(NULL);
+    if(getParentContainer() != NULL)
+    {
+        for(UInt32 i(0) ; getParentContainer()->getMFChildren()->size(); ++i)
+        {
+            if(getParentContainer()->getChildren(i)->getPosition().y() >= getPosition().y() &&
+               (TestComponent == NULL ||
+               getParentContainer()->getChildren(i)->getPosition().y() <= TestComponent->getPosition().y()))
+            {
+                TestComponent = getParentContainer()->getChildren(i);
+            }
+        }
+    }
+
+    if(TestComponent != this)
+    {
+        return TestComponent;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+Component* Component::getNextSiblingInNegY(void) const
+{
+    Component* TestComponent(NULL);
+    if(getParentContainer() != NULL)
+    {
+        for(UInt32 i(0) ; getParentContainer()->getMFChildren()->size(); ++i)
+        {
+            if(getParentContainer()->getChildren(i)->getPosition().y() <= getPosition().y() &&
+               (TestComponent == NULL ||
+               getParentContainer()->getChildren(i)->getPosition().y() >= TestComponent->getPosition().y()))
+            {
+                TestComponent = getParentContainer()->getChildren(i);
+            }
+        }
+    }
+
+    if(TestComponent != this)
+    {
+        return TestComponent;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 ComponentContainer* Component::getParentContainer(void) const
 {
     return dynamic_cast<ComponentContainer*>(_sfParentContainer.getValue());
@@ -617,6 +970,20 @@ void Component::keyReleased(KeyEventDetails* const e)
 void Component::keyTyped(KeyEventDetails* const e)
 {
     produceKeyTyped(e);
+
+    if(getFocused() &&
+       !e->isConsumed() &&
+       e->getKey() == KeyEventDetails::KEY_TAB)
+    {
+        if(e->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT)
+        {
+            moveFocusPrev();
+        }
+        else if(e->getModifiers() == 0)
+        {
+            moveFocusNext();
+        }
+    }
 }
 
 void Component::focusGained(FocusEventDetails* const e)

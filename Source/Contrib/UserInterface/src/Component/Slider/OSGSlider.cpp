@@ -85,6 +85,11 @@ void Slider::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+bool Slider::isFocusInteractable(void) const
+{
+    return getEnabled();
+}
+
 void Slider::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {
 

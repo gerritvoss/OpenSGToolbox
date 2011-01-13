@@ -84,6 +84,20 @@ void Button::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+void Button::keyTyped(KeyEventDetails* const e)
+{
+    if(e->getKey() == KeyEventDetails::KEY_ENTER)
+    {
+        produceActionPerformed();
+    }
+    Inherited::keyTyped(e);
+}
+
+bool Button::isFocusInteractable(void) const
+{
+    return getEnabled();
+}
     
 void Button::setTextColors( const Color4f &value )
 {

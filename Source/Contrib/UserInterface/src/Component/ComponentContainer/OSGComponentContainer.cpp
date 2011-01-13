@@ -79,6 +79,51 @@ void ComponentContainer::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+Component* ComponentContainer::getNextSiblingOfChild(Component* const Child) const
+{
+    if(getParentContainer() != NULL)
+    {
+        Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
+        if(ChildIndex >= 0 &&
+           ChildIndex+1 < getMFChildren()->size())
+        {
+            return getChildren(ChildIndex+1);
+        }
+    }
+
+    return NULL;
+}
+
+Component* ComponentContainer::getPrevSiblingOfChild(Component* const Child) const
+{
+    if(getParentContainer() != NULL)
+    {
+        Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
+        if(ChildIndex > 0)
+        {
+            return getChildren(ChildIndex-1);
+        }
+    }
+
+    return NULL;
+}
+
+bool ComponentContainer::isDecendent(Component* const TheComponent) const
+{
+    if(getMFChildren()->findIndex(TheComponent) >= 0)
+    {
+        return true;
+    }
+    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    {
+        if(getChildren(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+        {
+            return dynamic_cast<ComponentContainer*>(getChildren(i))->isDecendent(TheComponent);
+        }
+    }
+
+    return false;
+}
 
 Int32 ComponentContainer::getChildIndex(Component* const Child)
 {

@@ -479,6 +479,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Tree : public TreeBase
 
     std::deque<TreeRowComponents> _DrawnRows;
 
+    const TreeRowComponents* getRowComponents(Int32 Row) const;
+
     /*==========================  PRIVATE  ================================*/
 
   private:

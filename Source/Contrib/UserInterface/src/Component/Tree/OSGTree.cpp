@@ -900,13 +900,26 @@ void Tree::updateRowsDrawn(void)
     updateChildren();
 }
 
+const Tree::TreeRowComponents* Tree::getRowComponents(Int32 Row) const
+{
+    for(UInt32 i(0) ; i<_DrawnRows.size() ; ++i)
+    {
+        if(_DrawnRows[i]._Row == Row)
+        {
+            return &_DrawnRows[i];
+        }
+    }
+    return NULL;
+}
+
 Tree::TreeRowComponents Tree::createRowComponent(UInt32 Row)
 {
     if(getCellGenerator() != NULL)
     {
         TreePath NodePath(getModelLayout()->getPathForRow(Row));
-        bool Selected;
 
+        //Determine if this row is selected
+        bool Selected;
         if(getSelectionModel() != NULL)
         {
             Selected = getSelectionModel()->isPathSelected(NodePath);
@@ -915,18 +928,57 @@ Tree::TreeRowComponents Tree::createRowComponent(UInt32 Row)
         {
             Selected = false;
         }
+
+        //Determine if this row has focus
+        Component* FocusedComp(getParentWindow() ? getParentWindow()->getFocusedComponent() : NULL);
+
+        const TreeRowComponents* RowComps = getRowComponents(Row);
+
+        bool HasFocus(FocusedComp != NULL &&
+                      RowComps != NULL &&
+                      (RowComps->_ExpandedComponent == FocusedComp ||
+                       RowComps->_ValueComponent == FocusedComp ||
+                       (RowComps->_ExpandedComponent != NULL &&
+                        FocusedComp->isAncestor(RowComps->_ExpandedComponent)) ||
+                       FocusedComp->isAncestor(RowComps->_ValueComponent)));
+        
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))
         {
             //Create the Expand component
-            ComponentUnrecPtr NewExpComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
+            ComponentUnrecPtr
+                NewExpComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeExpandedComponent(this,
+                                                                                                               NodePath.getLastPathComponent(),
+                                                                                                               Selected,
+                                                                                                               getModelLayout()->isExpanded(NodePath),
+                                                                                                               getModel()->isLeaf(NodePath.getLastPathComponent()),
+                                                                                                               Row,
+                                                                                                               HasFocus));
             //Create the Row Component
-            ComponentUnrecPtr NewComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(this, NodePath.getLastPathComponent(), Selected, getModelLayout()->isExpanded(NodePath), getModel()->isLeaf(NodePath.getLastPathComponent()), Row, false));
+            ComponentUnrecPtr
+                NewComp(dynamic_cast<TreeComponentGenerator*>(getCellGenerator())->getTreeComponent(this,
+                                                                                                    NodePath.getLastPathComponent(),
+                                                                                                    Selected,
+                                                                                                    getModelLayout()->isExpanded(NodePath),
+                                                                                                    getModel()->isLeaf(NodePath.getLastPathComponent()),
+                                                                                                    Row,
+                                                                                                    HasFocus));
+            if(HasFocus)
+            {
+                NewComp->takeFocus();
+                getParentWindow()->setFocusedComponent(NewComp);
+            }
+
             return TreeRowComponents( NewExpComp, NewComp, Row);
         }
         else
         {
             //Create the Row Component
-            ComponentUnrecPtr NewComp(getCellGenerator()->getComponent(this,NodePath.getLastPathComponent(), Row, 0,Selected, false));
+            ComponentUnrecPtr NewComp(getCellGenerator()->getComponent(this,NodePath.getLastPathComponent(), Row, 0,Selected, HasFocus));
+            if(HasFocus)
+            {
+                NewComp->takeFocus();
+                getParentWindow()->setFocusedComponent(NewComp);
+            }
             return TreeRowComponents(NULL, NewComp,Row);
         }
     }
