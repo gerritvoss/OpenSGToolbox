@@ -86,11 +86,9 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetails : public LuaErrorEventDetai
     std::string      getErrorString(void) const;
 
     static  LuaErrorEventDetailsTransitPtr      create( FieldContainer* const Source,
-                                                 Time TimeStamp,
-                                                 lua_State* State,
-                                                 int LuaStatus,
-                                                 const std::list<std::string>& StackTrace,
-                                                 bool EnableStackTrace); 
+                                                        Time TimeStamp,
+                                                        lua_State* State,
+                                                        int LuaStatus); 
     /*=========================  PROTECTED  ===============================*/
 
   protected:

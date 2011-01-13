@@ -124,47 +124,6 @@ void LuaErrorEventDetailsBase::setStatus(const Int32 value)
 
     _sfStatus.setValue(value);
 }
-//! Get the value of the LuaErrorEventDetails::_sfStackTraceEnabled field.
-
-inline
-bool &LuaErrorEventDetailsBase::editStackTraceEnabled(void)
-{
-    editSField(StackTraceEnabledFieldMask);
-
-    return _sfStackTraceEnabled.getValue();
-}
-
-//! Get the value of the LuaErrorEventDetails::_sfStackTraceEnabled field.
-inline
-      bool  LuaErrorEventDetailsBase::getStackTraceEnabled(void) const
-{
-    return _sfStackTraceEnabled.getValue();
-}
-
-//! Set the value of the LuaErrorEventDetails::_sfStackTraceEnabled field.
-inline
-void LuaErrorEventDetailsBase::setStackTraceEnabled(const bool value)
-{
-    editSField(StackTraceEnabledFieldMask);
-
-    _sfStackTraceEnabled.setValue(value);
-}
-
-//! Get the value of the \a index element the LuaErrorEventDetails::_mfStackTrace field.
-inline
-const std::string &LuaErrorEventDetailsBase::getStackTrace(const UInt32 index) const
-{
-    return _mfStackTrace[index];
-}
-
-inline
-std::string &LuaErrorEventDetailsBase::editStackTrace(const UInt32 index)
-{
-    editMField(StackTraceFieldMask, _mfStackTrace);
-
-    return _mfStackTrace[index];
-}
-
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -182,15 +141,6 @@ void LuaErrorEventDetailsBase::execSync (      LuaErrorEventDetailsBase *pFrom,
 
     if(FieldBits::NoField != (StatusFieldMask & whichField))
         _sfStatus.syncWith(pFrom->_sfStatus);
-
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-        _mfStackTrace.syncWith(pFrom->_mfStackTrace,
-                                syncMode,
-                                uiSyncInfo,
-                                oOffsets);
-
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-        _sfStackTraceEnabled.syncWith(pFrom->_sfStackTraceEnabled);
 }
 #endif
 

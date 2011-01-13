@@ -57,19 +57,6 @@ UInt32 LuaManager::getProducerClassTypeId(void)
 }
 
 inline
-void LuaManager::setEnableStackTrace(bool Enable)
-{
-    _EnableStackTrace = Enable;
-}
-
-inline
-bool LuaManager::getEnableStackTrace(void) const
-{
-    return _EnableStackTrace;
-}
-
-
-inline
 boost::signals2::connection LuaManager::attachActivity(UInt32 eventId,
                                            Activity* TheActivity)
 {

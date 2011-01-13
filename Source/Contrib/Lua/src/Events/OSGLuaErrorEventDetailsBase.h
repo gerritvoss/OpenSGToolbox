@@ -66,7 +66,6 @@
 #include "OSGEventDetails.h" // Parent
 
 #include "OSGSysFields.h"               // LuaStateVoidP type
-#include "OSGBaseFields.h"              // StackTrace type
 
 #include "OSGLuaErrorEventDetailsFields.h"
 
@@ -98,26 +97,18 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
     {
         LuaStateVoidPFieldId = Inherited::NextFieldId,
         StatusFieldId = LuaStateVoidPFieldId + 1,
-        StackTraceFieldId = StatusFieldId + 1,
-        StackTraceEnabledFieldId = StackTraceFieldId + 1,
-        NextFieldId = StackTraceEnabledFieldId + 1
+        NextFieldId = StatusFieldId + 1
     };
 
     static const OSG::BitVector LuaStateVoidPFieldMask =
         (TypeTraits<BitVector>::One << LuaStateVoidPFieldId);
     static const OSG::BitVector StatusFieldMask =
         (TypeTraits<BitVector>::One << StatusFieldId);
-    static const OSG::BitVector StackTraceFieldMask =
-        (TypeTraits<BitVector>::One << StackTraceFieldId);
-    static const OSG::BitVector StackTraceEnabledFieldMask =
-        (TypeTraits<BitVector>::One << StackTraceEnabledFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFVoidP           SFLuaStateVoidPType;
     typedef SFInt32           SFStatusType;
-    typedef MFString          MFStackTraceType;
-    typedef SFBool            SFStackTraceEnabledType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -147,18 +138,10 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
 
             const SFInt32             *getSFStatus          (void) const;
 
-            const MFString            *getMFStackTrace      (void) const;
-
-            const SFBool              *getSFStackTraceEnabled (void) const;
-
 
             const VoidP               &getLuaStateVoidP   (void) const;
 
                   Int32                getStatus          (void) const;
-
-            const std::string         &getStackTrace      (const UInt32 index) const;
-
-                  bool                 getStackTraceEnabled (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -228,8 +211,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
 
     SFVoidP           _sfLuaStateVoidP;
     SFInt32           _sfStatus;
-    MFString          _mfStackTrace;
-    SFBool            _sfStackTraceEnabled;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -261,10 +242,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
     EditFieldHandlePtr editHandleLuaStateVoidP  (void);
     GetFieldHandlePtr  getHandleStatus          (void) const;
     EditFieldHandlePtr editHandleStatus         (void);
-    GetFieldHandlePtr  getHandleStackTrace      (void) const;
-    EditFieldHandlePtr editHandleStackTrace     (void);
-    GetFieldHandlePtr  getHandleStackTraceEnabled (void) const;
-    EditFieldHandlePtr editHandleStackTraceEnabled(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -276,18 +253,10 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
 
                   SFInt32             *editSFStatus         (void);
 
-                  MFString            *editMFStackTrace     (void);
-
-                  SFBool              *editSFStackTraceEnabled(void);
-
 
                   VoidP               &editLuaStateVoidP  (void);
 
                   Int32               &editStatus         (void);
-
-                  std::string         &editStackTrace     (const UInt32 index);
-
-                  bool                &editStackTraceEnabled(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -296,7 +265,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaErrorEventDetailsBase : public EventDetails
 
             void setLuaStateVoidP  (const VoidP &value);
             void setStatus         (const Int32 value);
-            void setStackTraceEnabled(const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

@@ -184,7 +184,11 @@ namespace lua_details
 
         bool breakpoint_at_line(UInt32 line) const;
 
+        bool breakpoint_at_line(const std::string& filename, UInt32 line) const;
+
         bool toggle_breakpoint(UInt32 line);
+
+        bool toggle_breakpoint(const std::string& filename, UInt32 line);
 
         lua_State* L;
         //CWinThread* thread_;
@@ -195,8 +199,14 @@ namespace lua_details
         boost::function<void (LuaRunEvent, Int32)> callback_;
         std::string status_msg_;
         bool status_ready_;
+
         typedef std::map<UInt32, Breakpoint> BreakpointMap;
+        typedef std::map<std::string, BreakpointMap> FileBreakpointMap;
+
         BreakpointMap breakpoints_;
+
+        FileBreakpointMap file_breakpoints_;
+
         //mutable CCriticalSection breakpoints_lock_;
         Int32 func_call_level_;
         Int32 stop_at_level_;

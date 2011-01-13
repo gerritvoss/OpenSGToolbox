@@ -118,12 +118,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
     void setPackageCPath(const std::string& Pattern);
     std::string getPackageCPath(void) const;
 
-    static void FunctionHook(lua_State *l, lua_Debug *ar);
-
-    void setEnableStackTrace(bool Enable);
-
-    bool getEnableStackTrace(void) const;
-
     static const  EventProducerType  &getProducerClassType  (void); 
     static        UInt32              getProducerClassTypeId(void); 
     virtual const EventProducerType &getProducerType(void) const; 
@@ -154,7 +148,7 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
 	void setCallback(const boost::function<void (lua_details::LuaRunEvent, Int32)>& fn);
 
-    typedef std::vector<unsigned char> ProgBuf;
+    typedef std::vector<UChar8> ProgBuf;
 	void dump(ProgBuf& program, bool debug);
 
 	// execute
@@ -185,6 +179,9 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
 	// toggle breakpoint in given line
 	bool toggleBreakpoint(Int32 line);
+
+	// toggle breakpoint in given line of the given file
+	bool toggleBreakpoint(const std::string& filename, Int32 line);
 
 	// stop running program
 	void breakProg(void);
@@ -239,8 +236,6 @@ class OSG_CONTRIBLUA_DLLMAPPING LuaManager
 
 
     static lua_State *_State;
-    std::list<std::string> _LuaStack;
-    bool _EnableStackTrace;
 
     void produceLuaError(int Status);
     

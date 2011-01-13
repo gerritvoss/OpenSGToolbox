@@ -37,25 +37,4 @@
         publicRead="true"
 	>
 	</Field>
-	<Field
-		name="StackTrace"
-		type="std::string"
-		category="data"
-		cardinality="multi"
-		visibility="internal"
-		access="protected"
-        publicRead="true"
-	>
-	</Field>
-	<Field
-		name="StackTraceEnabled"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="internal"
-		access="protected"
-		defaultValue="false"
-        publicRead="true"
-	>
-	</Field>
 </FieldContainer>

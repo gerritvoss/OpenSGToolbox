@@ -220,36 +220,6 @@ bool LuaManager::uninit(void)
     }
 }
 
-void LuaManager::FunctionHook(lua_State *l, lua_Debug *ar)
-{
-    //fill up the debug structure with information from the lua stack
-    lua_getinfo(l, "Snl", ar);
-
-    switch (ar->event)
-    {
-        case LUA_HOOKCALL:
-            {
-                //push function calls to the top of the callstack
-                std::stringstream ss;
-                ss << ar->short_src << ":"
-
-                    << ar->linedefined << ": "
-                    << (ar->name == NULL ? "[UNKNOWN]" : ar->name)
-                    << " (" << ar->namewhat << ")";
-
-                the()->_LuaStack.push_front(ss.str());
-            }
-            break;
-        case LUA_HOOKRET:
-            //pop the returned function from the callstack
-            if (the()->_LuaStack.size()>0)
-            {
-                the()->_LuaStack.pop_front();
-            }
-            break;
-    }
-}
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
@@ -259,17 +229,6 @@ int LuaManager::runScript(const std::string& Script)
     //Start the  scripts run time statistic
     StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
     if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
-
-    //If Stack Trace is enabled
-    if(_EnableStackTrace)
-    {
-        _LuaStack.clear();
-        lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
-    }
-    else
-    {
-        lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
-    }
 
     //Load the Script
     int s = luaL_loadstring(_State, Script.c_str());
@@ -296,17 +255,6 @@ int LuaManager::runScript(const BoostPath& ScriptPath)
         //Start the  scripts run time statistic
         StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
         if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
-
-        //If Stack Trace is enabled
-        if(_EnableStackTrace)
-        {
-            _LuaStack.clear();
-            lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
-        }
-        else
-        {
-            lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
-        }
 
         //Load the Script
         int s = luaL_loadfile(_State, ScriptPath.string().c_str());
@@ -337,17 +285,6 @@ int LuaManager::runPushedFunction(UInt32 NumArgs, UInt32 NumReturns)
     //Start the  scripts run time statistic
     StatTimeElem *ScriptsRunTimeStatElem = StatCollector::getGlobalElem(statScriptsRunTime);
     if(ScriptsRunTimeStatElem) { ScriptsRunTimeStatElem->start(); }
-
-    //If Stack Trace is enabled
-    if(_EnableStackTrace)
-    {
-        _LuaStack.clear();
-        lua_sethook(_State,&LuaManager::FunctionHook,LUA_MASKCALL | LUA_MASKRET,0);
-    }
-    else
-    {
-        lua_sethook(_State,NULL,LUA_MASKCALL | LUA_MASKRET,0);
-    }
 
     int s = lua_pcall(_State, NumArgs, NumReturns, 0);
     checkError(s);
@@ -399,33 +336,17 @@ void LuaManager::checkError(int Status)
             lua_pop(_State, 1); // remove error message
             break;
     }
-
-    if(_EnableStackTrace)
-    {
-        _LuaStack.clear();
-    }
 }
 
 void LuaManager::printStackTrace(void) const
 {
-    if(_EnableStackTrace)
-    {
-        std::stringstream ss;
-        ss << "Lua Stack Trace: " << std::endl;
-
-        std::list<std::string>::const_iterator ListItor(_LuaStack.begin());
-        for(; ListItor != _LuaStack.end() ; ++ListItor)
-        {
-            ss << "     " << (*ListItor) << std::endl;
-        }
-        SWARNING << ss.str();
-    }
+    SWARNING << getCallStack();
 }
 
 
 void LuaManager::produceLuaError(int Status)
 {
-    LuaErrorEventDetailsUnrecPtr Details = LuaErrorEventDetails::create(NULL, getSystemTime(), _State, Status, _LuaStack, _EnableStackTrace);
+    LuaErrorEventDetailsUnrecPtr Details = LuaErrorEventDetails::create(NULL, getSystemTime(), _State, Status);
    
     produceLuaError(Details);
 }
@@ -512,13 +433,11 @@ std::string LuaManager::getPackageCPath(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LuaManager::LuaManager(void) : 
-    _EnableStackTrace(true)
+LuaManager::LuaManager(void) 
 {	
 }
 
-LuaManager::LuaManager(const LuaManager &source) : 
-    _EnableStackTrace(source._EnableStackTrace)
+LuaManager::LuaManager(const LuaManager &source) 
 {
     assert(false && "Sould NOT CALL LuaManager copy constructor");
 }
@@ -612,6 +531,11 @@ bool LuaManager::isStopped(void) const
 bool LuaManager::toggleBreakpoint(Int32 line)
 {
 	return _DebState->toggle_breakpoint(line);
+}
+
+bool LuaManager::toggleBreakpoint(const std::string& filename, Int32 line)
+{
+	return _DebState->toggle_breakpoint(filename, line);
 }
 
 void LuaManager::breakProg(void)

@@ -200,6 +200,23 @@ bool lua_details::State::breakpoint_at_line(UInt32 line) const
 	return (it->second & BPT_MASK) == BPT_EXECUTE;
 }
 
+bool lua_details::State::breakpoint_at_line(const std::string& filename, UInt32 line) const
+{
+	//CSingleLock lock(&breakpoints_lock_, true);
+	FileBreakpointMap::const_iterator fileMapIt= file_breakpoints_.find(filename);
+    if(fileMapIt == file_breakpoints_.end())
+    {
+        return false;
+    }
+
+	BreakpointMap::const_iterator it= fileMapIt->second.find(line);
+
+	if (it == breakpoints_.end())
+		return false;
+
+	return (it->second & BPT_MASK) == BPT_EXECUTE;
+}
+
 
 bool lua_details::State::toggle_breakpoint(UInt32 line)
 {
@@ -213,6 +230,27 @@ bool lua_details::State::toggle_breakpoint(UInt32 line)
 	else
 	{
 		breakpoints_[line] = BPT_EXECUTE;
+		return true;
+	}
+}
+
+bool lua_details::State::toggle_breakpoint(const std::string& filename, UInt32 line)
+{
+	//CSingleLock lock(&breakpoints_lock_, true);
+    
+    if(file_breakpoints_.find(filename) == file_breakpoints_.end())
+    {
+        file_breakpoints_[filename] = BreakpointMap();
+    }
+
+	if (breakpoint_at_line(filename, line))
+	{
+		file_breakpoints_[filename].erase(line);
+		return false;
+	}
+	else
+	{
+		file_breakpoints_[filename][line] = BPT_EXECUTE;
 		return true;
 	}
 }
@@ -318,8 +356,19 @@ void lua_details::State::line_hook(lua_State* L, lua_Debug* dbg)
 	else if (run_mode_ == Run)	// run without delay?
 	{
 		// check breakpoints
-		if (breakpoint_at_line(dbg->currentline))
-			suspend_exec(dbg, true);	// stop now; there's a breakpoint at the current line
+        if(dbg->source[0] == '@') //Is the current source in a file
+        {
+            std::string Filename(dbg->source);
+            Filename = Filename.substr(1);
+
+            if (breakpoint_at_line(Filename, dbg->currentline))
+                suspend_exec(dbg, true);	// stop now; there's a breakpoint at the current line
+        }
+        else
+        {
+            if (breakpoint_at_line(dbg->currentline))
+                suspend_exec(dbg, true);	// stop now; there's a breakpoint at the current line
+        }
 	}
 	else
 		suspend_exec(dbg, false);	// line-by-line execution, so stop

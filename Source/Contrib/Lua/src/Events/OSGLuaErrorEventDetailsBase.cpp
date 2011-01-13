@@ -90,14 +90,6 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var std::string     LuaErrorEventDetailsBase::_mfStackTrace
-    
-*/
-
-/*! \var bool            LuaErrorEventDetailsBase::_sfStackTraceEnabled
-    
-*/
-
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -144,30 +136,6 @@ void LuaErrorEventDetailsBase::classDescInserter(TypeObject &oType)
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&LuaErrorEventDetails::editHandleStatus),
         static_cast<FieldGetMethodSig >(&LuaErrorEventDetails::getHandleStatus));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new MFString::Description(
-        MFString::getClassType(),
-        "StackTrace",
-        "",
-        StackTraceFieldId, StackTraceFieldMask,
-        true,
-        (Field::MFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&LuaErrorEventDetails::editHandleStackTrace),
-        static_cast<FieldGetMethodSig >(&LuaErrorEventDetails::getHandleStackTrace));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFBool::Description(
-        SFBool::getClassType(),
-        "StackTraceEnabled",
-        "",
-        StackTraceEnabledFieldId, StackTraceEnabledFieldMask,
-        true,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&LuaErrorEventDetails::editHandleStackTraceEnabled),
-        static_cast<FieldGetMethodSig >(&LuaErrorEventDetails::getHandleStackTraceEnabled));
 
     oType.addInitialDesc(pDesc);
 }
@@ -223,27 +191,6 @@ LuaErrorEventDetailsBase::TypeObject LuaErrorEventDetailsBase::_type(
     "        publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"StackTrace\"\n"
-    "\t\ttype=\"std::string\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"multi\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "        publicRead=\"true\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"StackTraceEnabled\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t\tdefaultValue=\"false\"\n"
-    "        publicRead=\"true\"\n"
-    "\t>\n"
-    "\t</Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -294,32 +241,6 @@ const SFInt32 *LuaErrorEventDetailsBase::getSFStatus(void) const
 }
 
 
-MFString *LuaErrorEventDetailsBase::editMFStackTrace(void)
-{
-    editMField(StackTraceFieldMask, _mfStackTrace);
-
-    return &_mfStackTrace;
-}
-
-const MFString *LuaErrorEventDetailsBase::getMFStackTrace(void) const
-{
-    return &_mfStackTrace;
-}
-
-
-SFBool *LuaErrorEventDetailsBase::editSFStackTraceEnabled(void)
-{
-    editSField(StackTraceEnabledFieldMask);
-
-    return &_sfStackTraceEnabled;
-}
-
-const SFBool *LuaErrorEventDetailsBase::getSFStackTraceEnabled(void) const
-{
-    return &_sfStackTraceEnabled;
-}
-
-
 
 
 
@@ -338,14 +259,6 @@ UInt32 LuaErrorEventDetailsBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfStatus.getBinSize();
     }
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-    {
-        returnValue += _mfStackTrace.getBinSize();
-    }
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-    {
-        returnValue += _sfStackTraceEnabled.getBinSize();
-    }
 
     return returnValue;
 }
@@ -363,14 +276,6 @@ void LuaErrorEventDetailsBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfStatus.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-    {
-        _mfStackTrace.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-    {
-        _sfStackTraceEnabled.copyToBin(pMem);
-    }
 }
 
 void LuaErrorEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
@@ -385,14 +290,6 @@ void LuaErrorEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (StatusFieldMask & whichField))
     {
         _sfStatus.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (StackTraceFieldMask & whichField))
-    {
-        _mfStackTrace.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (StackTraceEnabledFieldMask & whichField))
-    {
-        _sfStackTraceEnabled.copyFromBin(pMem);
     }
 }
 
@@ -509,18 +406,14 @@ FieldContainerTransitPtr LuaErrorEventDetailsBase::shallowCopy(void) const
 LuaErrorEventDetailsBase::LuaErrorEventDetailsBase(void) :
     Inherited(),
     _sfLuaStateVoidP          (VoidP(NULL)),
-    _sfStatus                 (Int32(0)),
-    _mfStackTrace             (),
-    _sfStackTraceEnabled      (bool(false))
+    _sfStatus                 (Int32(0))
 {
 }
 
 LuaErrorEventDetailsBase::LuaErrorEventDetailsBase(const LuaErrorEventDetailsBase &source) :
     Inherited(source),
     _sfLuaStateVoidP          (source._sfLuaStateVoidP          ),
-    _sfStatus                 (source._sfStatus                 ),
-    _mfStackTrace             (source._mfStackTrace             ),
-    _sfStackTraceEnabled      (source._sfStackTraceEnabled      )
+    _sfStatus                 (source._sfStatus                 )
 {
 }
 
@@ -582,56 +475,6 @@ EditFieldHandlePtr LuaErrorEventDetailsBase::editHandleStatus         (void)
     return returnValue;
 }
 
-GetFieldHandlePtr LuaErrorEventDetailsBase::getHandleStackTrace      (void) const
-{
-    MFString::GetHandlePtr returnValue(
-        new  MFString::GetHandle(
-             &_mfStackTrace,
-             this->getType().getFieldDesc(StackTraceFieldId),
-             const_cast<LuaErrorEventDetailsBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr LuaErrorEventDetailsBase::editHandleStackTrace     (void)
-{
-    MFString::EditHandlePtr returnValue(
-        new  MFString::EditHandle(
-             &_mfStackTrace,
-             this->getType().getFieldDesc(StackTraceFieldId),
-             this));
-
-
-    editMField(StackTraceFieldMask, _mfStackTrace);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr LuaErrorEventDetailsBase::getHandleStackTraceEnabled (void) const
-{
-    SFBool::GetHandlePtr returnValue(
-        new  SFBool::GetHandle(
-             &_sfStackTraceEnabled,
-             this->getType().getFieldDesc(StackTraceEnabledFieldId),
-             const_cast<LuaErrorEventDetailsBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr LuaErrorEventDetailsBase::editHandleStackTraceEnabled(void)
-{
-    SFBool::EditHandlePtr returnValue(
-        new  SFBool::EditHandle(
-             &_sfStackTraceEnabled,
-             this->getType().getFieldDesc(StackTraceEnabledFieldId),
-             this));
-
-
-    editSField(StackTraceEnabledFieldMask);
-
-    return returnValue;
-}
-
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -670,16 +513,7 @@ void LuaErrorEventDetailsBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-#ifdef OSG_MT_CPTR_ASPECT
-    AspectOffsetStore oOffsets;
 
-    _pAspectStore->fillOffsetArray(oOffsets, this);
-#endif
-
-#ifdef OSG_MT_CPTR_ASPECT
-    _mfStackTrace.terminateShare(Thread::getCurrentAspect(),
-                                      oOffsets);
-#endif
 }
 
 

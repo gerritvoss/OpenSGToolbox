@@ -74,9 +74,7 @@ void LuaErrorEventDetails::initMethod(InitPhase ePhase)
 LuaErrorEventDetailsTransitPtr LuaErrorEventDetails::create(FieldContainer* const Source,
                                               Time TimeStamp,
                                               lua_State* State,
-                                              int LuaStatus,
-                                              const std::list<std::string>& StackTrace,
-                                              bool EnableStackTrace)
+                                              int LuaStatus)
 {
     LuaErrorEventDetails* TheEventDetails = LuaErrorEventDetails::createUnregistered();
 
@@ -84,13 +82,6 @@ LuaErrorEventDetailsTransitPtr LuaErrorEventDetails::create(FieldContainer* cons
     TheEventDetails->setTimeStamp(TimeStamp);
     TheEventDetails->setLuaStateVoidP(static_cast<void*>(State));
     TheEventDetails->setStatus(LuaStatus);
-    for(std::list<std::string>::const_iterator Itor(StackTrace.begin())
-            ; Itor != StackTrace.end()
-            ; ++Itor)
-    {
-        TheEventDetails->editMFStackTrace()->push_back(*Itor);
-    }
-    TheEventDetails->setStackTraceEnabled(EnableStackTrace);
 
     return LuaErrorEventDetailsTransitPtr(TheEventDetails);
 }
