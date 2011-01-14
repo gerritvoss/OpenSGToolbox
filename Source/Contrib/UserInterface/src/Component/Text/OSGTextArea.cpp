@@ -269,6 +269,20 @@ void TextArea::keyTyped(KeyEventDetails* const e)//broken
 	Inherited::keyTyped(e);
 }
 
+void TextArea::setCaretLine(UInt32 line)
+{
+    if(line < numLines())
+    {
+        setCaretPosition(getLineStart(line));
+    }
+    else
+    {
+        moveCaretToEnd();
+    }
+    _TextSelectionStart = getCaretPosition();
+    _TextSelectionEnd = getCaretPosition();
+}
+
 void TextArea::moveCaretLine(Int32 delta)
 {
     if(delta!=0)

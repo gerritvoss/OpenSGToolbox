@@ -3912,8 +3912,11 @@ void WindowsLookAndFeel::init(void)
     WindowsDefaultTreeComponentGenerator->setSelectedBackground(WindowsDefaultTreeComponentGeneratorSelectedBackground);
     WindowsDefaultTreeComponentGenerator->setNonSelectedBackground(WindowsDefaultTreeComponentGeneratorNonSelectedBackground);
     WindowsDefaultTreeComponentGenerator->setSelectedBorder(WindowsDefaultTreeComponentGeneratorSelectedBorder);
+    WindowsDefaultTreeComponentGenerator->setFocusedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
     WindowsDefaultTreeComponentGenerator->setSelectedTextColor(Color4f(1.0f,1.0f,1.0f,1.0f));
     WindowsDefaultTreeComponentGenerator->setNonSelectedTextColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+    WindowsDefaultTreeComponentGenerator->setFocusedBackground(WindowsDefaultTreeComponentGeneratorSelectedBackground);
+    WindowsDefaultTreeComponentGenerator->setFocusedBorder(WindowsDefaultListComponentGeneratorFocusedBorder);
     WindowsDefaultTreeComponentGenerator->setNodePanelPrototype(WindowsDefaultTreeComponentGeneratorPanelPrototype);
 
     //DefaultTreeLayout
@@ -3960,7 +3963,7 @@ void WindowsLookAndFeel::init(void)
     WindowsTree->setEditable(false);
     WindowsTree->setExpandsSelectedPaths(true);
     WindowsTree->setInvokesStopCellEditing(true);
-    WindowsTree->setRowHeight(13);
+    WindowsTree->setRowHeight(18);
     WindowsTree->setScrollsOnExpand(false);
     WindowsTree->setShowsRootHandles(true);
     WindowsTree->setToggleClickCount(2);

@@ -143,6 +143,22 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var Border *        DefaultTreeComponentGeneratorBase::_sfFocusedBorder
+    
+*/
+
+/*! \var Color4f         DefaultTreeComponentGeneratorBase::_sfFocusedTextColor
+    
+*/
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfFocusedBackground
+    
+*/
+
+/*! \var Layer *         DefaultTreeComponentGeneratorBase::_sfFocusedForeground
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -338,6 +354,54 @@ void DefaultTreeComponentGeneratorBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleNonSelectedTextColor));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecBorderPtr::Description(
+        SFUnrecBorderPtr::getClassType(),
+        "FocusedBorder",
+        "",
+        FocusedBorderFieldId, FocusedBorderFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleFocusedBorder),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleFocusedBorder));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFColor4f::Description(
+        SFColor4f::getClassType(),
+        "FocusedTextColor",
+        "",
+        FocusedTextColorFieldId, FocusedTextColorFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleFocusedTextColor),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleFocusedTextColor));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedBackground",
+        "",
+        FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleFocusedBackground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleFocusedBackground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedForeground",
+        "",
+        FocusedForegroundFieldId, FocusedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&DefaultTreeComponentGenerator::editHandleFocusedForeground),
+        static_cast<FieldGetMethodSig >(&DefaultTreeComponentGenerator::getHandleFocusedForeground));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -500,6 +564,46 @@ DefaultTreeComponentGeneratorBase::TypeObject DefaultTreeComponentGeneratorBase:
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBorder\"\n"
+    "\t\ttype=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedTextColor\"\n"
+    "\t\ttype=\"Color4f\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"0.0,0.0,0.0,1.0\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedBackground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"FocusedForeground\"\n"
+    "\t\ttype=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -709,6 +813,58 @@ const SFColor4f *DefaultTreeComponentGeneratorBase::getSFNonSelectedTextColor(vo
 }
 
 
+//! Get the DefaultTreeComponentGenerator::_sfFocusedBorder field.
+const SFUnrecBorderPtr *DefaultTreeComponentGeneratorBase::getSFFocusedBorder(void) const
+{
+    return &_sfFocusedBorder;
+}
+
+SFUnrecBorderPtr    *DefaultTreeComponentGeneratorBase::editSFFocusedBorder  (void)
+{
+    editSField(FocusedBorderFieldMask);
+
+    return &_sfFocusedBorder;
+}
+
+SFColor4f *DefaultTreeComponentGeneratorBase::editSFFocusedTextColor(void)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    return &_sfFocusedTextColor;
+}
+
+const SFColor4f *DefaultTreeComponentGeneratorBase::getSFFocusedTextColor(void) const
+{
+    return &_sfFocusedTextColor;
+}
+
+
+//! Get the DefaultTreeComponentGenerator::_sfFocusedBackground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFFocusedBackground(void) const
+{
+    return &_sfFocusedBackground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFFocusedBackground(void)
+{
+    editSField(FocusedBackgroundFieldMask);
+
+    return &_sfFocusedBackground;
+}
+
+//! Get the DefaultTreeComponentGenerator::_sfFocusedForeground field.
+const SFUnrecLayerPtr *DefaultTreeComponentGeneratorBase::getSFFocusedForeground(void) const
+{
+    return &_sfFocusedForeground;
+}
+
+SFUnrecLayerPtr     *DefaultTreeComponentGeneratorBase::editSFFocusedForeground(void)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    return &_sfFocusedForeground;
+}
+
 
 
 
@@ -775,6 +931,22 @@ UInt32 DefaultTreeComponentGeneratorBase::getBinSize(ConstFieldMaskArg whichFiel
     {
         returnValue += _sfNonSelectedTextColor.getBinSize();
     }
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        returnValue += _sfFocusedBorder.getBinSize();
+    }
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        returnValue += _sfFocusedTextColor.getBinSize();
+    }
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedBackground.getBinSize();
+    }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForeground.getBinSize();
+    }
 
     return returnValue;
 }
@@ -840,6 +1012,22 @@ void DefaultTreeComponentGeneratorBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfNonSelectedTextColor.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        _sfFocusedBorder.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        _sfFocusedBackground.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyToBin(pMem);
+    }
 }
 
 void DefaultTreeComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -902,6 +1090,22 @@ void DefaultTreeComponentGeneratorBase::copyFromBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
     {
         _sfNonSelectedTextColor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+    {
+        _sfFocusedBorder.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+    {
+        _sfFocusedTextColor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+    {
+        _sfFocusedBackground.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyFromBin(pMem);
     }
 }
 
@@ -977,7 +1181,6 @@ DefaultTreeComponentGenerator *DefaultTreeComponentGeneratorBase::createEmpty(vo
     return returnValue;
 }
 
-
 FieldContainerTransitPtr DefaultTreeComponentGeneratorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -1023,7 +1226,6 @@ FieldContainerTransitPtr DefaultTreeComponentGeneratorBase::shallowCopy(void) co
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(void) :
@@ -1041,7 +1243,11 @@ DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(void) :
     _sfNonSelectedForeground  (NULL),
     _sfSelectedBorder         (NULL),
     _sfSelectedTextColor      (Color4f(0.0,0.0,0.0,1.0)),
-    _sfNonSelectedTextColor   (Color4f(0.0,0.0,0.0,1.0))
+    _sfNonSelectedTextColor   (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedBorder          (NULL),
+    _sfFocusedTextColor       (Color4f(0.0,0.0,0.0,1.0)),
+    _sfFocusedBackground      (NULL),
+    _sfFocusedForeground      (NULL)
 {
 }
 
@@ -1060,7 +1266,11 @@ DefaultTreeComponentGeneratorBase::DefaultTreeComponentGeneratorBase(const Defau
     _sfNonSelectedForeground  (NULL),
     _sfSelectedBorder         (NULL),
     _sfSelectedTextColor      (source._sfSelectedTextColor      ),
-    _sfNonSelectedTextColor   (source._sfNonSelectedTextColor   )
+    _sfNonSelectedTextColor   (source._sfNonSelectedTextColor   ),
+    _sfFocusedBorder          (NULL),
+    _sfFocusedTextColor       (source._sfFocusedTextColor       ),
+    _sfFocusedBackground      (NULL),
+    _sfFocusedForeground      (NULL)
 {
 }
 
@@ -1102,6 +1312,12 @@ void DefaultTreeComponentGeneratorBase::onCreate(const DefaultTreeComponentGener
         pThis->setNonSelectedForeground(source->getNonSelectedForeground());
 
         pThis->setSelectedBorder(source->getSelectedBorder());
+
+        pThis->setFocusedBorder(source->getFocusedBorder());
+
+        pThis->setFocusedBackground(source->getFocusedBackground());
+
+        pThis->setFocusedForeground(source->getFocusedForeground());
     }
 }
 
@@ -1491,6 +1707,116 @@ EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleNonSelectedTextC
     return returnValue;
 }
 
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleFocusedBorder   (void) const
+{
+    SFUnrecBorderPtr::GetHandlePtr returnValue(
+        new  SFUnrecBorderPtr::GetHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleFocusedBorder  (void)
+{
+    SFUnrecBorderPtr::EditHandlePtr returnValue(
+        new  SFUnrecBorderPtr::EditHandle(
+             &_sfFocusedBorder,
+             this->getType().getFieldDesc(FocusedBorderFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setFocusedBorder,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(FocusedBorderFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleFocusedTextColor (void) const
+{
+    SFColor4f::GetHandlePtr returnValue(
+        new  SFColor4f::GetHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleFocusedTextColor(void)
+{
+    SFColor4f::EditHandlePtr returnValue(
+        new  SFColor4f::EditHandle(
+             &_sfFocusedTextColor,
+             this->getType().getFieldDesc(FocusedTextColorFieldId),
+             this));
+
+
+    editSField(FocusedTextColorFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleFocusedBackground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleFocusedBackground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedBackground,
+             this->getType().getFieldDesc(FocusedBackgroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setFocusedBackground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(FocusedBackgroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr DefaultTreeComponentGeneratorBase::getHandleFocusedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             const_cast<DefaultTreeComponentGeneratorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr DefaultTreeComponentGeneratorBase::editHandleFocusedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&DefaultTreeComponentGenerator::setFocusedForeground,
+                    static_cast<DefaultTreeComponentGenerator *>(this), _1));
+
+    editSField(FocusedForegroundFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void DefaultTreeComponentGeneratorBase::execSyncV(      FieldContainer    &oFrom,
@@ -1551,6 +1877,12 @@ void DefaultTreeComponentGeneratorBase::resolveLinks(void)
     static_cast<DefaultTreeComponentGenerator *>(this)->setNonSelectedForeground(NULL);
 
     static_cast<DefaultTreeComponentGenerator *>(this)->setSelectedBorder(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setFocusedBorder(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setFocusedBackground(NULL);
+
+    static_cast<DefaultTreeComponentGenerator *>(this)->setFocusedForeground(NULL);
 
 
 }

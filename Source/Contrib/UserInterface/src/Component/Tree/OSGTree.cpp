@@ -936,10 +936,7 @@ Tree::TreeRowComponents Tree::createRowComponent(UInt32 Row)
 
         bool HasFocus(FocusedComp != NULL &&
                       RowComps != NULL &&
-                      (RowComps->_ExpandedComponent == FocusedComp ||
-                       RowComps->_ValueComponent == FocusedComp ||
-                       (RowComps->_ExpandedComponent != NULL &&
-                        FocusedComp->isAncestor(RowComps->_ExpandedComponent)) ||
+                      (RowComps->_ValueComponent == FocusedComp ||
                        FocusedComp->isAncestor(RowComps->_ValueComponent)));
         
 		if(getCellGenerator()->getType().isDerivedFrom(TreeComponentGenerator::getClassType()))

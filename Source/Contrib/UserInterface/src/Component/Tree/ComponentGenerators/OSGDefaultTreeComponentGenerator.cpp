@@ -136,25 +136,29 @@ ComponentTransitPtr DefaultTreeComponentGenerator::getTreeComponentText(Tree* co
     LabelRefPtr TheLabel = dynamic_pointer_cast<Label>(getNodeLabelPrototype()->shallowCopy());
     if(IsSelected)
     {
-        TheLabel->setTextColors(getSelectedTextColor());
-        TheLabel->setBackgrounds(getSelectedBackground());
-        TheLabel->setBorders(getSelectedBorder());
+        if(HasFocus)
+        {
+            TheLabel->setTextColors(getFocusedTextColor());
+            TheLabel->setBackgrounds(getFocusedBackground());
+            TheLabel->setBorders(getFocusedBorder());
+            TheLabel->setForegrounds(getFocusedForeground());
+        }
+        else
+        {
+            TheLabel->setTextColors(getSelectedTextColor());
+            TheLabel->setBackgrounds(getSelectedBackground());
+            TheLabel->setBorders(getSelectedBorder());
+            TheLabel->setForegrounds(getSelectedForeground());
+        }
     }
-    /*else
+    else
     {
         TheLabel->setTextColors(getNonSelectedTextColor());
         TheLabel->setBackgrounds(getNonSelectedBackground());
-        EmptyBorderUnrecPtr TheBorder(EmptyBorder::create());
-        TheLabel->setBorders(TheBorder);
-    }*/
+        TheLabel->setBorders(NULL);
+        TheLabel->setForegrounds(getNonSelectedForeground());
+    }
     TheLabel->setText(Value);
-
-    //Create the panel, set its children and layout
-    /*PanelRefPtr ThePanel = dynamic_pointer_cast<Panel>(getNodePanelPrototype()->shallowCopy());
-
-
-        ThePanel->setLayout(TheLayout);
-        ThePanel->pushToChildren(TheLabel);*/
 
     return ComponentTransitPtr(TheLabel.get());
 }

@@ -52,4 +52,30 @@ std::string TextArea::getWrappedLine(UInt32 line) const
     return getText().substr(_LineContents[line]._StartPosition, _LineContents[line]._EndPosition-_LineContents[line]._StartPosition+1);
 }
 
+inline
+Int32 TextArea::getLineStart(UInt32 line) const
+{
+    if(line < numLines())
+    {
+        return _LineContents[line]._StartPosition;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
+inline
+Int32 TextArea::getLineEnd(UInt32 line) const
+{
+    if(line < numLines())
+    {
+        return _LineContents[line]._EndPosition;
+    }
+    else
+    {
+        return -1;
+    }
+}
+
 OSG_END_NAMESPACE

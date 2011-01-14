@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -316,6 +317,79 @@ void DefaultTreeComponentGeneratorBase::setNonSelectedTextColor(const Color4f &v
     _sfNonSelectedTextColor.setValue(value);
 }
 
+//! Get the value of the DefaultTreeComponentGenerator::_sfFocusedBorder field.
+inline
+Border * DefaultTreeComponentGeneratorBase::getFocusedBorder(void) const
+{
+    return _sfFocusedBorder.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfFocusedBorder field.
+inline
+void DefaultTreeComponentGeneratorBase::setFocusedBorder(Border * const value)
+{
+    editSField(FocusedBorderFieldMask);
+
+    _sfFocusedBorder.setValue(value);
+}
+//! Get the value of the DefaultTreeComponentGenerator::_sfFocusedTextColor field.
+
+inline
+Color4f &DefaultTreeComponentGeneratorBase::editFocusedTextColor(void)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfFocusedTextColor field.
+inline
+const Color4f &DefaultTreeComponentGeneratorBase::getFocusedTextColor(void) const
+{
+    return _sfFocusedTextColor.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfFocusedTextColor field.
+inline
+void DefaultTreeComponentGeneratorBase::setFocusedTextColor(const Color4f &value)
+{
+    editSField(FocusedTextColorFieldMask);
+
+    _sfFocusedTextColor.setValue(value);
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfFocusedBackground field.
+inline
+Layer * DefaultTreeComponentGeneratorBase::getFocusedBackground(void) const
+{
+    return _sfFocusedBackground.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfFocusedBackground field.
+inline
+void DefaultTreeComponentGeneratorBase::setFocusedBackground(Layer * const value)
+{
+    editSField(FocusedBackgroundFieldMask);
+
+    _sfFocusedBackground.setValue(value);
+}
+
+//! Get the value of the DefaultTreeComponentGenerator::_sfFocusedForeground field.
+inline
+Layer * DefaultTreeComponentGeneratorBase::getFocusedForeground(void) const
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Set the value of the DefaultTreeComponentGenerator::_sfFocusedForeground field.
+inline
+void DefaultTreeComponentGeneratorBase::setFocusedForeground(Layer * const value)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    _sfFocusedForeground.setValue(value);
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -368,6 +442,18 @@ void DefaultTreeComponentGeneratorBase::execSync (      DefaultTreeComponentGene
 
     if(FieldBits::NoField != (NonSelectedTextColorFieldMask & whichField))
         _sfNonSelectedTextColor.syncWith(pFrom->_sfNonSelectedTextColor);
+
+    if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
+        _sfFocusedBorder.syncWith(pFrom->_sfFocusedBorder);
+
+    if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
+        _sfFocusedTextColor.syncWith(pFrom->_sfFocusedTextColor);
+
+    if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
+        _sfFocusedBackground.syncWith(pFrom->_sfFocusedBackground);
+
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pFrom->_sfFocusedForeground);
 }
 #endif
 

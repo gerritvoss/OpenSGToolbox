@@ -149,4 +149,44 @@ A UI Default Tree ComponentGenerator.
 		access="public"
 	>
 	</Field>
+	<Field
+		name="FocusedBorder"
+		type="Border"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedTextColor"
+		type="Color4f"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedBackground"
+		type="Layer"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="FocusedForeground"
+		type="Layer"
+        category="pointer"
+		cardinality="single"
+		visibility="external"
+		defaultValue="NULL"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

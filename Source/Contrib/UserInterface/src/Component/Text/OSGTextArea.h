@@ -79,7 +79,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 
     /*! \}                                                                 */
 
-	struct TextLine{
+	struct TextLine
+    {
+      public:
 		UInt32 _StartPosition;
 		UInt32 _EndPosition;
 		Real32 _VerticalOffset;
@@ -118,6 +120,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 	virtual std::string getLine(UInt32 line) const;
 	virtual std::string getWrappedLine(UInt32 line) const;
 
+	Int32 getLineStart(UInt32 line) const;
+	Int32 getLineEnd(UInt32 line) const;
+
 	virtual bool isLineVisible(const UInt32& line) const;
     virtual UInt32 numVisibleLines(void) const;
 
@@ -128,6 +133,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
     virtual void moveCaretToBeginOfLine(void);
     
     void moveCaretLine(Int32 delta);
+    void setCaretLine(UInt32 line);
 
     virtual void detachFromEventProducer(void);
 

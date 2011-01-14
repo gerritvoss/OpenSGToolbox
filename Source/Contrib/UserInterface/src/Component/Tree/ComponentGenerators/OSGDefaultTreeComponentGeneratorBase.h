@@ -91,6 +91,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(DefaultTreeComponentGenerator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -112,7 +114,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
         SelectedBorderFieldId = NonSelectedForegroundFieldId + 1,
         SelectedTextColorFieldId = SelectedBorderFieldId + 1,
         NonSelectedTextColorFieldId = SelectedTextColorFieldId + 1,
-        NextFieldId = NonSelectedTextColorFieldId + 1
+        FocusedBorderFieldId = NonSelectedTextColorFieldId + 1,
+        FocusedTextColorFieldId = FocusedBorderFieldId + 1,
+        FocusedBackgroundFieldId = FocusedTextColorFieldId + 1,
+        FocusedForegroundFieldId = FocusedBackgroundFieldId + 1,
+        NextFieldId = FocusedForegroundFieldId + 1
     };
 
     static const OSG::BitVector ExpandedDrawObjectPrototypeFieldMask =
@@ -143,6 +149,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
         (TypeTraits<BitVector>::One << SelectedTextColorFieldId);
     static const OSG::BitVector NonSelectedTextColorFieldMask =
         (TypeTraits<BitVector>::One << NonSelectedTextColorFieldId);
+    static const OSG::BitVector FocusedBorderFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBorderFieldId);
+    static const OSG::BitVector FocusedTextColorFieldMask =
+        (TypeTraits<BitVector>::One << FocusedTextColorFieldId);
+    static const OSG::BitVector FocusedBackgroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedBackgroundFieldId);
+    static const OSG::BitVector FocusedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedForegroundFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -160,6 +174,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
     typedef SFUnrecBorderPtr  SFSelectedBorderType;
     typedef SFColor4f         SFSelectedTextColorType;
     typedef SFColor4f         SFNonSelectedTextColorType;
+    typedef SFUnrecBorderPtr  SFFocusedBorderType;
+    typedef SFColor4f         SFFocusedTextColorType;
+    typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
+    typedef SFUnrecLayerPtr   SFFocusedForegroundType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -214,6 +232,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
 
                   SFColor4f           *editSFNonSelectedTextColor(void);
             const SFColor4f           *getSFNonSelectedTextColor (void) const;
+            const SFUnrecBorderPtr    *getSFFocusedBorder  (void) const;
+                  SFUnrecBorderPtr    *editSFFocusedBorder  (void);
+
+                  SFColor4f           *editSFFocusedTextColor(void);
+            const SFColor4f           *getSFFocusedTextColor (void) const;
+            const SFUnrecLayerPtr     *getSFFocusedBackground(void) const;
+                  SFUnrecLayerPtr     *editSFFocusedBackground(void);
+            const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
+                  SFUnrecLayerPtr     *editSFFocusedForeground(void);
 
 
                   UIDrawObjectCanvas * getExpandedDrawObjectPrototype(void) const;
@@ -246,6 +273,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
                   Color4f             &editNonSelectedTextColor(void);
             const Color4f             &getNonSelectedTextColor (void) const;
 
+                  Border * getFocusedBorder  (void) const;
+
+                  Color4f             &editFocusedTextColor(void);
+            const Color4f             &getFocusedTextColor (void) const;
+
+                  Layer * getFocusedBackground(void) const;
+
+                  Layer * getFocusedForeground(void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -265,6 +301,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
             void setSelectedBorder (Border * const value);
             void setSelectedTextColor(const Color4f &value);
             void setNonSelectedTextColor(const Color4f &value);
+            void setFocusedBorder  (Border * const value);
+            void setFocusedTextColor(const Color4f &value);
+            void setFocusedBackground(Layer * const value);
+            void setFocusedForeground(Layer * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -343,6 +383,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
     SFUnrecBorderPtr  _sfSelectedBorder;
     SFColor4f         _sfSelectedTextColor;
     SFColor4f         _sfNonSelectedTextColor;
+    SFUnrecBorderPtr  _sfFocusedBorder;
+    SFColor4f         _sfFocusedTextColor;
+    SFUnrecLayerPtr   _sfFocusedBackground;
+    SFUnrecLayerPtr   _sfFocusedForeground;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -399,6 +443,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING DefaultTreeComponentGeneratorBase : pu
     EditFieldHandlePtr editHandleSelectedTextColor(void);
     GetFieldHandlePtr  getHandleNonSelectedTextColor (void) const;
     EditFieldHandlePtr editHandleNonSelectedTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedBorder   (void) const;
+    EditFieldHandlePtr editHandleFocusedBorder  (void);
+    GetFieldHandlePtr  getHandleFocusedTextColor (void) const;
+    EditFieldHandlePtr editHandleFocusedTextColor(void);
+    GetFieldHandlePtr  getHandleFocusedBackground (void) const;
+    EditFieldHandlePtr editHandleFocusedBackground(void);
+    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
+    EditFieldHandlePtr editHandleFocusedForeground(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
