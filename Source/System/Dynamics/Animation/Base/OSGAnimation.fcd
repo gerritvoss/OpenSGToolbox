@@ -12,7 +12,19 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-Animation is the base class of all Animation
+\brief Abstract interface for controlling and applying the result of an
+#OSG::Animator to some object
+
+To use an animation, first create a concrete instance that
+inherits from Animation.  The animation can be started using the start()
+method.  Updating the animation can be done using the update() method, or
+preferably by attaching an UpdateEvent producer using the
+attachUpdateProducer() method.&lt;br&gt;
+
+Classes that inherit from Animation must implement the public
+getUnclippedLength() and protected internalUpdate() methods.  internalUpdate() is
+responsible for applying the result of an #OSG::Animator to some object.  The
+concrete class can define what object to apply to.
 	<Field
 		name="Cycling"
 		type="Int32"

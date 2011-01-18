@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,6 +86,8 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeSequenceBase : public Attachment
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(KeyframeSequence);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

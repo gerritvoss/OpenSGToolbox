@@ -12,7 +12,8 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-KeyframeSequence is the base class of all Keyframe Sequences.
+KeyframeSequence is the base class of all Keyframe Sequences.  KeyframeSequence defines an
+interface for applying the result of a Key-framed interpolation to a Field of a OSG::FieldContainer.
 	<Field
 		name="InternalKeys"
 		type="Real32"

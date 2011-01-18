@@ -79,7 +79,8 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::FieldAnimation
-    Field Animation Class.
+    Controls the application of an #OSG::Animator on a specific field of a #OSG::FieldContianer.
+    The field can be either a SingleField or a specific indes of a MultiField.
  */
 
 /***************************************************************************\
@@ -253,7 +254,8 @@ FieldAnimationBase::TypeObject FieldAnimationBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Field Animation Class.\n"
+    "Controls the application of an #OSG::Animator on a specific field of a #OSG::FieldContianer.\n"
+    "The field can be either a SingleField or a specific indes of a MultiField.\n"
     "\t<Field\n"
     "\t\tname=\"Animator\"\n"
     "\t\ttype=\"Animator\"\n"
@@ -322,7 +324,8 @@ FieldAnimationBase::TypeObject FieldAnimationBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    "Field Animation Class.\n"
+    "Controls the application of an #OSG::Animator on a specific field of a #OSG::FieldContianer.\n"
+    "The field can be either a SingleField or a specific indes of a MultiField.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -620,7 +623,6 @@ FieldAnimation *FieldAnimationBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr FieldAnimationBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -663,7 +665,6 @@ FieldContainerTransitPtr FieldAnimationBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -894,6 +895,7 @@ EditFieldHandlePtr FieldAnimationBase::editHandleReplacementPolicy(void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

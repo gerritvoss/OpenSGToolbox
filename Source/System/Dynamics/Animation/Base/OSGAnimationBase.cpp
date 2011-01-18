@@ -57,8 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGAnimationEventDetails.h"
-
 
 
 #include "OSGAnimationBase.h"
@@ -79,7 +77,19 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::Animation
-    Animation is the base class of all Animation
+    \brief Abstract interface for controlling and applying the result of an
+    #OSG::Animator to some object
+
+    To use an animation, first create a concrete instance that
+    inherits from Animation.  The animation can be started using the start()
+    method.  Updating the animation can be done using the update() method, or
+    preferably by attaching an UpdateEvent producer using the
+    attachUpdateProducer() method.<br>
+
+    Classes that inherit from Animation must implement the public
+    getUnclippedLength() and protected internalUpdate() methods.  internalUpdate() is
+    responsible for applying the result of an #OSG::Animator to some object.  The
+    concrete class can define what object to apply to.
  */
 
 /***************************************************************************\
@@ -221,7 +231,20 @@ AnimationBase::TypeObject AnimationBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Animation is the base class of all Animation\n"
+    "\\brief Abstract interface for controlling and applying the result of an\n"
+    "#OSG::Animator to some object\n"
+    "\n"
+    "\\copybrief OSG::Animation\n"
+    "To use an animation, first create a concrete instance that\n"
+    "inherits from Animation.  The animation can be started using the start()\n"
+    "method.  Updating the animation can be done using the update() method, or\n"
+    "preferably by attaching an UpdateEvent producer using the\n"
+    "attachUpdateProducer() method.&lt;br&gt;\n"
+    "\n"
+    "Classes that inherit from Animation must implement the public\n"
+    "getUnclippedLength() and protected internalUpdate() methods.  internalUpdate() is\n"
+    "responsible for applying the result of an #OSG::Animator to some object.  The\n"
+    "concrete class can define what object to apply to.\n"
     "\t<Field\n"
     "\t\tname=\"Cycling\"\n"
     "\t\ttype=\"Int32\"\n"
@@ -309,7 +332,20 @@ AnimationBase::TypeObject AnimationBase::_type(
     "\t>\n"
     "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
-    "Animation is the base class of all Animation\n"
+    "\\brief Abstract interface for controlling and applying the result of an\n"
+    "#OSG::Animator to some object\n"
+    "\n"
+    "\\copybrief OSG::Animation\n"
+    "To use an animation, first create a concrete instance that\n"
+    "inherits from Animation.  The animation can be started using the start()\n"
+    "method.  Updating the animation can be done using the update() method, or\n"
+    "preferably by attaching an UpdateEvent producer using the\n"
+    "attachUpdateProducer() method.<br>\n"
+    "\n"
+    "Classes that inherit from Animation must implement the public\n"
+    "getUnclippedLength() and protected internalUpdate() methods.  internalUpdate() is\n"
+    "responsible for applying the result of an #OSG::Animator to some object.  The\n"
+    "concrete class can define what object to apply to.\n"
     );
 
 //! Animation Produced Events
@@ -590,7 +626,7 @@ void AnimationBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _AnimationCycledEvent(dynamic_cast<AnimationCycledEventDetailsType* const>(e), AnimationCycledEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -620,7 +656,7 @@ boost::signals2::connection AnimationBase::connectEvent(UInt32 eventId,
         return _AnimationCycledEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -654,7 +690,7 @@ boost::signals2::connection  AnimationBase::connectEvent(UInt32 eventId,
         return _AnimationCycledEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -685,7 +721,7 @@ void  AnimationBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_
         _AnimationCycledEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -713,7 +749,7 @@ void  AnimationBase::disconnectAllSlotsEvent(UInt32 eventId)
         _AnimationCycledEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -741,7 +777,7 @@ bool  AnimationBase::isEmptyEvent(UInt32 eventId) const
         return _AnimationCycledEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -770,7 +806,7 @@ UInt32  AnimationBase::numSlotsEvent(UInt32 eventId) const
         return _AnimationCycledEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }

@@ -76,7 +76,8 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::KeyframeAnimator
-    Keyframe Animator Class.
+    Applies the result of the interpolation of a key-frame sequence to a field.
+    The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.
  */
 
 /***************************************************************************\
@@ -154,7 +155,8 @@ KeyframeAnimatorBase::TypeObject KeyframeAnimatorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a key-frame sequence to a field.\n"
+    "The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.\n"
     "\t<Field\n"
     "\t\tname=\"KeyframeSequence\"\n"
     "\t\ttype=\"KeyframeSequence\"\n"
@@ -165,7 +167,8 @@ KeyframeAnimatorBase::TypeObject KeyframeAnimatorBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a key-frame sequence to a field.\n"
+    "The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -237,6 +240,7 @@ void KeyframeAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (KeyframeSequenceFieldMask & whichField))
     {
+        editSField(KeyframeSequenceFieldMask);
         _sfKeyframeSequence.copyFromBin(pMem);
     }
 }
@@ -313,7 +317,6 @@ KeyframeAnimator *KeyframeAnimatorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr KeyframeAnimatorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -356,7 +359,6 @@ FieldContainerTransitPtr KeyframeAnimatorBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -420,6 +422,7 @@ EditFieldHandlePtr KeyframeAnimatorBase::editHandleKeyframeSequence(void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

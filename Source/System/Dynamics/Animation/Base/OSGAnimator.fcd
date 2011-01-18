@@ -12,5 +12,6 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-Animator is the base class of all Animators.
+Abstract interface for animating the value of a SingleField or the
+index of some MultiField.
 </FieldContainer>

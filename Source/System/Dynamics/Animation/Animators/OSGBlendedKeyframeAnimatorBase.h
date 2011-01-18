@@ -87,6 +87,8 @@ class OSG_TBANIMATION_DLLMAPPING BlendedKeyframeAnimatorBase : public Animator
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(BlendedKeyframeAnimator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

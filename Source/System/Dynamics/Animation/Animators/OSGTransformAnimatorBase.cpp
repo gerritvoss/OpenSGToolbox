@@ -77,7 +77,42 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::TransformAnimator
-    Keyframe Animator Class.
+    Applies the result of the interpolation of a key-frame sequence to specific components of a 
+    matrix field. For example, the x-translation defined by a matrix can be animated with a #OSG::KeyframeNumberSequenceReal32.
+    \code
+    //Number Keyframe Sequence
+    KeyframeNumberSequenceReal32RecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();
+    XTransKeyframes->addKeyframe(1.0,0.0f);
+    XTransKeyframes->addKeyframe(5.0,2.0f);
+    XTransKeyframes->addKeyframe(-5.0,4.0f);
+    XTransKeyframes->addKeyframe(1.0,6.0f);
+
+    //Animator
+    TransformAnimatorRecPtr TheAnimator = TransformAnimator::create();
+    TheAnimator->setXTranslationSequence(XTransKeyframes);
+
+    //Make a transform node to animate
+    TransformRecPtr TransCore = Transform::create();
+
+    NodeRecPtr TransNode = makeNodeFor(TransCore);
+
+    //Add child nodes to TransNode
+    ...
+    //Add TransNode to your scene graph
+    ...
+
+    //Animation
+    FieldAnimationRecPtr TheAnimation = FieldAnimation::create();
+    TheAnimation->setAnimator(TheAnimator);
+    TheAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);
+    TheAnimation->setCycling(2);
+    TheAnimation->setAnimatedField(TransCore, std::string("matrix"));
+
+    //Attach an update producer to the animation and start it
+    TheAnimation->attachUpdateProducer(win);
+    TheAnimation->start();
+    \endcode
+    The data-type of the #OSG::KeyframeSequence must be Matrix.
  */
 
 /***************************************************************************\
@@ -315,7 +350,42 @@ TransformAnimatorBase::TypeObject TransformAnimatorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a key-frame sequence to specific components of a \n"
+    "matrix field. For example, the x-translation defined by a matrix can be animated with a #OSG::KeyframeSequenceReal32.\n"
+    "\\code\n"
+    "    //Number Keyframe Sequence\n"
+    "    KeyframeNumberSequenceReal32RecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();\n"
+    "    XTransKeyframes-&gt;addKeyframe(1.0,0.0f);\n"
+    "    XTransKeyframes-&gt;addKeyframe(5.0,2.0f);\n"
+    "    XTransKeyframes-&gt;addKeyframe(-5.0,4.0f);\n"
+    "    XTransKeyframes-&gt;addKeyframe(1.0,6.0f);\n"
+    "\n"
+    "    //Animator\n"
+    "    TransformAnimatorRecPtr TheAnimator = TransformAnimator::create();\n"
+    "    TheAnimator-&gt;setXTranslationSequence(XTransKeyframes);\n"
+    "\n"
+    "    //Make a transform node to animate\n"
+    "    TransformRecPtr TransCore = Transform::create();\n"
+    "\n"
+    "    NodeRecPtr TransNode = makeNodeFor(TransCore);\n"
+    "\n"
+    "    //Add child nodes to TransNode\n"
+    "    ...\n"
+    "    //Add TransNode to your scene graph\n"
+    "    ...\n"
+    "\n"
+    "    //Animation\n"
+    "    FieldAnimationRecPtr TheAnimation = FieldAnimation::create();\n"
+    "    TheAnimation-&gt;setAnimator(TheAnimator);\n"
+    "    TheAnimation-&gt;setInterpolationType(Animator::LINEAR_INTERPOLATION);\n"
+    "    TheAnimation-&gt;setCycling(2);\n"
+    "    TheAnimation-&gt;setAnimatedField(TransCore, std::string(\"matrix\"));\n"
+    "\n"
+    "    //Attach an update producer to the animation and start it\n"
+    "    TheAnimation-&gt;attachUpdateProducer(win);\n"
+    "    TheAnimation-&gt;start();\n"
+    "\\endcode\n"
+    "The data-type of the #OSG::KeyframeSequence must be Matrix.\n"
     "\t<Field\n"
     "\t\tname=\"XTranslationSequence\"\n"
     "\t\ttype=\"KeyframeNumberSequenceReal32\"\n"
@@ -438,7 +508,42 @@ TransformAnimatorBase::TypeObject TransformAnimatorBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a key-frame sequence to specific components of a \n"
+    "matrix field. For example, the x-translation defined by a matrix can be animated with a #OSG::KeyframeSequenceReal32.\n"
+    "\\code\n"
+    "//Number Keyframe Sequence\n"
+    "KeyframeNumberSequenceReal32RecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();\n"
+    "XTransKeyframes->addKeyframe(1.0,0.0f);\n"
+    "XTransKeyframes->addKeyframe(5.0,2.0f);\n"
+    "XTransKeyframes->addKeyframe(-5.0,4.0f);\n"
+    "XTransKeyframes->addKeyframe(1.0,6.0f);\n"
+    "\n"
+    "//Animator\n"
+    "TransformAnimatorRecPtr TheAnimator = TransformAnimator::create();\n"
+    "TheAnimator->setXTranslationSequence(XTransKeyframes);\n"
+    "\n"
+    "//Make a transform node to animate\n"
+    "TransformRecPtr TransCore = Transform::create();\n"
+    "\n"
+    "NodeRecPtr TransNode = makeNodeFor(TransCore);\n"
+    "\n"
+    "//Add child nodes to TransNode\n"
+    "...\n"
+    "//Add TransNode to your scene graph\n"
+    "...\n"
+    "\n"
+    "//Animation\n"
+    "FieldAnimationRecPtr TheAnimation = FieldAnimation::create();\n"
+    "TheAnimation->setAnimator(TheAnimator);\n"
+    "TheAnimation->setInterpolationType(Animator::LINEAR_INTERPOLATION);\n"
+    "TheAnimation->setCycling(2);\n"
+    "TheAnimation->setAnimatedField(TransCore, std::string(\"matrix\"));\n"
+    "\n"
+    "//Attach an update producer to the animation and start it\n"
+    "TheAnimation->attachUpdateProducer(win);\n"
+    "TheAnimation->start();\n"
+    "\\endcode\n"
+    "The data-type of the #OSG::KeyframeSequence must be Matrix.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -720,46 +825,57 @@ void TransformAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (XTranslationSequenceFieldMask & whichField))
     {
+        editSField(XTranslationSequenceFieldMask);
         _sfXTranslationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (YTranslationSequenceFieldMask & whichField))
     {
+        editSField(YTranslationSequenceFieldMask);
         _sfYTranslationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ZTranslationSequenceFieldMask & whichField))
     {
+        editSField(ZTranslationSequenceFieldMask);
         _sfZTranslationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (XRotationSequenceFieldMask & whichField))
     {
+        editSField(XRotationSequenceFieldMask);
         _sfXRotationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (YRotationSequenceFieldMask & whichField))
     {
+        editSField(YRotationSequenceFieldMask);
         _sfYRotationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ZRotationSequenceFieldMask & whichField))
     {
+        editSField(ZRotationSequenceFieldMask);
         _sfZRotationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (XScaleSequenceFieldMask & whichField))
     {
+        editSField(XScaleSequenceFieldMask);
         _sfXScaleSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (YScaleSequenceFieldMask & whichField))
     {
+        editSField(YScaleSequenceFieldMask);
         _sfYScaleSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ZScaleSequenceFieldMask & whichField))
     {
+        editSField(ZScaleSequenceFieldMask);
         _sfZScaleSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (TranslationSequenceFieldMask & whichField))
     {
+        editSField(TranslationSequenceFieldMask);
         _sfTranslationSequence.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ScaleSequenceFieldMask & whichField))
     {
+        editSField(ScaleSequenceFieldMask);
         _sfScaleSequence.copyFromBin(pMem);
     }
 }
@@ -836,7 +952,6 @@ TransformAnimator *TransformAnimatorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr TransformAnimatorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -879,7 +994,6 @@ FieldContainerTransitPtr TransformAnimatorBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -1263,6 +1377,7 @@ EditFieldHandlePtr TransformAnimatorBase::editHandleScaleSequence  (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

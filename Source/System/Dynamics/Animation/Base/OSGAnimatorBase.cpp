@@ -75,7 +75,8 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::Animator
-    Animator is the base class of all Animators.
+    Abstract interface for animating the value of a SingleField or the
+    index of some MultiField.
  */
 
 /***************************************************************************\
@@ -135,9 +136,11 @@ AnimatorBase::TypeObject AnimatorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Animator is the base class of all Animators.\n"
+    "Abstract interface for animating the value of a SingleField or the\n"
+    "index of some MultiField.\n"
     "</FieldContainer>\n",
-    "Animator is the base class of all Animators.\n"
+    "Abstract interface for animating the value of a SingleField or the\n"
+    "index of some MultiField.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -190,7 +193,6 @@ void AnimatorBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 AnimatorBase::AnimatorBase(void) :
@@ -209,6 +211,7 @@ AnimatorBase::AnimatorBase(const AnimatorBase &source) :
 AnimatorBase::~AnimatorBase(void)
 {
 }
+
 
 
 

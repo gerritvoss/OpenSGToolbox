@@ -13,4 +13,5 @@
 	supportUnregisteredCreate="true"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
+Encapsulates data for an event produced by an #OSG::SkeletonBlendedGeometry
 </FieldContainer>

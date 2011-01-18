@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -75,7 +75,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::AnimationEventDetails
-    
+    Encapsulates data for an event produced by an #OSG::Animation
  */
 
 /***************************************************************************\
@@ -131,10 +131,11 @@ AnimationEventDetailsBase::TypeObject AnimationEventDetailsBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "\tsupportUnregisteredCreate=\"true\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
+    "Encapsulates data for an event produced by an #OSG::Animation\n"
     "</FieldContainer>\n",
-    ""
+    "Encapsulates data for an event produced by an #OSG::Animation\n"
     );
 
 /*------------------------------ get -----------------------------------*/

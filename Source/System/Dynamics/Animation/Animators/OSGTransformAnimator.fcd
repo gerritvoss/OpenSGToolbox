@@ -12,7 +12,42 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-Keyframe Animator Class.
+Applies the result of the interpolation of a key-frame sequence to specific components of a 
+matrix field. For example, the x-translation defined by a matrix can be animated with a #OSG::KeyframeNumberSequenceReal32.
+\code
+    //Number Keyframe Sequence
+    KeyframeNumberSequenceReal32RecPtr XTransKeyframes = KeyframeNumberSequenceReal32::create();
+    XTransKeyframes-&gt;addKeyframe(1.0,0.0f);
+    XTransKeyframes-&gt;addKeyframe(5.0,2.0f);
+    XTransKeyframes-&gt;addKeyframe(-5.0,4.0f);
+    XTransKeyframes-&gt;addKeyframe(1.0,6.0f);
+
+    //Animator
+    TransformAnimatorRecPtr TheAnimator = TransformAnimator::create();
+    TheAnimator-&gt;setXTranslationSequence(XTransKeyframes);
+
+    //Make a transform node to animate
+    TransformRecPtr TransCore = Transform::create();
+
+    NodeRecPtr TransNode = makeNodeFor(TransCore);
+
+    //Add child nodes to TransNode
+    ...
+    //Add TransNode to your scene graph
+    ...
+
+    //Animation
+    FieldAnimationRecPtr TheAnimation = FieldAnimation::create();
+    TheAnimation-&gt;setAnimator(TheAnimator);
+    TheAnimation-&gt;setInterpolationType(Animator::LINEAR_INTERPOLATION);
+    TheAnimation-&gt;setCycling(2);
+    TheAnimation-&gt;setAnimatedField(TransCore, std::string("matrix"));
+
+    //Attach an update producer to the animation and start it
+    TheAnimation-&gt;attachUpdateProducer(win);
+    TheAnimation-&gt;start();
+\endcode
+The data-type of the #OSG::KeyframeSequence must be Matrix.
 	<Field
 		name="XTranslationSequence"
 		type="KeyframeNumberSequenceReal32"

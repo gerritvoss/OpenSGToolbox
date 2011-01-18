@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -75,7 +75,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::SkeletonEventDetails
-    
+    Encapsulates data for an event produced by an #OSG::SkeletonBlendedGeometry
  */
 
 /***************************************************************************\
@@ -133,8 +133,9 @@ SkeletonEventDetailsBase::TypeObject SkeletonEventDetailsBase::_type(
     "\tsupportUnregisteredCreate=\"true\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
+    "Encapsulates data for an event produced by an #OSG::SkeletonBlendedGeometry\n"
     "</FieldContainer>\n",
-    ""
+    "Encapsulates data for an event produced by an #OSG::SkeletonBlendedGeometry\n"
     );
 
 /*------------------------------ get -----------------------------------*/

@@ -98,17 +98,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
     virtual void accumulateMatrix(Matrix &result);
 
     /*! \}                                                                 */
-    
-    /**************************************************************************//**
-     * @fn	void addJointBlending(const UInt32& PositionIndex,
-     * 		const NodeUnrecPtr TheJoint, const Real32& BlendAmount)
-     * 
-     * @brief	Attaches a point in the mesh to a joint with the given blend weight
-     * 
-     * @param	PositionIndex	Index of the point to be attached.
-     * @param	TheJoint		The joint to which the point is being attached.
-     * @param	BlendAmount		The blend weight.
-    *****************************************************************************/
+
     void addJointBlending(UInt32 VertexIndex,
                           Node* const TheJoint,
                           Real32 BlendAmount);
@@ -121,45 +111,22 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
                           UInt32 JointIndex,
                           UInt32 WeightIndex);
 
-   GeoVectorProperty*   getWeights      (void) const;
-   GeoIntegralProperty* getWeightIndexes(void) const;
+    GeoVectorProperty*   getWeights      (void) const;
+    GeoIntegralProperty* getWeightIndexes(void) const;
 
-   void setWeights      (GeoVectorProperty*   const weights);
-   void setWeightIndexes(GeoIntegralProperty* const indexes);
+    void setWeights      (GeoVectorProperty*   const weights);
+    void setWeightIndexes(GeoIntegralProperty* const indexes);
 
-    /**************************************************************************//**
-     * @fn	void skeletonUpdated(void)
-     * 
-     * @brief	Skeleton updated.
-    *****************************************************************************/
-    void skeletonUpdated(void);
-
-    /**************************************************************************//**
-     * @fn	Matrix getAbsoluteTransformation(UInt32 index) const
-     * 
-     * @brief	Gets the absolute transformation of the joint in its current
-     *			position.
-     * 
-     * @return	The joint's absolute transformation matrix. 
-    *****************************************************************************/
     Matrix getAbsoluteTransformation(UInt32 index) const;
 
-    /**************************************************************************//**
-     * @fn	Matrix getAbsoluteBindTransformation(UInt32 index) const
-     * 
-     * @brief	Gets the bind pose absolute transformation of the joint in its current
-     *			position.
-     * 
-     * @return	The joint's bind pose absolute transformation matrix. 
-    *****************************************************************************/
     Matrix getAbsoluteBindTransformation(UInt32 index) const;
 
     Int32 getJointIndex(Node* theJoint) const;
     Int32 getJointParentIndex(UInt32 index) const;
 
     UInt32 getNumJoints       (void                    ) const;
-    Node* getJoint           (UInt32 index            ) const;
-    Matrix getJointInvBind    (UInt32 index            ) const; //Locaal space to Joint space
+    Node* getJoint            (UInt32 index            ) const;
+    Matrix getJointInvBind    (UInt32 index            ) const;
     void   pushToJoints       (Node* const jointValue,
                                const Matrix& invBind  );
     void   removeFromJoints   (UInt32 uiIndex         );

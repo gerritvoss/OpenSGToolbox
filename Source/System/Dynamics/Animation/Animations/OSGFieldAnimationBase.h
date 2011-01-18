@@ -89,6 +89,8 @@ class OSG_TBANIMATION_DLLMAPPING FieldAnimationBase : public Animation
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(FieldAnimation);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

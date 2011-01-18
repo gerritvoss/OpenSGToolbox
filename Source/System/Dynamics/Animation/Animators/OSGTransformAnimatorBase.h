@@ -87,6 +87,8 @@ class OSG_TBANIMATION_DLLMAPPING TransformAnimatorBase : public Animator
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TransformAnimator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

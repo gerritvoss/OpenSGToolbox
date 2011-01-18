@@ -12,7 +12,27 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-Keyframe Animator Class.
+Applies the result of the interpolation of a set of  key-frame sequences to a field.
+Each key-frame sequence is evaluated at the given timestamps.  The result is then multiplied
+by the corresponding blend amount and then added to the value of the field.
+
+\code
+//Initialize the value of the field to the "zero" of the data type
+zeroField(TheAnimatedField, TheAnimatedFieldIndex);
+
+//For each KeyframeSequence
+for(UInt32 i(0) ; i&lt; getMFKeyframeSequences()->size() ; ++i)
+{
+    //Get the value of interpolated key-frame sequence
+    InterpValue = getKeyframeSequences(i)->interpolate();
+
+    //Add the blended amount to the field
+    TheAnimatedField = TheAnimatedField + (getKeyframeSequences(i) * InterpValue);
+}
+\endcode
+The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.
+Can only be used for data-types that can be multiplied and added, so this can not be used for
+booleans, strings, pointers, etc.
 	<Field
 		name="KeyframeSequences"
 		type="KeyframeSequence"

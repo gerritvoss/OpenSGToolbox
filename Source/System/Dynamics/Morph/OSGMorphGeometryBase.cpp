@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com),                            *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -77,7 +77,20 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::MorphGeometry
-    
+    A specialized Geometry that can blend between static OSG::Geometry.
+
+    Each possible geometry that can be blended (a morph target) must be specified.
+    In addition, there is a base mesh which is used a reference or baseline for the blending operation.
+
+    The result of a morph mesh is usually a linear combination of other meshes (whether they are static,
+    skinned, or something else). These input meshes are called the morph targets. A major constraint is that
+    the morph targets must all have the same set of vertices (even if they are in different positions).Therefore, all
+    of the morph targets'vertices elements must have the same structure. The
+    combination of the morph targets can interpolate the data of any of the vertex attributes of the base and target meshes.
+
+    OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, and a set of vertex properties to interpolate.
+    By default only the Positions attribute is interpolated.  You can add or remove vertex attributes to interpolate by changing the 
+    MorphProperties field.  The MorphProperteis field uses the vertex attributes defined in OSG::Geometry.
  */
 
 /***************************************************************************\
@@ -201,8 +214,22 @@ MorphGeometryBase::TypeObject MorphGeometryBase::_type(
     "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com),                            \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
+    "    A specialized Geometry that can blend between static OSG::Geometry.\n"
+    "\n"
+    "    Each possible geometry that can be blended (a morph target) must be specified.\n"
+    "    In addition, there is a base mesh which is used a reference or baseline for the blending operation.\n"
+    "\n"
+    "    The result of a morph mesh is usually a linear combination of other meshes (whether they are static,\n"
+    "    skinned, or something else). These input meshes are called the morph targets. A major constraint is that\n"
+    "    the morph targets must all have the same set of vertices (even if they are in different positions).Therefore, all\n"
+    "    of the morph targets&apos; vertices elements must have the same structure. The\n"
+    "    combination of the morph targets can interpolate the data of any of the vertex attributes of the base and target meshes.\n"
+    "\n"
+    "    OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, and a set of vertex properties to interpolate.\n"
+    "    By default only the Positions attribute is interpolated.  You can add or remove vertex attributes to interpolate by changing the \n"
+    "    MorphProperties field.  The MorphProperteis field uses the vertex attributes defined in OSG::Geometry.\n"
     "\t<Field\n"
     "\t\tname=\"BaseGeometry\"\n"
     "\t\ttype=\"Geometry\"\n"
@@ -242,7 +269,20 @@ MorphGeometryBase::TypeObject MorphGeometryBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    ""
+    "A specialized Geometry that can blend between static OSG::Geometry.\n"
+    "\n"
+    "Each possible geometry that can be blended (a morph target) must be specified.\n"
+    "In addition, there is a base mesh which is used a reference or baseline for the blending operation.\n"
+    "\n"
+    "The result of a morph mesh is usually a linear combination of other meshes (whether they are static,\n"
+    "skinned, or something else). These input meshes are called the morph targets. A major constraint is that\n"
+    "the morph targets must all have the same set of vertices (even if they are in different positions).Therefore, all\n"
+    "of the morph targets'vertices elements must have the same structure. The\n"
+    "combination of the morph targets can interpolate the data of any of the vertex attributes of the base and target meshes.\n"
+    "\n"
+    "OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, and a set of vertex properties to interpolate.\n"
+    "By default only the Positions attribute is interpolated.  You can add or remove vertex attributes to interpolate by changing the \n"
+    "MorphProperties field.  The MorphProperteis field uses the vertex attributes defined in OSG::Geometry.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -430,18 +470,22 @@ void MorphGeometryBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (BaseGeometryFieldMask & whichField))
     {
+        editSField(BaseGeometryFieldMask);
         _sfBaseGeometry.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalTargetGeometriesFieldMask & whichField))
     {
+        editMField(InternalTargetGeometriesFieldMask, _mfInternalTargetGeometries);
         _mfInternalTargetGeometries.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
     {
+        editSField(InternalWeightsFieldMask);
         _sfInternalWeights.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MorphPropertiesFieldMask & whichField))
     {
+        editMField(MorphPropertiesFieldMask, _mfMorphProperties);
         _mfMorphProperties.copyFromBin(pMem);
     }
 }
@@ -518,7 +562,6 @@ MorphGeometry *MorphGeometryBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr MorphGeometryBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -561,7 +604,6 @@ FieldContainerTransitPtr MorphGeometryBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -610,7 +652,7 @@ bool MorphGeometryBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfInternalWeights.getValue())
+            if(_sfInternalWeights.getValue() == pTypedChild)
             {
                 editSField(InternalWeightsFieldMask);
 
@@ -619,8 +661,15 @@ bool MorphGeometryBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("MorphGeometryBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -775,6 +824,7 @@ EditFieldHandlePtr MorphGeometryBase::editHandleMorphProperties(void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

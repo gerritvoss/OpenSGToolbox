@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          David Naylor                                                     *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,8 +58,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGSkeletonEventDetails.h"
-
 
 #include "OSGGeometry.h"                // BaseGeometry Class
 #include "OSGGeoIntegralProperty.h"     // InternalWeightIndexes Class
@@ -83,7 +82,39 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::SkeletonBlendedGeometry
-    
+    Controller and drawer for character skinning. For character skinning, the animation engine drives the joints (skeleton) of a skinned character. A SkeletonBlendedGeometry
+    describes the associations between the joints and the mesh vertices forming the skin topology. The joints
+    influence the transformation of skin mesh vertices according to a controlling algorithm.
+    The skinning algorithm blends the influences of neighboring joints according to weighted values.
+    The  algorithm transforms points of a geometry with
+    the transformations of joint nodes and averages the result using scalar weights. The affected
+    geometry is called the skin, the combination of a transform (node) and its corresponding weight is called an
+    influence, and the set of influencing nodes (usually a hierarchy) is called a skeleton.
+    <br>
+    Skinning involves two steps:
+    - Preprocessing, known as binding the skeleton to the skin
+    - Running the skinning algorithm to modify the shape of the skin as the pose of the skeleton changes
+
+    The results of the pre-processing, or skinning information consists of the following:
+    - bind-shape: also called default shape. This is the shape of the skin when it was bound to the skeleton. This includes positions (required) for each corresponding mesh vertex and may optionally include additional vertex attributes.
+    - influences: a variable-length lists of node + weight pairs for each mesh vertex.
+    - bind-pose: the transforms of all influences at the time of binding. This per-node information is usually represented by a bind-matrix, which is the local-to-world matrix of a node at the time of binding.
+
+    In the skinning algorithm, all transformations are done relative to the bind-pose. This relative transform is
+    usually pre-computed for each node in the skeleton and is stored as a skinning matrix.
+    To derive the new (skinned) position of a vertex, the skinning matrix of each influencing node transforms
+    the bind-shape position of the vertex and the result is averaged using the blending weights.
+    The easiest way to derive the skinning matrix is to multiply the current local-to-world matrix of a node by
+    the inverse of the node's bind-matrix. This effectively cancels out the bind-pose transform of each node
+    and allows us to work in the common object space of the skin.
+    <br>
+    The binding process usually involves:
+    - Storing the current shape of the skin as the bind-shape
+    - Computing and storing the bind-matrices
+
+    Generating default blending weights, usually with some fall-off function: the farther a joint is from a
+    given vertex, the less it influences it. Also, if a weight is 0, the influence can be omitted.
+    After that, the artist is allowed to hand-modify the weights, usually by painting them on the mesh.
  */
 
 /***************************************************************************\
@@ -227,7 +258,7 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     reinterpret_cast<InitalInsertDescFunc>(&SkeletonBlendedGeometry::classDescInserter),
     false,
     0,
-    "<?xml version=\"1.0\"?>\n"
+    "﻿<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
     "\tname=\"SkeletonBlendedGeometry\"\n"
@@ -239,8 +270,41 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor               \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor\"\n"
     ">\n"
+    "Controller and drawer for character skinning. For character skinning, the animation engine drives the joints (skeleton) of a skinned character. A SkeletonBlendedGeometry\n"
+    "describes the associations between the joints and the mesh vertices forming the skin topology. The joints\n"
+    "influence the transformation of skin mesh vertices according to a controlling algorithm.\n"
+    "The skinning algorithm blends the influences of neighboring joints according to weighted values.\n"
+    "The  algorithm transforms points of a geometry with\n"
+    "the transformations of joint nodes and averages the result using scalar weights. The affected\n"
+    "geometry is called the skin, the combination of a transform (node) and its corresponding weight is called an\n"
+    "influence, and the set of influencing nodes (usually a hierarchy) is called a skeleton.\n"
+    "&lt;br&gt;\n"
+    "Skinning involves two steps:\n"
+    "- Preprocessing, known as binding the skeleton to the skin\n"
+    "- Running the skinning algorithm to modify the shape of the skin as the pose of the skeleton changes\n"
+    "\n"
+    "The results of the pre-processing, or skinning information consists of the following:\n"
+    "- bind-shape: also called default shape. This is the shape of the skin when it was bound to the skeleton. This includes positions (required) for each corresponding mesh vertex and may optionally include additional vertex attributes.\n"
+    "- influences: a variable-length lists of node + weight pairs for each mesh vertex.\n"
+    "- bind-pose: the transforms of all influences at the time of binding. This per-node information is usually represented by a bind-matrix, which is the local-to-world matrix of a node at the time of binding.\n"
+    "\n"
+    "In the skinning algorithm, all transformations are done relative to the bind-pose. This relative transform is\n"
+    "usually pre-computed for each node in the skeleton and is stored as a skinning matrix.\n"
+    "To derive the new (skinned) position of a vertex, the skinning matrix of each influencing node transforms\n"
+    "the bind-shape position of the vertex and the result is averaged using the blending weights.\n"
+    "The easiest way to derive the skinning matrix is to multiply the current local-to-world matrix of a node by\n"
+    "the inverse of the node&apos;s bind-matrix. This effectively cancels out the bind-pose transform of each node\n"
+    "and allows us to work in the common object space of the skin.\n"
+    "&lt;br&gt;\n"
+    "The binding process usually involves:\n"
+    "- Storing the current shape of the skin as the bind-shape\n"
+    "- Computing and storing the bind-matrices\n"
+    "\n"
+    "Generating default blending weights, usually with some fall-off function: the farther a joint is from a\n"
+    "given vertex, the less it influences it. Also, if a weight is 0, the influence can be omitted.\n"
+    "After that, the artist is allowed to hand-modify the weights, usually by painting them on the mesh.\n"
     "\t<Field\n"
     "\t\tname=\"BaseGeometry\"\n"
     "\t\ttype=\"Geometry\"\n"
@@ -306,7 +370,39 @@ SkeletonBlendedGeometryBase::TypeObject SkeletonBlendedGeometryBase::_type(
     "\t>\n"
     "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
-    ""
+    "Controller and drawer for character skinning. For character skinning, the animation engine drives the joints (skeleton) of a skinned character. A SkeletonBlendedGeometry\n"
+    "describes the associations between the joints and the mesh vertices forming the skin topology. The joints\n"
+    "influence the transformation of skin mesh vertices according to a controlling algorithm.\n"
+    "The skinning algorithm blends the influences of neighboring joints according to weighted values.\n"
+    "The  algorithm transforms points of a geometry with\n"
+    "the transformations of joint nodes and averages the result using scalar weights. The affected\n"
+    "geometry is called the skin, the combination of a transform (node) and its corresponding weight is called an\n"
+    "influence, and the set of influencing nodes (usually a hierarchy) is called a skeleton.\n"
+    "<br>\n"
+    "Skinning involves two steps:\n"
+    "- Preprocessing, known as binding the skeleton to the skin\n"
+    "- Running the skinning algorithm to modify the shape of the skin as the pose of the skeleton changes\n"
+    "\n"
+    "The results of the pre-processing, or skinning information consists of the following:\n"
+    "- bind-shape: also called default shape. This is the shape of the skin when it was bound to the skeleton. This includes positions (required) for each corresponding mesh vertex and may optionally include additional vertex attributes.\n"
+    "- influences: a variable-length lists of node + weight pairs for each mesh vertex.\n"
+    "- bind-pose: the transforms of all influences at the time of binding. This per-node information is usually represented by a bind-matrix, which is the local-to-world matrix of a node at the time of binding.\n"
+    "\n"
+    "In the skinning algorithm, all transformations are done relative to the bind-pose. This relative transform is\n"
+    "usually pre-computed for each node in the skeleton and is stored as a skinning matrix.\n"
+    "To derive the new (skinned) position of a vertex, the skinning matrix of each influencing node transforms\n"
+    "the bind-shape position of the vertex and the result is averaged using the blending weights.\n"
+    "The easiest way to derive the skinning matrix is to multiply the current local-to-world matrix of a node by\n"
+    "the inverse of the node's bind-matrix. This effectively cancels out the bind-pose transform of each node\n"
+    "and allows us to work in the common object space of the skin.\n"
+    "<br>\n"
+    "The binding process usually involves:\n"
+    "- Storing the current shape of the skin as the bind-shape\n"
+    "- Computing and storing the bind-matrices\n"
+    "\n"
+    "Generating default blending weights, usually with some fall-off function: the farther a joint is from a\n"
+    "given vertex, the less it influences it. Also, if a weight is 0, the influence can be omitted.\n"
+    "After that, the artist is allowed to hand-modify the weights, usually by painting them on the mesh.\n"
     );
 
 //! SkeletonBlendedGeometry Produced Events
@@ -562,26 +658,32 @@ void SkeletonBlendedGeometryBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (BaseGeometryFieldMask & whichField))
     {
+        editSField(BaseGeometryFieldMask);
         _sfBaseGeometry.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalWeightIndexesFieldMask & whichField))
     {
+        editSField(InternalWeightIndexesFieldMask);
         _sfInternalWeightIndexes.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalWeightsFieldMask & whichField))
     {
+        editSField(InternalWeightsFieldMask);
         _sfInternalWeights.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalJointsFieldMask & whichField))
     {
+        editMField(InternalJointsFieldMask, _mfInternalJoints);
         _mfInternalJoints.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (InternalJointInvBindTransformationsFieldMask & whichField))
     {
+        editMField(InternalJointInvBindTransformationsFieldMask, _mfInternalJointInvBindTransformations);
         _mfInternalJointInvBindTransformations.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BindTransformationFieldMask & whichField))
     {
+        editSField(BindTransformationFieldMask);
         _sfBindTransformation.copyFromBin(pMem);
     }
 }
@@ -658,7 +760,6 @@ SkeletonBlendedGeometry *SkeletonBlendedGeometryBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr SkeletonBlendedGeometryBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -716,7 +817,7 @@ void SkeletonBlendedGeometryBase::produceEvent(UInt32 eventId, EventDetails* con
         _SkeletonChangedEvent(dynamic_cast<SkeletonChangedEventDetailsType* const>(e), SkeletonChangedEventId);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -731,7 +832,7 @@ boost::signals2::connection SkeletonBlendedGeometryBase::connectEvent(UInt32 eve
         return _SkeletonChangedEvent.connect(listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -750,7 +851,7 @@ boost::signals2::connection  SkeletonBlendedGeometryBase::connectEvent(UInt32 ev
         return _SkeletonChangedEvent.connect(group, listener, at);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -766,7 +867,7 @@ void  SkeletonBlendedGeometryBase::disconnectEvent(UInt32 eventId, const BaseEve
         _SkeletonChangedEvent.disconnect(group);
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -779,7 +880,7 @@ void  SkeletonBlendedGeometryBase::disconnectAllSlotsEvent(UInt32 eventId)
         _SkeletonChangedEvent.disconnect_all_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -792,7 +893,7 @@ bool  SkeletonBlendedGeometryBase::isEmptyEvent(UInt32 eventId) const
         return _SkeletonChangedEvent.empty();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -806,7 +907,7 @@ UInt32  SkeletonBlendedGeometryBase::numSlotsEvent(UInt32 eventId) const
         return _SkeletonChangedEvent.num_slots();
         break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }
@@ -866,7 +967,7 @@ bool SkeletonBlendedGeometryBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfInternalWeightIndexes.getValue())
+            if(_sfInternalWeightIndexes.getValue() == pTypedChild)
             {
                 editSField(InternalWeightIndexesFieldMask);
 
@@ -875,8 +976,15 @@ bool SkeletonBlendedGeometryBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("SkeletonBlendedGeometryBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -891,7 +999,7 @@ bool SkeletonBlendedGeometryBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfInternalWeights.getValue())
+            if(_sfInternalWeights.getValue() == pTypedChild)
             {
                 editSField(InternalWeightsFieldMask);
 
@@ -900,8 +1008,15 @@ bool SkeletonBlendedGeometryBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("SkeletonBlendedGeometryBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }

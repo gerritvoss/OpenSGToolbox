@@ -1,0 +1,31 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+
+   \if separate
+     \page PageAnimation Animation Documentation
+   \else
+     \page PageAnimation Animation
+   \endif
+ */
+
+/*! \page PageSystemAnimation Animation Handling
+
+\latexonly Starter:NewChapter \endlatexonly
+
+The data reflexive features of OpenSG were used to implement a generic animation library.  The animation library is made up of Animations, Animators, and KeyframeSequences. Animations are defined to be applied to data that is supported by an attached Animator.  Because of this, Animators and KeyframeSequences are independent of the data that they may be applied to.  As an example, a keyframe sequence is made for 32-bit float data; this keyframe sequence could then be attached to any OpenSG field that is a 32-bit float.  So for all of the data types supported by keyframe sequences, any OpenSG field of those types can have an animation attached to them.
+
+Keyframed animations can be applied using different interpolation methods.  Step, linear, and cubic interpolation is implemented for all math types, and step is implemented for all other types.  Keyframed animations can be applied using different methods for how to replace the data they are animating; these are overwrite, additive, and additive-since-last.  Overwrite will replace the value of the data being animated.  Additive adds the value interpolated by the keyframe sequence to the data being animated (only defined for types with an addition operator). Additive-since-last adds the difference of the value interpolated by the keyframe sequence last frame and the current frame to the data being animated (only defined for types with an addition operator).
+
+Multiple animations that act on the same field can be blended using the BlendedKeyframeAnimator.  The BlendedKeyframeAnimator is a realization of the Animator interface that contains a collection of KeyframeAnimators and floating point weights for each.  Only Animators that work on types that addition and multiplication operators defined on them can be used by the BlendedKeyframeAnimator.  BlendedKeyframeAnimator calculates the weighted sum of the interpolation value for animator it contains.  The weighted sum is used as the value used by the replacement policy of the animator.
+
+\subsection Deformable Geometries
+
+Deformable geometries are dynamic 3D geometries.  They are created by weighting the vertices of a mesh geometry to transformation nodes.  The transformation nodes attached to a deformable geometry are called joints, and the total collection of joints called a skeleton.  When constructing the deformable geometry the geometry is bound to the skeleton in the skeleton's bind pose.  The bind pose represents the transformations of joints in the skeleton that would not apply any transformational change to the geometry, i.e. identity transformations.  The geometry is bound to the skeleton by defining weights to each of the joints in the skeleton, for most joints in the skeleton the weight on a particular joint will probably be zero.  For joints that are close to the vertex, then the weight value may be greater than 0.  If a joint has a 0 weight affect on a vertex, then the joint weight is not attached to save memory.  When joints in the skeleton move then the vertices, and normals of the geometry need to be updated.  We developed support for deformable characters for the OpenSG libraries.
+
+\subsection Morphs
+
+Geometry morphs are dynamic 3D geometries.  Morphs are constructed from a base geometry, and any number of target geometries.  There are weights that can be assigned for each of the target geometries.  The geometry rendered for a morph is the sum of the base geometry and the weighed difference of the target geometries with the base geometry.  Animating the weights associated with each target geometry can smoothly bring out the feature differences of the target geometry compared to the base geometry.
+*/

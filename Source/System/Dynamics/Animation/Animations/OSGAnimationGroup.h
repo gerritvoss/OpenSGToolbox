@@ -46,10 +46,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AnimationGroup class. See \ref
-           PageDynamicsAnimationGroup for a description.
-*/
-
 class OSG_TBANIMATION_DLLMAPPING AnimationGroup : public AnimationGroupBase
 {
   protected:

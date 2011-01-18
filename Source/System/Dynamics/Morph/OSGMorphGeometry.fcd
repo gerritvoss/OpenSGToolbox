@@ -10,8 +10,22 @@
 	parentsystemcomponent="true"
 	decoratable="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com),                            "
+    authors="David Kabala (djkabala@gmail.com)"
 >
+    A specialized Geometry that can blend between static OSG::Geometry.
+
+    Each possible geometry that can be blended (a morph target) must be specified.
+    In addition, there is a base mesh which is used a reference or baseline for the blending operation.
+
+    The result of a morph mesh is usually a linear combination of other meshes (whether they are static,
+    skinned, or something else). These input meshes are called the morph targets. A major constraint is that
+    the morph targets must all have the same set of vertices (even if they are in different positions).Therefore, all
+    of the morph targets&apos; vertices elements must have the same structure. The
+    combination of the morph targets can interpolate the data of any of the vertex attributes of the base and target meshes.
+
+    OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, and a set of vertex properties to interpolate.
+    By default only the Positions attribute is interpolated.  You can add or remove vertex attributes to interpolate by changing the 
+    MorphProperties field.  The MorphProperteis field uses the vertex attributes defined in OSG::Geometry.
 	<Field
 		name="BaseGeometry"
 		type="Geometry"

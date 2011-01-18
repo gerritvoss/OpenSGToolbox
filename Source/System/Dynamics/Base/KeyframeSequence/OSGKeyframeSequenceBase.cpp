@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -75,7 +75,8 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::KeyframeSequence
-    KeyframeSequence is the base class of all Keyframe Sequences.
+    KeyframeSequence is the base class of all Keyframe Sequences.  KeyframeSequence defines an
+    interface for applying the result of a Key-framed interpolation to a Field of a OSG::FieldContainer.
  */
 
 /***************************************************************************\
@@ -153,7 +154,8 @@ KeyframeSequenceBase::TypeObject KeyframeSequenceBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "KeyframeSequence is the base class of all Keyframe Sequences.\n"
+    "KeyframeSequence is the base class of all Keyframe Sequences.  KeyframeSequence defines an\n"
+    "interface for applying the result of a Key-framed interpolation to a Field of a OSG::FieldContainer.\n"
     "\t<Field\n"
     "\t\tname=\"InternalKeys\"\n"
     "\t\ttype=\"Real32\"\n"
@@ -164,7 +166,8 @@ KeyframeSequenceBase::TypeObject KeyframeSequenceBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    "KeyframeSequence is the base class of all Keyframe Sequences.\n"
+    "KeyframeSequence is the base class of all Keyframe Sequences.  KeyframeSequence defines an\n"
+    "interface for applying the result of a Key-framed interpolation to a Field of a OSG::FieldContainer.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -236,10 +239,10 @@ void KeyframeSequenceBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (InternalKeysFieldMask & whichField))
     {
+        editMField(InternalKeysFieldMask, _mfInternalKeys);
         _mfInternalKeys.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -289,6 +292,7 @@ EditFieldHandlePtr KeyframeSequenceBase::editHandleInternalKeys   (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

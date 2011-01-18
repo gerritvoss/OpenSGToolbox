@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          David Naylor                                                     *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -76,7 +77,9 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::SkeletonDrawable
-    
+    A node core that can draw the skeleton of a OSG::SkeletonBlendedGeometry.  This is 
+    primarily used for debugging.  The bind pose and the current pose of the skeleton can
+    be drawn.  The connections between nodes in the skeleton are drawn as lines.
  */
 
 /***************************************************************************\
@@ -216,8 +219,11 @@ SkeletonDrawableBase::TypeObject SkeletonDrawableBase::_type(
     "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor               \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com), David Naylor\"\n"
     ">\n"
+    "    A node core that can draw the skeleton of a OSG::SkeletonBlendedGeometry.  This is \n"
+    "    primarily used for debugging.  The bind pose and the current pose of the skeleton can\n"
+    "    be drawn.  The connections between nodes in the skeleton are drawn as lines.\n"
     "\t<Field\n"
     "\t\tname=\"Skeleton\"\n"
     "\t\ttype=\"SkeletonBlendedGeometry\"\n"
@@ -269,7 +275,9 @@ SkeletonDrawableBase::TypeObject SkeletonDrawableBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    ""
+    "A node core that can draw the skeleton of a OSG::SkeletonBlendedGeometry.  This is \n"
+    "primarily used for debugging.  The bind pose and the current pose of the skeleton can\n"
+    "be drawn.  The connections between nodes in the skeleton are drawn as lines.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -425,22 +433,27 @@ void SkeletonDrawableBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (SkeletonFieldMask & whichField))
     {
+        editSField(SkeletonFieldMask);
         _sfSkeleton.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DrawBindPoseFieldMask & whichField))
     {
+        editSField(DrawBindPoseFieldMask);
         _sfDrawBindPose.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DrawPoseFieldMask & whichField))
     {
+        editSField(DrawPoseFieldMask);
         _sfDrawPose.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BindPoseColorFieldMask & whichField))
     {
+        editSField(BindPoseColorFieldMask);
         _sfBindPoseColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (PoseColorFieldMask & whichField))
     {
+        editSField(PoseColorFieldMask);
         _sfPoseColor.copyFromBin(pMem);
     }
 }
@@ -517,7 +530,6 @@ SkeletonDrawable *SkeletonDrawableBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr SkeletonDrawableBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -560,7 +572,6 @@ FieldContainerTransitPtr SkeletonDrawableBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -732,6 +743,7 @@ EditFieldHandlePtr SkeletonDrawableBase::editHandlePoseColor      (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

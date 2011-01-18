@@ -62,6 +62,137 @@ OSG_BEGIN_NAMESPACE
 // To modify it, please change the .fcd file (OSGSkeletonBlendedGeometry.fcd) and
 // regenerate the base file.
 
+/*!\fn void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,Node* const TheJoint, Real32 BlendAmount)
+ * \brief Attaches a point in the mesh to a joint with the given blend weight
+ *
+ * \param[in] VertexIndex Index of the position to be attached.
+ * \param[in] TheJoint The joint to which the position is being attached
+ * \param[in] BlendAmount The blend weight
+ */
+
+/*!\fn void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,
+  UInt32 JointIndex,
+  Real32 BlendAmount)
+ * \brief Attaches a point in the mesh to a joint with a blend weight
+ *
+ * \param[in] VertexIndex Index of the position to be attached.
+ * \param[in] JointIndex The index of the joint to which the position is being attached
+ * \param[in] BlendAmount The blend weight
+ */
+
+/*!\fn void SkeletonBlendedGeometry::addJointBlending(UInt32 VertexIndex,
+  UInt32 JointIndex,
+  UInt32 WeightIndex)
+ * \brief Attaches a point in the mesh to a joint with a blend weight
+ *
+ * \param[in] VertexIndex Index of the point to be attached.
+ * \param[in] JointIndex The index of the joint to which the position is being attached
+ * \param[in] WeightIndex The index of the blend weight to use
+ */
+
+/*!\fn GeoVectorProperty*   SkeletonBlendedGeometry::getWeights      (void) const
+ * \brief Get the geometry field containing the blend weights
+ */
+
+/*!\fn GeoIntegralProperty* SkeletonBlendedGeometry::getWeightIndexes(void) const
+ * \brief Get the geometry field containing the indexing of the blend weights
+ */
+
+/*!\fn void SkeletonBlendedGeometry::setWeights      (GeoVectorProperty*   const weights)
+ * \brief Set the blend weights
+ *
+ * \param[in] weights The blend weights
+ *
+ * \returns 
+ */
+
+/*!\fn void SkeletonBlendedGeometry::setWeightIndexes(GeoIntegralProperty* const indexes)
+ * \brief Set the blend weight indexes
+ *
+ * \param[in] indexes The blend weight indexes
+ */
+
+/*!\fn Matrix SkeletonBlendedGeometry::getAbsoluteTransformation(UInt32 index) const
+ * \brief Gets the current absolute transformation of the joint
+ *
+ * \param[in] index The joint index
+ *
+ * \returns The joint's absolute transformation matrix
+ */
+
+/*!\fn Matrix SkeletonBlendedGeometry::getAbsoluteBindTransformation(UInt32 index) const
+ * \brief Gets the bind pose absolute transformation of the joint 
+ *
+ * \param[in] index The joint index
+ *
+ * \returns The joint's bind pose absolute transformation matrix
+ */
+
+/*!\fn Int32 SkeletonBlendedGeometry::getJointIndex(Node* theJoint) const
+ * \brief Get the index of a given joint
+ *
+ * \param[in] theJoint The joint
+ *
+ * \returns The index of the joint.  returns -1 if the joint is not present.
+ */
+
+/*!\fn Int32 SkeletonBlendedGeometry::getJointParentIndex(UInt32 index) const
+ * \brief Get the index of the parent of the given child joint
+ *
+ * \param[in] index Index of the child joint
+ *
+ * \returns The index of the parent joint. returns -1 if the joint is not present, or
+ * the joint does not have a parent joint
+ */
+
+/*!\fn UInt32 SkeletonBlendedGeometry::getNumJoints(void) const
+ * \brief Get the number of joints
+ */
+
+/*!\fn Node* SkeletonBlendedGeometry::getJoint(UInt32 index) const
+ * \brief Get the joint at the given index
+ *
+ * \param[in] index The index of the joint
+ */
+
+/*!\fn Matrix SkeletonBlendedGeometry::getJointInvBind    (UInt32 index) const
+ * \brief Get the inverse bind matrix of the joint at the given index
+ *
+ * \param[in] index The index of the joint
+ *
+ * \returns The inverse bind matrix
+ */
+
+/*!\fn void   SkeletonBlendedGeometry::pushToJoints       (Node* const jointValue,
+  const Matrix& invBind  )
+ * \brief Add a joint node with the given inverse bind matrix
+ *
+ * \param[in] jointValue The joint to add
+ * \param[in] invBind The inverse bind matrix of the joint
+ */
+
+/*!\fn void   SkeletonBlendedGeometry::removeFromJoints   (UInt32 uiIndex)
+ * \brief Remove the joint at the given index
+ *
+ * This also removes the inverse bind matrix associated with that joint
+ *
+ * \param[in] uiIndex the index of the joint to remove
+ */
+
+/*!\fn void   SkeletonBlendedGeometry::removeObjFromJoints(Node* const jointValue)
+ * \brief Remove the joint.
+ *
+ * This also removes the inverse bind matrix associated with that joint
+ *
+ * \param[in] jointValue The joint to remove
+ */
+
+/*!\fn void SkeletonBlendedGeometry::clearJoints(void)
+ * \brief Remove all joints
+ *
+ * This also removes the inverse bind matrices associated with the joints
+ */
+
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
@@ -169,15 +300,6 @@ void SkeletonBlendedGeometry::drawPrimitives(DrawEnv *pEnv)
     }
 
     Inherited::drawPrimitives(pEnv);
-}
-
-void SkeletonBlendedGeometry::skeletonUpdated(void)
-{
-	produceSkeletonChanged();
-    if(getBaseGeometry())
-    {
-        calculatePositions();
-    }
 }
 
 Matrix SkeletonBlendedGeometry::getAbsoluteTransformation(UInt32 index) const

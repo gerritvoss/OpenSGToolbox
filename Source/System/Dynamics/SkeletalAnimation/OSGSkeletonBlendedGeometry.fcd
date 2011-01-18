@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 
 <FieldContainer
 	name="SkeletonBlendedGeometry"
@@ -10,8 +10,41 @@
 	parentsystemcomponent="true"
 	decoratable="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com), David Naylor               "
+    authors="David Kabala (djkabala@gmail.com), David Naylor"
 >
+Controller and drawer for character skinning. For character skinning, the animation engine drives the joints (skeleton) of a skinned character. A SkeletonBlendedGeometry
+describes the associations between the joints and the mesh vertices forming the skin topology. The joints
+influence the transformation of skin mesh vertices according to a controlling algorithm.
+The skinning algorithm blends the influences of neighboring joints according to weighted values.
+The  algorithm transforms points of a geometry with
+the transformations of joint nodes and averages the result using scalar weights. The affected
+geometry is called the skin, the combination of a transform (node) and its corresponding weight is called an
+influence, and the set of influencing nodes (usually a hierarchy) is called a skeleton.
+&lt;br&gt;
+Skinning involves two steps:
+- Preprocessing, known as binding the skeleton to the skin
+- Running the skinning algorithm to modify the shape of the skin as the pose of the skeleton changes
+
+The results of the pre-processing, or skinning information consists of the following:
+- bind-shape: also called default shape. This is the shape of the skin when it was bound to the skeleton. This includes positions (required) for each corresponding mesh vertex and may optionally include additional vertex attributes.
+- influences: a variable-length lists of node + weight pairs for each mesh vertex.
+- bind-pose: the transforms of all influences at the time of binding. This per-node information is usually represented by a bind-matrix, which is the local-to-world matrix of a node at the time of binding.
+
+In the skinning algorithm, all transformations are done relative to the bind-pose. This relative transform is
+usually pre-computed for each node in the skeleton and is stored as a skinning matrix.
+To derive the new (skinned) position of a vertex, the skinning matrix of each influencing node transforms
+the bind-shape position of the vertex and the result is averaged using the blending weights.
+The easiest way to derive the skinning matrix is to multiply the current local-to-world matrix of a node by
+the inverse of the node&apos;s bind-matrix. This effectively cancels out the bind-pose transform of each node
+and allows us to work in the common object space of the skin.
+&lt;br&gt;
+The binding process usually involves:
+- Storing the current shape of the skin as the bind-shape
+- Computing and storing the bind-matrices
+
+Generating default blending weights, usually with some fall-off function: the farther a joint is from a
+given vertex, the less it influences it. Also, if a weight is 0, the influence can be omitted.
+After that, the artist is allowed to hand-modify the weights, usually by painting them on the mesh.
 	<Field
 		name="BaseGeometry"
 		type="Geometry"

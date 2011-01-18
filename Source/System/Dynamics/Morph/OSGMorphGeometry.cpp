@@ -58,6 +58,74 @@ OSG_BEGIN_NAMESPACE
 // To modify it, please change the .fcd file (OSGMorphGeometry.fcd) and
 // regenerate the base file.
 
+/*!\fn void addMorphTarget(Geometry * const Target, Real32 Weight)
+ * \brief Add a target geometry and weight
+ *
+ * \param[in] Target The OSG::Geometry to add
+ * \param[in] Weight The weight of the target geometry
+ */
+
+/*!\fn void clearMorphTargets(void)
+ * \brief Remove all target geometries 
+ */
+
+/*!\fn void setMorphTarget(UInt32 Index, Geometry * const Target)
+ * \brief Replace the target geometry at the given index
+ *
+ * \param[in] Index The index of the target geometry to replace
+ * \param[in] Target The OSG::Geometry to replace with
+ */
+
+/*!\fn void setMorphTargetWeight(UInt32 Index, Real32 Weight)
+ * \brief Set the weight of a target geometry at a given index
+ *
+ * \param[in] Index The index of the target geometry
+ * \param[in] Weight The weight to assign this target geometry
+ */
+
+/*!\fn UInt32 getNumMorphTargets(void) const
+ * \brief Get the number of geometry targets
+ *
+ * \returns The number of geometry targets
+ */
+
+/*!\fn Geometry* getMorphTarget(UInt32 Index) const
+ * \brief Get the target geometry at the given index
+ *
+ * \param[in] Index The index of the target geometry
+ */
+
+/*!\fn Int32 getMorphTargetIndex(Geometry * const Target) const
+ * \brief Get the index of the given target geometry
+ *
+ * \param[in] Target
+ *
+ * \returns The index of the given target geometry.  Returns -1 if the given
+ * geometry does not exist. 
+ */
+
+/*!\fn Real32 getMorphTargetWeight(UInt32 Index) const
+ * \brief Get the weight of the target geometry at the given index
+ *
+ * \param[in] Index The index of the target geometry
+ *
+ * \returns The weight
+ */
+
+/*!\fn Real32 getMorphTargetWeight(Geometry * const Target) const
+ * \brief Get the weight of the target geometry
+ *
+ * \param[in] Target
+ *
+ * \returns The weight
+ */
+
+/*!\fn GeoVectorProperty*   getWeights      (void) const
+ * \brief Get the property of the Weights field
+ *
+ * \returns Pointer to the Weights field
+ */
+
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/

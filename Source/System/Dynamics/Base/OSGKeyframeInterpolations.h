@@ -19,6 +19,15 @@ bool OSG_TBANIMATION_DLLMAPPING getInterpolationIndexes(const MFReal32& Keys, co
 
 bool OSG_TBANIMATION_DLLMAPPING getInterpolationIndex(const MFReal32& Keys, const Real32& time, UInt32& Index, Real32& t, bool isCyclic=false);
 
+/*!
+ * \brief Operator for adding two Points together
+ *
+ * \param[in] lValue Left operand
+ * \param[in] rValue Right operand
+ *
+ * \returns The result of add the left operand with the Vec representation of
+ * the right operand.
+ */
 template <class ValueTypeT, UInt32 SizeI     > inline
 Point<ValueTypeT, SizeI>
 operator +(const Point<ValueTypeT, SizeI> &lValue,

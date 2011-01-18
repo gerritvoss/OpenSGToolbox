@@ -40,36 +40,68 @@
 
 OSG_BEGIN_NAMESPACE
 
+/*!
+ * \brief Get the Key
+ *
+ * \param[in] index The index of the key
+ */
 inline
 Real32 KeyframeSequence::getKey(UInt32 index)
 {
     return getInternalKeys(index);
 }
 
+/*!
+ * \brief Get the Key
+ *
+ * \param[in] index The index of the key
+ */
 inline
 Real32 KeyframeSequence::getKey(UInt32 index) const
 {
     return getInternalKeys(index);
 }
 
+/*!
+ * \brief Get the Key
+ *
+ * \param[in] index The index of the key
+ * \param[out] val Replaced with the key
+ */
 inline
 void KeyframeSequence::getKey( Real32 &val, UInt32 index)
 {
     val = getInternalKeys(index);
 }
 
+/*!
+ * \brief Get the Key
+ *
+ * \param[in] index The index of the key
+ * \param[out] val Replaced with the key
+ */
 inline
 void KeyframeSequence::getKey( Real32 &val, UInt32 index) const
 {
     val = getInternalKeys(index);
 }
 
+/*!
+ * \brief Get the Keys
+ *
+ * \returns An uneditable reference to a MultiField of Real32
+ */
 inline
 const MFReal32 &KeyframeSequence::getKeys(void) const
 {
     return *getMFInternalKeys();
 }
 
+/*!
+ * \brief Get the Keys
+ *
+ * \returns An editable reference to a MultiField of Real32
+ */
 inline
 MFReal32 *KeyframeSequence::editKeys(void)
 {

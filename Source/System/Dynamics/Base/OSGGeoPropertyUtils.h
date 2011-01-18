@@ -29,21 +29,61 @@
 
 OSG_BEGIN_NAMESPACE
 
+/*!
+ * \brief Sets all of the values of a GeoVectorProperty to the "zero" of the
+ * data type contained by the property.
+ *
+ * \param[out] GeoProp The Geometry property to zero.
+ */
 void OSG_TBANIMATION_DLLMAPPING zeroGeoProperty(GeoVectorProperty* GeoProp);
 
+/*!
+ * \brief Helper function used by the non-templated
+ * zeroGeoProperty(GeoVectorProperty* GeoProp) 
+ *
+ * \param[out] GeoProp The Geometry property to zero.
+ */
 template<class TypeT>
 void OSG_TBANIMATION_DLLMAPPING zeroGeoPropertyTmpl(GeoVectorProperty* GeoProp);
 
+/*!
+ * \brief Morphs the values of a GeoVectorProperty by a given weight between a
+ * BaseGeomProp and a TargetGeoProp
+ *
+ * \param[in] BaseGeoProp The Base GeoProperty
+ * \param[in] TargetGeoProp The Target GeoProperty
+ * \param[out] ResultGeoProp The GeoProperty to apply the morph to
+ * \param[in] Weight The weight of morph between the base and target properties.
+ */
 void morphGeoProperty(GeoVectorProperty* BaseGeoProp,
                       GeoVectorProperty* TargetGeoProp,
                       GeoVectorProperty* ResultGeoProp,
                       Real32 Weight);
+
+/*!
+ * \brief Helper function used by the non-templated
+ * morphGeoProperty() 
+ *
+ * \param[in] BaseGeoProp The Base GeoProperty
+ * \param[in] TargetGeoProp The Target GeoProperty
+ * \param[out] ResultGeoProp The GeoProperty to apply the morph to
+ * \param[in] Weight The weight of morph between the base and target properties.
+ */
 template<class TypeT>
 void morphGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
                           GeoVectorProperty* TargetGeoProp,
                           GeoVectorProperty* ResultGeoProp,
                           Real32 Weight);
 
+/*!
+ * \brief Helper function used by the non-templated
+ * morphGeoProperty() for GeoProperties that represent normalized vectors.
+ *
+ * \param[in] BaseGeoProp The Base GeoProperty
+ * \param[in] TargetGeoProp The Target GeoProperty
+ * \param[out] ResultGeoProp The GeoProperty to apply the morph to
+ * \param[in] Weight The weight of morph between the base and target properties.
+ */
 template<class TypeT>
 void morphNormGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
                               GeoVectorProperty* TargetGeoProp,

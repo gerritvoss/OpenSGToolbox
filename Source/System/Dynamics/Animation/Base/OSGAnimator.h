@@ -46,10 +46,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animator class. See \ref
-           PageDynamicsAnimator for a description.
-*/
-
 class OSG_TBANIMATION_DLLMAPPING Animator : public AnimatorBase
 {
   protected:
@@ -57,21 +53,29 @@ class OSG_TBANIMATION_DLLMAPPING Animator : public AnimatorBase
     /*==========================  PUBLIC  =================================*/
 
   public:
+    /*! 
+     * Enumeration for the interpolation method used by animators.
+     */
     enum InterpolationType
     {
-        LINEAR_INTERPOLATION           =1,
-        CUBIC_INTERPOLATION            =2,
-        STEP_INTERPOLATION             =4,
-        LINEAR_NORMAL_INTERPOLATION    =8,
-        SPHERICAL_LINEAR_INTERPOLATION =16,
-        NORMALIZED_LINEAR_INTERPOLATION=32
+        LINEAR_INTERPOLATION           =1,  /*!< Linear interpolation */
+        CUBIC_INTERPOLATION            =2,  /*!< Cubic interpolation */
+        STEP_INTERPOLATION             =4,  /*!< Step interpolation */
+        LINEAR_NORMAL_INTERPOLATION    =8,  /*!< Linear normal  interpolation */
+        SPHERICAL_LINEAR_INTERPOLATION =16, /*!< Spherical linear interpolation */
+        NORMALIZED_LINEAR_INTERPOLATION=32  /*!< Normalized linear interpolation */
     };
 
+    /*! 
+     * Enumeration for the replacement policy to use when applying the
+     * result of an animator to the value it is attached to.
+     */
     enum ValueReplacementPolicy
     {
-        OVERWRITE          =1,
-        ADDITIVE_ABSOLUTE  =2,
-        ADDITIVE_SINCE_LAST=4
+        OVERWRITE          =1, /*!< Overwrite the current value */
+        ADDITIVE_ABSOLUTE  =2, /*!< Add the result with the value */
+        ADDITIVE_SINCE_LAST=4  /*!< Add the difference of the previous result and
+                                 the current result with the value */
     };
 
     typedef AnimatorBase Inherited;
@@ -98,14 +102,14 @@ class OSG_TBANIMATION_DLLMAPPING Animator : public AnimatorBase
                          UInt32 ReplacementPolicy,
                          bool Cycling,
                          Real32 time,
-                         Real32 prevTime,
+                         Real32 PrevTime,
                          EditFieldHandlePtr Result,
                          UInt32 Index = 0) = 0;
                       
-            
     virtual Real32 getLength(void) const = 0;
 
     virtual const DataType* getDataType(void) const = 0;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:

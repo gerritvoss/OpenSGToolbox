@@ -76,7 +76,26 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::BlendedKeyframeAnimator
-    Keyframe Animator Class.
+    Applies the result of the interpolation of a set of  key-frame sequences to a field.
+    Each key-frame sequence is evaluated at the given timestamps.  The result is then multiplied
+    by the corresponding blend amount and then added to the value of the field.
+    \code
+    //Initialize the value of the field to the "zero" of the data type
+    zeroField(TheAnimatedField, TheAnimatedFieldIndex);
+
+    //For each KeyframeSequence
+    for(UInt32 i(0) ; i<getMFKeyframeSequences()->size() ; ++i)
+    {
+    //Get the value of interpolated key-frame sequence
+    InterpValue = getKeyframeSequences(i)->interpolate();
+
+    //Add the blended amount to the field
+    TheAnimatedField = TheAnimatedField + (getKeyframeSequences(i) * InterpValue);
+    }
+    \endcode
+    The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.
+    Can only be used for data-types that can be multiplied and added, so this can not be used for
+    booleans, strings, pointers, etc.
  */
 
 /***************************************************************************\
@@ -170,7 +189,27 @@ BlendedKeyframeAnimatorBase::TypeObject BlendedKeyframeAnimatorBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a set of  key-frame sequences to a field.\n"
+    "Each key-frame sequence is evaluated at the given timestamps.  The result is then multiplied\n"
+    "by the corresponding blend amount and then added to the value of the field.\n"
+    "\n"
+    "/code\n"
+    "//Initialize the value of the field to the \"zero\" of the data type\n"
+    "zeroField(TheAnimatedField, TheAnimatedFieldIndex);\n"
+    "\n"
+    "//For each KeyframeSequence\n"
+    "for(UInt32 i(0) ; i&lt; getMFKeyframeSequences()->size() ; ++i)\n"
+    "{\n"
+    "    //Get the value of interpolated key-frame sequence\n"
+    "    InterpValue = getKeyframeSequences(i)->interpolate();\n"
+    "\n"
+    "    //Add the blended amount to the field\n"
+    "    TheAnimatedField = TheAnimatedField + (getKeyframeSequences(i) * InterpValue);\n"
+    "}\n"
+    "/endcode\n"
+    "The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.\n"
+    "Can only be used for data-types that can be multiplied and added, so this can not be used for\n"
+    "booleans, strings, pointers, etc.\n"
     "\t<Field\n"
     "\t\tname=\"KeyframeSequences\"\n"
     "\t\ttype=\"KeyframeSequence\"\n"
@@ -190,7 +229,27 @@ BlendedKeyframeAnimatorBase::TypeObject BlendedKeyframeAnimatorBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    "Keyframe Animator Class.\n"
+    "Applies the result of the interpolation of a set of  key-frame sequences to a field.\n"
+    "Each key-frame sequence is evaluated at the given timestamps.  The result is then multiplied\n"
+    "by the corresponding blend amount and then added to the value of the field.\n"
+    "\n"
+    "/code\n"
+    "//Initialize the value of the field to the \"zero\" of the data type\n"
+    "zeroField(TheAnimatedField, TheAnimatedFieldIndex);\n"
+    "\n"
+    "//For each KeyframeSequence\n"
+    "for(UInt32 i(0) ; i<getMFKeyframeSequences()->size() ; ++i)\n"
+    "{\n"
+    "//Get the value of interpolated key-frame sequence\n"
+    "InterpValue = getKeyframeSequences(i)->interpolate();\n"
+    "\n"
+    "//Add the blended amount to the field\n"
+    "TheAnimatedField = TheAnimatedField + (getKeyframeSequences(i) * InterpValue);\n"
+    "}\n"
+    "/endcode\n"
+    "The data-type of the #OSG::KeyframeSequence must match the type of the field applied to.\n"
+    "Can only be used for data-types that can be multiplied and added, so this can not be used for\n"
+    "booleans, strings, pointers, etc.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -336,10 +395,12 @@ void BlendedKeyframeAnimatorBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (KeyframeSequencesFieldMask & whichField))
     {
+        editMField(KeyframeSequencesFieldMask, _mfKeyframeSequences);
         _mfKeyframeSequences.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BlendAmountsFieldMask & whichField))
     {
+        editMField(BlendAmountsFieldMask, _mfBlendAmounts);
         _mfBlendAmounts.copyFromBin(pMem);
     }
 }
@@ -416,7 +477,6 @@ BlendedKeyframeAnimator *BlendedKeyframeAnimatorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr BlendedKeyframeAnimatorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -459,7 +519,6 @@ FieldContainerTransitPtr BlendedKeyframeAnimatorBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -569,6 +628,7 @@ EditFieldHandlePtr BlendedKeyframeAnimatorBase::editHandleBlendAmounts   (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

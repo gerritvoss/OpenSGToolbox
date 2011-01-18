@@ -12,7 +12,8 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
-Field Animation Class.
+Controls the application of an #OSG::Animator on a specific field of a #OSG::FieldContianer.
+The field can be either a SingleField or a specific indes of a MultiField.
 	<Field
 		name="Animator"
 		type="Animator"

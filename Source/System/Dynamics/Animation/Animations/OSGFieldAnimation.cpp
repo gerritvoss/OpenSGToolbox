@@ -90,6 +90,17 @@ Real32 FieldAnimation::getUnclippedCycleLength(void) const
     }
 }
 
+/*!\fn void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName)
+ *
+ * \brief Attach to the SingleField of a #OSG::FieldContainer.
+ *
+ * If TheContainer is NULL or there is no SingleField by the
+ * given name on the container, then no changes are made.
+ *
+ * \param TheContainer The container to attach to.
+ * \param FieldName The name of the field on the given container to attach
+ * to.
+ */
 void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName)
 {
     setFieldName( FieldName );
@@ -97,6 +108,17 @@ void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, const
     commitChanges();
 }
 
+/*!\fn void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID)
+ *
+ * \brief Attach to the SingleField of a #OSG::FieldContainer.
+ *
+ * If TheContainer is NULL or there is no SingleField with the
+ * given FieldID on the container, then no changes are made.
+ *
+ * \param TheContainer The container to attach to.
+ * \param FieldID The ID of the field on the given container to attach
+ * to.
+ */
 void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID)
 {
     setFieldId( FieldID );
@@ -104,6 +126,19 @@ void FieldAnimation::setAnimatedField(FieldContainerUnrecPtr TheContainer, UInt3
     commitChanges();
 }
 
+/*!\fn void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName, UInt32 Index)
+ *
+ * \brief Attach to the Index of a MultiField of a #OSG::FieldContainer.
+ *
+ * If TheContainer is NULL, or there is no MultiField by the
+ * given name on the container, or the Index is out of bounds, then no
+ * changes are made.
+ *
+ * \param TheContainer The container to attach to.
+ * \param FieldName The name of the field on the given container to attach
+ * to.
+ * \param Index The index of the MultiField to attach to.
+ */
 void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, const std::string& FieldName, UInt32 Index)
 {
     setFieldName( FieldName );
@@ -112,6 +147,19 @@ void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, 
     commitChanges();
 }
 
+/*!\fn void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID, UInt32 Index)
+ *
+ * \brief Attach to the Index of a MultiField of a #OSG::FieldContainer.
+ *
+ * If TheContainer is NULL, or there is no MultiField with the
+ * given FieldID on the container, or the Index is out of bounds, then no
+ * changes are made.
+ *
+ * \param TheContainer The container to attach to.
+ * \param FieldID The ID of the field on the given container to attach
+ * to.
+ * \param Index The index of the MultiField to attach to.
+ */
 void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, UInt32 FieldID, UInt32 Index)
 {
     setFieldId( FieldID );
@@ -120,6 +168,9 @@ void FieldAnimation::setAnimatedMultiField(FieldContainerUnrecPtr TheContainer, 
     commitChanges();
 }
 
+/*-------------------------------------------------------------------------*\
+ -  private                                                                 -
+\*-------------------------------------------------------------------------*/
 void FieldAnimation::internalUpdate(Real32 t, const Real32 prev_t)
 {
     if(getContainer() == NULL || getFieldId() == 0)
@@ -169,10 +220,6 @@ void FieldAnimation::internalUpdate(Real32 t, const Real32 prev_t)
         //commitChanges();
     }
 }
-
-/*-------------------------------------------------------------------------*\
- -  private                                                                 -
-\*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 

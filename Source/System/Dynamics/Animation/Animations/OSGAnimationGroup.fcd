@@ -12,6 +12,7 @@
     isNodeCore="false"
     authors="David Kabala (djkabala@gmail.com)                             "
 >
+Controls the animation of a collection of #Animation as a singleunit.
 	<Field
 		name="Animations"
 		type="Animation"

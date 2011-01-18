@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com), David Naylor               *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          David Naylor                                                     *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -88,6 +89,8 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonDrawableBase : public MaterialDrawable
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(SkeletonDrawable);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

@@ -10,8 +10,11 @@
 	parentsystemcomponent="true"
 	decoratable="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com), David Naylor               "
+    authors="David Kabala (djkabala@gmail.com), David Naylor"
 >
+    A node core that can draw the skeleton of a OSG::SkeletonBlendedGeometry.  This is 
+    primarily used for debugging.  The bind pose and the current pose of the skeleton can
+    be drawn.  The connections between nodes in the skeleton are drawn as lines.
 	<Field
 		name="Skeleton"
 		type="SkeletonBlendedGeometry"

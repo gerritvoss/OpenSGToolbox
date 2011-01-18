@@ -50,10 +50,6 @@
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief Animation class. See \ref
-           PageDynamicsAnimation for a description.
-*/
-
 class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
 {
   protected:
@@ -82,23 +78,31 @@ class OSG_TBANIMATION_DLLMAPPING Animation : public AnimationBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    //virtual bool update(const AnimationAdvancerPtr& advancer);
+
     virtual bool update(const Time& ElapsedTime);
     
     virtual void start(const Time& StartTime=0.0f);
+
     virtual void seek(const Time& SeekTime);
+
     virtual void pause(bool ShouldPause);
+
     virtual bool isPaused(void) const;
+
     virtual bool isPlaying(void) const;
+
     virtual void stop(bool DisconnectFromEventProducer = true);
 
     Real32 getLength(void) const;
+
     Real32 getCycleLength(void) const;
 
     virtual Real32 getUnclippedCycleLength(void) const = 0;
+
     virtual Real32 getUnclippedLength(void) const;
 
     void attachUpdateProducer(ReflexiveContainer* const producer);
+
     void detachUpdateProducer(void);
 
     static StatElemDesc<StatTimeElem   > statAnimUpdateTime;

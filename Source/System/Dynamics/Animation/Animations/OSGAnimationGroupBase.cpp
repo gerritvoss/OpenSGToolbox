@@ -76,7 +76,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::AnimationGroup
-    
+    Controls the animation of a collection of #Animation as a singleunit.
  */
 
 /***************************************************************************\
@@ -154,6 +154,7 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "    isNodeCore=\"false\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
     ">\n"
+    "Controls the animation of a collection of #Animation as a singleunit.\n"
     "\t<Field\n"
     "\t\tname=\"Animations\"\n"
     "\t\ttype=\"Animation\"\n"
@@ -164,7 +165,7 @@ AnimationGroupBase::TypeObject AnimationGroupBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
-    ""
+    "Controls the animation of a collection of #Animation as a singleunit.\n"
     );
 
 /*------------------------------ get -----------------------------------*/

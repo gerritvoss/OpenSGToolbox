@@ -86,6 +86,8 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeAnimatorBase : public Animator
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(KeyframeAnimator);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

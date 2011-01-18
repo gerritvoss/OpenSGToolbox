@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com),                            *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -88,6 +88,8 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(MorphGeometry);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
