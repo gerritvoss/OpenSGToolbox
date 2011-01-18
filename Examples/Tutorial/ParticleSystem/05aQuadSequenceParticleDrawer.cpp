@@ -1,3 +1,6 @@
+// NOTE: If the images are not loading correctly, make sure the working 
+// directory is set to the location of the .cpp file for this tutorial.
+
 // General OpenSG configuration, needed everywhere
 #include "OSGConfig.h"
 
@@ -20,18 +23,16 @@
 #include "OSGMaterialChunk.h"
 #include "OSGParticleSystem.h"
 #include "OSGParticleSystemCore.h"
-#include "OSGPointParticleSystemDrawer.h"
+#include "OSGRateParticleGenerator.h"
 
-#include "OSGSphereDistribution3D.h"
-#include "OSGQuadParticleSystemDrawer.h"
-#include "OSGQuadParticleSystemDrawer.h"
-#include "OSGBurstParticleGenerator.h"
-#include "OSGAgeSizeParticleAffector.h"
+#include "OSGQuadSequenceParticleSystemDrawer.h"
+#include "OSGAgeParticleFunction.h"
 
 #include "OSGGaussianNormalDistribution1D.h"
 #include "OSGCylinderDistribution3D.h"
 #include "OSGLineDistribution3D.h"
-//#include "OSGSizeDistribution3D.h"
+#include "OSGSphereDistribution3D.h"
+
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -48,9 +49,7 @@ Distribution3DRefPtr createSizeDistribution(void);
 
 void keyTyped(KeyEventDetails* const details,
               SimpleSceneManager *mgr,
-              ParticleSystem* const ExampleParticleSystem,
-              BurstParticleGenerator* const ExampleBurstGenerator,
-              QuadParticleSystemDrawer* const ExampleParticleSystemDrawer
+              AgeParticleFunction* const AgeFunc
              )
 {
     if(details->getKey() == KeyEventDetails::KEY_Q &&
@@ -58,57 +57,18 @@ void keyTyped(KeyEventDetails* const details,
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-    if(details->getKey() == KeyEventDetails::KEY_B)//generate particles when clicked
+    if (details->getKey() == KeyEventDetails::KEY_1)
     {
-        //Attach the Generator to the Particle System
-        ExampleParticleSystem->pushToGenerators(ExampleBurstGenerator);
-    }
-    UInt32 CHANGE_SOURCE;
-    if(details->getKey()== KeyEventDetails::KEY_P)
+        AgeFunc->setSequenceOrder(AgeParticleFunction::CYCLE);
+    }		
+    else if (details->getKey() == KeyEventDetails::KEY_2)
     {
-
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_POSITION_CHANGE;
+        AgeFunc->setSequenceOrder(AgeParticleFunction::REVERSE_CYCLE);
     }
-
-    else if(details->getKey()== KeyEventDetails::KEY_C)
+    else if (details->getKey() == KeyEventDetails::KEY_3)
     {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_VELOCITY_CHANGE;
+        AgeFunc->setSequenceOrder(AgeParticleFunction::CUSTOM);
     }
-
-    else if(details->getKey()== KeyEventDetails::KEY_V)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_VELOCITY;
-    }
-
-    else if(details->getKey()== KeyEventDetails::KEY_A)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_ACCELERATION;
-    }
-
-    else  if(details->getKey()== KeyEventDetails::KEY_N)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_PARTICLE_NORMAL;
-    }
-
-    else if(details->getKey()== KeyEventDetails::KEY_D)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_VIEW_POSITION;
-    }
-
-    else if(details->getKey()== KeyEventDetails::KEY_S)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_STATIC;
-    }
-
-    else  if(details->getKey()== KeyEventDetails::KEY_W)
-    {
-        CHANGE_SOURCE = QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION;
-    }
-    else {
-        return;
-    }
-    ExampleParticleSystemDrawer->setNormalAndUpSource(CHANGE_SOURCE,QuadParticleSystemDrawer::UP_STATIC);
-
 }
 
 void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
@@ -150,9 +110,9 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
     }
 }
 
-
 int main(int argc, char **argv)
 {
+    preloadSharedObject("OSGImageFileIO");
     // OSG init
     osgInit(argc,argv);
 
@@ -176,10 +136,12 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
-        //Particle System Material
-        TextureObjChunkRefPtr QuadTextureObjChunk = TextureObjChunk::create();
-        ImageRefPtr LoadedImage = ImageFileHandler::the()->read("Data/Cloud.png");    
-        QuadTextureObjChunk->setImage(LoadedImage);
+        // Creating the Particle System Material
+        // Here, the image is loaded.  The entire image sequence is conatined in one image,
+        // which reduces texture memory overhead and runs faster.
+        TextureObjChunkRefPtr QuadTextureChunk = TextureObjChunk::create();
+        ImageRefPtr LoadedImage = ImageFileHandler::the()->read("Data/SpriteExplode.png");    
+        QuadTextureChunk->setImage(LoadedImage);
 
         TextureEnvChunkRefPtr QuadTextureEnvChunk = TextureEnvChunk::create();
         QuadTextureEnvChunk->setEnvMode(GL_MODULATE);
@@ -189,107 +151,113 @@ int main(int argc, char **argv)
         PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 
         MaterialChunkRefPtr PSMaterialChunk = MaterialChunk::create();
-        PSMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
-        PSMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
-        PSMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+        PSMaterialChunk->setAmbient(Color4f(0.3f,0.0f,0.0f,1.0f));
+        PSMaterialChunk->setDiffuse(Color4f(0.7f,0.0f,0.0f,1.0f));
+        PSMaterialChunk->setSpecular(Color4f(0.9f,0.0f,0.0f,1.0f));
         PSMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 
         ChunkMaterialRefPtr PSMaterial = ChunkMaterial::create();
-        PSMaterial->addChunk(QuadTextureObjChunk);
+        PSMaterial->addChunk(QuadTextureChunk);
         PSMaterial->addChunk(QuadTextureEnvChunk);
         PSMaterial->addChunk(PSMaterialChunk);
         PSMaterial->addChunk(PSBlendChunk);
 
-
-
-        //Affector
-        AgeSizeParticleAffectorRecPtr ExampleAgeSizeParticleAffector = AgeSizeParticleAffector::create();
-        //ages
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.0);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.05);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.2);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.36);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.7);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(0.8);
-        ExampleAgeSizeParticleAffector->editMFAges()->push_back(1.0);
-
-        //sizes
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(1.0,0.5,1.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(1.0,0.5,1.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(20.0,0.5,30.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(3.0,3.0,3.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(6.0,60.0,6.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(2.0,3.0,1.0));
-        ExampleAgeSizeParticleAffector->editMFSizes()->push_back(Vec3f(10.0,1.0,10.0));
-
         //Particle System
         ParticleSystemRecPtr ExampleParticleSystem = ParticleSystem::create();
         ExampleParticleSystem->attachUpdateProducer(TutorialWindow);
-        ExampleParticleSystem->pushToAffectors(ExampleAgeSizeParticleAffector);
 
-        //Particle System Drawer
-        QuadParticleSystemDrawerRecPtr ExampleParticleSystemDrawer = QuadParticleSystemDrawer::create();
+        //Age Particle Function.  Controls which image is shown when, based on the age of a particle.
+        AgeParticleFunctionRecPtr AgeFunc = AgeParticleFunction::create();
+        AgeFunc->setSequenceTime(0.1f); // image changes every 0.1 seconds.
+        AgeFunc->setSequenceOrder(AgeParticleFunction::CUSTOM); // using the custom sequence below.
+        /*
+           Here, a custom sequence for the image ordering is assembled.  The image sequence will be shown in 
+           the order specified here.  Once the end of the sequence is reached, the sequence repeats.
+           */
+        AgeFunc->editMFCustomSequence()->push_back(0);
+        AgeFunc->editMFCustomSequence()->push_back(1);
+        AgeFunc->editMFCustomSequence()->push_back(2);
+        AgeFunc->editMFCustomSequence()->push_back(3);
+        AgeFunc->editMFCustomSequence()->push_back(4);
+        AgeFunc->editMFCustomSequence()->push_back(5);
+        AgeFunc->editMFCustomSequence()->push_back(4);
+        AgeFunc->editMFCustomSequence()->push_back(3);
+        AgeFunc->editMFCustomSequence()->push_back(2);
+        AgeFunc->editMFCustomSequence()->push_back(1);
 
+        //Particle System Drawer - 
+        QuadSequenceParticleSystemDrawerRecPtr ExampleParticleSystemDrawer = QuadSequenceParticleSystemDrawer::create();
+        // image dimensions (in pixels) are required if there is a border on the images.
+        ExampleParticleSystemDrawer->setImageDimensions(Vec2us(780,520));
+        // The "dimensions" of the sequence contained in the image.  For this image,
+        // there are 3 images in the "x" direction, and two in the "y" direction, for a 
+        // total of 6.
+        ExampleParticleSystemDrawer->setSequenceDimensions(Vec2b(3,2));
+        // width of the border on each side of the image, in pixels.
+        ExampleParticleSystemDrawer->setBorderOffsets(Vec2b(0,0));
+        // this is the age function we just created above.
+        ExampleParticleSystemDrawer->setSequenceFunction(AgeFunc);
 
-        BurstParticleGeneratorRecPtr ExampleBurstGenerator = BurstParticleGenerator::create();
+        RateParticleGeneratorRecPtr ExampleParticleGenerator = RateParticleGenerator::create();
         //Attach the function objects to the Generator
-        ExampleBurstGenerator->setPositionDistribution(createPositionDistribution());
-        ExampleBurstGenerator->setLifespanDistribution(createLifespanDistribution());
-        ExampleBurstGenerator->setBurstAmount(10.0);
-        ExampleBurstGenerator->setVelocityDistribution(createVelocityDistribution());
-        //ExampleBurstGenerator->setAccelerationDistribution(createAccelerationDistribution());
-        ExampleBurstGenerator->setSizeDistribution(createSizeDistribution());
+        ExampleParticleGenerator->setPositionDistribution(createPositionDistribution());
+        ExampleParticleGenerator->setLifespanDistribution(createLifespanDistribution());
+        ExampleParticleGenerator->setVelocityDistribution(createVelocityDistribution());
+        ExampleParticleGenerator->setAccelerationDistribution(createAccelerationDistribution());
+        ExampleParticleGenerator->setSizeDistribution(createSizeDistribution());
+        ExampleParticleGenerator->setGenerationRate(40.0f);
 
         //Particle System Node
         ParticleSystemCoreRefPtr ParticleNodeCore = ParticleSystemCore::create();
         ParticleNodeCore->setSystem(ExampleParticleSystem);
         ParticleNodeCore->setDrawer(ExampleParticleSystemDrawer);
         ParticleNodeCore->setMaterial(PSMaterial);
+        ParticleNodeCore->setSortingMode(ParticleSystemCore::BACK_TO_FRONT);
 
         NodeRefPtr ParticleNode = Node::create();
         ParticleNode->setCore(ParticleNodeCore);
 
-        //Ground Node
-        NodeRefPtr GoundNode = makePlane(30.0,30.0,10,10);
+        ExampleParticleSystem->addParticle(Pnt3f(10.0,0.0,0.0),
+                                           Vec3f(0.0,1.0,0.0),
+                                           Color4f(1.0,1.0,1.0,1.0),
+                                           Vec3f(1.0,1.0,1.0),
+                                           0.01,
+                                           Vec3f(0.0,0.0,0.0),
+                                           Vec3f(0.0,0.0,0.0));
 
-        Matrix GroundTransformation;
-        GroundTransformation.setRotate(Quaternion(Vec3f(1.0f,0.0,0.0), -3.14195f));
-        TransformRefPtr GroundTransformCore = Transform::create();
-        GroundTransformCore->setMatrix(GroundTransformation);
+        ExampleParticleSystem->addParticle(Pnt3f(-10.0,0.0,0.0),
+                                           Vec3f(0.0,1.0,0.0),
+                                           Color4f(1.0,1.0,1.0,1.0),
+                                           Vec3f(1.0,1.0,1.0),
+                                           0.01,
+                                           Vec3f(0.0,0.0,0.0),
+                                           Vec3f(0.0,0.0,0.0));
 
-        NodeRefPtr GroundTransformNode = Node::create();
-        GroundTransformNode->setCore(GroundTransformCore);
-        GroundTransformNode->addChild(GoundNode);
-
-
+        ExampleParticleSystem->pushToGenerators(ExampleParticleGenerator);
         // Make Main Scene Node and add the Torus
-        NodeRefPtr scene = Node::create();
-        scene->setCore(Group::create());
+        NodeRefPtr scene = makeCoredNode<Group>();
         scene->addChild(ParticleNode);
-        scene->addChild(GroundTransformNode);
 
         TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1,
                                                     &sceneManager,
-                                                    ExampleParticleSystem.get(),
-                                                    ExampleBurstGenerator.get(),
-                                                    ExampleParticleSystemDrawer.get()));
+                                                    AgeFunc.get()));
+
         sceneManager.setRoot(scene);
 
         // Show the whole Scene
         sceneManager.showAll();
-
 
         //Open Window
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
                                    WinSize,
-                                   "07AgeSizeParticleAffector");
+                                   "05a - QuadSequenceParticleDrawer");
 
         //Enter main Loop
         TutorialWindow->mainLoop();
-
     }
+
     osgExit();
 
     return 0;
@@ -297,7 +265,6 @@ int main(int argc, char **argv)
 
 
 // Callback functions
-
 
 // Redraw the window
 void display(SimpleSceneManager *mgr)
@@ -313,8 +280,6 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr)
 
 Distribution3DRefPtr createPositionDistribution(void)
 {
-
-
     //Sphere Distribution
     SphereDistribution3DRefPtr TheSphereDistribution = SphereDistribution3D::create();
     TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
@@ -331,23 +296,19 @@ Distribution3DRefPtr createPositionDistribution(void)
 
 Distribution3DRefPtr createVelocityDistribution(void)
 {
-
-
     //Sphere Distribution
     SphereDistribution3DRefPtr TheSphereDistribution = SphereDistribution3D::create();
     TheSphereDistribution->setCenter(Pnt3f(0.0,0.0,0.0));
-    TheSphereDistribution->setInnerRadius(3.0);
-    TheSphereDistribution->setOuterRadius(6.0);
-    TheSphereDistribution->setMinTheta(-3.141950);
-    TheSphereDistribution->setMaxTheta(3.141950);
+    TheSphereDistribution->setInnerRadius(2.0);
+    TheSphereDistribution->setOuterRadius(5.0);
+    TheSphereDistribution->setMinTheta(-1.5);
+    TheSphereDistribution->setMaxTheta(1.5);
     TheSphereDistribution->setMinZ(0.0);
-    TheSphereDistribution->setMaxZ(0.0);
+    TheSphereDistribution->setMaxZ(1.0);
     TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::VOLUME);
 
     return TheSphereDistribution;
 }
-
-
 
 Distribution1DRefPtr createLifespanDistribution(void)
 {
@@ -371,10 +332,10 @@ Distribution3DRefPtr createAccelerationDistribution(void)
 
 Distribution3DRefPtr createSizeDistribution(void)
 {
-    //Sphere Distribution
+    //Line Distribution
     LineDistribution3DRefPtr TheLineDistribution = LineDistribution3D::create();
-    TheLineDistribution->setPoint1(Pnt3f(5.0,5.0,1.0));
-    TheLineDistribution->setPoint2(Pnt3f(10.0,10.0,1.0));
+    TheLineDistribution->setPoint1(Pnt3f(0.2,0.2,1.0));
+    TheLineDistribution->setPoint2(Pnt3f(1.0,1.0,1.0));
 
     return TheLineDistribution;
 }

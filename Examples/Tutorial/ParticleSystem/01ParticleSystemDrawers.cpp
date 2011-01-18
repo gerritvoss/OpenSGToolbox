@@ -26,13 +26,15 @@ OSG_USING_NAMESPACE
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-//Particle System Drawer
-PointParticleSystemDrawer* ExamplePointDrawer;
-LineParticleSystemDrawer* ExampleLineDrawer;
-QuadParticleSystemDrawer* ExampleQuadDrawer;
-DiscParticleSystemDrawer* ExampleDiscDrawer;
 
-void keyTyped(KeyEventDetails* const details, SimpleSceneManager *mgr, ParticleSystemCore* const core)
+void keyTyped(KeyEventDetails* const details,
+              SimpleSceneManager *mgr,
+              ParticleSystemCore* const core,
+              PointParticleSystemDrawer* ExamplePointDrawer,
+              LineParticleSystemDrawer* ExampleLineDrawer,
+              QuadParticleSystemDrawer* ExampleQuadDrawer,
+              DiscParticleSystemDrawer* ExampleDiscDrawer
+             )
 {
     static bool StatisticsOn(false);
     if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
@@ -82,6 +84,26 @@ void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -105,6 +127,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
         //Particle System Material
         PointChunkRecPtr PSPointChunk = PointChunk::create();
@@ -144,30 +167,26 @@ int main(int argc, char **argv)
 
         //Particle System Drawer
         //Point
-        PointParticleSystemDrawerRecPtr ExamplePointParticleSystemDrawer = PointParticleSystemDrawer::create();
-        ExamplePointDrawer = ExamplePointParticleSystemDrawer;
+        PointParticleSystemDrawerRecPtr ExamplePointDrawer = PointParticleSystemDrawer::create();
         //ExamplePointParticleSystemDrawer->setForcePerParticleSizing(true);
 
         //Line
-        LineParticleSystemDrawerRecPtr ExampleLineParticleSystemDrawer = LineParticleSystemDrawer::create();
-        ExampleLineDrawer = ExampleLineParticleSystemDrawer;
-        ExampleLineParticleSystemDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
-        ExampleLineParticleSystemDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
+        LineParticleSystemDrawerRecPtr ExampleLineDrawer = LineParticleSystemDrawer::create();
+        ExampleLineDrawer->setLineDirectionSource(LineParticleSystemDrawer::DIRECTION_NORMAL);//DIRECTION_VELOCITY_CHANGE);
+        ExampleLineDrawer->setLineLengthSource(LineParticleSystemDrawer::LENGTH_SIZE_X);
         //Quad
-        QuadParticleSystemDrawerRecPtr ExampleQuadParticleSystemDrawer = QuadParticleSystemDrawer::create();
-        ExampleQuadDrawer = ExampleQuadParticleSystemDrawer;
+        QuadParticleSystemDrawerRecPtr ExampleQuadDrawer = QuadParticleSystemDrawer::create();
 
         //Disc
-        DiscParticleSystemDrawerRecPtr ExampleDiscParticleSystemDrawer = DiscParticleSystemDrawer::create();
-        ExampleDiscDrawer = ExampleDiscParticleSystemDrawer;
-        ExampleDiscParticleSystemDrawer->setSegments(16);
-        ExampleDiscParticleSystemDrawer->setCenterAlpha(1.0);
-        ExampleDiscParticleSystemDrawer->setEdgeAlpha(0.0);
+        DiscParticleSystemDrawerRecPtr ExampleDiscDrawer = DiscParticleSystemDrawer::create();
+        ExampleDiscDrawer->setSegments(16);
+        ExampleDiscDrawer->setCenterAlpha(1.0);
+        ExampleDiscDrawer->setEdgeAlpha(0.0);
 
         //Particle System Node
         ParticleSystemCoreRecPtr ParticleNodeCore = ParticleSystemCore::create();
         ParticleNodeCore->setSystem(ExampleParticleSystem);
-        ParticleNodeCore->setDrawer(ExampleLineParticleSystemDrawer);
+        ParticleNodeCore->setDrawer(ExampleLineDrawer);
         ParticleNodeCore->setMaterial(PSMaterial);
 
         NodeRecPtr ParticleNode = Node::create();
@@ -181,7 +200,14 @@ int main(int argc, char **argv)
 
         sceneManager.setRoot(scene);
 
-        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1, &sceneManager, ParticleNodeCore.get()));
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1,
+                                                    &sceneManager,
+                                                    ParticleNodeCore.get(),
+                                                    ExamplePointDrawer,
+                                                    ExampleLineDrawer,
+                                                    ExampleQuadDrawer,
+                                                    ExampleDiscDrawer
+                                                   ));
 
         // Show the whole Scene
         sceneManager.showAll();

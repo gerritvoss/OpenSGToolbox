@@ -10,7 +10,6 @@
 #include "OSGWindowUtils.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGVector.h"
 
 #include "OSGParticleSystem.h"
@@ -18,7 +17,6 @@
 #include "OSGPointParticleSystemDrawer.h"
 #include "OSGGeometryCollisionParticleSystemAffector.h"
 #include "OSGRateParticleGenerator.h"
-#include "OSGParticleCollisionListener.h"
 
 #include "OSGLineDistribution3D.h"
 #include "OSGGaussianNormalDistribution1D.h"
@@ -32,194 +30,178 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 Distribution3DRefPtr createPositionDistribution(void);
 Distribution1DRefPtr createLifespanDistribution(void);
 Distribution3DRefPtr createVelocityDistribution(void);
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void particleCollision(ParticleGeometryCollisionEventDetails* const details)
 {
-  public:
+    ParticleSystemRefPtr TheSystem= details->getSystem();
+    UInt32 ParticleIndex(details->getParticleIndex());
 
-    virtual void keyPressed(const KeyEventUnrecPtr e)
+    Vec3f Reflect(TheSystem->getVelocity(ParticleIndex).reflect(details->getHitNormal()));
+    TheSystem->setVelocity(Reflect, ParticleIndex);
+    TheSystem->setPosition(details->getHitPoint() + (0.00001f*Reflect), ParticleIndex);
+}
+
+void keyTyped(KeyEventDetails* const details,
+              SimpleSceneManager *mgr
+             )
+{
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
+
+void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
         {
-            TutorialWindow->closeWindow();
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
-
-    virtual void keyReleased(const KeyEventUnrecPtr e)
+    else if(details->getUnitsToScroll() < 0)
     {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
     }
-
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-    }
-};
-
-class TutorialMouseListener : public MouseListener
-{
-  public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialMouseMotionListener : public MouseMotionListener
-{
-  public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-class TutorialParticleCollisionListener : public ParticleGeometryCollisionListener
-{
-    virtual void particleCollision(const ParticleGeometryCollisionEventUnrecPtr ColE)
-    {
-        ParticleSystemRefPtr TheSystem= ColE->getSystem();
-        UInt32 ParticleIndex(ColE->getParticleIndex());
-
-        Vec3f Reflect(TheSystem->getVelocity(ParticleIndex).reflect(ColE->getHitNormal()));
-        TheSystem->setVelocity(Reflect, ParticleIndex);
-        TheSystem->setPosition(ColE->getHitPoint() + (0.00001f*Reflect), ParticleIndex);
-
-    }
-};
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        //Attach to events
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1, &sceneManager));
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
+        //Particle System
+        ParticleSystemRefPtr ExampleParticleSystem = ParticleSystem::create();
+        ExampleParticleSystem->attachUpdateProducer(TutorialWindow);
 
+        PointParticleSystemDrawerRefPtr ExamplePointParticleSystemDrawer = PointParticleSystemDrawer::create();
+        //NodeRefPtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
+        //NodeRefPtr CollisionNode = makeBox(5.0,5.0,5.0,1,1,1);//makeSphere(4,10.0f);
+        NodeRefPtr CollisionNode = makeSphere(2,4.0f);
 
-    //Particle System
-    ParticleSystemRefPtr ExampleParticleSystem = OSG::ParticleSystem::create();
-    ExampleParticleSystem->attachUpdateListener(TutorialWindow);
+        //Particle System Material
+        PointChunkRefPtr PSPointChunk = PointChunk::create();
+        PSPointChunk->setSize(5.0f);
+        PSPointChunk->setSmooth(true);
+        BlendChunkRefPtr PSBlendChunk = BlendChunk::create();
+        PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
+        PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 
-    PointParticleSystemDrawerRefPtr ExamplePointParticleSystemDrawer = OSG::PointParticleSystemDrawer::create();
-    //NodeRefPtr ParticlePrototypeNode = makeTorus(1.0,4.0,16,16);
-    //NodeRefPtr CollisionNode = makeBox(5.0,5.0,5.0,1,1,1);//makeSphere(4,10.0f);
-    NodeRefPtr CollisionNode = makeSphere(2,4.0f);
+        MaterialChunkRefPtr PSMaterialChunkChunk = MaterialChunk::create();
+        PSMaterialChunkChunk->setAmbient(Color4f(1.0f,0.0f,0.0f,1.0f));
+        PSMaterialChunkChunk->setDiffuse(Color4f(1.0f,0.0f,0.0f,1.0f));
+        PSMaterialChunkChunk->setSpecular(Color4f(1.0f,0.0f,0.0f,1.0f));
+        PSMaterialChunkChunk->setColorMaterial(GL_NONE);
+        //PSMaterialChunkChunk->setLit(false);
 
-    //Particle System Material
-    PointChunkRefPtr PSPointChunk = PointChunk::create();
-    PSPointChunk->setSize(5.0f);
-    PSPointChunk->setSmooth(true);
-    BlendChunkRefPtr PSBlendChunk = BlendChunk::create();
-    PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
-    PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
+        ChunkMaterialRefPtr PSMaterial = ChunkMaterial::create();
+        PSMaterial->addChunk(PSPointChunk);
+        PSMaterial->addChunk(PSMaterialChunkChunk);
+        PSMaterial->addChunk(PSBlendChunk);
 
-    MaterialChunkRefPtr PSMaterialChunkChunk = MaterialChunk::create();
-    PSMaterialChunkChunk->setAmbient(Color4f(1.0f,0.0f,0.0f,1.0f));
-    PSMaterialChunkChunk->setDiffuse(Color4f(1.0f,0.0f,0.0f,1.0f));
-    PSMaterialChunkChunk->setSpecular(Color4f(1.0f,0.0f,0.0f,1.0f));
-    PSMaterialChunkChunk->setColorMaterial(GL_NONE);
-    //PSMaterialChunkChunk->setLit(false);
+        ParticleSystemCoreRefPtr ParticleNodeCore = ParticleSystemCore::create();
+        ParticleNodeCore->setSystem(ExampleParticleSystem);
+        ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
+        ParticleNodeCore->setMaterial(PSMaterial);
 
-    ChunkMaterialRefPtr PSMaterial = ChunkMaterial::create();
-    PSMaterial->addChunk(PSPointChunk);
-    PSMaterial->addChunk(PSMaterialChunkChunk);
-    PSMaterial->addChunk(PSBlendChunk);
+        NodeRefPtr ParticleNode = Node::create();
+        ParticleNode->setCore(ParticleNodeCore);
 
-    ParticleSystemCoreRefPtr ParticleNodeCore = OSG::ParticleSystemCore::create();
-    ParticleNodeCore->setSystem(ExampleParticleSystem);
-    ParticleNodeCore->setDrawer(ExamplePointParticleSystemDrawer);
-    ParticleNodeCore->setMaterial(PSMaterial);
+        //Generator
+        //Attach the function objects to the Generator
+        RateParticleGeneratorRefPtr ExampleGenerator= RateParticleGenerator::create();
+        ExampleGenerator->setPositionDistribution(createPositionDistribution());
+        ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
+        ExampleGenerator->setGenerationRate(20.0);
+        ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
 
-    NodeRefPtr ParticleNode = OSG::Node::create();
-    ParticleNode->setCore(ParticleNodeCore);
+        //Geometry Collision Affector
+        GeometryCollisionParticleSystemAffectorRefPtr ExampleGeometryCollisionParticleSystemAffector = GeometryCollisionParticleSystemAffector::create();
+        ExampleGeometryCollisionParticleSystemAffector->setCollisionNode(CollisionNode);
 
-    //Generator
-    //Attach the function objects to the Generator
-    RateParticleGeneratorRefPtr ExampleGenerator= RateParticleGenerator::create();
-    ExampleGenerator->setPositionDistribution(createPositionDistribution());
-    ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
-    ExampleGenerator->setGenerationRate(20.0);
-    ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
+        ExampleGeometryCollisionParticleSystemAffector->connectParticleCollision(boost::bind(particleCollision, _1));
 
-    //Geometry Collision Affector
-    GeometryCollisionParticleSystemAffectorRefPtr ExampleGeometryCollisionParticleSystemAffector = GeometryCollisionParticleSystemAffector::create();
-    ExampleGeometryCollisionParticleSystemAffector->setCollisionNode(CollisionNode);
-
-    TutorialParticleCollisionListener TheCollisionListener;
-    ExampleGeometryCollisionParticleSystemAffector->addParticleGeometryCollisionListener(&TheCollisionListener);
-
-    ExampleParticleSystem->pushToSystemAffectors(ExampleGeometryCollisionParticleSystemAffector);
-    ExampleParticleSystem->pushToGenerators(ExampleGenerator);
-
-
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-    scene->setCore(OSG::Group::create());
-    scene->addChild(ParticleNode);
-    scene->addChild(CollisionNode);
-
-    mgr->setRoot(scene);
-
-    // Show the whole Scene
-    mgr->showAll();
+        ExampleParticleSystem->pushToSystemAffectors(ExampleGeometryCollisionParticleSystemAffector);
+        ExampleParticleSystem->pushToGenerators(ExampleGenerator);
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-                               WinSize,
-                               "13CollisionGeometry");
+        // Make Main Scene Node and add the Torus
+        NodeRefPtr scene = Node::create();
+        scene->setCore(Group::create());
+        scene->addChild(ParticleNode);
+        scene->addChild(CollisionNode);
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        sceneManager.setRoot(scene);
 
+        // Show the whole Scene
+        sceneManager.showAll();
+
+
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "13CollisionGeometry");
+
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+
+    }
     osgExit();
 
     return 0;
@@ -230,13 +212,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

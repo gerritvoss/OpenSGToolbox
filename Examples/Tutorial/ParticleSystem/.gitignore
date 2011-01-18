@@ -3,6 +3,8 @@
 03RateParticleGenerator
 04BurstParticleGenerator
 05QuadParticleDrawer
+05aQuadSequenceParticleDrawer
+05bQuadSequenceParticleDrawer
 06Explosion
 07AgeSizeParticleAffector
 08DistanceFadeAffector
