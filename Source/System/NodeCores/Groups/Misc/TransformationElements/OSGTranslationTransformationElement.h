@@ -79,7 +79,7 @@ class OSG_GROUP_DLLMAPPING TranslationTransformationElement : public Translation
 
     /*! \}                                                                 */
 
-    virtual void calcMatrix(Matrixr &result) const;
+    virtual void calcMatrix(Matrix &result) const;
 
     /*=========================  PROTECTED  ===============================*/
 

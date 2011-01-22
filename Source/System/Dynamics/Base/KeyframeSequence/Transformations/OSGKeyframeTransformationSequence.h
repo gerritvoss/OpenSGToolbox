@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGKeyframeTransformationSequenceBase.h"
-#include "OSGVector.h"
+#include "OSGMatrix.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,7 +62,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeTransformationSequence : public Keyfram
     typedef KeyframeTransformationSequenceBase Inherited;
     typedef KeyframeTransformationSequence     Self;
 
-    typedef Matrixr          GenericType;
+    typedef Matrix          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

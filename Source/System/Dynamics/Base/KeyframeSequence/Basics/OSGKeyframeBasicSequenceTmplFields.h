@@ -89,7 +89,10 @@ struct FieldTraits<KeyframeBasicSequenceString *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeBasicSequenceString *, KeyframeBasicSequenceStringPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceString *, KeyframeBasicSequenceStringPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceString *,
+                               KeyframeBasicSequenceStringPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -135,7 +138,10 @@ struct FieldTraits<KeyframeBasicSequenceBool *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeBasicSequenceBool *, KeyframeBasicSequenceBoolPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceBool *, KeyframeBasicSequenceBoolPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceBool *,
+                               KeyframeBasicSequenceBoolPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -181,7 +187,10 @@ struct FieldTraits<KeyframeBasicSequenceGLenum *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeBasicSequenceGLenum *, KeyframeBasicSequenceGLenumPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceGLenum *, KeyframeBasicSequenceGLenumPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceGLenum *,
+                               KeyframeBasicSequenceGLenumPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -227,7 +236,10 @@ struct FieldTraits<KeyframeBasicSequenceBoxVolume *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeBasicSequenceBoxVolume *, KeyframeBasicSequenceBoxVolumePtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceBoxVolume *, KeyframeBasicSequenceBoxVolumePtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeBasicSequenceBoxVolume *,
+                               KeyframeBasicSequenceBoxVolumePtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

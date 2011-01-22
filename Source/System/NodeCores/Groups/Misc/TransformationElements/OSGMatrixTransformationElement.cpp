@@ -76,7 +76,7 @@ void MatrixTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void MatrixTransformationElement::calcMatrix(Matrixr &result) const
+void MatrixTransformationElement::calcMatrix(Matrix &result) const
 {
     result = getMatrix();
 }

@@ -83,9 +83,9 @@ class OSG_GROUP_DLLMAPPING ScreenTransform : public ScreenTransformBase
     /*! \name                   Transformation                             */
     /*! \{                                                                 */
 
-    virtual void accumulateMatrix(Matrixr &result);
+    virtual void accumulateMatrix(Matrix &result);
 
-    void calcMatrix(const Matrixr &toWorld, Viewport* const theViewport);
+    void calcMatrix(const Matrix &toWorld, Viewport* const theViewport);
 
 
     /*! \}                                                                 */
@@ -139,7 +139,7 @@ class OSG_GROUP_DLLMAPPING ScreenTransform : public ScreenTransformBase
 
   private:
 
-    Matrixr _Transform;
+    Matrix _Transform;
 
     friend class FieldContainer;
     friend class ScreenTransformBase;

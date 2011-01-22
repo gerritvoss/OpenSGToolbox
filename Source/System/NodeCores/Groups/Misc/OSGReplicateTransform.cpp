@@ -101,9 +101,9 @@ void ReplicateTransform::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ReplicateTransform::calcMatrix(const Matrixr        &mToWorld)
+void ReplicateTransform::calcMatrix(const Matrix        &mToWorld)
 {
-    Matrixr prevValue(_invWorld);
+    Matrix prevValue(_invWorld);
     _invWorld.invertFrom(mToWorld);
     if(getTarget() != NULL)
     {
@@ -116,7 +116,7 @@ void ReplicateTransform::calcMatrix(const Matrixr        &mToWorld)
     }
 }
 
-void ReplicateTransform::accumulateMatrix(Matrixr &result)
+void ReplicateTransform::accumulateMatrix(Matrix &result)
 {
     result.mult(_invWorld);
 }

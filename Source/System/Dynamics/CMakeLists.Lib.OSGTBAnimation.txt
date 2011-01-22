@@ -64,8 +64,14 @@ OSG_ADD_DIRECTORY("Morph")
 CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Def.cpp.in"
                "${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}/${PROJECT_NAME}Def.cpp")
 OSG_ADD_DIRECTORY("${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}")
+
 ##############################################################################
 # setup build
 ##############################################################################
+
+##############################################################################
+# setup documentation
+##############################################################################
+SET(OSG_${PROJECT_NAME}_DOC_EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../Examples/Tutorial/Animation)
 
 OSG_SETUP_PROJECT("OSG_COMPILETBANIMATIONLIB")

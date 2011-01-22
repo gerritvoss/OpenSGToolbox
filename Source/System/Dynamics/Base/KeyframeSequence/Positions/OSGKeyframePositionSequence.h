@@ -62,7 +62,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframePositionSequence : public KeyframePosit
     typedef KeyframePositionSequenceBase Inherited;
     typedef KeyframePositionSequence     Self;
 
-    typedef Pnt3r          GenericType;
+    typedef Pnt3f          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

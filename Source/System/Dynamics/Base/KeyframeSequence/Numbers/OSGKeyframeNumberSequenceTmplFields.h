@@ -90,7 +90,10 @@ struct FieldTraits<KeyframeNumberSequenceUInt8 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceUInt8 *, KeyframeNumberSequenceUInt8Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt8 *, KeyframeNumberSequenceUInt8Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt8 *,
+                               KeyframeNumberSequenceUInt8Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -136,7 +139,10 @@ struct FieldTraits<KeyframeNumberSequenceUInt16 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceUInt16 *, KeyframeNumberSequenceUInt16Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt16 *, KeyframeNumberSequenceUInt16Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt16 *,
+                               KeyframeNumberSequenceUInt16Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -182,7 +188,10 @@ struct FieldTraits<KeyframeNumberSequenceUInt32 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceUInt32 *, KeyframeNumberSequenceUInt32Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt32 *, KeyframeNumberSequenceUInt32Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt32 *,
+                               KeyframeNumberSequenceUInt32Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -228,7 +237,10 @@ struct FieldTraits<KeyframeNumberSequenceUInt64 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceUInt64 *, KeyframeNumberSequenceUInt64Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt64 *, KeyframeNumberSequenceUInt64Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceUInt64 *,
+                               KeyframeNumberSequenceUInt64Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
@@ -276,7 +288,10 @@ struct FieldTraits<KeyframeNumberSequenceInt8 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceInt8 *, KeyframeNumberSequenceInt8Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt8 *, KeyframeNumberSequenceInt8Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt8 *,
+                               KeyframeNumberSequenceInt8Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -322,7 +337,10 @@ struct FieldTraits<KeyframeNumberSequenceInt16 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceInt16 *, KeyframeNumberSequenceInt16Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt16 *, KeyframeNumberSequenceInt16Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt16 *,
+                               KeyframeNumberSequenceInt16Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -368,7 +386,10 @@ struct FieldTraits<KeyframeNumberSequenceInt32 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceInt32 *, KeyframeNumberSequenceInt32Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt32 *, KeyframeNumberSequenceInt32Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt32 *,
+                               KeyframeNumberSequenceInt32Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -414,7 +435,10 @@ struct FieldTraits<KeyframeNumberSequenceInt64 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceInt64 *, KeyframeNumberSequenceInt64Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt64 *, KeyframeNumberSequenceInt64Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceInt64 *,
+                               KeyframeNumberSequenceInt64Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -463,7 +487,10 @@ struct FieldTraits<KeyframeNumberSequenceReal16 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceReal16 *, KeyframeNumberSequenceReal16Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal16 *, KeyframeNumberSequenceReal16Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal16 *,
+                               KeyframeNumberSequenceReal16Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -509,7 +536,10 @@ struct FieldTraits<KeyframeNumberSequenceReal32 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceReal32 *, KeyframeNumberSequenceReal32Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal32 *, KeyframeNumberSequenceReal32Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal32 *,
+                               KeyframeNumberSequenceReal32Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -555,7 +585,10 @@ struct FieldTraits<KeyframeNumberSequenceFixed32 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceFixed32 *, KeyframeNumberSequenceFixed32Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceFixed32 *, KeyframeNumberSequenceFixed32Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceFixed32 *,
+                               KeyframeNumberSequenceFixed32Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -601,7 +634,10 @@ struct FieldTraits<KeyframeNumberSequenceReal64 *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeNumberSequenceReal64 *, KeyframeNumberSequenceReal64Ptr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal64 *, KeyframeNumberSequenceReal64Ptr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeNumberSequenceReal64 *,
+                               KeyframeNumberSequenceReal64Ptr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

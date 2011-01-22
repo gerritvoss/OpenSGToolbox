@@ -149,7 +149,7 @@ void StackedTransform::updateTransform(void)
     invalidateVolume();
 }
 
-void StackedTransform::accumulateMatrix(Matrixr &result)
+void StackedTransform::accumulateMatrix(Matrix &result)
 {
     result.mult(_Transformation);
 }

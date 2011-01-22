@@ -43,6 +43,7 @@
 #endif
 
 #include "OSGDistribution3DBase.h"
+#include "OSGVector.h"
 
 OSG_BEGIN_NAMESPACE
 

@@ -79,7 +79,7 @@ class OSG_GROUP_DLLMAPPING LookAtTransformationElement : public LookAtTransforma
 
     /*! \}                                                                 */
 
-    virtual void calcMatrix(Matrixr &result) const;
+    virtual void calcMatrix(Matrix &result) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

@@ -102,7 +102,7 @@ void ScreenTransform::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ScreenTransform::calcMatrix(const Matrixr &toWorld, Viewport* const theViewport)
+void ScreenTransform::calcMatrix(const Matrix &toWorld, Viewport* const theViewport)
 {
     //Get the local to world transformation
     Matrix BeaconToWorld;
@@ -119,7 +119,7 @@ void ScreenTransform::calcMatrix(const Matrixr &toWorld, Viewport* const theView
     ViewportCamera->getViewing(WorldToView, theViewport->getPixelWidth(), theViewport->getPixelHeight());
 
     //Store the previous value
-    Matrixr prevValue(_Transform);
+    Matrix prevValue(_Transform);
     
     //Invert the current Model Transformation
     if(getInvertWorldTransform())
@@ -227,7 +227,7 @@ void ScreenTransform::calcMatrix(const Matrixr &toWorld, Viewport* const theView
     }
 }
 
-void ScreenTransform::accumulateMatrix(Matrixr &result)
+void ScreenTransform::accumulateMatrix(Matrix &result)
 {
     result.mult(_Transform);
 }

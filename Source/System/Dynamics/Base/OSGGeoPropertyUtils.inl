@@ -27,6 +27,7 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 #include "OSGGL.h"
+#include "OSGQuaternion.h"
 
 OSG_BEGIN_NAMESPACE
 

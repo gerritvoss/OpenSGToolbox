@@ -77,7 +77,7 @@ void SkewTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void SkewTransformationElement::calcMatrix(Matrixr &result) const
+void SkewTransformationElement::calcMatrix(Matrix &result) const
 {
 	MatrixSkew(result,getRotationAxis(),getTranslationAxis(),getAngle());
 }

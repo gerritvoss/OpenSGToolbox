@@ -46,6 +46,7 @@
 #include <OSGConfig.h>
 
 #include "OSGRotationTransformationElement.h"
+#include "OSGQuaternion.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -76,7 +77,7 @@ void RotationTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void RotationTransformationElement::calcMatrix(Matrixr &result) const
+void RotationTransformationElement::calcMatrix(Matrix &result) const
 {
     result.setTransform(Quaternion(getAxis(),osgDegree2Rad(getAngle())));
 }

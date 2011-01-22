@@ -62,7 +62,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeVectorSequence : public KeyframeVectorS
     typedef KeyframeVectorSequenceBase Inherited;
     typedef KeyframeVectorSequence     Self;
 
-    typedef Vec3r          GenericType;
+    typedef Vec3f          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

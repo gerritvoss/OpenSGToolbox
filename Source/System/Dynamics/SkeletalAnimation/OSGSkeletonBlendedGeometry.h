@@ -85,17 +85,17 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
     /*! \name               calc the inverse matrix                        */
     /*! \{                                                                 */
 
-    void initMatrix(const Matrixr        &mToWorld);
+    void initMatrix(const Matrix        &mToWorld);
 
-    void calcMatrix(const Matrixr        &mToWorld,
-                          Matrixr        &mResult);
+    void calcMatrix(const Matrix        &mToWorld,
+                          Matrix        &mResult);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Transformation                             */
     /*! \{                                                                 */
 
-    virtual void accumulateMatrix(Matrixr &result);
+    virtual void accumulateMatrix(Matrix &result);
 
     /*! \}                                                                 */
     
@@ -238,7 +238,7 @@ class OSG_TBANIMATION_DLLMAPPING SkeletonBlendedGeometry : public SkeletonBlende
 
   private:
 
-    Matrixr _invWorld;
+    Matrix _invWorld;
 
     friend class FieldContainer;
     friend class SkeletonBlendedGeometryBase;

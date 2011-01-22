@@ -82,9 +82,9 @@ class OSG_GROUP_DLLMAPPING ReplicateTransform : public ReplicateTransformBase
     /*! \name                   Transformation                             */
     /*! \{                                                                 */
 
-    virtual void accumulateMatrix(Matrixr &result);
+    virtual void accumulateMatrix(Matrix &result);
 
-    void calcMatrix(const Matrixr        &mToWorld);
+    void calcMatrix(const Matrix        &mToWorld);
 
 
     /*! \}                                                                 */
@@ -138,7 +138,7 @@ class OSG_GROUP_DLLMAPPING ReplicateTransform : public ReplicateTransformBase
 
   private:
 
-    Matrixr _invWorld;
+    Matrix _invWorld;
 
     friend class FieldContainer;
     friend class ReplicateTransformBase;

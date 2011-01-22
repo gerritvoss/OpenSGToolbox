@@ -41,15 +41,15 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void TransformationElement::accumulateMatrix(Matrixr &result) const
+void TransformationElement::accumulateMatrix(Matrix &result) const
 {
     result.mult(calcMatrix());
 }
 
 inline
-Matrixr TransformationElement::calcMatrix(void) const
+Matrix TransformationElement::calcMatrix(void) const
 {
-    Matrixr Result;
+    Matrix Result;
 
     calcMatrix(Result);
 

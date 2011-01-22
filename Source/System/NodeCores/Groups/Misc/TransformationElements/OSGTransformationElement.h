@@ -43,6 +43,7 @@
 #endif
 
 #include "OSGTransformationElementBase.h"
+#include "OSGMatrix.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -79,11 +80,11 @@ class OSG_GROUP_DLLMAPPING TransformationElement : public TransformationElementB
 
     /*! \}                                                                 */
 
-    void accumulateMatrix(Matrixr &result) const;
+    void accumulateMatrix(Matrix &result) const;
 
-    virtual void calcMatrix(Matrixr &result) const = 0;
+    virtual void calcMatrix(Matrix &result) const = 0;
 
-    Matrixr calcMatrix(void) const;
+    Matrix calcMatrix(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

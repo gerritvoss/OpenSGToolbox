@@ -77,7 +77,7 @@ void LookAtTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void LookAtTransformationElement::calcMatrix(Matrixr &result) const
+void LookAtTransformationElement::calcMatrix(Matrix &result) const
 {
     MatrixLookAt(result, getEyePosition(), getLookAtPosition(), getUpDirection());
 }

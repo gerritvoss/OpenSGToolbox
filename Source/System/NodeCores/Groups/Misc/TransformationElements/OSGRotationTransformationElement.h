@@ -78,7 +78,7 @@ class OSG_GROUP_DLLMAPPING RotationTransformationElement : public RotationTransf
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    virtual void calcMatrix(Matrixr &result) const;
+    virtual void calcMatrix(Matrix &result) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

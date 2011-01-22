@@ -76,7 +76,7 @@ void TranslationTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void TranslationTransformationElement::calcMatrix(Matrixr &result) const
+void TranslationTransformationElement::calcMatrix(Matrix &result) const
 {
     result.setTransform(getTranslation());
 }

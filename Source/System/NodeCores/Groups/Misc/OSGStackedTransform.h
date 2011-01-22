@@ -92,7 +92,7 @@ class OSG_GROUP_DLLMAPPING StackedTransform : public StackedTransformBase
     /*! \name                   Transformation                             */
     /*! \{                                                                 */
 
-    virtual void accumulateMatrix(Matrixr &result);
+    virtual void accumulateMatrix(Matrix &result);
 
     TransformationElement* getElement(const std::string& Name) const;
 

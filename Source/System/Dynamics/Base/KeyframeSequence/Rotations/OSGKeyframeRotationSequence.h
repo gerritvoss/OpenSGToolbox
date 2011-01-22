@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGKeyframeRotationSequenceBase.h"
-#include "OSGVector.h"
+#include "OSGQuaternion.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,7 +62,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeRotationSequence : public KeyframeRotat
     typedef KeyframeRotationSequenceBase Inherited;
     typedef KeyframeRotationSequence     Self;
 
-    typedef Quaternionr          GenericType;
+    typedef Quaternion          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

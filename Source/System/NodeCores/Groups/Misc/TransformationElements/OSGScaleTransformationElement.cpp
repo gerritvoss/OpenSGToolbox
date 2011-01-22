@@ -76,7 +76,7 @@ void ScaleTransformationElement::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-void ScaleTransformationElement::calcMatrix(Matrixr &result) const
+void ScaleTransformationElement::calcMatrix(Matrix &result) const
 {
     result.setIdentity();
     result.setScale(getScale());

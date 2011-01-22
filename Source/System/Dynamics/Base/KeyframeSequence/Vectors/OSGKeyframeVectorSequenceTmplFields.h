@@ -89,7 +89,10 @@ struct FieldTraits<KeyframeVectorSequenceVec2s *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec2s *, KeyframeVectorSequenceVec2sPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2s *, KeyframeVectorSequenceVec2sPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2s *,
+                               KeyframeVectorSequenceVec2sPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -136,7 +139,10 @@ struct FieldTraits<KeyframeVectorSequenceVec3s *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec3s *, KeyframeVectorSequenceVec3sPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3s *, KeyframeVectorSequenceVec3sPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3s *,
+                               KeyframeVectorSequenceVec3sPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -182,7 +188,10 @@ struct FieldTraits<KeyframeVectorSequenceVec4s *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec4s *, KeyframeVectorSequenceVec4sPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4s *, KeyframeVectorSequenceVec4sPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4s *,
+                               KeyframeVectorSequenceVec4sPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -228,7 +237,10 @@ struct FieldTraits<KeyframeVectorSequenceVec1f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec1f *, KeyframeVectorSequenceVec1fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec1f *, KeyframeVectorSequenceVec1fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec1f *,
+                               KeyframeVectorSequenceVec1fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -273,7 +285,10 @@ struct FieldTraits<KeyframeVectorSequenceVec2f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec2f *, KeyframeVectorSequenceVec2fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2f *, KeyframeVectorSequenceVec2fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2f *,
+                               KeyframeVectorSequenceVec2fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -320,7 +335,10 @@ struct FieldTraits<KeyframeVectorSequenceVec3f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec3f *, KeyframeVectorSequenceVec3fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3f *, KeyframeVectorSequenceVec3fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3f *,
+                               KeyframeVectorSequenceVec3fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -366,7 +384,10 @@ struct FieldTraits<KeyframeVectorSequenceVec4f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec4f *, KeyframeVectorSequenceVec4fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4f *, KeyframeVectorSequenceVec4fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4f *,
+                               KeyframeVectorSequenceVec4fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -412,7 +433,10 @@ struct FieldTraits<KeyframeVectorSequenceVec2fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec2fx *, KeyframeVectorSequenceVec2fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2fx *, KeyframeVectorSequenceVec2fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2fx *,
+                               KeyframeVectorSequenceVec2fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -459,7 +483,10 @@ struct FieldTraits<KeyframeVectorSequenceVec3fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec3fx *, KeyframeVectorSequenceVec3fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3fx *, KeyframeVectorSequenceVec3fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3fx *,
+                               KeyframeVectorSequenceVec3fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -505,7 +532,10 @@ struct FieldTraits<KeyframeVectorSequenceVec4fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec4fx *, KeyframeVectorSequenceVec4fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4fx *, KeyframeVectorSequenceVec4fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4fx *,
+                               KeyframeVectorSequenceVec4fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -551,7 +581,10 @@ struct FieldTraits<KeyframeVectorSequenceVec2d *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec2d *, KeyframeVectorSequenceVec2dPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2d *, KeyframeVectorSequenceVec2dPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec2d *,
+                               KeyframeVectorSequenceVec2dPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -598,7 +631,10 @@ struct FieldTraits<KeyframeVectorSequenceVec3d *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec3d *, KeyframeVectorSequenceVec3dPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3d *, KeyframeVectorSequenceVec3dPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec3d *,
+                               KeyframeVectorSequenceVec3dPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -644,7 +680,10 @@ struct FieldTraits<KeyframeVectorSequenceVec4d *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeVectorSequenceVec4d *, KeyframeVectorSequenceVec4dPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4d *, KeyframeVectorSequenceVec4dPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeVectorSequenceVec4d *,
+                               KeyframeVectorSequenceVec4dPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

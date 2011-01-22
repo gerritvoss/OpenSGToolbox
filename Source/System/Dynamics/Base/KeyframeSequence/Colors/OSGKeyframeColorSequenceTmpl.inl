@@ -857,67 +857,39 @@ template<> inline
 KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::GenericType 
       KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        1.0f);
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2],
-                       1.0f);
-#endif
 }
 
 template<> inline 
 KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::GenericType 
       KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        1.0f);
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2],
-                       1.0f);
-#endif
 }
 
 template<> inline 
 void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),
                   1.0f);
-#else
-    val.setValues(_field[index][0],
-                  _field[index][1],
-                  _field[index][2],
-                  1.0f);
-#endif
 }
 
 template<> inline 
 void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor3fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),1.0f);
-#else
-    val.setValues(_field[index][0],
-                  _field[index][1],
-                  _field[index][2],
-                  1.0f);
-#endif
 }
 
 template<> inline 
@@ -977,68 +949,40 @@ template<> inline
 KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::GenericType 
       KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        Fixed32::toFloat(_field[index][3]));
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2],
-                       _field[index][3]);
-#endif
 }
 
 template<> inline 
 KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::GenericType 
       KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        Fixed32::toFloat(_field[index][3]));
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2],
-                       _field[index][3]);
-#endif
 }
 
 template<> inline 
 void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),
                   Fixed32::toFloat(_field[index][3]));
-#else
-    val.setValues(_field[index][0],
-                  _field[index][1],
-                  _field[index][2],
-                  _field[index][3]);
-#endif
 }
 
 template<> inline 
 void KeyframeColorSequenceTmpl<KeyframeColorSequenceColor4fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),
                   Fixed32::toFloat(_field[index][3]));
-#else
-    val.setValues(_field[index][0],
-                  _field[index][1],
-                  _field[index][2],
-                  _field[index][3]);
-#endif
 }
 
 template<> inline 

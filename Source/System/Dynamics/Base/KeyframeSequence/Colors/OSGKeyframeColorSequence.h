@@ -43,7 +43,7 @@
 #endif
 
 #include "OSGKeyframeColorSequenceBase.h"
-#include "OSGVector.h"
+#include "OSGColor.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -62,7 +62,7 @@ class OSG_TBANIMATION_DLLMAPPING KeyframeColorSequence : public KeyframeColorSeq
     typedef KeyframeColorSequenceBase Inherited;
     typedef KeyframeColorSequence     Self;
 
-    typedef Color4r          GenericType;
+    typedef Color4f          GenericType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

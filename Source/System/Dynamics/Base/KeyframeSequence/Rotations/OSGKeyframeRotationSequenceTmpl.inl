@@ -613,60 +613,44 @@ template<> inline
 KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::GenericType 
       KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        Fixed32::toFloat(_field[index][3])
                        );
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::GenericType 
       KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]),
                        Fixed32::toFloat(_field[index][3])
                        );
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValueAsQuat(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),
                   Fixed32::toFloat(_field[index][3])
                   );
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframeRotationSequenceTmpl<KeyframeRotationSequenceQuaternionfxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValueAsQuat(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   Fixed32::toFloat(_field[index][2]),
                   Fixed32::toFloat(_field[index][3])
                   );
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 

@@ -90,7 +90,10 @@ struct FieldTraits<KeyframeColorSequenceColor3ub *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor3ub *, KeyframeColorSequenceColor3ubPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3ub *, KeyframeColorSequenceColor3ubPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3ub *,
+                               KeyframeColorSequenceColor3ubPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -136,7 +139,10 @@ struct FieldTraits<KeyframeColorSequenceColor4ub *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor4ub *, KeyframeColorSequenceColor4ubPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4ub *, KeyframeColorSequenceColor4ubPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4ub *,
+                               KeyframeColorSequenceColor4ubPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -183,7 +189,10 @@ struct FieldTraits<KeyframeColorSequenceColor3f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor3f *, KeyframeColorSequenceColor3fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3f *, KeyframeColorSequenceColor3fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3f *,
+                               KeyframeColorSequenceColor3fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -229,7 +238,10 @@ struct FieldTraits<KeyframeColorSequenceColor4f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor4f *, KeyframeColorSequenceColor4fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4f *, KeyframeColorSequenceColor4fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4f *,
+                               KeyframeColorSequenceColor4fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -276,7 +288,10 @@ struct FieldTraits<KeyframeColorSequenceColor3fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor3fx *, KeyframeColorSequenceColor3fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3fx *, KeyframeColorSequenceColor3fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor3fx *,
+                               KeyframeColorSequenceColor3fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -322,7 +337,10 @@ struct FieldTraits<KeyframeColorSequenceColor4fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeColorSequenceColor4fx *, KeyframeColorSequenceColor4fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4fx *, KeyframeColorSequenceColor4fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeColorSequenceColor4fx *,
+                               KeyframeColorSequenceColor4fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

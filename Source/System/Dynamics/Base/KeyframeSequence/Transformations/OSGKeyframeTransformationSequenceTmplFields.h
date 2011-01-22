@@ -89,7 +89,10 @@ struct FieldTraits<KeyframeTransformationSequenceMatrix4f *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeTransformationSequenceMatrix4f *, KeyframeTransformationSequenceMatrix4fPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4f *, KeyframeTransformationSequenceMatrix4fPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4f *,
+                               KeyframeTransformationSequenceMatrix4fPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -135,7 +138,10 @@ struct FieldTraits<KeyframeTransformationSequenceMatrix4fx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeTransformationSequenceMatrix4fx *, KeyframeTransformationSequenceMatrix4fxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4fx *, KeyframeTransformationSequenceMatrix4fxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4fx *,
+                               KeyframeTransformationSequenceMatrix4fxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -181,7 +187,10 @@ struct FieldTraits<KeyframeTransformationSequenceMatrix4d *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeTransformationSequenceMatrix4d *, KeyframeTransformationSequenceMatrix4dPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4d *, KeyframeTransformationSequenceMatrix4dPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeTransformationSequenceMatrix4d *,
+                               KeyframeTransformationSequenceMatrix4dPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

@@ -384,7 +384,7 @@ void SkeletonBlendedGeometry::adjustVolume(Volume &volume)
     volume.transform(_invWorld);
 }
 
-void SkeletonBlendedGeometry::accumulateMatrix(Matrixr &result)
+void SkeletonBlendedGeometry::accumulateMatrix(Matrix &result)
 {
     Inherited::accumulateMatrix(result);
     result.mult(_invWorld);
@@ -392,15 +392,15 @@ void SkeletonBlendedGeometry::accumulateMatrix(Matrixr &result)
 
 /*------------------------- calc matrix ---------------------------------*/
 
-void SkeletonBlendedGeometry::calcMatrix(const Matrixr        &mToWorld,
-                                        Matrixr        &mResult)
+void SkeletonBlendedGeometry::calcMatrix(const Matrix        &mToWorld,
+                                        Matrix        &mResult)
 {
     mResult.invertFrom(mToWorld);
 
     _invWorld = mResult; 
 }
 
-void SkeletonBlendedGeometry::initMatrix(const Matrixr &mToWorld)
+void SkeletonBlendedGeometry::initMatrix(const Matrix &mToWorld)
 {
     _invWorld.invertFrom(mToWorld);
 }
@@ -456,7 +456,7 @@ Action::ResultE SkeletonBlendedGeometry::renderEnter(Action *action)
     RenderAction *pAction = 
         dynamic_cast<RenderAction *>(action);
 
-    Matrixr mMat;    // will be set to World^-1
+    Matrix mMat;    // will be set to World^-1
 
     calcMatrix(pAction->topMatrix(), mMat);
 

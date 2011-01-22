@@ -89,7 +89,10 @@ struct FieldTraits<KeyframeRotationSequenceQuaternion *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeRotationSequenceQuaternion *, KeyframeRotationSequenceQuaternionPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternion *, KeyframeRotationSequenceQuaternionPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternion *,
+                               KeyframeRotationSequenceQuaternionPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -135,7 +138,10 @@ struct FieldTraits<KeyframeRotationSequenceQuaternionfx *> :
 
 OSG_FIELD_TRAITS_NAME_INST(KeyframeRotationSequenceQuaternionfx *, KeyframeRotationSequenceQuaternionfxPtr)
 
-OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternionfx *, KeyframeRotationSequenceQuaternionfxPtr);
+OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternionfx *,
+                               KeyframeRotationSequenceQuaternionfxPtr,
+                               GrpAnimationKeyframeSequence,
+                               GrpLibOSGTBAnimation);
 
 #endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 
@@ -183,7 +189,10 @@ OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaternionfx *, KeyframeR
 
 //OSG_FIELD_TRAITS_NAME_INST(KeyframeRotationSequenceQuaterniond *, KeyframeRotationSequenceQuaterniondPtr)
 
-//OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaterniond *, KeyframeRotationSequenceQuaterniondPtr);
+//OSG_FIELDCONTAINER_FIELDS_INST(KeyframeRotationSequenceQuaterniond *,
+//KeyframeRotationSequenceQuaterniondPtr,
+                               //GrpAnimationKeyframeSequence,
+                               //GrpLibOSGTBAnimation);
 
 //#endif // !defined(OSG_DO_DOC) || (OSG_DOC_LEVEL >= 3)
 

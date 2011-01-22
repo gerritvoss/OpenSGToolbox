@@ -1020,52 +1020,36 @@ template<> inline
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        0.0f);
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        0.0f);
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   0.0f);
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt2fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                   Fixed32::toFloat(_field[index][1]),
                   0.0f);
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 
@@ -1125,52 +1109,36 @@ template<> inline
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    return _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt3fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    val = _field[index];
-#endif
 }
 
 template<> inline 
@@ -1230,60 +1198,36 @@ template<> inline
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::getKeyValue (const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2]);
-#endif
 }
 
 template<> inline 
 KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::GenericType 
       KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::getKeyValue (const UInt32       index )
 {
-#ifdef OSG_FLOAT_PROFILE
     return GenericType(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    return GenericType(_field[index][0],
-                       _field[index][1],
-                       _field[index][2]);
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index )      
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    val.setValues(_field[index][0],
-                       _field[index][1],
-                       _field[index][2]);
-#endif
 }
 
 template<> inline 
 void KeyframePositionSequenceTmpl<KeyframePositionSequencePnt4fxDescBase>::getKeyValue (GenericType &val,
                               const UInt32       index ) const
 {
-#ifdef OSG_FLOAT_PROFILE
     val.setValues(Fixed32::toFloat(_field[index][0]),
                        Fixed32::toFloat(_field[index][1]),
                        Fixed32::toFloat(_field[index][2]));
-#else
-    val.setValues(_field[index][0],
-                       _field[index][1],
-                       _field[index][2]);
-#endif
 }
 
 template<> inline 
