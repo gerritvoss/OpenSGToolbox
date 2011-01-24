@@ -164,7 +164,8 @@ bool QuadParticleSystemDrawer::setNormalAndUpSource(UInt32 NormalSource, UInt32 
          (UpSource ==UP_POSITION_CHANGE || UpSource == UP_VELOCITY_CHANGE)) ||
 
         (UpSource == UP_VELOCITY && 
-         (NormalSource ==  NORMAL_POSITION_CHANGE || NormalSource == NORMAL_VELOCITY_CHANGE )) ||
+         (NormalSource ==  NORMAL_POSITION_CHANGE || NormalSource ==
+          NORMAL_VELOCITY_CHANGE || NormalSource == NORMAL_VIEW_DIRECTION )) ||
 
         (UpSource == UP_VIEW_DIRECTION && 
          (NormalSource == NORMAL_VIEW_DIRECTION || NormalSource == NORMAL_VIEW_POSITION )) ||
@@ -306,15 +307,19 @@ Vec3f QuadParticleSystemDrawer::getQuadUpDir(DrawEnv *pEnv, ParticleSystemUnrecP
 	{
 	case UP_POSITION_CHANGE:
 		Direction = System->getPositionChange(Index);
+        Direction.normalize();
 		break;
 	case UP_VELOCITY_CHANGE:
 		Direction = System->getVelocityChange(Index);
+        Direction.normalize();
 		break;
 	case UP_VELOCITY:
 		Direction = System->getVelocity(Index);
+        Direction.normalize();
 		break;
 	case UP_ACCELERATION:
 		Direction = System->getAcceleration(Index);
+        Direction.normalize();
 		break;
 	case UP_PARTICLE_NORMAL:
 		Direction = System->getNormal(Index);
