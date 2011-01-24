@@ -12,8 +12,6 @@
 #include "OSGSimpleParticleTrailGenerator.h"
 #include "OSGBlendChunk.h"
 #include "OSGPointChunk.h"
-#include "OSGLineChunk.h"
-#include "OSGTextureObjChunk.h"
 #include "OSGChunkMaterial.h"
 #include "OSGMaterialChunk.h"
 #include "OSGParticleSystem.h"
@@ -24,6 +22,7 @@
 #include "OSGGaussianNormalDistribution1D.h"
 #include "OSGLineDistribution3D.h"
 #include "OSGSphereDistribution3D.h"
+#include "OSGSineWaveParticleAffector.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -35,13 +34,15 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr);
 // Helper fucntions for particle system distributions
 Distribution3DRefPtr createPositionDistribution(void);
 Distribution3DRefPtr createVelocityDistribution(void);
+Distribution3DRefPtr createColorDistribution(void);
 Distribution3DRefPtr createNormalDistribution(void);
 Distribution1DRefPtr createLifespanDistribution(void);
 Distribution3DRefPtr createSizeDistribution(void);
 
 void keyPressed(KeyEventDetails* const details, SimpleSceneManager *mgr, ParticleSystem* const ExampleParticleSystem, SimpleParticleTrailGenerator* const ExampleTrailGenerator)
 {
-    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL)
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
@@ -135,6 +136,26 @@ void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+}
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -158,46 +179,58 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
-        // Material point chunk, so particles are drawn as points
-        PointChunkRefPtr PSPointChunk = PointChunk::create();
-        PSPointChunk->setSize(5.0f);
+        //Particle System Material
+        PointChunkRecPtr PSPointChunk = PointChunk::create();
+        PSPointChunk->setSize(9.0f);
         PSPointChunk->setSmooth(true);
 
-        // Material blend chunk
         BlendChunkRefPtr PSBlendChunk = BlendChunk::create();
         PSBlendChunk->setSrcFactor(GL_SRC_ALPHA);
         PSBlendChunk->setDestFactor(GL_ONE_MINUS_SRC_ALPHA);
 
-        LineChunkRefPtr PSLineChunk = LineChunk::create();
+        MaterialChunkRefPtr PSMaterialChunk = MaterialChunk::create();
+        PSMaterialChunk->setAmbient(Color4f(0.3f,0.0f,0.0f,1.0f));
+        PSMaterialChunk->setDiffuse(Color4f(0.7f,0.0f,0.0f,1.0f));
+        PSMaterialChunk->setSpecular(Color4f(0.9f,0.0f,0.0f,1.0f));
+        PSMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
 
-        //Texture Chunk
-        TextureObjChunkRefPtr PSTexChunk = TextureObjChunk::create();
-
-        //Particle System Material
-        MaterialChunkRefPtr PSMaterialChunkChunk = MaterialChunk::create();
-        PSMaterialChunkChunk->setAmbient(Color4f(1.0f,0.5f,0.3f,1.0f));
-        PSMaterialChunkChunk->setDiffuse(Color4f(1.0f,0.5f,0.3f,0.6f));
-        PSMaterialChunkChunk->setSpecular(Color4f(1.0f,0.5f,0.3f,0.6f));
-        PSMaterialChunkChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
-
-        // Assembling materials
         ChunkMaterialRefPtr PSMaterial = ChunkMaterial::create();
-        PSMaterial->addChunk(PSMaterialChunkChunk);
         PSMaterial->addChunk(PSPointChunk);
+        PSMaterial->addChunk(PSMaterialChunk);
         PSMaterial->addChunk(PSBlendChunk);
-        PSMaterial->addChunk(PSLineChunk);
-        PSMaterial->addChunk(PSTexChunk);
-        PSMaterial->setTransparencyMode(Material::TransparencyForceTransparent);
+
+        PointChunkRecPtr TrailPointChunk = PointChunk::create();
+        TrailPointChunk->setSize(3.0f);
+        TrailPointChunk->setSmooth(true);
+
+        MaterialChunkRefPtr TrailMaterialChunk = MaterialChunk::create();
+        TrailMaterialChunk->setAmbient(Color4f(0.3f,0.3f,0.3f,1.0f));
+        TrailMaterialChunk->setDiffuse(Color4f(0.7f,0.7f,0.7f,1.0f));
+        TrailMaterialChunk->setSpecular(Color4f(0.9f,0.9f,0.9f,1.0f));
+        TrailMaterialChunk->setColorMaterial(GL_AMBIENT_AND_DIFFUSE);
+
+        ChunkMaterialRecPtr TrailMaterial = ChunkMaterial::create();
+        TrailMaterial->addChunk(TrailPointChunk);
+        TrailMaterial->addChunk(TrailMaterialChunk);
+        TrailMaterial->addChunk(PSBlendChunk);
 
         // Creating a particle generator
         RateParticleGeneratorRefPtr ExampleGenerator = RateParticleGenerator::create();
         //Attach the function objects to the Generator
         ExampleGenerator->setPositionDistribution(createPositionDistribution());
-        ExampleGenerator->setGenerationRate(8.0);
+        ExampleGenerator->setGenerationRate(2.0);
         ExampleGenerator->setVelocityDistribution(createVelocityDistribution());
+        ExampleGenerator->setColorDistribution(createColorDistribution());
         ExampleGenerator->setLifespanDistribution(createLifespanDistribution());
         ExampleGenerator->setSizeDistribution(createSizeDistribution());
+
+        // Particle System Sine Wave Affector
+        SineWaveParticleAffectorRecPtr ExampleSWA = SineWaveParticleAffector::create();
+        ExampleSWA->setAmplitude(2.75f);
+        ExampleSWA->setUpDirSource(SineWaveParticleAffector::CROSS_PRODUCT);
+        ExampleSWA->setFrequency(20.00f);
 
         //Creating Particle System
         ParticleSystemRecPtr ExampleParticleSystem = ParticleSystem::create();
@@ -209,10 +242,10 @@ int main(int argc, char **argv)
 
         //Creating Particle System Drawer
         PointParticleSystemDrawerRefPtr ExampleParticleSystemDrawer = PointParticleSystemDrawer::create();
-        ExampleParticleSystemDrawer->setForcePerParticleSizing(true);
 
         // Attaching affector and generator to the particle system
         ExampleParticleSystem->pushToGenerators(ExampleGenerator);
+        ExampleParticleSystem->pushToAffectors(ExampleSWA);
 
         //Particle System Core, setting its system, drawer, and material
         ParticleSystemCoreRefPtr ParticleNodeCore = ParticleSystemCore::create();
@@ -223,12 +256,12 @@ int main(int argc, char **argv)
         // Create Trail Generator(s)
         // simple trail generator
         SimpleParticleTrailGeneratorRecPtr ExampleTrailGenerator = SimpleParticleTrailGenerator::create();
-        ExampleTrailGenerator->setTrailResolution(2.5f);
+        ExampleTrailGenerator->setTrailResolution(1.0f);
         ExampleTrailGenerator->setDrawMethod(SimpleParticleTrailGenerator::POINTS);
         ExampleTrailGenerator->setTrailLength(3.12);
         ExampleTrailGenerator->setTrailLengthMethod(ParticleTrailGenerator::TIME);
         ExampleTrailGenerator->setTrailResolutionMethod(ParticleTrailGenerator::DISTANCE_SPACING);
-        ExampleTrailGenerator->setTrailMaterial(PSMaterial);
+        ExampleTrailGenerator->setTrailMaterial(TrailMaterial);
 
         // attach listener for trail generator to the particle system
         ExampleTrailGenerator->setSystemToTrail(ExampleParticleSystem);
@@ -250,7 +283,6 @@ int main(int argc, char **argv)
         sceneManager.showAll();
         sceneManager.getCamera()->setFar(10000.0f);
         sceneManager.getCamera()->setNear(0.1f);
-        sceneManager.setStatistics(true);
         
         TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, &sceneManager, ExampleParticleSystem.get(), ExampleTrailGenerator.get()));
 
@@ -320,6 +352,16 @@ Distribution3DRefPtr createVelocityDistribution(void)
     TheSphereDistribution->setSurfaceOrVolume(SphereDistribution3D::SURFACE);
 
     return TheSphereDistribution;
+}
+
+Distribution3DRefPtr createColorDistribution(void)
+{
+    // spherical dist.
+    LineDistribution3DRefPtr TheLineDistribution = LineDistribution3D::create();
+    TheLineDistribution->setPoint1(Pnt3f(1.0,0.0,0.0));
+    TheLineDistribution->setPoint2(Pnt3f(1.0,0.0,0.0));
+
+    return TheLineDistribution;
 }
 
 Distribution3DRefPtr createNormalDistribution(void)

@@ -55,9 +55,13 @@ Distribution3DRefPtr createSizeDistribution(void);
 Distribution3DRefPtr createTrailSizeDistribution(void);
 Distribution3DRefPtr createColorDistribution(void);
 
-void keyPressed(KeyEventDetails* const details, SimpleSceneManager *mgr, ParticleSystem* const ExampleParticleSystem, SimpleParticleTrailGenerator* const ExampleTrailGenerator)
+void keyPressed(KeyEventDetails* const details,
+                SimpleSceneManager *mgr,
+                ParticleSystem* const ExampleParticleSystem,
+                ParticleSystemParticleTrailGenerator* const ExampleTrailGenerator)
 {
-    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL)
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
@@ -151,6 +155,25 @@ void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -175,6 +198,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
 
         // Material blend chunk
@@ -249,8 +273,8 @@ int main(int argc, char **argv)
                                                           QuadParticleSystemDrawer::UP_VELOCITY);
 
         QuadParticleSystemDrawerRefPtr ExampleTrailDrawer = QuadParticleSystemDrawer::create();
-        ExampleTrailDrawer->setNormalAndUpSource(QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION,
-                                                 QuadParticleSystemDrawer::UP_PARTICLE_NORMAL);
+        //ExampleTrailDrawer->setNormalAndUpSource(QuadParticleSystemDrawer::NORMAL_VIEW_DIRECTION,
+                                                 //QuadParticleSystemDrawer::UP_PARTICLE_NORMAL);
 
         // Attaching affector and generator to the particle system
         ExampleParticleSystem->pushToGenerators(ExampleGenerator);
@@ -305,13 +329,15 @@ int main(int argc, char **argv)
         scene->setCore(Group::create());
         scene->addChild(ParticleNode);
 
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, &sceneManager, ExampleParticleSystem.get(), ExamplePSTrailGenerator.get()));
+
         sceneManager.setRoot(scene);
 
         // Show the whole Scene
-        sceneManager.showAll();
+        sceneManager.getNavigator()->set(Pnt3f(0.0,0.0,100.0), Pnt3f(0.0,0.0,0.0), Vec3f(0.0,1.0,0.0));
+        sceneManager.getNavigator()->setMotionFactor(1.0f);
         sceneManager.getCamera()->setFar(10000.0f);
         sceneManager.getCamera()->setNear(0.1f);
-        sceneManager.setStatistics(false);
 
         //Open Window
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
