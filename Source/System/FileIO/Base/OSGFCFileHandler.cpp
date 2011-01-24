@@ -149,8 +149,10 @@ bool FCFileHandlerBase::subFCFileType(FCFileTypeP FileType)
 FCFileTypeP FCFileHandlerBase::getFileType(const std::string& FileExtension, UInt32 Flags)
 {
     //Check if this is a FileName or just the file extension
+    std::string FileExtensionLowerCase(FileExtension);
+    boost::algorithm::to_lower(FileExtensionLowerCase);
 
-	FileTypeMap::const_iterator SearchItor(_SuffixTypeMap.find(FileExtension));
+	FileTypeMap::const_iterator SearchItor(_SuffixTypeMap.find(FileExtensionLowerCase));
 
 	if(SearchItor != _SuffixTypeMap.end())
 	{
