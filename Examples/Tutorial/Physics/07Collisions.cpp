@@ -21,41 +21,24 @@
 #include "OSGSimpleStatisticsForeground.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGWindowUtils.h"
 
 //Physics
 #include "OSGPhysics.h"
-#include "OSGCollisionListener.h"
 #include "OSGCollisionEvent.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
+// with , but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
 
 // forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
-void buildCar();
-void buildTriMesh(void);
-void buildSphere(void);
-void buildBox(void);
-
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-NodeRefPtr TriGeometryBase;
-
-PhysicsHandlerRefPtr physHandler;
-PhysicsWorldRefPtr physicsWorld;
-PhysicsHashSpaceRefPtr physicsSpace;
-
-//just for hierarchy
-NodeRefPtr spaceGroupNode;
-
-NodeRefPtr rootNode;
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
+void buildTriMesh(Node* const TriGeometryBase, Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
+void buildSphere(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
+void buildBox(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
 
 //Define the different Geom Categories
 //These are used as bit masks
@@ -70,167 +53,147 @@ Real32 frand(void)
     return static_cast<Real32>(rand()%RAND_MAX)/static_cast<Real32>(RAND_MAX);
 }
 
-class TutorialCollisionListener : public CollisionListener
+void handleCollision(CollisionEventDetails* const details)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void collision(const CollisionEventUnrecPtr e)
+    if(details->getProjectedNormalSpeed() >= 5.0f)
     {
-        if(e->getProjectedNormalSpeed() >= 5.0f)
-        {
-            Vec3f NormalProjVel(e->getObject1Velocity() + e->getObject2Velocity());
-            NormalProjVel.projectTo(e->getNormal());
+        Vec3f NormalProjVel(details->getObject1Velocity() + details->getObject2Velocity());
+        NormalProjVel.projectTo(details->getNormal());
 
-            std::cout << "Collision Occured: " << std::endl
-                      << "    Position: " << e->getPosition() << std::endl
-                      << "    Normal: " << e->getNormal() << std::endl
-                      << "    Body 1 Velocity: " << e->getObject1Velocity() << std::endl
-                      << "    Body 2 Velocity: " << e->getObject2Velocity() << std::endl
-                      << "    Projected Normal speed: " << e->getProjectedNormalSpeed() << std::endl
-                      << "    Normal projected Velocity: " << NormalProjVel << std::endl<< std::endl;
+        std::cout << "Collision Occured: " << std::endl
+            << "    Position: " << details->getPosition() << std::endl
+            << "    Normal: " << details->getNormal() << std::endl
+            << "    Body 1 Velocity: " << details->getObject1Velocity() << std::endl
+            << "    Body 2 Velocity: " << details->getObject2Velocity() << std::endl
+            << "    Projected Normal speed: " << details->getProjectedNormalSpeed() << std::endl
+            << "    Normal projected Velocity: " << NormalProjVel << std::endl<< std::endl;
+    }
+}
+
+void keyPressed(KeyEventDetails* const details,
+                Node* const TriGeometryBase,
+                Node* const spaceGroupNode,
+                PhysicsWorld* const physicsWorld,
+                PhysicsHashSpace* const physicsSpace)
+{
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+    switch(details->getKey())
+    {
+        case KeyEventDetails::KEY_S:
+            {
+                buildSphere(spaceGroupNode, physicsWorld, physicsSpace);
+            }
+            break;
+        case KeyEventDetails::KEY_B:
+            {
+                buildBox(spaceGroupNode, physicsWorld, physicsSpace);
+            }
+            break;
+        case KeyEventDetails::KEY_T:
+            {
+                buildTriMesh(TriGeometryBase, spaceGroupNode, physicsWorld, physicsSpace);
+            }
+            break;
+    }
+}
+
+void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
-};
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
-{
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-           TutorialWindow->closeWindow();
-       }
-       switch(e->getKey())
-       {
-       case KeyEvent::KEY_S:
-            {
-                buildSphere();
-            }
-            break;
-       case KeyEvent::KEY_B:
-            {
-                buildBox();
-            }
-            break;
-       case KeyEvent::KEY_Z:
-            {
-                //SceneFileHandler::the().write(rootNode, "scene.osb");
-            }
-            break;
-       case KeyEvent::KEY_T:
-            {
-                buildTriMesh();
-            }
-            break;
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-
-class TutorialMouseListener : public MouseListener
-{
-  public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
+    else if(details->getUnitsToScroll() < 0)
     {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
     }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-    }
-};
+}
 
-class TutorialMouseMotionListener : public MouseMotionListener
-{
-  public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-    }
-};
-
-// Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
-
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
-
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
-    TutorialMouseListener TheTutorialMouseListener;
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TutorialWindow->addMouseListener(&TheTutorialMouseListener);
-    TutorialWindow->addMouseMotionListener(&TheTutorialMouseMotionListener);
-
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-	
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-
-    //Make Torus Node
-    TriGeometryBase = makeTorus(.55, 1.5, 16, 16);
-
-    //Make Main Scene Node
-	NodeRefPtr scene = makeCoredNode<Group>();
-    setName(scene, "scene");
-    rootNode = Node::create();
-    setName(rootNode, "rootNode");
-    ComponentTransformRefPtr Trans;
-    Trans = ComponentTransform::create();
     {
-        rootNode->setCore(Trans);
- 
-        // add the torus as a child
-        rootNode->addChild(scene);
-    }
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    //Setup Physics Scene
-    physicsWorld = PhysicsWorld::create();
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
+
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
+
+        //Attach to events
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+
+        //Make Torus Node
+        NodeRecPtr TriGeometryBase = makeTorus(.55, 1.5, 16, 16);
+
+        //Make Main Scene Node
+        NodeRefPtr scene = makeCoredNode<Group>();
+        setName(scene, "scene");
+        NodeRecPtr rootNode = Node::create();
+        setName(rootNode, "rootNode");
+        ComponentTransformRefPtr Trans = ComponentTransform::create();
+        {
+            rootNode->setCore(Trans);
+
+            // add the torus as a child
+            rootNode->addChild(scene);
+        }
+
+        //Setup Physics Scene
+        PhysicsWorldRecPtr physicsWorld = PhysicsWorld::create();
         physicsWorld->setWorldContactSurfaceLayer(0.005);
         physicsWorld->setAutoDisableFlag(1);
         physicsWorld->setAutoDisableTime(0.75);
         physicsWorld->setWorldContactMaxCorrectingVel(100.0);
         physicsWorld->setGravity(Vec3f(0.0, 0.0, -9.81));
 
-    //Create the Collision Space
-    physicsSpace = PhysicsHashSpace::create();
+        //Create the Collision Space
+        PhysicsHashSpaceRecPtr physicsSpace = PhysicsHashSpace::create();
 
-    //Setup the default collision parameters
-    CollisionContactParametersRefPtr DefaultCollisionParams = CollisionContactParameters::createEmpty();
+        //Setup the default collision parameters
+        CollisionContactParametersRefPtr DefaultCollisionParams = CollisionContactParameters::createEmpty();
         DefaultCollisionParams->setMode(dContactApprox1);
         DefaultCollisionParams->setMu(0.3);
         DefaultCollisionParams->setMu2(0.0);
@@ -246,8 +209,8 @@ int main(int argc, char **argv)
 
         physicsSpace->setDefaultCollisionParameters(DefaultCollisionParams);
 
-    //Bouncy Sphere collision parameters
-    CollisionContactParametersRefPtr BouncySphereCollisionParams = CollisionContactParameters::createEmpty();
+        //Bouncy Sphere collision parameters
+        CollisionContactParametersRefPtr BouncySphereCollisionParams = CollisionContactParameters::createEmpty();
         BouncySphereCollisionParams->setMode(dContactApprox1 | dContactBounce);
         BouncySphereCollisionParams->setMu(0.3);
         BouncySphereCollisionParams->setMu2(0.0);
@@ -260,13 +223,13 @@ int main(int argc, char **argv)
         BouncySphereCollisionParams->setMotionN(0.0);
         BouncySphereCollisionParams->setSlip1(0.0);
         BouncySphereCollisionParams->setSlip2(0.0);
-    physicsSpace->addCollisionContactCategory(SphereCategory, TerrainCategory, BouncySphereCollisionParams);
-    physicsSpace->addCollisionContactCategory(SphereCategory, BoxCategory, BouncySphereCollisionParams);
-    physicsSpace->addCollisionContactCategory(SphereCategory, SphereCategory, BouncySphereCollisionParams);
-    physicsSpace->addCollisionContactCategory(SphereCategory, TriCategory, BouncySphereCollisionParams);
+        physicsSpace->addCollisionContactCategory(SphereCategory, TerrainCategory, BouncySphereCollisionParams);
+        physicsSpace->addCollisionContactCategory(SphereCategory, BoxCategory, BouncySphereCollisionParams);
+        physicsSpace->addCollisionContactCategory(SphereCategory, SphereCategory, BouncySphereCollisionParams);
+        physicsSpace->addCollisionContactCategory(SphereCategory, TriCategory, BouncySphereCollisionParams);
 
-    //Soft Box collision parameters
-    CollisionContactParametersRefPtr SlickBoxParams = CollisionContactParameters::createEmpty();
+        //Soft Box collision parameters
+        CollisionContactParametersRefPtr SlickBoxParams = CollisionContactParameters::createEmpty();
         SlickBoxParams->setMode(dContactApprox1);
         SlickBoxParams->setMu(0.01);
         SlickBoxParams->setMu2(0.0);
@@ -279,47 +242,44 @@ int main(int argc, char **argv)
         SlickBoxParams->setMotionN(0.0);
         SlickBoxParams->setSlip1(0.0);
         SlickBoxParams->setSlip2(0.0);
-    physicsSpace->addCollisionContactCategory(BoxCategory, TerrainCategory, SlickBoxParams);
-    physicsSpace->addCollisionContactCategory(BoxCategory, BoxCategory, SlickBoxParams);
-    //physicsSpace->addCollisionContactCategory(BoxCategory, SphereCategory, SlickBoxParams);
-    physicsSpace->addCollisionContactCategory(BoxCategory, TriCategory, SlickBoxParams);
+        physicsSpace->addCollisionContactCategory(BoxCategory, TerrainCategory, SlickBoxParams);
+        physicsSpace->addCollisionContactCategory(BoxCategory, BoxCategory, SlickBoxParams);
+        //physicsSpace->addCollisionContactCategory(BoxCategory, SphereCategory, SlickBoxParams);
+        physicsSpace->addCollisionContactCategory(BoxCategory, TriCategory, SlickBoxParams);
 
-    
-    TutorialCollisionListener ColListener;
-    physicsSpace->addCollisionListener(&ColListener,BoxCategory, 5.0);
+        physicsSpace->PhysicsSpaceBase::connectCollision(boost::bind(handleCollision, _1));
 
-    physHandler = PhysicsHandler::create();
+        PhysicsHandlerRecPtr physHandler = PhysicsHandler::create();
         physHandler->setWorld(physicsWorld);
         physHandler->pushToSpaces(physicsSpace);
         physHandler->setStepSize(0.001);
         physHandler->setUpdateNode(rootNode);
-    physHandler->attachUpdateProducer(TutorialWindow->editEventProducer());
-    
+        physHandler->attachUpdateProducer(TutorialWindow);
+
 
         rootNode->addAttachment(physHandler);    
         rootNode->addAttachment(physicsWorld);
         rootNode->addAttachment(physicsSpace);
 
 
-	/************************************************************************/
-	/* create spaces, geoms and bodys                                                                     */
-	/************************************************************************/
-    //create a group for our space
-    GroupRefPtr spaceGroup;
-	spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
-    //create the ground plane
-    GeometryRefPtr plane;
-	NodeRefPtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
-    plane = dynamic_cast<Geometry*>(planeNode->getCore());
-    //and its Material
-	SimpleMaterialRefPtr plane_mat = SimpleMaterial::create();
-		plane_mat->setAmbient(Color3f(0.7,0.7,0.7));
-		plane_mat->setDiffuse(Color3f(0.9,0.6,1.0));
-	    plane->setMaterial(plane_mat);
+        /************************************************************************/
+        /* create spaces, geoms and bodys                                                                     */
+        /************************************************************************/
+        //create a group for our space
+        NodeRecPtr spaceGroupNode = makeCoredNode<Group>();
+        //create the ground plane
+        GeometryRefPtr plane;
+        NodeRefPtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
+        plane = dynamic_cast<Geometry*>(planeNode->getCore());
+        //and its Material
+        SimpleMaterialRefPtr plane_mat = SimpleMaterial::create();
+        plane_mat->setAmbient(Color3f(0.7,0.7,0.7));
+        plane_mat->setDiffuse(Color3f(0.9,0.6,1.0));
+        plane->setMaterial(plane_mat);
 
 
-    //create Physical Attachments
-	PhysicsBoxGeomRefPtr planeGeom = PhysicsBoxGeom::create();
+        //create Physical Attachments
+        PhysicsBoxGeomRefPtr planeGeom = PhysicsBoxGeom::create();
         planeGeom->setLengths(Vec3f(30.0, 30.0, 1.0));
         //add geoms to space for collision
         planeGeom->setSpace(physicsSpace);
@@ -328,152 +288,150 @@ int main(int argc, char **argv)
         //and for selecting the collision contact parameters when a collision does occur
         planeGeom->setCategoryBits(TerrainCategory);
 
-	//add Attachments to nodes...
-	    spaceGroupNode->addAttachment(physicsSpace);
+        //add Attachments to nodes...
+        spaceGroupNode->addAttachment(physicsSpace);
         spaceGroupNode->addChild(planeNode);
 
         planeNode->addAttachment(planeGeom);
-    
-	    scene->addChild(spaceGroupNode);
-    
-    //Create Statistics Foreground
-    SimpleStatisticsForegroundRefPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
-        PhysicsStatForeground->setSize(25);
-        PhysicsStatForeground->setColor(Color4f(0,1,0,0.7));
-        PhysicsStatForeground->addElement(PhysicsHandler::statPhysicsTime, 
-            "Physics time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statCollisionTime, 
-            "Collision time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statSimulationTime, 
-            "Simulation time: %.3f s");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisions, 
-            "%d collisions");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNCollisionTests, 
-            "%d collision tests");
-        PhysicsStatForeground->addElement(PhysicsHandler::statNPhysicsSteps, 
-            "%d simulation steps per frame");
 
+        scene->addChild(spaceGroupNode);
 
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1,
+                                                      TriGeometryBase.get(),
+                                                      spaceGroupNode.get(),
+                                                      physicsWorld.get(),
+                                                      physicsSpace.get()));
 
+        // tell the manager what to manage
+        sceneManager.setRoot  (rootNode);
 
-    // tell the manager what to manage
-    mgr->setRoot  (rootNode);
+        // show the whole rootNode
+        sceneManager.showAll();
 
-    mgr->getWindow()->getPort(0)->addForeground(PhysicsStatForeground);
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "07Collisions");
 
-    physHandler->setStatistics(PhysicsStatForeground->getCollector());
+        //Enter main Loop
+        TutorialWindow->mainLoop();
 
-    // show the whole rootNode
-    mgr->showAll();
-    
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "07Collisions");
-
-    //Enter main Loop
-    TutorialWindow->mainLoop();
-
+    }
     osgExit();
 
     return 0;
 }
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
+
 //////////////////////////////////////////////////////////////////////////
 //! build a box
 //////////////////////////////////////////////////////////////////////////
-void buildBox(void)
+void buildBox(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace)
 {
-    Vec3f Lengths(frand()*2.0+0.5, frand()*2.0+0.5, frand()*2.0+0.5);
+    Vec3f Lengths((Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0, (Real32)(rand()%2)+1.0);
     Matrix m;
     //create OpenSG mesh
-    GeometryRefPtr box;
-    NodeRefPtr boxNode = makeBox(Lengths.x(), Lengths.y(), Lengths.z(), 1, 1, 1);
+    GeometryRecPtr box;
+    NodeRecPtr boxNode = makeBox(Lengths.x(), Lengths.y(), Lengths.z(), 1, 1, 1);
     box = dynamic_cast<Geometry*>(boxNode->getCore());
-    SimpleMaterialRefPtr box_mat = SimpleMaterial::create();
-        box_mat->setAmbient(Color3f(0.0,0.0,0.0));
-        box_mat->setDiffuse(Color3f(0.0,1.0 ,0.0));
-        box->setMaterial(box_mat);
-    TransformRefPtr boxTrans;
-    NodeRefPtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
+    SimpleMaterialRecPtr box_mat = SimpleMaterial::create();
+    box_mat->setAmbient(Color3f(0.0,0.0,0.0));
+    box_mat->setDiffuse(Color3f(0.0,1.0 ,0.0));
+
+    box->setMaterial(box_mat);
+
+    TransformRecPtr boxTrans;
+    NodeRecPtr boxTransNode = makeCoredNode<Transform>(&boxTrans);
     m.setIdentity();
-    Real32 randX = frand()*10.0-5.0;
-    Real32 randY = frand()*10.0-5.0;
+    Real32 randX = (Real32)(rand()%10)-5.0;
+    Real32 randY = (Real32)(rand()%10)-5.0;
     m.setTranslate(randX, randY, 10.0);
-        boxTrans->setMatrix(m);
+    boxTrans->setMatrix(m);
+
 
     //create ODE data
-    PhysicsBodyRefPtr boxBody = PhysicsBody::create(physicsWorld);
-        boxBody->setPosition(Vec3f(randX, randY, 10.0));
+    PhysicsBodyRecPtr boxBody = PhysicsBody::create(physicsWorld);
+    boxBody->setPosition(Vec3f(randX, randY, 10.0));
+
     boxBody->setBoxMass(1.0, Lengths.x(), Lengths.y(), Lengths.z());
 
-    PhysicsBoxGeomRefPtr boxGeom = PhysicsBoxGeom::create();
-        boxGeom->setBody(boxBody);
-        boxGeom->setSpace(physicsSpace);
-        boxGeom->setLengths(Lengths);
-        boxGeom->setCategoryBits(BoxCategory);
+    PhysicsBoxGeomRecPtr boxGeom = PhysicsBoxGeom::create();
+    boxGeom->setBody(boxBody);
+    boxGeom->setSpace(physicsSpace);
+    boxGeom->setLengths(Lengths);
+    boxGeom->setCategoryBits(BoxCategory);
+
 
     //add attachments
-        boxNode->addAttachment(boxGeom);
-        boxTransNode->addAttachment(boxBody);
-        boxTransNode->addChild(boxNode);
+    boxNode->addAttachment(boxGeom);
+    boxTransNode->addAttachment(boxBody);
+    boxTransNode->addChild(boxNode);
+
 
     //add to SceneGraph
-        spaceGroupNode->addChild(boxTransNode);
+    spaceGroupNode->addChild(boxTransNode);
 
     commitChanges();
+
 }
 
 //////////////////////////////////////////////////////////////////////////
 //! build a sphere
 //////////////////////////////////////////////////////////////////////////
-void buildSphere(void)
+void buildSphere(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace)
 {
-    Real32 Radius(frand()*1.5+0.2);
+    Real32 Radius((Real32)(rand()%2)*0.5+0.5);
     Matrix m;
     //create OpenSG mesh
-    GeometryRefPtr sphere;
-    NodeRefPtr sphereNode = makeSphere(2, Radius);
+    GeometryRecPtr sphere;
+    NodeRecPtr sphereNode = makeSphere(2, Radius);
     sphere = dynamic_cast<Geometry*>(sphereNode->getCore());
-    SimpleMaterialRefPtr sphere_mat = SimpleMaterial::create();
+    SimpleMaterialRecPtr sphere_mat = SimpleMaterial::create();
     sphere_mat->setAmbient(Color3f(0.0,0.0,0.0));
     sphere_mat->setDiffuse(Color3f(0.0,0.0,1.0));
+
     sphere->setMaterial(sphere_mat);
-    TransformRefPtr sphereTrans;
-    NodeRefPtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
+
+    TransformRecPtr sphereTrans;
+    NodeRecPtr sphereTransNode = makeCoredNode<Transform>(&sphereTrans);
     m.setIdentity();
-    Real32 randX = frand()*10.0-5.0;
-    Real32 randY = frand()*10.0-5.0;
+    Real32 randX = (Real32)(rand()%10)-5.0;
+    Real32 randY = (Real32)(rand()%10)-5.0;
     m.setTranslate(randX, randY, 10.0);
     sphereTrans->setMatrix(m);
-    //create ODE data
-    PhysicsBodyRefPtr sphereBody = PhysicsBody::create(physicsWorld);
-        sphereBody->setPosition(Vec3f(randX, randY, 10.0));
-        sphereBody->setAngularDamping(0.0001);
-    sphereBody->setSphereMass(0.4,Radius);
 
-    PhysicsSphereGeomRefPtr sphereGeom = PhysicsSphereGeom::create();
-        sphereGeom->setBody(sphereBody);
-        sphereGeom->setSpace(physicsSpace);
-        sphereGeom->setRadius(Radius);
-        sphereGeom->setCategoryBits(SphereCategory);
-    
+    //create ODE data
+    PhysicsBodyRecPtr sphereBody = PhysicsBody::create(physicsWorld);
+    sphereBody->setPosition(Vec3f(randX, randY, 10.0));
+    sphereBody->setAngularDamping(0.0001);
+
+    sphereBody->setSphereMass(1.0,Radius);
+
+    PhysicsSphereGeomRecPtr sphereGeom = PhysicsSphereGeom::create();
+    sphereGeom->setBody(sphereBody);
+    sphereGeom->setSpace(physicsSpace);
+    sphereGeom->setRadius(Radius);
+    sphereGeom->setCategoryBits(SphereCategory);
+
+
     //add attachments
     sphereNode->addAttachment(sphereGeom);
+
     sphereTransNode->addAttachment(sphereBody);
     sphereTransNode->addChild(sphereNode);
+
     //add to SceneGraph
     spaceGroupNode->addChild(sphereTransNode);
 
@@ -483,50 +441,47 @@ void buildSphere(void)
 //////////////////////////////////////////////////////////////////////////
 //! trimesh defined by filenode will be loaded
 //////////////////////////////////////////////////////////////////////////
-void buildTriMesh(void)
+void buildTriMesh(Node* const TriGeometryBase, Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace)
 {
-    //NodeRefPtr tri = makeTorus(0.5, 1.0, 24, 12);
-    //NodeRefPtr tri = makeBox(10.0, 10.0, 10.0, 1, 1, 1);
-    NodeRefPtr tri = cloneTree(TriGeometryBase);
+    NodeRecPtr tri = cloneTree(TriGeometryBase);
     if(tri!=NULL)
     {
-        GeometryRefPtr triGeo = dynamic_cast<Geometry*>(tri->getCore()); 
+        GeometryRecPtr triGeo = dynamic_cast<Geometry*>(tri->getCore()); 
+        Matrix m;
+        SimpleMaterialRecPtr tri_mat = SimpleMaterial::create();
+        tri_mat->setAmbient(Color3f(0.1,0.1,0.2));
+        tri_mat->setDiffuse(Color3f(1.0,0.1,0.7));
 
-        Real32 randX = frand()*10.0-5.0;
-        Real32 randY = frand()*10.0-5.0;
+        triGeo->setMaterial(tri_mat);
+        TransformRecPtr triTrans;
+        NodeRecPtr triTransNode = makeCoredNode<Transform>(&triTrans);
+        m.setIdentity();
+        Real32 randX = (Real32)(rand()%10)-5.0;
+        Real32 randY = (Real32)(rand()%10)-5.0;
+        m.setTranslate(randX, randY, 18.0);
+        triTrans->setMatrix(m);
 
         //create ODE data
         Vec3f GeometryBounds(calcMinGeometryBounds(triGeo));
-        PhysicsBodyRefPtr triBody = PhysicsBody::create(physicsWorld);
-            triBody->setPosition(Vec3f(randX, randY, 18.0));
-            triBody->setLinearDamping(0.0001);
-            triBody->setAngularDamping(0.0001);
-            triBody->setBoxMass(1.0,GeometryBounds.x(), GeometryBounds.y(), GeometryBounds.z());
+        PhysicsBodyRecPtr triBody = PhysicsBody::create(physicsWorld);
+        triBody->setPosition(Vec3f(randX, randY, 18.0));
+        triBody->setLinearDamping(0.0001);
+        triBody->setAngularDamping(0.0001);
 
-        PhysicsGeomRefPtr triGeom;
+        triBody->setBoxMass(1.0,GeometryBounds.x(), GeometryBounds.y(), GeometryBounds.z());
+        PhysicsGeomRecPtr triGeom;
         if(true)
         {
             triGeom = PhysicsTriMeshGeom::create();
-                triGeom->setBody(triBody);
-                //add geom to space for collision
-                triGeom->setSpace(physicsSpace);
-                //set the geometryNode to fill the ode-triMesh
-                dynamic_pointer_cast<PhysicsTriMeshGeom>(triGeom)->setGeometryNode(tri);
-                triGeom->setCategoryBits(TriCategory);
+            triGeom->setBody(triBody);
+            //add geom to space for collision
+            triGeom->setSpace(physicsSpace);
+            //set the geometryNode to fill the ode-triMesh
+            NodeRecPtr TorusGeometryNode(makeTorus(0.55, 1.5, 6, 6));
+            dynamic_pointer_cast<PhysicsTriMeshGeom>(triGeom)->setGeometryNode(TorusGeometryNode);
+            triGeom->setCategoryBits(TriCategory);
         }
 
-        Matrix m;
-        SimpleMaterialRefPtr tri_mat = SimpleMaterial::create();
-        tri_mat->setAmbient(Color3f(0.1,0.1,0.2));
-        tri_mat->setDiffuse(Color3f(1.0,0.1,0.7));
-        triGeo->setMaterial(tri_mat);
-        TransformRefPtr triTrans;
-        NodeRefPtr triTransNode = makeCoredNode<Transform>(&triTrans);
-        m.setIdentity();
-        //m.setTranslate(randX, randY, 18.0);
-        triTrans->setMatrix(m);
-
-        
         //add attachments
         tri->addAttachment(triGeom);
         triTransNode->addAttachment(triBody);

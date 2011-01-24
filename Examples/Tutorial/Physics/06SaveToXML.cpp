@@ -27,7 +27,8 @@
 
 #include "OSGFieldContainerFactory.h"
 #include "OSGNameAttachment.h"
-#include "OSGSceneFileHandler.h"
+
+#include "OSGFCFileHandler.h"
 
 // Input
 #include "OSGWindowUtils.h"
@@ -44,49 +45,20 @@ OSG_USING_NAMESPACE
 // forward declaration so we can have the interesting stuff upfront
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
-void buildHingeJointMesh(Node* const spaceGroupNode,
-                         PhysicsWorld* const physicsWorld,
-                         PhysicsHashSpace* const physicsSpace);
-void buildBallJointMesh(Node* const spaceGroupNode,
-                        PhysicsWorld* const physicsWorld,
-                        PhysicsHashSpace* const physicsSpace);
-void buildMotorJointMesh(Node* const spaceGroupNode,
-                         PhysicsWorld* const physicsWorld,
-                         PhysicsHashSpace* const physicsSpace);
 
-void keyPressed(KeyEventDetails* const details,
-                Node* const spaceGroupNode,
-                PhysicsWorld* const physicsWorld,
-                PhysicsHashSpace* const physicsSpace)
+PhysicsBodyUnrecPtr  buildBox(const Pnt3f& Position,
+                              const Vec3f& Dimensions,
+                              const Color3f& Color,
+                              Node* const spaceGroupNode,
+                              PhysicsWorld* const physicsWorld,
+                              PhysicsHashSpace* const physicsSpace);
+
+void keyPressed(KeyEventDetails* const details)
 {
     if(details->getKey() == KeyEventDetails::KEY_Q &&
        details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
-    }
-    switch(details->getKey())
-    {
-        case KeyEventDetails::KEY_H:
-            {
-                buildHingeJointMesh(spaceGroupNode,
-                                    physicsWorld,
-                                    physicsSpace);
-            }
-            break;
-        case KeyEventDetails::KEY_B:
-            {
-                buildBallJointMesh(spaceGroupNode,
-                                   physicsWorld,
-                                   physicsSpace);
-            }
-            break;
-        case KeyEventDetails::KEY_M:
-            {
-                buildMotorJointMesh(spaceGroupNode,
-                                    physicsWorld,
-                                    physicsSpace);
-            }
-            break;
     }
 }
 
@@ -128,7 +100,7 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
         }
     }
 }
-// Initialize GLUT & OpenSG and set up the rootNode
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -153,6 +125,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1));
 
         //Make Main Scene Node
         NodeUnrecPtr scene = makeCoredNode<Group>();
@@ -183,6 +156,7 @@ int main(int argc, char **argv)
         physHandler->setUpdateNode(rootNode);
         physHandler->attachUpdateProducer(TutorialWindow);
 
+
         rootNode->addAttachment(physHandler);    
         rootNode->addAttachment(physicsWorld);
         rootNode->addAttachment(hashSpace);
@@ -192,8 +166,7 @@ int main(int argc, char **argv)
         /* create spaces, geoms and bodys                                                                     */
         /************************************************************************/
         //create a group for our space
-        GroupUnrecPtr spaceGroup;
-        NodeRecPtr spaceGroupNode = makeCoredNode<Group>(&spaceGroup);
+        NodeRecPtr spaceGroupNode = makeCoredNode<Group>();
         //create the ground plane
         GeometryUnrecPtr plane;
         NodeUnrecPtr planeNode = makeBox(30.0, 30.0, 1.0, 1, 1, 1);
@@ -219,30 +192,41 @@ int main(int argc, char **argv)
 
         scene->addChild(spaceGroupNode);
 
-        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1,
-                                                      spaceGroupNode.get(),
-                                                      physicsWorld.get(),
-                                                      hashSpace.get()));
+        UInt32 NumBoxes(5);
+        for(UInt32 i(0) ; i<NumBoxes ; ++i)
+        {
+            Vec3f BoxSize(1.0,1.0,1.0);
+            Pnt3f BoxPosition((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
+
+            buildBox(BoxPosition,
+                     BoxSize,
+                     Color3f(0.0f,1.0f,0.0f),
+                     spaceGroupNode,
+                     physicsWorld,
+                     hashSpace);
+        }
+
+        FCFileType::FCPtrStore CollectionStore;
+        CollectionStore.insert(rootNode);
+
+        FCFileHandler::the()->write(CollectionStore,BoostPath("./06Output.xml"));
 
         // tell the manager what to manage
         sceneManager.setRoot  (rootNode);
 
         // show the whole rootNode
-        sceneManager.getNavigator()->set(Pnt3f(-10.0,10.0,15.0), Pnt3f(0.0,0.0,0.0), Vec3f(0.0,0.0,1.0));
-        sceneManager.getNavigator()->setMotionFactor(1.0f);
-        sceneManager.getCamera()->setFar(10000.0f);
-        sceneManager.getCamera()->setNear(0.1f);
+        sceneManager.showAll();
 
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
                                    WinSize,
-                                   "02Joints");
+                                   "06PhysicsFileIO");
 
         //Enter main Loop
         TutorialWindow->mainLoop();
-    }
 
+    }
     osgExit();
 
     return 0;
@@ -304,132 +288,4 @@ PhysicsBodyUnrecPtr  buildBox(const Pnt3f& Position,
 
     return boxBody;
 }
-//////////////////////////////////////////////////////////////////////////
-//! build a Hinge joint with attached Meshes
-//////////////////////////////////////////////////////////////////////////
-void buildHingeJointMesh(Node* const spaceGroupNode,
-                         PhysicsWorld* const physicsWorld,
-                         PhysicsHashSpace* const physicsSpace)
-{
-    Vec3f Box1Size(1.0,1.0,0.1),
-    Box2Size(1.0,1.0,1.0);
-    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
-    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+.05,0.0,0.0)));
 
-    PhysicsBodyUnrecPtr Box1Body = buildBox(Box1Position,
-                                            Box1Size,
-                                            Color3f(0.0f,1.0f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace);
-
-    PhysicsBodyUnrecPtr Box2Body = buildBox(Box2Position,
-                                            Box2Size,
-                                            Color3f(0.0f,0.5f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace );
-
-    //Create Hinge Joint
-    PhysicsHingeJointUnrecPtr TutorialHingeJoint = PhysicsHingeJoint::create(Box1Body->getWorld());
-    TutorialHingeJoint->setFirstBody(Box1Body);
-    TutorialHingeJoint->setSecondBody(Box2Body);
-    TutorialHingeJoint->setAxis(Vec3f(0.0,1.0,0.0));
-    TutorialHingeJoint->setAnchor(Vec3f(Box1Position) + (Vec3f(Box1Size.x()/2,0.0,0.0)));
-    TutorialHingeJoint->setLoStop(-0.3);
-    TutorialHingeJoint->setHiStop(0.3);
-
-    commitChanges();
-}
-
-void buildMotorJointMesh(Node* const spaceGroupNode,
-                         PhysicsWorld* const physicsWorld,
-                         PhysicsHashSpace* const physicsSpace)
-{
-    Vec3f Box1Size(1.0,1.5,0.1),
-          Box2Size(1.0,1.0,1.0);
-    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
-    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+0.01,0.0,0.0)));
-
-    PhysicsBodyUnrecPtr Box1Body = buildBox(Box1Position,
-                                            Box1Size,
-                                            Color3f(0.0f,1.0f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace);
-
-    PhysicsBodyUnrecPtr Box2Body = buildBox(Box2Position,
-                                            Box2Size,
-                                            Color3f(0.0f,0.5f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace );
-
-    //Create AMotor Joint
-    PhysicsAMotorJointUnrecPtr TutorialAMotorJoint = PhysicsAMotorJoint::create(Box1Body->getWorld());
-    TutorialAMotorJoint->setFirstBody(Box1Body);
-    TutorialAMotorJoint->setSecondBody(NULL);
-    TutorialAMotorJoint->setMode(dAMotorUser);
-    TutorialAMotorJoint->setNumAxes(1);
-    TutorialAMotorJoint->setAxis1Properties(Vec3f(1.0,0.0,0.0),1);
-
-    TutorialAMotorJoint->setFMax(13.0);
-    TutorialAMotorJoint->setVel(6.0);
-
-    PhysicsHingeJointUnrecPtr TutorialHingeJoint = PhysicsHingeJoint::create(Box1Body->getWorld());
-    TutorialHingeJoint->setFirstBody(Box1Body);
-    TutorialHingeJoint->setSecondBody(Box2Body);
-    TutorialHingeJoint->setAxis(Vec3f(1.0,0.0,0.0));
-    TutorialHingeJoint->setAnchor(Vec3f(Box1Position) + (Vec3f(Box1Size.x()/2,0.0,0.0)));
-    commitChanges();
-
-}
-
-void buildUniversalJointMesh(Node* const spaceGroupNode,
-                             PhysicsWorld* const physicsWorld,
-                             PhysicsHashSpace* const physicsSpace)
-{
-    /*PhysicsUniversalJointUnrecPtr TutorialUniversalJoint = PhysicsUniversalJoint::create(Box1Body->getWorld());
-      TutorialUniversalJoint->setFirstBody(Box1Body);
-      TutorialUniversalJoint->setSecondBody(Box2Body);
-      TutorialUniversalJoint->setAnchor(Box1Position + (Vec3f(Box1Size.x()/2+0.005,0.0,0.0)));
-      TutorialUniversalJoint->setAxis1(Vec3f(0.0,0.0,1.0));
-      TutorialUniversalJoint->setAxis2(Vec3f(0.0,1.0,0.0));
-      TutorialUniversalJoint->setLoStop(-0.3);
-      TutorialUniversalJoint->setHiStop(0.3);
-      TutorialUniversalJoint->setLoStop2(-0.3);
-      TutorialUniversalJoint->setHiStop2(0.3);*/
-    commitChanges();
-}
-
-void buildBallJointMesh(Node* const spaceGroupNode,
-                        PhysicsWorld* const physicsWorld,
-                        PhysicsHashSpace* const physicsSpace)
-{
-    Vec3f Box1Size(1.0,0.1,0.1),
-    Box2Size(1.0,1.0,1.0);
-    Pnt3f Box1Position((Real32)(rand()%10)-5.0, (Real32)(rand()%10)-5.0, 10.0);
-    Pnt3f Box2Position(Box1Position + (Vec3f(Box1Size.x()+0.1,0.0,0.0)));
-
-    PhysicsBodyUnrecPtr Box1Body = buildBox(Box1Position,
-                                            Box1Size,
-                                            Color3f(0.0f,1.0f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace);
-
-    PhysicsBodyUnrecPtr Box2Body = buildBox(Box2Position,
-                                            Box2Size,
-                                            Color3f(0.0f,0.5f,0.0f),
-                                            spaceGroupNode,
-                                            physicsWorld,
-                                            physicsSpace );
-
-    //Create Ball Joint
-    PhysicsBallJointUnrecPtr TutorialBallJoint = PhysicsBallJoint::create(Box1Body->getWorld());
-    TutorialBallJoint->setFirstBody(Box1Body);
-    TutorialBallJoint->setSecondBody(Box2Body);
-    TutorialBallJoint->setAnchor(Vec3f(Box1Position) + (Vec3f(Box1Size.x()/2+0.05,0.0,0.0)));
-
-    commitChanges();
-}

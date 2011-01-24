@@ -34,7 +34,6 @@
 		travMask="4294967295"
 		core="10"
 		children="13"
-        parent="0"
 	>
 	</Node>
     
@@ -49,7 +48,6 @@
 		travMask="4294967295"
 		core="12"
 		children="8;24;247"
-        parent="11"
 	>
 	</Node>
     
@@ -155,7 +153,6 @@
 		travMask="4294967295"
         attachments="5"
 		core="511"
-        parent="8"
 	>
 	</Node>
 	<Transform
@@ -170,7 +167,6 @@
 		travMask="4294967295"
 		core="6"
 		children="7"
-        parent="13"
 	>
 	</Node>
     
@@ -199,7 +195,6 @@
         attachments="21"
 		travMask="4294967295"
 		core="27"
-        parent="24"
 	>
 	</Node>
 	<Transform
@@ -214,7 +209,6 @@
 		travMask="4294967295"
 		core="23"
 		children="22"
-        parent="13"
 	>
 	</Node>
 	<PhysicsBody
@@ -282,7 +276,6 @@
         nameAttachment="Ground Box Node"
         attachments="250"
 		travMask="4294967295"
-        parent="13"
 		children=""
 		core="242"
 	>

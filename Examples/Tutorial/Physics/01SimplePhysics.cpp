@@ -46,6 +46,7 @@ OSG_USING_NAMESPACE
 // forward declaration so we can have the interesting stuff upfront
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
+void handleStatisticsReset(UpdateEventDetails* const details);
 void buildTriMesh(Node* const TriGeometryBase, Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
 void buildSphere(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
 void buildBox(Node* const spaceGroupNode, PhysicsWorld* const physicsWorld, PhysicsHashSpace* const physicsSpace);
@@ -57,7 +58,8 @@ void keyPressed(KeyEventDetails* const details,
                 PhysicsWorld* const physicsWorld,
                 PhysicsHashSpace* const physicsSpace)
 {
-    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
@@ -112,6 +114,26 @@ void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+}
+
 // Initialize GLUT & OpenSG and set up the rootNode
 int main(int argc, char **argv)
 {
@@ -132,6 +154,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
@@ -223,27 +246,36 @@ int main(int argc, char **argv)
         SimpleStatisticsForegroundRecPtr PhysicsStatForeground = SimpleStatisticsForeground::create();
         PhysicsStatForeground->setSize(25);
         PhysicsStatForeground->setColor(Color4f(0,1,0,0.7));
+        PhysicsStatForeground->addElement(WindowEventProducer::statWindowLoopTime, "Draw FPS: %r.3f");
+        PhysicsStatForeground->getCollector()->getElem(WindowEventProducer::statWindowLoopTime, true);
+        PhysicsStatForeground->addElement(RenderAction::statNGeometries, 
+                                         "%d Nodes drawn");
+        PhysicsStatForeground->getCollector()->getElem(RenderAction::statNGeometries, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statPhysicsTime, 
                                           "Physics time: %.3f s");
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statPhysicsTime, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statCollisionTime, 
                                           "Collision time: %.3f s");
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statCollisionTime, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statSimulationTime, 
                                           "Simulation time: %.3f s");
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statSimulationTime, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statNCollisions, 
                                           "%d collisions");
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statNCollisions, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statNCollisionTests, 
                                           "%d collision tests");
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statNCollisionTests, true);
         PhysicsStatForeground->addElement(PhysicsHandler::statNPhysicsSteps, 
                                           "%d simulation steps per frame");
-        PhysicsStatForeground->setVerticalAlign(SimpleStatisticsForeground::Center);
+        PhysicsStatForeground->getCollector()->getElem(PhysicsHandler::statNPhysicsSteps, true);
+        TutorialWindow->connectUpdate(boost::bind(handleStatisticsReset, _1), boost::signals2::at_front);
+        StatCollector::setGlobalCollector(PhysicsStatForeground->getCollector());
 
 
         SimpleStatisticsForegroundRecPtr RenderStatForeground = SimpleStatisticsForeground::create();
         RenderStatForeground->setSize(25);
         RenderStatForeground->setColor(Color4f(0,1,0,0.7));
-        RenderStatForeground->addElement(RenderAction::statDrawTime, "Draw FPS: %r.3f");
-        RenderStatForeground->addElement(RenderAction::statNGeometries, 
-                                         "%d Nodes drawn");
 
 
 
@@ -255,9 +287,6 @@ int main(int argc, char **argv)
         sceneManager.getWindow()->getPort(0)->addForeground(PhysicsStatForeground);
         sceneManager.getWindow()->getPort(0)->addForeground(RenderStatForeground);
 
-        physHandler->setStatistics(PhysicsStatForeground->editCollector());
-        sceneManager.getRenderAction()->setStatCollector(RenderStatForeground->editCollector());
-
         
         TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1,
             TriGeometryBase.get(),
@@ -267,7 +296,10 @@ int main(int argc, char **argv)
             physicsSpace.get()));
 
         // show the whole rootNode
-        sceneManager.showAll();
+        sceneManager.getNavigator()->set(Pnt3f(20.0,20.0,10.0), Pnt3f(0.0,0.0,0.0), Vec3f(0.0,0.0,1.0));
+        sceneManager.getNavigator()->setMotionFactor(1.0f);
+        sceneManager.getCamera()->setFar(10000.0f);
+        sceneManager.getCamera()->setNear(0.1f);
 
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
@@ -294,6 +326,11 @@ void display(SimpleSceneManager *mgr)
 void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
+}
+
+void handleStatisticsReset(UpdateEventDetails* const details)
+{
+    StatCollector::getGlobalCollector()->reset();
 }
 
 
