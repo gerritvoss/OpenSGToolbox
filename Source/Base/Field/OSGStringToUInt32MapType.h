@@ -34,13 +34,9 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
 #include "OSGBaseDef.h"
-
-#include "OSGFieldType.h"
-#include "OSGBaseFieldTraits.h"
-#include "OSGDataType.h"
-
+#include "OSGBaseTypes.h"
+#include "OSGFieldTraits.h"
 #include "OSGSField.h"
 #include "OSGMField.h"
 
@@ -60,7 +56,7 @@ struct FieldTraits<StringToUInt32Map> : public FieldTraitsTemplateBase<StringToU
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
-    typedef FieldTraits<std::string>  Self;
+    typedef FieldTraits<StringToUInt32Map>  Self;
 
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
@@ -68,7 +64,7 @@ struct FieldTraits<StringToUInt32Map> : public FieldTraitsTemplateBase<StringToU
                                       Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void);
 
     // Access to the names of the actual Fields
     static const Char8          *getSName     (void) { return "SFStringToUInt32Map"; }
@@ -78,194 +74,39 @@ struct FieldTraits<StringToUInt32Map> : public FieldTraitsTemplateBase<StringToU
     static StringToUInt32Map       getDefault   (void) { return StringToUInt32Map();   }
 
 
-    // This is where it gets interesting: the conversion functions
-
     // String conversion
 
     // Output inVal into outVal
-    // the exact mapping doesn't matter, 
-    // Our recommendation is to output as a string, 
-    // i.e. start and stop with ", as this simplifies integration into the
-    // OSG Loader.
     static void putToStream(const StringToUInt32Map   &inVal,
-            OutStream &outVal)
-    {
-        //Put the Size of the map
-        FieldTraits<UInt32>::putToStream(static_cast<UInt32>(inVal.size()),outVal);
-
-        //Loop through all of the map elelments
-        StringToUInt32Map::const_iterator Itor(inVal.begin());
-        for(; Itor != inVal.end(); ++Itor)
-        {
-            outVal << "," << Itor->first << ",";
-            FieldTraits<StringToUInt32Map::mapped_type>::putToStream( Itor->second,outVal );
-        }
-    }
+                            OutStream &outVal);
 
     // Setup outVal from the contents of inVal
-    // For complicated classes it makes sense to implement this function
-    // as a class method and just call that from here  
     static bool getFromCString(      StringToUInt32Map  &outVal,
-            const Char8     *&inVal)
-    {
-        //Get Size of the map
-        UInt32 Size(0);
-        if(sscanf(inVal,"%d", &Size) != 1)
-        {
-            return false;
-        }
-
-        outVal.clear();
-
-        //Loop through all of the map elelments
-        const Char8 *curInString(inVal);
-
-        std::string Key;
-        UInt32 Value;
-        for(UInt32 i(0) ; i<Size ; ++i)
-        {
-            //Move past the , seperator
-            curInString = strchr(curInString, ',');
-            ++curInString;
-            if(curInString == NULL)
-            {
-                return false;
-            }
-
-            //Move past the " seperator
-            //curInString = strchr(curInString, '\"');
-            //++curInString;
-            if(curInString == NULL)
-            {
-                return false;
-            }
-            //Get the key value
-
-            Key.assign(curInString, (strchr(curInString, ',') - curInString));
-
-            //Move past the map value
-            //curInString = strchr(curInString, '\"');
-            //++curInString;
-            
-            //Move past the , seperator
-            curInString = strchr(curInString, ',');
-            ++curInString;
-            if(curInString == NULL)
-            {
-                return false;
-            }
-
-
-            //Get the map value
-            FieldTraits<StringToUInt32Map::mapped_type>::getFromCString(Value, curInString );
-
-            //Add the Key/Value pair
-            outVal[Key] = Value;
-        }
-
-        return true;
-    }
+                                     const Char8     *&inVal);
 
     // Binary conversion
 
     // Return the size of the binary version in byte   
-    // There are two versions of this function, one for a single object, 
-    // one for an array of objects
-    static UInt32 getBinSize(const StringToUInt32Map & obj)
-    {
-        //Size:
-        //Size of a UInt32 -> number of items in the Map
-        //Sum of all the sizes of the strings
-        UInt32 StringSizeSum(0);
-        StringToUInt32Map::const_iterator Itor(obj.begin());
-        for( ; Itor != obj.end() ; ++Itor)
-        {
-            StringSizeSum += FieldTraits<std::string>::getBinSize(Itor->first);
-        }
+    static UInt32 getBinSize(const StringToUInt32Map & obj);
 
-        return sizeof(UInt32) + obj.size()*sizeof(UInt32) + StringSizeSum;
-    }
-
-    static UInt32 getBinSize (const StringToUInt32Map *obj, UInt32 num)
-    {
-        //Size:
-        //Sum of all the objs
-        UInt32 SizeSum(0);
-        for(UInt32 i = 0; i < num; ++i)
-        {
-            SizeSum += getBinSize(obj[i]);
-        }
-        return SizeSum;
-    }
+    static UInt32 getBinSize (const StringToUInt32Map *obj, UInt32 num);
 
     // Copy the object into the BinaryDataHandler
-    // the BDH has a number of methods to add a simple type to the stream
-    // just use those and use the same order to read them back in.
-    // Again there are two versions, one for a single object, one for an 
-    // array of objects
     static void copyToBin(      BinaryDataHandler &bdh, 
-            const StringToUInt32Map         &obj)
-    {
-        //Number of items in the map
-        bdh.putValue(static_cast<UInt32>(obj.size()));
-
-        //Loop through all of the map elelments
-        StringToUInt32Map::const_iterator Itor(obj.begin());
-        for(; Itor != obj.end(); ++Itor)
-        {
-            bdh.putValue(static_cast<StringToUInt32Map::key_type>(Itor->first));
-
-            bdh.putValue(static_cast<StringToUInt32Map::mapped_type>(Itor->second));
-        }
-    }
+                                const StringToUInt32Map         &obj);
 
     static void copyToBin(      BinaryDataHandler &bdh,
-            const StringToUInt32Map         *objs,
-            UInt32             num)
-    {
-        for(UInt32 i = 0; i < num; ++i)
-        {
-            copyToBin(bdh, objs[i]);
-        }
-    }
+                                const StringToUInt32Map         *objs,
+                                UInt32             num);
 
 
     // Copy the object from the BinaryDataHandler
-    // the BDH has a number of methods to get a simple type from the stream
-    // just use those and use the same order you used to write them out.
-    // Again there are two versions, one for a single object, one for an 
-    // array of objects
     static void copyFromBin(BinaryDataHandler &bdh, 
-            StringToUInt32Map         &obj)
-    {
-        //Number of items in the list
-        UInt32 Size(0);
-        bdh.getValue(Size);
+                            StringToUInt32Map         &obj);
 
-        obj.clear();
-
-
-        std::string Key;
-        UInt32 Value;
-
-        //Loop through all of the map elelments
-        for(UInt32 i(0) ; i<Size ; ++i)
-        {
-            FieldTraits<StringToUInt32Map::key_type>::copyFromBin( bdh, Key );
-            bdh.getValue(Value);
-
-            obj[Key] = Value;
-        }
-    }
     static void copyFromBin(BinaryDataHandler &bdh,
-            StringToUInt32Map         *objs,
-            UInt32             num)
-    {
-        for(UInt32 i = 0; i < num; ++i)
-        {
-            copyFromBin(bdh, objs[i]);
-        }
-    }
+                            StringToUInt32Map         *objs,
+                            UInt32             num);
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS

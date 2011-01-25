@@ -36,13 +36,9 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include "OSGConfig.h"
 #include "OSGBaseDef.h"
-
-#include "OSGFieldType.h"
-#include "OSGBaseFieldTraits.h"
-#include "OSGDataType.h"
-
+#include "OSGBaseTypes.h"
+#include "OSGFieldTraits.h"
 #include "OSGSField.h"
 #include "OSGMField.h"
 
@@ -63,7 +59,7 @@ struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
     // Static DataType descriptor, see OSGNewFieldType.cpp for implementation
     static DataType       _type;
 
-    typedef FieldTraits<std::string>  Self;
+    typedef FieldTraits<BoostPath>  Self;
 
     // Define whether string conversions are available. It is strongly
     // recommended to implement both.
@@ -71,7 +67,7 @@ struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
                                       Self::FromStringConvertible)  };
 
     // access method for the DataType
-    static OSG_BASE_DLLMAPPING DataType       &getType      (void) { return _type;          }
+    static OSG_BASE_DLLMAPPING DataType       &getType      (void);
 
     // Access to the names of the actual Fields
     static const Char8          *getSName     (void) { return "SFBoostPath"; }
@@ -87,119 +83,35 @@ struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
     // String conversion
 
     // Output inVal into outVal
-    // the exact mapping doesn't matter, 
-    // Our recommendation is to output as a string, 
-    // i.e. start and stop with ", as this simplifies integration into the
-    // OSG Loader.
     static void putToStream(const BoostPath   &inVal,
-            OutStream &outVal)
-    {
-        outVal << inVal.string();
-    }
+            OutStream &outVal);
     
     // Setup outVal from the contents of inVal
-    // For complicated classes it makes sense to implement this function
-    // as a class method and just call that from here  
     static bool getFromCString(      BoostPath  &outVal,
-                              const Char8     *&inVal)
-    {
-		std::string PathString("");
-		if( FieldTraits<std::string>::getFromCString(PathString, inVal) )
-		{
-			try
-			{
-				outVal = PathString;
-				return true;
-			}
-			catch(boost::filesystem::filesystem_error& error)
-			{
-				SWARNING <<
-					 "ERROR in creating file path from string:" << error.what() <<
-					 std::endl;
-				return false;
-			}
-		}
-		else
-		{
-			return false;
-		}
-        
-    }
+                              const Char8     *&inVal);
     
     // Binary conversion
     
     // Return the size of the binary version in byte   
-    // There are two versions of this function, one for a single object, 
-    // one for an array of objects
-    static UInt32 getBinSize(const BoostPath & obj)
-    {
-		return FieldTraits<std::string>::getBinSize(obj.string());
-    }
+    static UInt32 getBinSize(const BoostPath & obj);
 
-    static UInt32 getBinSize (const BoostPath *obj, UInt32 num)
-    {
-        //Size:
-		//Sum of all the objs
-		UInt32 SizeSum(0);
-    	for(UInt32 i = 0; i < num; ++i)
-        {
-            SizeSum += FieldTraits<std::string>::getBinSize(obj[i].string());
-        }
-        return SizeSum;
-    }
+    static UInt32 getBinSize (const BoostPath *obj, UInt32 num);
 
     // Copy the object into the BinaryDataHandler
-    // the BDH has a number of methods to add a simple type to the stream
-    // just use those and use the same order to read them back in.
-    // Again there are two versions, one for a single object, one for an 
-    // array of objects
     static void copyToBin(      BinaryDataHandler &bdh, 
-                          const BoostPath         &obj)
-    {
-		FieldTraits<std::string>::copyToBin(bdh, obj.string());
-    }
+                          const BoostPath         &obj);
 
     static void copyToBin(      BinaryDataHandler &bdh,
                           const BoostPath         *objs,
-                                UInt32             num)
-    {
-    	for(UInt32 i = 0; i < num; ++i)
-        {
-            copyToBin(bdh, objs[i]);
-        }
-    }
+                                UInt32             num);
     
 
     // Copy the object from the BinaryDataHandler
-    // the BDH has a number of methods to get a simple type from the stream
-    // just use those and use the same order you used to write them out.
-    // Again there are two versions, one for a single object, one for an 
-    // array of objects
     static void copyFromBin(BinaryDataHandler &bdh, 
-                            BoostPath         &obj)
-    {
-		std::string PathString("");
-		FieldTraits<std::string>::copyFromBin(bdh, PathString);
-		try
-		{
-			obj = PathString;
-		}
-		catch(boost::filesystem::filesystem_error& error)
-		{
-			SWARNING <<
-                 "ERROR in creating file path from binary:" << error.what() <<
-                 std::endl;
-		}
-    }
+                            BoostPath         &obj);
     static void copyFromBin(BinaryDataHandler &bdh,
                             BoostPath         *objs,
-                            UInt32             num)
-    {
-    	for(UInt32 i = 0; i < num; ++i)
-        {
-            copyFromBin(bdh, objs[i]);
-        }
-    }
+                            UInt32             num);
 };
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
