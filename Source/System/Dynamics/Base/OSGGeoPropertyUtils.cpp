@@ -18,21 +18,15 @@ void zeroGeoProperty(GeoVectorProperty* GeoProp)
         case GL_SHORT:
             zeroGeoPropertyTmpl<GLshort>(GeoProp);
             break;
-#ifndef OSG_EMBEDED
         case GL_FLOAT:
             zeroGeoPropertyTmpl<GLfloat>(GeoProp);
             break;
-#endif
-#ifdef OSG_EMBEDED
-        case GL_FIXED:
-            zeroGeoPropertyTmpl<GLfixed>(GeoProp);
-            break;
-#endif
-#ifndef OSG_EMBEDED
+        //case GL_FIXED:
+            //zeroGeoPropertyTmpl<GLfixed>(GeoProp);
+            //break;
         case GL_DOUBLE:
             zeroGeoPropertyTmpl<GLdouble>(GeoProp);
             break;
-#endif
         default:
             SWARNING << "Property format " << GeoProp->getFormat() << " not supported" << std::endl;
             break;
@@ -70,30 +64,24 @@ void morphGeoProperty(GeoVectorProperty* BaseGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
-#ifndef OSG_EMBEDED
         case GL_FLOAT:
             morphGeoPropertyTmpl<GLfloat>(BaseGeoProp,
                                    TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
-#endif
-#ifdef OSG_EMBEDED
-        case GL_FIXED:
-            morphGeoPropertyTmpl<GLfixed>(BaseGeoProp,
-                                   TargetGeoProp,
-                                   ResultGeoProp,
-                                   Weight);
-            break;
-#endif
-#ifndef OSG_EMBEDED
+        //case GL_FIXED:
+            //morphGeoPropertyTmpl<GLfixed>(BaseGeoProp,
+                                   //TargetGeoProp,
+                                   //ResultGeoProp,
+                                   //Weight);
+            //break;
         case GL_DOUBLE:
             morphGeoPropertyTmpl<GLdouble>(BaseGeoProp,
                                    TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
-#endif
         default:
             SWARNING << "Property format " << ResultGeoProp->getFormat() << " not supported" << std::endl;
             break;

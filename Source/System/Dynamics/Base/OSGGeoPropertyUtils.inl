@@ -28,6 +28,7 @@
 \*---------------------------------------------------------------------------*/
 #include "OSGGL.h"
 #include "OSGQuaternion.h"
+#include "OSGBaseTypeTraits.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -39,7 +40,7 @@ void zeroGeoPropertyTmpl(GeoVectorProperty* GeoProp)
     UInt32 NumElements(GeoProp->size() * GeoProp->getDimension());
     for(UInt32 i(0) ; i<NumElements ; ++i)
     {
-        *BasePropData = static_cast<TypeT>(0);
+        *BasePropData = TypeTraits<TypeT>::getZeroElement();
         ++BasePropData;
     }
 }
@@ -54,37 +55,32 @@ void morphGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
     if(ResultGeoProp->getUsage() & GeoProperty::UsageTangentSpace &&
        ResultGeoProp->getDimension() == 3 &&
        (
-#ifndef OSG_EMBEDED
         ResultGeoProp->getFormat() == GL_FLOAT ||
-        ResultGeoProp->getFormat() == GL_DOUBLE
-#endif
-#ifdef OSG_EMBEDED
-        ResultGeoProp->getFormat() == GL_FIXED
-#endif
+        ResultGeoProp->getFormat() == GL_DOUBLE/* ||*/
+        /*ResultGeoProp->getFormat() == GL_FIXED*/
       ))
     {
-#ifndef OSG_EMBEDED
-    if(ResultGeoProp->getFormat() == GL_FLOAT)
-    {
-        morphNormGeoPropertyTmpl<GLfloat>(BaseGeoProp,
-                                 TargetGeoProp,
-                                 ResultGeoProp,
-                                 Weight);
-    }
-    else if(ResultGeoProp->getFormat() == GL_DOUBLE)
-    {
-        morphNormGeoPropertyTmpl<GLdouble>(BaseGeoProp,
-                                 TargetGeoProp,
-                                 ResultGeoProp,
-                                 Weight);
-    }
-#endif
-#ifdef OSG_EMBEDED
-        morphNormGeoPropertyTmpl<GLfixed>(BaseGeoProp,
-                                 TargetGeoProp,
-                                 ResultGeoProp,
-                                 Weight);
-#endif
+        if(ResultGeoProp->getFormat() == GL_FLOAT)
+        {
+            morphNormGeoPropertyTmpl<GLfloat>(BaseGeoProp,
+                                              TargetGeoProp,
+                                              ResultGeoProp,
+                                              Weight);
+        }
+        else if(ResultGeoProp->getFormat() == GL_DOUBLE)
+        {
+            morphNormGeoPropertyTmpl<GLdouble>(BaseGeoProp,
+                                               TargetGeoProp,
+                                               ResultGeoProp,
+                                               Weight);
+        }
+        //else if(ResultGeoProp->getFormat() == GL_FIXED)
+        //{
+        //morphNormGeoPropertyTmpl<GLfixed>(BaseGeoProp,
+        //TargetGeoProp,
+        //ResultGeoProp,
+        //Weight);
+        //return;
         return;
     }
 
