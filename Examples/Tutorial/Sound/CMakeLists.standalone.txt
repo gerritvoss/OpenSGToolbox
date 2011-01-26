@@ -20,13 +20,13 @@ SET(OSG_COMPONENTS OSGBase
                    OSGDrawable 
                    OSGFileIO 
                    OSGGroup 
-                   OSGImageFileIO
                    OSGState 
                    OSGSystem 
                    OSGUtil 
                    OSGDynamics 
                    OSGWindow 
                    OSGContribSound 
+                   OSGTBFileIO 
                    )
 
 IF(UNIX)

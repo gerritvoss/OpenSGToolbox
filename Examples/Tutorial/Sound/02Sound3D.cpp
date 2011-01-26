@@ -34,142 +34,110 @@
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
-// with OSG::, but that would be a bit tedious for this example
+// with , but that would be a bit tedious for this example
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-
-WindowEventProducerUnrecPtr TheWindowEventProducer;
-EventConnection MouseEventConnection;
-TransformUnrecPtr TheSphereTransform;
-
-SoundUnrecPtr PopSound;
-SoundEmitterUnrecPtr TheEmitter;
-
 // forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-class TutorialSoundListener : public SoundListener
+void handleSoundPlayed(SoundEventDetails* const details)
 {
-    virtual void soundPlayed(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Played" << std::endl;
-    }
+    std::cout << "Sound Played" << std::endl;
+}
 
-    virtual void soundStopped(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Channel Stopped" << std::endl;
-    }
-
-    virtual void soundPaused(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Channel Paused" << std::endl;
-    }
-
-    virtual void soundUnpaused(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Channel Unpaused" << std::endl;
-    }
-
-    virtual void soundLooped(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Channel Looped" << std::endl;
-    }
-
-    virtual void soundEnded(const SoundEventUnrecPtr e)
-    {
-        std::cout << "Sound Channel Ended" << std::endl;
-    }
-};
-
-class TutorialMouseMotionListener : public MouseMotionListener
+void handleSoundStopped(SoundEventDetails* const details)
 {
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-    }
+    std::cout << "Sound Channel Stopped" << std::endl;
+}
 
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-    }
-};
-
-class TutorialMouseListener : public MouseListener
+void handleSoundPaused(SoundEventDetails* const details)
 {
-    /*=========================  PUBLIC  ===============================*/
-  public:
-  
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-    }
-};
+    std::cout << "Sound Channel Paused" << std::endl;
+}
 
-class TutorialKeyListener : public KeyListener
+void handleSoundUnpaused(SoundEventDetails* const details)
 {
-   /*=========================  PUBLIC  ===============================*/
-public:
+    std::cout << "Sound Channel Unpaused" << std::endl;
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-    {
-    }
-    virtual void keyReleased(const KeyEventUnrecPtr e)
-    {
-    }
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-           TheWindowEventProducer->closeWindow();
-       }
-
-       switch(e->getKey())
-       {
-       case KeyEvent::KEY_P:
-           TheEmitter->emitSound();
-           break;
-       }
-    }
-protected:
-    UInt32 _PopChannelID;
-};
-
-class TutorialUpdateListener : public UpdateListener
+void handleSoundLooped(SoundEventDetails* const details)
 {
-    /*=========================  PUBLIC  ===============================*/
-protected:
-    Real32 _TotalTime;
-public:
-      TutorialUpdateListener(void) : _TotalTime(0.0)
-      {
-      }
+    std::cout << "Sound Channel Looped" << std::endl;
+}
 
-    virtual void update(const UpdateEventUnrecPtr e)
+void handleUpdate(UpdateEventDetails* const details,
+                  Transform* const TheSphereTransform)
+{
+    static Real32 _TotalTime(0.0f);
+    _TotalTime += details->getElapsedTime();
+
+    Matrix Translate;
+    Translate.setTranslate(0.0,0.0,-5.0);
+    Matrix Rotation;
+    Rotation.setRotate(Quaternion(Vec3f(0.0,1.0,0.0), osgDegree2Rad(_TotalTime*80.0)));
+
+    Matrix Total(Rotation);
+    Total.mult(Translate);
+
+    TheSphereTransform->setMatrix(Total);
+}
+
+void keyTyped(KeyEventDetails* const details,
+              SoundEmitter* const TheEmitter)
+{
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        _TotalTime += e->getElapsedTime();
-        Matrix Translate;
-        Translate.setTranslate(0.0,0.0,-5.0);
-        Matrix Rotation;
-        Rotation.setRotate(Quaternion(Vec3f(0.0,1.0,0.0), osgDegree2Rad(_TotalTime*80.0)));
-
-        Matrix Total(Rotation);
-        Total.mult(Translate);
-
-            TheSphereTransform->setMatrix(Total);
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-};
+    switch(details->getKey())
+    {
+        case KeyEventDetails::KEY_P:
+            TheEmitter->emitSound();
+            break;
+    }
+}
+
+void mousePressed(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+{
+    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+}
+
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
+{
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+}
+
 
 // Initialize WIN32 & OpenSG and set up the scene
 int main(int argc, char **argv)
@@ -180,97 +148,99 @@ int main(int argc, char **argv)
 
     // OSG init
     osgInit(argc,argv);
-    
-    TheWindowEventProducer = createNativeWindow();
-    TheWindowEventProducer->initWindow();
-    
-    TheWindowEventProducer->setDisplayCallback(display);
-    TheWindowEventProducer->setReshapeCallback(reshape);
 
-    //Attach Mouse Listener
-    TutorialMouseListener TheTutorialMouseListener;
-    MouseEventConnection = TheWindowEventProducer->addMouseListener(&TheTutorialMouseListener);
-    //Attach Key Listener
-    TutorialKeyListener TheTutorialKeyListener;
-    TheWindowEventProducer->addKeyListener(&TheTutorialKeyListener);
-    //Attach MouseMotion Listener
-    TutorialMouseMotionListener TheTutorialMouseMotionListener;
-    TheWindowEventProducer->addMouseMotionListener(&TheTutorialMouseMotionListener);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialUpdateListener TheUpdateListener;
-    TheWindowEventProducer->addUpdateListener(&TheUpdateListener);
-    
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    //Sound Emitter Node
-    TheEmitter = SoundEmitter::create();
-    TheEmitter->attachUpdateListener(TheWindowEventProducer);
+        //Attach to events
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
-    NodeUnrecPtr TheEmitterNode = Node::create();
+        //Sound Emitter Node
+        SoundEmitterRecPtr TheEmitter = SoundEmitter::create();
+        TheEmitter->attachUpdateProducer(TutorialWindow);
+
+        NodeUnrecPtr TheEmitterNode = Node::create();
         TheEmitterNode->setCore(TheEmitter);
 
-    //Sphere Transformation Node
-    Matrix Translate;
-    Translate.setTranslate(0.0,0.0,-5.0);
-    Matrix Rotation;
-    Rotation.setRotate(Quaternion(Vec3f(0.0,1.0,0.0), 0.0));
+        //Sphere Transformation Node
+        Matrix Translate;
+        Translate.setTranslate(0.0,0.0,-5.0);
+        Matrix Rotation;
+        Rotation.setRotate(Quaternion(Vec3f(0.0,1.0,0.0), 0.0));
 
-    Matrix Total(Translate);
-    Total.mult(Rotation);
+        Matrix Total(Translate);
+        Total.mult(Rotation);
 
-    TheSphereTransform = Transform::create();
+        TransformRecPtr TheSphereTransform = Transform::create();
         TheSphereTransform->setMatrix(Total);
 
-    NodeUnrecPtr SphereTransformNode = Node::create();
+        NodeUnrecPtr SphereTransformNode = Node::create();
         SphereTransformNode->setCore(TheSphereTransform);
         SphereTransformNode->addChild(makeSphere(2, 1.0));
         SphereTransformNode->addChild(TheEmitterNode);
 
-    // create the scene
-    NodeUnrecPtr scene = Node::create();
+        // create the scene
+        NodeUnrecPtr scene = Node::create();
         scene->setCore(Group::create());
         scene->addChild(SphereTransformNode);
 
-    // create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        // tell the manager what to manage
+        sceneManager.setRoot  (scene);
 
-    // tell the manager what to manage
-    mgr->setWindow(TheWindowEventProducer );
-    mgr->setRoot  (scene);
-
-    CameraUnrecPtr TheCamera = mgr->getCamera();
+        CameraUnrecPtr TheCamera = sceneManager.getCamera();
         TheCamera->setNear(0.1);
         TheCamera->setFar(100.0);
 
-    //Initialize the Sound Manager
-    SoundManager::the()->attachUpdateProducer(TheWindowEventProducer);
-    SoundManager::the()->setCamera(mgr->getCamera());
+        //Initialize the Sound Manager
+        SoundManager::the()->attachUpdateProducer(TutorialWindow);
+        SoundManager::the()->setCamera(sceneManager.getCamera());
 
-    PopSound = SoundManager::the()->createSound();
+        SoundRecPtr PopSound = SoundManager::the()->createSound();
         PopSound->setFile(BoostPath("./Data/pop.wav"));
         PopSound->setVolume(1.0);
         PopSound->setStreaming(false);
         PopSound->setLooping(-1);
         PopSound->setEnable3D(true);
-    
-    TutorialSoundListener TheSoundListerner;
-    PopSound->addSoundListener(&TheSoundListerner);
 
-    //Attach this sound to the emitter node
+        PopSound->connectSoundPlayed  (boost::bind(handleSoundPlayed,   _1));
+        PopSound->connectSoundStopped (boost::bind(handleSoundStopped,  _1));
+        PopSound->connectSoundPaused  (boost::bind(handleSoundPaused,   _1));
+        PopSound->connectSoundUnpaused(boost::bind(handleSoundUnpaused, _1));
+        PopSound->connectSoundLooped  (boost::bind(handleSoundLooped,   _1));
+
+        //Attach this sound to the emitter node
         TheEmitter->setSound(PopSound);
-    
+
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1,
+                                                    TheEmitter.get()));
+        TutorialWindow->connectUpdate(boost::bind(handleUpdate, _1,
+                                                  TheSphereTransform.get()));
+
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "02 Sound3D Window");
 
 
-    Vec2f WinSize(TheWindowEventProducer->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TheWindowEventProducer->getDesktopSize() - WinSize) *0.5);
-    TheWindowEventProducer->openWindow(WinPos,
-            WinSize,
-            "02 Sound3D Window");
+        //Enter main loop
+        TutorialWindow->mainLoop();
 
-
-    //Enter main loop
-    TheWindowEventProducer->mainLoop();
-
+    }
     osgExit();
     return 0;
 }
@@ -280,13 +250,13 @@ int main(int argc, char **argv)
 //
 
 // redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // react to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
