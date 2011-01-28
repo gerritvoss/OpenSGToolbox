@@ -37,13 +37,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 12CheckboxButton Headers
 #include "OSGButton.h"
@@ -53,75 +49,67 @@ void reshape(Vec2f Size);
 #include "OSGCheckboxButton.h"
 #include "OSGRadioButton.h"
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
-    
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
+
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-    /******************************************************
+        /******************************************************
 
-        Create and edit a CheckboxButton.
+          Create and edit a CheckboxButton.
 
-		Note: the only function call shown 
-		specific to	CheckboxButton is setSelected.
-		In DefaultLookAndFeel, the options 
-		for changing the style of the CheckBox
-		are shown.  CheckboxButton also 
-		inherits off Button so all features
-		of Button may be used.
+Note: the only function call shown 
+specific to	CheckboxButton is setSelected.
+In DefaultLookAndFeel, the options 
+for changing the style of the CheckBox
+are shown.  CheckboxButton also 
+inherits off Button so all features
+of Button may be used.
 
-		-setSelected(bool): Determines if the 
-			CheckboxButton is checked(true) or 
-			not checked(false).
+-setSelected(bool): Determines if the 
+CheckboxButton is checked(true) or 
+not checked(false).
 
-    ******************************************************/
-    CheckboxButtonRefPtr ExampleCheckboxButton = OSG::CheckboxButton::create();
+         ******************************************************/
+        CheckboxButtonRecPtr ExampleCheckboxButton = CheckboxButton::create();
         ExampleCheckboxButton->setMinSize(Vec2f(50, 25));
         ExampleCheckboxButton->setMaxSize(Vec2f(300, 100));
         ExampleCheckboxButton->setPreferredSize(Vec2f(200, 50));
@@ -130,60 +118,58 @@ int main(int argc, char **argv)
         ExampleCheckboxButton->setAlignment(Vec2f(0.5,0.5));
         ExampleCheckboxButton->setSelected(true);
 
-    
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        LayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(ExampleCheckboxButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(ExampleCheckboxButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "13CheckboxButton");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "13CheckboxButton");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -193,13 +179,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

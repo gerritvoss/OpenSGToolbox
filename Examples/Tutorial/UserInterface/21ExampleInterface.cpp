@@ -20,9 +20,6 @@
 #include "OSGGroup.h"
 #include "OSGViewport.h"
 
-// The general scene file loading handler
-#include "OSGSceneFileHandler.h"
-
 // Input
 #include "OSGWindowUtils.h"
 
@@ -35,13 +32,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 
 // 21ExampleInterface Headers
@@ -72,299 +65,156 @@ void reshape(Vec2f Size);
 #include "OSGTextArea.h"
 #include "OSGTextField.h"
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
 // Create functions create Component Panels to make 
 // code easier to read
-ComponentRefPtr createLeftPanelButtonPanel(void);
-ComponentRefPtr createLeftPanelRadioTextPanel(void);
-ComponentRefPtr createRightPanelButtonPanel(void);
-ComponentRefPtr createRightPanelCheckPanel(void);
+PanelTransitPtr createLeftPanelButtonPanel(void);
+PanelTransitPtr createLeftPanelRadioTextPanel(void);
+PanelTransitPtr createRightPanelButtonPanel(void);
+PanelTransitPtr createRightPanelCheckPanel(Node* const TorusNode,
+                                           Node* const SphereNode,
+                                           Node* const ConeNode,
+                                           Node* const BoxNode);
+
 // This function makes a complex Background outside of the main code
 // to make code easier to read
-LayerRefPtr createComplexBackground(void);
+LayerTransitPtr createComplexBackground(void);
+
 // These functions create materials to use with objects in scene
-ChunkMaterialRefPtr createRedMaterial(void);
-ChunkMaterialRefPtr createBlueMaterial(void);
-ChunkMaterialRefPtr createGreenMaterial(void);
-NodeRefPtr scene, ExampleTorus, ExampleCone, ExampleSphere, ExampleBox;
-void create3DObjects(void);
+ChunkMaterialTransitPtr createMaterial(const Color4f& TheColor);
 
+NodeTransitPtr createTorus(void);
+NodeTransitPtr createCone(void);
+NodeTransitPtr createSphere(void);
+NodeTransitPtr createBox(void);
 
+void setNodeTravMask(Node* const NodeToChange,
+                     UInt32 Mask)
+{         
+    NodeToChange->setTravMask(Mask);
+}
 
-// Declare some variables up front 
-RadioButtonGroupRefPtr buttonGroup;
-TextAreaRefPtr LeftPanelTextArea;
+void setTextColors(TextArea* const TextAreaToChange,
+                   Color4f TheColor)
+{         
+    TextAreaToChange->setTextColor(TheColor);
+    TextAreaToChange->setRolloverTextColor(TheColor);
+}
 
-class MakeTorus : public ButtonSelectedListener
+void mousePressed(MouseEventDetails* const details,
+                  SimpleSceneManager *mgr)
 {
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-        {         
-                scene->addChild(ExampleTorus);
-        }
-
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-        {         
-                scene->subChild(ExampleTorus);
-        }
-};
-class MakeSphere : public ButtonSelectedListener
-{
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-        {         
-                scene->addChild(ExampleSphere);
-        }
-
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-                scene->subChild(ExampleSphere);
-   }
-};
-class MakeBox : public ButtonSelectedListener
-{
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-        {         
-                scene->addChild(ExampleBox);
-        }
-
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-                scene->subChild(ExampleBox);
-   }
-};
-class MakeCone : public ButtonSelectedListener
-{
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-        {         
-                scene->addChild(ExampleCone);
-        }
-
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-                scene->subChild(ExampleCone);
-   }
-};
-
-
-// These classes create Listeners to change Font Color
-// in the TextArea
-class BlackFont : public ButtonSelectedListener
-{
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    if(dynamic_cast<WindowEventProducer*>(details->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
-            LeftPanelTextArea->setTextColor(Color4f( 0.0, 0.0 , 0.0, 1.0));
-            LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 0.0 , 0.0, 1.0));
-   }
-
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-    
-   }
-};
-class RedFont : public ButtonSelectedListener
-{
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-
-            LeftPanelTextArea->setTextColor(Color4f( 1.0, 0.0 , 0.0, 1.0));
-            LeftPanelTextArea->setRolloverTextColor(Color4f( 1.0, 0.0 , 0.0, 1.0));
-    
+        mgr->mouseButtonPress(details->getButton(), details->getLocation().x(), details->getLocation().y());
     }
+}
 
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-
-   }
-};
-class BlueFont : public ButtonSelectedListener
+void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
 {
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    if(dynamic_cast<WindowEventProducer*>(details->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
-
-            LeftPanelTextArea->setTextColor(Color4f( 0.0, 0.0 , 1.0, 1.0));
-            LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 0.0 , 1.0, 1.0));
-    
+        mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
     }
+}
 
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-
-   }
-};
-class GreenFont : public ButtonSelectedListener
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
 {
-public:
-
-   virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
+    if(dynamic_cast<WindowEventProducer*>(details->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
-
-            LeftPanelTextArea->setTextColor(Color4f( 0.0, 1.0 , 0.0, 1.0));
-            LeftPanelTextArea->setRolloverTextColor(Color4f( 0.0, 1.0 , 0.0, 1.0));
-    
+        mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
     }
+}
 
-   virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-   {
-
-   }
-};
-
-// Declare listeners to be global
-BlackFont RadioButton1Listener;
-RedFont RadioButton2Listener;
-GreenFont RadioButton3Listener;
-BlueFont RadioButton4Listener;
-MakeTorus RightPanelCheck1Listener;
-MakeBox RightPanelCheck2Listener;
-MakeSphere RightPanelCheck3Listener;
-MakeCone RightPanelCheck4Listener;
-class TutorialMouseListener : public MouseListener
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
 {
-  public:
-    virtual void mouseClicked(const MouseEventUnrecPtr e)
+    if(dynamic_cast<WindowEventProducer*>(details->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
-    }
-    virtual void mouseEntered(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mouseExited(const MouseEventUnrecPtr e)
-    {
-    }
-    virtual void mousePressed(const MouseEventUnrecPtr e)
-    {
-        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
         {
-            mgr->mouseButtonPress(e->getButton(), e->getLocation().x(), e->getLocation().y());
+            if(details->getUnitsToScroll() > 0)
+            {
+                mgr->mouseButtonPress(SimpleSceneManager::MouseDown,details->getLocation().x(),details->getLocation().y());
+            }
+            else if(details->getUnitsToScroll() < 0)
+            {
+                mgr->mouseButtonPress(SimpleSceneManager::MouseUp,details->getLocation().x(),details->getLocation().y());
+            }
         }
     }
-    virtual void mouseReleased(const MouseEventUnrecPtr e)
-    {
-        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
-        {
-           mgr->mouseButtonRelease(e->getButton(), e->getLocation().x(), e->getLocation().y());
-        }
-    }
-};
-
-class TutorialMouseMotionListener : public MouseMotionListener
-{
-  public:
-    virtual void mouseMoved(const MouseEventUnrecPtr e)
-    {
-        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
-        {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-        }
-    }
-
-    virtual void mouseDragged(const MouseEventUnrecPtr e)
-    {
-        if(TutorialWindow->getKeyModifiers() & KeyEvent::KEY_MODIFIER_CAPS_LOCK)
-        {
-            mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
-        }
-    }
-};
-
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialMouseListener mouseListener;
-    TutorialMouseMotionListener mouseMotionListener;
-    TutorialWindow->addMouseListener(&mouseListener);
-    TutorialWindow->addMouseMotionListener(&mouseMotionListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
+        TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
+        TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-
-    // Set up Window
-
-	//Load in File
-	NodeRefPtr LoadedFile = SceneFileHandler::the()->read("C:\\Documents and Settings\\All Users\\Documents\\Cell.osb");
-
-    // Make Main Scene Node
-    create3DObjects();
-    scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
-		scene->addChild(LoadedFile);
-
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
-
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
-
+        // Make Main Scene Node
+        NodeRecPtr Scene = makeCoredNode<Group>();
         
-    /******************************************************
-            
-            Create a Background
+        NodeRecPtr TorusNode  = createTorus();
+        NodeRecPtr SphereNode = createSphere();
+        NodeRecPtr ConeNode   = createCone();
+        NodeRecPtr BoxNode    = createBox();
 
-    ******************************************************/
-    ColorLayerRefPtr GreyBackground = OSG::ColorLayer::create();
+        Scene->addChild(TorusNode);
+        Scene->addChild(SphereNode);
+        Scene->addChild(ConeNode);
+        Scene->addChild(BoxNode);
+
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
+
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
+
+
+        /******************************************************
+
+          Create a Background
+
+         ******************************************************/
+        ColorLayerRecPtr GreyBackground = ColorLayer::create();
 
         GreyBackground->setColor(Color4f(.93,.93,.93,1.0));
 
 
-    /******************************************************
-            
-            Create some Borders
+        /******************************************************
 
-    ******************************************************/
-    LineBorderRefPtr PanelBorder = OSG::LineBorder::create();
-    EmptyBorderRefPtr Panel1Border = OSG::EmptyBorder::create();
-    EmptyBorderRefPtr Panel2Border = OSG::EmptyBorder::create();
-    EmptyBorderRefPtr emptyBorder = OSG::EmptyBorder::create();
-    
+          Create some Borders
+
+         ******************************************************/
+        LineBorderRecPtr PanelBorder = LineBorder::create();
+        EmptyBorderRecPtr Panel1Border = EmptyBorder::create();
+        EmptyBorderRecPtr Panel2Border = EmptyBorder::create();
+        EmptyBorderRecPtr emptyBorder = EmptyBorder::create();
+
         PanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
         PanelBorder->setWidth(1);
 
@@ -376,16 +226,16 @@ int main(int argc, char **argv)
         Panel2Border->setBottomWidth(0);
         Panel2Border->setLeftWidth(0);
         Panel2Border->setRightWidth(0);
-    
 
-    /******************************************************
 
-            Create some Labels and stuff to go 
-            with them
+        /******************************************************
 
-    ******************************************************/
-    LabelRefPtr LeftPanelLabel1 = OSG::Label::create();
-    UIFontRefPtr LeftPanelLabel1Font = OSG::UIFont::create();
+          Create some Labels and stuff to go 
+          with them
+
+         ******************************************************/
+        LabelRecPtr LeftPanelLabel1 = Label::create();
+        UIFontRecPtr LeftPanelLabel1Font = UIFont::create();
 
         LeftPanelLabel1Font->setSize(50);
 
@@ -394,96 +244,105 @@ int main(int argc, char **argv)
         LeftPanelLabel1->setFont(LeftPanelLabel1Font);
         LeftPanelLabel1->setText("OSG Gui");
         LeftPanelLabel1->setPreferredSize(Vec2f(300, 100));
-		LeftPanelLabel1->setAlignment(Vec2f(0.0f, 0.5f));
+        LeftPanelLabel1->setAlignment(Vec2f(0.0f, 0.5f));
 
-     /******************************************************
+        /******************************************************
 
-            Create some Layouts
+          Create some Layouts
 
-    ******************************************************/
-    BoxLayoutRefPtr MainInternalWindowLayout = OSG::BoxLayout::create();
-    FlowLayoutRefPtr LeftPanelLayout = OSG::FlowLayout::create();
-    BoxLayoutRefPtr RightPanelLayout = OSG::BoxLayout::create();
+         ******************************************************/
+        BoxLayoutRecPtr MainInternalWindowLayout = BoxLayout::create();
+        FlowLayoutRecPtr LeftPanelLayout = FlowLayout::create();
+        BoxLayoutRecPtr RightPanelLayout = BoxLayout::create();
         MainInternalWindowLayout->setOrientation(BoxLayout::HORIZONTAL_ORIENTATION);
 
         LeftPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
         LeftPanelLayout->setMinorAxisAlignment(1.0f);
 
         RightPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    
 
-    /******************************************************
 
-        Create MainFrame and Panels
+        /******************************************************
 
-    ******************************************************/
-    PanelRefPtr LeftPanel = OSG::Panel::create();
-    PanelRefPtr RightPanel = OSG::Panel::create();
+          Create MainFrame and Panels
 
-    // LeftPanel stuff
+         ******************************************************/
+        PanelRecPtr LeftPanel = Panel::createEmpty();
+        PanelRecPtr RightPanel = Panel::createEmpty();
+
+        // LeftPanel stuff
         LeftPanel->setPreferredSize(Vec2f(400, 500));
         LeftPanel->pushToChildren(LeftPanelLabel1);
-        LeftPanel->pushToChildren(createLeftPanelButtonPanel());
-        LeftPanel->pushToChildren(createLeftPanelRadioTextPanel());
+        PanelRecPtr LeftPanelButtonPanel = createLeftPanelButtonPanel();
+        LeftPanel->pushToChildren(LeftPanelButtonPanel);
+        PanelRecPtr LeftPanelRadioTextPanel = createLeftPanelRadioTextPanel();
+        LeftPanel->pushToChildren(LeftPanelRadioTextPanel);
         LeftPanel->setLayout(LeftPanelLayout);
         LeftPanel->setBackgrounds(GreyBackground);
         LeftPanel->setBorders(Panel1Border);
 
-    //RightPanel stuff
+        //RightPanel stuff
         RightPanel->setPreferredSize(Vec2f(200, 620));
-        RightPanel->pushToChildren(createRightPanelButtonPanel());
-        RightPanel->pushToChildren(createRightPanelCheckPanel());
+        PanelRecPtr RightPanelButtonPanel = createRightPanelButtonPanel();
+        RightPanel->pushToChildren(RightPanelButtonPanel);
+        PanelRecPtr RightPanelCheckPanel = createRightPanelCheckPanel(TorusNode,
+                                                                      SphereNode,
+                                                                      ConeNode,  
+                                                                      BoxNode);  
+        RightPanel->pushToChildren(RightPanelCheckPanel);
         RightPanel->setLayout(RightPanelLayout);
         RightPanel->setBackgrounds(GreyBackground);
         RightPanel->setBorders(Panel2Border);
-    
-    // Create The Main InternalWindow
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(LeftPanel);
-       MainInternalWindow->pushToChildren(RightPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(GreyBackground);
-       MainInternalWindow->setBorders(PanelBorder);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0f,1.0f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create The Main InternalWindow
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(LeftPanel);
+        MainInternalWindow->pushToChildren(RightPanel);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(GreyBackground);
+        MainInternalWindow->setBorders(PanelBorder);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(1.0f,1.0f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
+        //MainInternalWindow->setOpacity(0.7f);
+
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Make A 3D Rectangle to draw the UI on
-    UIRectangleRefPtr UIRectCore = UIRectangle::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Make A 3D Rectangle to draw the UI on
+        UIRectangleRecPtr UIRectCore = UIRectangle::create();
         UIRectCore->setPoint(Pnt3f(-310.0,-310.0,370.0));
         UIRectCore->setWidth(620);
         UIRectCore->setHeight(620);
         UIRectCore->setDrawingSurface(TutorialDrawingSurface);
-    
-    NodeRefPtr UIRectNode = OSG::Node::create();
+
+        NodeRecPtr UIRectNode = Node::create();
         UIRectNode->setCore(UIRectCore);
-    
+
         // add the UIRect as a child
-        scene->addChild(UIRectNode);
+        Scene->addChild(UIRectNode);
 
 
-    mgr->setRoot(scene);
+        sceneManager.setRoot(Scene);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "21ExampleInterface");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "21ExampleInterface");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -491,449 +350,464 @@ int main(int argc, char **argv)
 }
 
 
-ComponentRefPtr createLeftPanelButtonPanel(void)
-
+PanelTransitPtr createLeftPanelButtonPanel(void)
 {
-
     // Create Label for this Panel
-    LabelRefPtr LeftPanelButtonPanelLabel = OSG::Label::create();
+    LabelRecPtr LeftPanelButtonPanelLabel = Label::create();
 
-        LeftPanelButtonPanelLabel->setTextColor(Color4f(1.0,1.0,1.0,1.0));
-        LeftPanelButtonPanelLabel->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
-        LeftPanelButtonPanelLabel->setBackground(createComplexBackground());
-        LeftPanelButtonPanelLabel->setPreferredSize(Vec2f(100, 50));
-        LeftPanelButtonPanelLabel->setText("Various Options");
-		LeftPanelButtonPanelLabel->setAlignment(Vec2f(0.5,0.5));
+    LeftPanelButtonPanelLabel->setTextColor(Color4f(1.0,1.0,1.0,1.0));
+    LeftPanelButtonPanelLabel->setRolloverTextColor(Color4f(1.0,1.0,1.0,1.0));
+    LayerRecPtr ComplexBackground = createComplexBackground();
+    LeftPanelButtonPanelLabel->setBackground(ComplexBackground);
+    LeftPanelButtonPanelLabel->setPreferredSize(Vec2f(100, 50));
+    LeftPanelButtonPanelLabel->setText("Various Options");
+    LeftPanelButtonPanelLabel->setAlignment(Vec2f(0.5,0.5));
 
     // Create and edit the Panel buttons
-    ButtonRefPtr LeftPanelButton1 = OSG::Button::create();
-    ButtonRefPtr LeftPanelButton2 = OSG::Button::create();
-    ButtonRefPtr LeftPanelButton3 = OSG::Button::create();
-    ButtonRefPtr LeftPanelButton4 = OSG::Button::create();
-    ButtonRefPtr LeftPanelButton5 = OSG::Button::create();
-    ButtonRefPtr LeftPanelButton6 = OSG::Button::create();
+    ButtonRecPtr LeftPanelButton1 = Button::create();
+    ButtonRecPtr LeftPanelButton2 = Button::create();
+    ButtonRecPtr LeftPanelButton3 = Button::create();
+    ButtonRecPtr LeftPanelButton4 = Button::create();
+    ButtonRecPtr LeftPanelButton5 = Button::create();
+    ButtonRecPtr LeftPanelButton6 = Button::create();
 
-        LeftPanelButton1->setText("This");
-        LeftPanelButton1->setPreferredSize(Vec2f(100,50));
-    
-        LeftPanelButton2->setText("is");
-        LeftPanelButton2->setPreferredSize(Vec2f(100,50));
+    LeftPanelButton1->setText("This");
+    LeftPanelButton1->setPreferredSize(Vec2f(100,50));
 
-        LeftPanelButton3->setText("an");
-        LeftPanelButton3->setPreferredSize(Vec2f(100,50));
+    LeftPanelButton2->setText("is");
+    LeftPanelButton2->setPreferredSize(Vec2f(100,50));
 
-        LeftPanelButton4->setText("example");
-        LeftPanelButton4->setPreferredSize(Vec2f(100,50));
+    LeftPanelButton3->setText("an");
+    LeftPanelButton3->setPreferredSize(Vec2f(100,50));
 
-        LeftPanelButton5->setText("user");
-        LeftPanelButton5->setPreferredSize(Vec2f(100,50));
-    
-        LeftPanelButton6->setText("interface.");
-        LeftPanelButton6->setPreferredSize(Vec2f(100,50));
-    
+    LeftPanelButton4->setText("example");
+    LeftPanelButton4->setPreferredSize(Vec2f(100,50));
+
+    LeftPanelButton5->setText("user");
+    LeftPanelButton5->setPreferredSize(Vec2f(100,50));
+
+    LeftPanelButton6->setText("interface.");
+    LeftPanelButton6->setPreferredSize(Vec2f(100,50));
+
 
     // Create and edit Panel layout
-    BoxLayoutRefPtr LeftPanelButtonPanelLayout = OSG::BoxLayout::create();
-        LeftPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    BoxLayoutRecPtr LeftPanelButtonPanelLayout = BoxLayout::create();
+    LeftPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
 
     // Create an edit Panel Background
-    ColorLayerRefPtr LeftPanelButtonPanelBackground = OSG::ColorLayer::create();
-        LeftPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+    ColorLayerRecPtr LeftPanelButtonPanelBackground = ColorLayer::create();
+    LeftPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 
     // Create Panel Border
-    LineBorderRefPtr LeftPanelBorder = OSG::LineBorder::create();
-        LeftPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
-        LeftPanelBorder->setWidth(1);
+    LineBorderRecPtr LeftPanelBorder = LineBorder::create();
+    LeftPanelBorder->setColor(Color4f(0.0,0.0,0.0,1.0));
+    LeftPanelBorder->setWidth(1);
 
     // Create and edit Panel
-    PanelRefPtr LeftPanelButtonPanel = OSG::Panel::create();
-        LeftPanelButtonPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButtonPanelLabel);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton1);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton2);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton3);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton4);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton5);
-        LeftPanelButtonPanel->pushToChildren(LeftPanelButton6);
-        LeftPanelButtonPanel->setLayout(LeftPanelButtonPanelLayout);
-        LeftPanelButtonPanel->setBackgrounds(LeftPanelButtonPanelBackground);
-        LeftPanelButtonPanel->setBorders(LeftPanelBorder);
+    PanelRecPtr LeftPanelButtonPanel = Panel::createEmpty();
+    LeftPanelButtonPanel->setPreferredSize(Vec2f(180, 500));
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButtonPanelLabel);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton1);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton2);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton3);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton4);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton5);
+    LeftPanelButtonPanel->pushToChildren(LeftPanelButton6);
+    LeftPanelButtonPanel->setLayout(LeftPanelButtonPanelLayout);
+    LeftPanelButtonPanel->setBackgrounds(LeftPanelButtonPanelBackground);
+    LeftPanelButtonPanel->setBorders(LeftPanelBorder);
 
-    return LeftPanelButtonPanel;
+    return PanelTransitPtr(LeftPanelButtonPanel);
 }
 
 
 
 
-ComponentRefPtr createLeftPanelRadioTextPanel(void)
+PanelTransitPtr createLeftPanelRadioTextPanel(void)
 {
+    // Create TextArea
+    TextAreaRecPtr LeftPanelTextArea = TextArea::create();
+    LeftPanelTextArea->setPreferredSize(Vec2f(125, 200));
+    LeftPanelTextArea->setText("Text Area");
 
     // Create the RadioButton group
-    RadioButtonRefPtr RadioButton1 = OSG::RadioButton::create();
-    RadioButtonRefPtr RadioButton2 = OSG::RadioButton::create();
-    RadioButtonRefPtr RadioButton3 = OSG::RadioButton::create();
-    RadioButtonRefPtr RadioButton4 = OSG::RadioButton::create();
+    RadioButtonRecPtr RadioButton1 = RadioButton::create();
+    RadioButtonRecPtr RadioButton2 = RadioButton::create();
+    RadioButtonRecPtr RadioButton3 = RadioButton::create();
+    RadioButtonRecPtr RadioButton4 = RadioButton::create();
 
-        RadioButton1->setAlignment(Vec2f(0.0,0.5));
-        RadioButton1->setPreferredSize(Vec2f(100, 40));
-        RadioButton1->setText("Black Text");
-        RadioButton1->setToolTipText("Set TextArea text black");
-    RadioButton1->addButtonSelectedListener(&RadioButton1Listener);
+    RadioButton1->setAlignment(Vec2f(0.0,0.5));
+    RadioButton1->setPreferredSize(Vec2f(100, 40));
+    RadioButton1->setText("Black Text");
+    RadioButton1->setToolTipText("Set TextArea text black");
+    RadioButton1->connectButtonSelected(boost::bind(setTextColors,
+                                                    LeftPanelTextArea.get(),
+                                                    Color4f(0.0f,0.0f,0.0f,1.0f)));
 
-        RadioButton2->setAlignment(Vec2f(0.0,0.5));
-        RadioButton2->setPreferredSize(Vec2f(100, 40));
-        RadioButton2->setText("Red Text");
-        RadioButton2->setToolTipText("Set TextArea text red");
-    RadioButton2->addButtonSelectedListener(&RadioButton2Listener);
+    RadioButton2->setAlignment(Vec2f(0.0,0.5));
+    RadioButton2->setPreferredSize(Vec2f(100, 40));
+    RadioButton2->setText("Red Text");
+    RadioButton2->setToolTipText("Set TextArea text red");
+    RadioButton2->connectButtonSelected(boost::bind(setTextColors,
+                                              LeftPanelTextArea.get(),
+                                              Color4f(1.0f,0.0f,0.0f,1.0f)));
 
-        RadioButton3->setAlignment(Vec2f(0.0,0.5));
-        RadioButton3->setPreferredSize(Vec2f(100, 40));
-        RadioButton3->setText("Green Text");
-        RadioButton3->setToolTipText("Set TextArea text green");
-    RadioButton3->addButtonSelectedListener(&RadioButton3Listener);
+    RadioButton3->setAlignment(Vec2f(0.0,0.5));
+    RadioButton3->setPreferredSize(Vec2f(100, 40));
+    RadioButton3->setText("Green Text");
+    RadioButton3->setToolTipText("Set TextArea text green");
+    RadioButton3->connectButtonSelected(boost::bind(setTextColors,
+                                              LeftPanelTextArea.get(),
+                                              Color4f(0.0f,1.0f,0.0f,1.0f)));
 
-        RadioButton4->setAlignment(Vec2f(0.0,0.5));
-        RadioButton4->setPreferredSize(Vec2f(100, 40));
-        RadioButton4->setText("Blue Text");
-        RadioButton4->setToolTipText("Set TextArea text blue");
-    RadioButton4->addButtonSelectedListener(&RadioButton4Listener);
+    RadioButton4->setAlignment(Vec2f(0.0,0.5));
+    RadioButton4->setPreferredSize(Vec2f(100, 40));
+    RadioButton4->setText("Blue Text");
+    RadioButton4->setToolTipText("Set TextArea text blue");
+    RadioButton4->connectButtonSelected(boost::bind(setTextColors,
+                                              LeftPanelTextArea.get(),
+                                              Color4f(0.0f,0.0f,1.0f,1.0f)));
 
-    buttonGroup = RadioButtonGroup::create();
+    RadioButtonGroupRecPtr buttonGroup = RadioButtonGroup::create();
     buttonGroup->addButton(RadioButton1);
     buttonGroup->addButton(RadioButton2);
     buttonGroup->addButton(RadioButton3);
     buttonGroup->addButton(RadioButton4);
 
 
-    // Create TextArea
-    LeftPanelTextArea = OSG::TextArea::create();
-        LeftPanelTextArea->setPreferredSize(Vec2f(125, 200));
-
     // Create Panel and its Background/Border to label TextField
-    LabelRefPtr LeftPanelTextFieldLabel = OSG::Label::create();
-    EmptyLayerRefPtr LeftPanelTextFieldLabelBackground = OSG::EmptyLayer::create();
-    EmptyBorderRefPtr LeftPanelTextFieldLabelBorder = OSG::EmptyBorder::create();
-        LeftPanelTextFieldLabel->setPreferredSize(Vec2f(100, 25));
-        LeftPanelTextFieldLabel->setBorders(LeftPanelTextFieldLabelBorder);
-        LeftPanelTextFieldLabel->setBackgrounds(LeftPanelTextFieldLabelBackground);
-        LeftPanelTextFieldLabel->setText("Text Field");
+    LabelRecPtr LeftPanelTextFieldLabel = Label::create();
+    EmptyLayerRecPtr LeftPanelTextFieldLabelBackground = EmptyLayer::create();
+    EmptyBorderRecPtr LeftPanelTextFieldLabelBorder = EmptyBorder::create();
+    LeftPanelTextFieldLabel->setPreferredSize(Vec2f(100, 25));
+    LeftPanelTextFieldLabel->setBorders(LeftPanelTextFieldLabelBorder);
+    LeftPanelTextFieldLabel->setBackgrounds(LeftPanelTextFieldLabelBackground);
+    LeftPanelTextFieldLabel->setText("Text Field");
 
     // Create TextField
-    TextFieldRefPtr LeftPanelTextField = OSG::TextField::create();
-        LeftPanelTextField->setPreferredSize(Vec2f(125.0f, 22.0f));
+    TextFieldRecPtr LeftPanelTextField = TextField::create();
+    LeftPanelTextField->setPreferredSize(Vec2f(125.0f, 22.0f));
 
-    
     // Create an edit Panel Background
-    ColorLayerRefPtr LeftPanelRadioTextPanelBackground = OSG::ColorLayer::create();
-        LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93f,0.93f,0.93f,1.0f));
+    ColorLayerRecPtr LeftPanelRadioTextPanelBackground = ColorLayer::create();
+    LeftPanelRadioTextPanelBackground->setColor(Color4f(0.93f,0.93f,0.93f,1.0f));
 
     // Create and edit Panel layouts
-    FlowLayoutRefPtr LeftPanelRadioTextPanelLayout = OSG::FlowLayout::create();
-    FlowLayoutRefPtr LeftPanelRadioTextPanelRadioPanelLayout = OSG::FlowLayout::create();
-    FlowLayoutRefPtr LeftPanelRadioTextPanelTextPanelLayout = OSG::FlowLayout::create();
-        LeftPanelRadioTextPanelLayout->setMinorAxisAlignment(0.0f);
+    FlowLayoutRecPtr LeftPanelRadioTextPanelLayout = FlowLayout::create();
+    FlowLayoutRecPtr LeftPanelRadioTextPanelRadioPanelLayout = FlowLayout::create();
+    FlowLayoutRecPtr LeftPanelRadioTextPanelTextPanelLayout = FlowLayout::create();
+    LeftPanelRadioTextPanelLayout->setMinorAxisAlignment(0.0f);
 
     // Create two Panels for this Panel
-    PanelRefPtr LeftPanelRadioTextPanelRadioPanel = OSG::Panel::create();
-    PanelRefPtr LeftPanelRadioTextPanelTextPanel = OSG::Panel::create();
+    PanelRecPtr LeftPanelRadioTextPanelRadioPanel = Panel::createEmpty();
+    PanelRecPtr LeftPanelRadioTextPanelTextPanel = Panel::createEmpty();
 
     // Create some Borders
-    EmptyBorderRefPtr LeftPanelRadioTextPanelRadioPanelBorder = OSG::EmptyBorder::create();
+    EmptyBorderRecPtr LeftPanelRadioTextPanelRadioPanelBorder = EmptyBorder::create();
 
-        LeftPanelRadioTextPanelRadioPanel->setBorders(LeftPanelRadioTextPanelRadioPanelBorder);
-        LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2f(125, 200));
-        LeftPanelRadioTextPanelRadioPanel->setLayout(LeftPanelRadioTextPanelRadioPanelLayout);
-        LeftPanelRadioTextPanelRadioPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
-        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton1);
-        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton2);
-        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton3);
-        LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton4);
+    LeftPanelRadioTextPanelRadioPanel->setBorders(LeftPanelRadioTextPanelRadioPanelBorder);
+    LeftPanelRadioTextPanelRadioPanel->setPreferredSize(Vec2f(125, 200));
+    LeftPanelRadioTextPanelRadioPanel->setLayout(LeftPanelRadioTextPanelRadioPanelLayout);
+    LeftPanelRadioTextPanelRadioPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
+    LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton1);
+    LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton2);
+    LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton3);
+    LeftPanelRadioTextPanelRadioPanel->pushToChildren(RadioButton4);
 
     // Create Panel Border
-    LineBorderRefPtr PanelBorder1 = OSG::LineBorder::create();
-        PanelBorder1->setColor(Color4f(0.0,0.0,0.0,1.0));
-        PanelBorder1->setWidth(1);
+    LineBorderRecPtr PanelBorder1 = LineBorder::create();
+    PanelBorder1->setColor(Color4f(0.0,0.0,0.0,1.0));
+    PanelBorder1->setWidth(1);
 
     // Create and edit Panel
-    PanelRefPtr LeftPanelRadioTextPanel = OSG::Panel::create();
-        LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
-        LeftPanelRadioTextPanel->pushToChildren(LeftPanelRadioTextPanelRadioPanel);
-        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextArea);
-        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextFieldLabel);
-        LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextField);
-        LeftPanelRadioTextPanel->setLayout(LeftPanelRadioTextPanelLayout);
-        LeftPanelRadioTextPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
-        LeftPanelRadioTextPanel->setBorders(PanelBorder1);
+    PanelRecPtr LeftPanelRadioTextPanel = Panel::createEmpty();
+    LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
+    LeftPanelRadioTextPanel->pushToChildren(LeftPanelRadioTextPanelRadioPanel);
+    LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextArea);
+    LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextFieldLabel);
+    LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextField);
+    LeftPanelRadioTextPanel->setLayout(LeftPanelRadioTextPanelLayout);
+    LeftPanelRadioTextPanel->setBackgrounds(LeftPanelRadioTextPanelBackground);
+    LeftPanelRadioTextPanel->setBorders(PanelBorder1);
 
-    return LeftPanelRadioTextPanel;
+    return PanelTransitPtr(LeftPanelRadioTextPanel);
 }
-ComponentRefPtr createRightPanelButtonPanel(void)
+
+PanelTransitPtr createRightPanelButtonPanel(void)
 {
     // Create and edit the Panel Buttons
-    ToggleButtonRefPtr RightPanelButton1 = OSG::ToggleButton::create();
-    ToggleButtonRefPtr RightPanelButton2 = OSG::ToggleButton::create();
-    ToggleButtonRefPtr RightPanelButton3 = OSG::ToggleButton::create();
-    ToggleButtonRefPtr RightPanelButton4 = OSG::ToggleButton::create();
+    ToggleButtonRecPtr RightPanelButton1 = ToggleButton::create();
+    ToggleButtonRecPtr RightPanelButton2 = ToggleButton::create();
+    ToggleButtonRecPtr RightPanelButton3 = ToggleButton::create();
+    ToggleButtonRecPtr RightPanelButton4 = ToggleButton::create();
 
-        RightPanelButton1->setText("These");
-        RightPanelButton1->setPreferredSize(Vec2f(100,50));
-    
-        RightPanelButton2->setText("are");
-        RightPanelButton2->setPreferredSize(Vec2f(100,50));
+    RightPanelButton1->setText("These");
+    RightPanelButton1->setPreferredSize(Vec2f(100,50));
 
-        RightPanelButton3->setText("toggle");
-        RightPanelButton3->setPreferredSize(Vec2f(100,50));
+    RightPanelButton2->setText("are");
+    RightPanelButton2->setPreferredSize(Vec2f(100,50));
 
-        RightPanelButton4->setText("buttons");
-        RightPanelButton4->setPreferredSize(Vec2f(100,50));
+    RightPanelButton3->setText("toggle");
+    RightPanelButton3->setPreferredSize(Vec2f(100,50));
+
+    RightPanelButton4->setText("buttons");
+    RightPanelButton4->setPreferredSize(Vec2f(100,50));
 
 
     // Create an edit Panel Background
-    ColorLayerRefPtr RightPanelButtonPanelBackground = OSG::ColorLayer::create();
-        RightPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+    ColorLayerRecPtr RightPanelButtonPanelBackground = ColorLayer::create();
+    RightPanelButtonPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 
     // Create and edit Panel layout
-    BoxLayoutRefPtr RightPanelButtonPanelLayout = OSG::BoxLayout::create();
-        RightPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    BoxLayoutRecPtr RightPanelButtonPanelLayout = BoxLayout::create();
+    RightPanelButtonPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
 
     // Create Panel Border
-    LineBorderRefPtr PanelBorder2 = OSG::LineBorder::create();
-        PanelBorder2->setColor(Color4f(0.0,0.0,0.0,1.0));
-        PanelBorder2->setWidth(1);
+    LineBorderRecPtr PanelBorder2 = LineBorder::create();
+    PanelBorder2->setColor(Color4f(0.0,0.0,0.0,1.0));
+    PanelBorder2->setWidth(1);
 
     // Create and edit Panel
-    PanelRefPtr RightPanelButtonPanel = OSG::Panel::create();
-        RightPanelButtonPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelButtonPanel->pushToChildren(RightPanelButton1);
-        RightPanelButtonPanel->pushToChildren(RightPanelButton2);
-        RightPanelButtonPanel->pushToChildren(RightPanelButton3);
-        RightPanelButtonPanel->pushToChildren(RightPanelButton4);
-        RightPanelButtonPanel->setLayout(RightPanelButtonPanelLayout);
-        RightPanelButtonPanel->setBackgrounds(RightPanelButtonPanelBackground);
-        RightPanelButtonPanel->setBorders(PanelBorder2);
+    PanelRecPtr RightPanelButtonPanel = Panel::createEmpty();
+    RightPanelButtonPanel->setPreferredSize(Vec2f(200, 300));
+    RightPanelButtonPanel->pushToChildren(RightPanelButton1);
+    RightPanelButtonPanel->pushToChildren(RightPanelButton2);
+    RightPanelButtonPanel->pushToChildren(RightPanelButton3);
+    RightPanelButtonPanel->pushToChildren(RightPanelButton4);
+    RightPanelButtonPanel->setLayout(RightPanelButtonPanelLayout);
+    RightPanelButtonPanel->setBackgrounds(RightPanelButtonPanelBackground);
+    RightPanelButtonPanel->setBorders(PanelBorder2);
 
-    return RightPanelButtonPanel;
+    return PanelTransitPtr(RightPanelButtonPanel);
 
 }
-ComponentRefPtr createRightPanelCheckPanel(void)
+
+PanelTransitPtr createRightPanelCheckPanel(Node* const TorusNode,
+                                           Node* const SphereNode,
+                                           Node* const ConeNode,
+                                           Node* const BoxNode)
 {
     // Create and edit the CheckBoxes
-    CheckboxButtonRefPtr RightPanelCheck1 = OSG::CheckboxButton::create();
-    CheckboxButtonRefPtr RightPanelCheck2 = OSG::CheckboxButton::create();
-    CheckboxButtonRefPtr RightPanelCheck3 = OSG::CheckboxButton::create();
-    CheckboxButtonRefPtr RightPanelCheck4 = OSG::CheckboxButton::create();
-	//NOTE HorizontalAlignment needs to be changed to Alignment only with Vec2f arg
-        RightPanelCheck1->setText("Show Torus");
-        RightPanelCheck1->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck1->setAlignment(0.0);
-        // Add Listener
-        RightPanelCheck1->addButtonSelectedListener(&RightPanelCheck1Listener);
-    
-        RightPanelCheck2->setText("Show Box");
-        RightPanelCheck2->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck2->setAlignment(Vec2f (0.5,0.0));
-        // Add Listener
-        RightPanelCheck2->addButtonSelectedListener(&RightPanelCheck2Listener);
+    CheckboxButtonRecPtr RightPanelCheck1 = CheckboxButton::create();
+    CheckboxButtonRecPtr RightPanelCheck2 = CheckboxButton::create();
+    CheckboxButtonRecPtr RightPanelCheck3 = CheckboxButton::create();
+    CheckboxButtonRecPtr RightPanelCheck4 = CheckboxButton::create();
+    //NOTE HorizontalAlignment needs to be changed to Alignment only with Vec2f arg
+    RightPanelCheck1->setText("Show Torus");
+    RightPanelCheck1->setPreferredSize(Vec2f(125,50));
+    RightPanelCheck1->setAlignment(0.0);
+    RightPanelCheck1->connectButtonSelected(boost::bind(setNodeTravMask,
+                                                        TorusNode,
+                                                        1));
+    RightPanelCheck1->connectButtonDeselected(boost::bind(setNodeTravMask,
+                                                          TorusNode,
+                                                          0));
 
-        RightPanelCheck3->setText("Show Sphere");
-        RightPanelCheck3->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck3->setAlignment(Vec2f(0.0,0.0));
-        // Add Listener
-        RightPanelCheck3->addButtonSelectedListener(&RightPanelCheck3Listener);
+    RightPanelCheck2->setText("Show Box");
+    RightPanelCheck2->setPreferredSize(Vec2f(125,50));
+    RightPanelCheck2->setAlignment(Vec2f (0.5,0.0));
+    RightPanelCheck2->connectButtonSelected(boost::bind(setNodeTravMask, BoxNode, 1));
+    RightPanelCheck2->connectButtonDeselected(boost::bind(setNodeTravMask, BoxNode, 0));
 
-        RightPanelCheck4->setText("Show Cone");
-        RightPanelCheck4->setPreferredSize(Vec2f(125,50));
-        RightPanelCheck4->setAlignment(Vec2f(0.0,0.0));
-        // Add Listener
-        RightPanelCheck4->addButtonSelectedListener(&RightPanelCheck4Listener);
+    RightPanelCheck3->setText("Show Sphere");
+    RightPanelCheck3->setPreferredSize(Vec2f(125,50));
+    RightPanelCheck3->setAlignment(Vec2f(0.0,0.0));
+    RightPanelCheck3->connectButtonSelected(boost::bind(setNodeTravMask, SphereNode, 1));
+    RightPanelCheck3->connectButtonDeselected(boost::bind(setNodeTravMask, SphereNode, 0));
+
+    RightPanelCheck4->setText("Show Cone");
+    RightPanelCheck4->setPreferredSize(Vec2f(125,50));
+    RightPanelCheck4->setAlignment(Vec2f(0.0,0.0));
+    RightPanelCheck4->connectButtonSelected(boost::bind(setNodeTravMask, ConeNode, 1));
+    RightPanelCheck4->connectButtonDeselected(boost::bind(setNodeTravMask, ConeNode, 0));
 
     // Create an edit Panel Background
-    ColorLayerRefPtr RightPanelCheckPanelBackground = OSG::ColorLayer::create();
-        RightPanelCheckPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
+    ColorLayerRecPtr RightPanelCheckPanelBackground = ColorLayer::create();
+    RightPanelCheckPanelBackground->setColor(Color4f(0.93,0.93,0.93,1.0));
 
     // Create and edit Panel layout
-    BoxLayoutRefPtr RightPanelCheckPanelLayout = OSG::BoxLayout::create();
-        RightPanelCheckPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-        RightPanelCheckPanelLayout->setMinorAxisAlignment(0.5f);
+    BoxLayoutRecPtr RightPanelCheckPanelLayout = BoxLayout::create();
+    RightPanelCheckPanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+    RightPanelCheckPanelLayout->setMinorAxisAlignment(0.5f);
 
     // Create Panel Border
-    LineBorderRefPtr PanelBorder3 = OSG::LineBorder::create();
-        PanelBorder3->setColor(Color4f(0.0,0.0,0.0,1.0));
-        PanelBorder3->setWidth(1);
+    LineBorderRecPtr PanelBorder3 = LineBorder::create();
+    PanelBorder3->setColor(Color4f(0.0,0.0,0.0,1.0));
+    PanelBorder3->setWidth(1);
 
     // Create and edit Panel
-    PanelRefPtr RightPanelCheckPanel = OSG::Panel::create();
-        RightPanelCheckPanel->setPreferredSize(Vec2f(200, 300));
-        RightPanelCheckPanel->pushToChildren(RightPanelCheck1);
-        RightPanelCheckPanel->pushToChildren(RightPanelCheck2);
-        RightPanelCheckPanel->pushToChildren(RightPanelCheck3);
-        RightPanelCheckPanel->pushToChildren(RightPanelCheck4);
-        RightPanelCheckPanel->setLayout(RightPanelCheckPanelLayout);
-        RightPanelCheckPanel->setBackgrounds(RightPanelCheckPanelBackground);
-        RightPanelCheckPanel->setBorders(PanelBorder3);
+    PanelRecPtr RightPanelCheckPanel = Panel::createEmpty();
+    RightPanelCheckPanel->setPreferredSize(Vec2f(200, 300));
+    RightPanelCheckPanel->pushToChildren(RightPanelCheck1);
+    RightPanelCheckPanel->pushToChildren(RightPanelCheck2);
+    RightPanelCheckPanel->pushToChildren(RightPanelCheck3);
+    RightPanelCheckPanel->pushToChildren(RightPanelCheck4);
+    RightPanelCheckPanel->setLayout(RightPanelCheckPanelLayout);
+    RightPanelCheckPanel->setBackgrounds(RightPanelCheckPanelBackground);
+    RightPanelCheckPanel->setBorders(PanelBorder3);
 
-    return RightPanelCheckPanel;
+    return PanelTransitPtr(RightPanelCheckPanel);
 }
-LayerRefPtr createComplexBackground(void)
+
+LayerTransitPtr createComplexBackground(void)
 {
 
     // Create complex Background 
-    ColorLayerRefPtr ComplexBackgroundBase = OSG::ColorLayer::create();
-    GradientLayerRefPtr ComplexBackgroundGradient1 = OSG::GradientLayer::create();
-    GradientLayerRefPtr ComplexBackgroundGradient2 = OSG::GradientLayer::create();
-    GradientLayerRefPtr ComplexBackgroundGradient3 = OSG::GradientLayer::create();
-    CompoundLayerRefPtr ComplexBackgroundCompound1 = OSG::CompoundLayer::create();
-    CompoundLayerRefPtr ComplexBackgroundCompound2 = OSG::CompoundLayer::create();
-    CompoundLayerRefPtr ComplexBackground = OSG::CompoundLayer::create();
+    ColorLayerRecPtr ComplexBackgroundBase = ColorLayer::create();
+    GradientLayerRecPtr ComplexBackgroundGradient1 = GradientLayer::create();
+    GradientLayerRecPtr ComplexBackgroundGradient2 = GradientLayer::create();
+    GradientLayerRecPtr ComplexBackgroundGradient3 = GradientLayer::create();
+    CompoundLayerRecPtr ComplexBackgroundCompound1 = CompoundLayer::create();
+    CompoundLayerRecPtr ComplexBackgroundCompound2 = CompoundLayer::create();
+    CompoundLayerRecPtr ComplexBackground = CompoundLayer::create();
 
-        ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
+    ComplexBackgroundBase->setColor(Color4f(0.0, 0.0, .25, 1.0));
 
-        ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(1.0, 0.0, 0.0, 0.5));
-		ComplexBackgroundGradient1->editMFStops()->push_back(0.0);
-        ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(0.5, 0.0, 0.0, 0.3));
-		ComplexBackgroundGradient1->editMFStops()->push_back(1.0);
-        ComplexBackgroundGradient1->setStartPosition(Vec2f(0.0f,0.0f));
-        ComplexBackgroundGradient1->setEndPosition(Vec2f(1.0f,0.0f));
+    ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(1.0, 0.0, 0.0, 0.5));
+    ComplexBackgroundGradient1->editMFStops()->push_back(0.0);
+    ComplexBackgroundGradient1->editMFColors()->push_back(Color4f(0.5, 0.0, 0.0, 0.3));
+    ComplexBackgroundGradient1->editMFStops()->push_back(1.0);
+    ComplexBackgroundGradient1->setStartPosition(Vec2f(0.0f,0.0f));
+    ComplexBackgroundGradient1->setEndPosition(Vec2f(1.0f,0.0f));
 
-        ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.6, 0.0, 0.3, 1.0));
-		ComplexBackgroundGradient2->editMFStops()->push_back(0.0);
-        ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.2, 0.0, 0.3, 0.5));
-		ComplexBackgroundGradient2->editMFStops()->push_back(1.0);
-        ComplexBackgroundGradient2->setStartPosition(Vec2f(0.0f,0.0f));
-        ComplexBackgroundGradient2->setEndPosition(Vec2f(0.0f,1.0f));
+    ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.6, 0.0, 0.3, 1.0));
+    ComplexBackgroundGradient2->editMFStops()->push_back(0.0);
+    ComplexBackgroundGradient2->editMFColors()->push_back(Color4f(.2, 0.0, 0.3, 0.5));
+    ComplexBackgroundGradient2->editMFStops()->push_back(1.0);
+    ComplexBackgroundGradient2->setStartPosition(Vec2f(0.0f,0.0f));
+    ComplexBackgroundGradient2->setEndPosition(Vec2f(0.0f,1.0f));
 
-        ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.2));
-		ComplexBackgroundGradient3->editMFStops()->push_back(0.0);
-        ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.3));
-		ComplexBackgroundGradient3->editMFStops()->push_back(1.0);
-        ComplexBackgroundGradient3->setStartPosition(Vec2f(0.0f,0.0f));
-        ComplexBackgroundGradient3->setEndPosition(Vec2f(1.0f,0.0f));
+    ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.2));
+    ComplexBackgroundGradient3->editMFStops()->push_back(0.0);
+    ComplexBackgroundGradient3->editMFColors()->push_back(Color4f(0.0, 0.0, 0.2, 0.3));
+    ComplexBackgroundGradient3->editMFStops()->push_back(1.0);
+    ComplexBackgroundGradient3->setStartPosition(Vec2f(0.0f,0.0f));
+    ComplexBackgroundGradient3->setEndPosition(Vec2f(1.0f,0.0f));
 
-        ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundBase);
-        ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundGradient1);
+    ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundBase);
+    ComplexBackgroundCompound1->pushToBackgrounds(ComplexBackgroundGradient1);
 
-        ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient2);
-        ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient3);
+    ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient2);
+    ComplexBackgroundCompound2->pushToBackgrounds(ComplexBackgroundGradient3);
 
-        ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound1);
-        ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound2);
+    ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound1);
+    ComplexBackground->pushToBackgrounds(ComplexBackgroundCompound2);
 
-    return ComplexBackground;
+    return LayerTransitPtr(ComplexBackground);
 }
 
-ChunkMaterialRefPtr createRedMaterial(void){
+ChunkMaterialTransitPtr createMaterial(const Color4f& TheColor)
+{
+    MaterialChunkRecPtr BackgroundMaterialChunk = MaterialChunk::create();
+    BackgroundMaterialChunk->setAmbient (TheColor);
+    BackgroundMaterialChunk->setDiffuse (TheColor);
+    BackgroundMaterialChunk->setSpecular(TheColor);
 
-    ChunkMaterialRefPtr RedBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkRefPtr RedBackgroundMaterialChunk = MaterialChunk::create();
-        RedBackgroundMaterialChunk->setAmbient(Color4f(1.0,0.0,0.0,1.0));
-        RedBackgroundMaterialChunk->setDiffuse(Color4f(1.0,0.0,0.0,1.0));
-        RedBackgroundMaterialChunk->setSpecular(Color4f(1.0,0.0,0.0,1.0));
+    ChunkMaterialRecPtr BackgroundMaterial = ChunkMaterial::create();
+    BackgroundMaterial->addChunk(BackgroundMaterialChunk);
 
-        RedBackgroundMaterial->addChunk(RedBackgroundMaterialChunk);
-
-    return RedBackgroundMaterial;
-
-}
-ChunkMaterialRefPtr createBlueMaterial(void){
-
-    ChunkMaterialRefPtr BlueBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkRefPtr BlueBackgroundMaterialChunk = MaterialChunk::create();
-        BlueBackgroundMaterialChunk->setAmbient(Color4f(0.0,0.0,0.8,1.0));
-        BlueBackgroundMaterialChunk->setDiffuse(Color4f(0.0,0.0,0.8,1.0));
-        BlueBackgroundMaterialChunk->setSpecular(Color4f(0.0,0.0,0.8,1.0));
-
-        BlueBackgroundMaterial->addChunk(BlueBackgroundMaterialChunk);
-
-    return BlueBackgroundMaterial;
-
-}
-ChunkMaterialRefPtr createGreenMaterial(void){
-
-    ChunkMaterialRefPtr GreenBackgroundMaterial = ChunkMaterial::create();
-    MaterialChunkRefPtr GreenBackgroundMaterialChunk = MaterialChunk::create();
-        GreenBackgroundMaterialChunk->setAmbient(Color4f(0.0,1.0,0.0,1.0));
-        GreenBackgroundMaterialChunk->setDiffuse(Color4f(0.0,1.0,0.0,1.0));
-        GreenBackgroundMaterialChunk->setSpecular(Color4f(0.0,1.0,0.0,1.0));
-
-        GreenBackgroundMaterial->addChunk(GreenBackgroundMaterialChunk);
-
-    return GreenBackgroundMaterial;
-
+    return ChunkMaterialTransitPtr(BackgroundMaterial);
 }
 
-void create3DObjects(void)
+NodeTransitPtr createTorus(void)
 {
     // Make Object Nodes
-    NodeRefPtr ExampleTorusGeo = makeTorus(90, 270, 16, 16);
-    NodeRefPtr ExampleConeGeo = makeCone(150, 50, 16, true, true);
-    NodeRefPtr ExampleSphereGeo = makeSphere(4, 100);
-    NodeRefPtr ExampleBoxGeo = makeBox(100, 100, 100, 1, 1, 1);
-
-    // AssignTextures
-
-    dynamic_cast<Geometry*>(ExampleConeGeo->getCore())->setMaterial(createBlueMaterial());
-
-    dynamic_cast<Geometry*>(ExampleSphereGeo->getCore())->setMaterial(createRedMaterial());
-
-    dynamic_cast<Geometry*>(ExampleBoxGeo->getCore())->setMaterial(createGreenMaterial());
+    NodeRecPtr ExampleTorusGeo = makeTorus(90, 270, 16, 16);
 
     // Preform transformations on them
     Matrix mat;
 
-    
     // On Torus    
     mat.setTranslate(0.0,100.0,-200.0);
-    TransformRefPtr TorusTranCore = Transform::create();
-        TorusTranCore->setMatrix(mat);
-    
-    ExampleTorus = Node::create();
-        ExampleTorus->setCore(TorusTranCore);
-        ExampleTorus->addChild(ExampleTorusGeo);
-    
-    // On Sphere
-    mat.setTranslate(250.0,0.0,0.0);
+    TransformRecPtr TorusTranCore = Transform::create();
+    TorusTranCore->setMatrix(mat);
 
-    TransformRefPtr SphereTranCore = Transform::create();
-        SphereTranCore->setMatrix(mat);
-    
-    ExampleSphere = Node::create();
-        ExampleSphere->setCore(SphereTranCore);
-        ExampleSphere->addChild(ExampleSphereGeo);
+    NodeRecPtr ExampleTorus = Node::create();
+    ExampleTorus->setCore(TorusTranCore);
+    ExampleTorus->addChild(ExampleTorusGeo);
+    ExampleTorus->setTravMask(0);
+
+    return NodeTransitPtr(ExampleTorus);
+}
+
+NodeTransitPtr createCone(void)
+{
+    // Make Object Nodes
+    NodeRecPtr ExampleConeGeo = makeCone(150, 50, 16, true, true);
+
+    MaterialRecPtr BlueMaterial = createMaterial(Color4f(0.0f,0.0f,1.0f,1.0f));
+    dynamic_cast<Geometry*>(ExampleConeGeo->getCore())->setMaterial(BlueMaterial);
+
+    // Preform transformations on them
+    Matrix mat;
 
     // On Cone
     mat.setTranslate(0.0,0.0,-250.0);
 
-    TransformRefPtr ConeTranCore = Transform::create();
-        ConeTranCore->setMatrix(mat);
-    
-    ExampleCone = Node::create();
-        ExampleCone->setCore(ConeTranCore);
-        ExampleCone->addChild(ExampleConeGeo);
-        
-    // On Box
-    mat.setTranslate(250.0,250.0,0.0);
+    TransformRecPtr ConeTranCore = Transform::create();
+    ConeTranCore->setMatrix(mat);
 
-    TransformRefPtr ExampleBoxTranCore = Transform::create();
-        ExampleBoxTranCore->setMatrix(mat);
-    
-    ExampleBox = Node::create();
-        ExampleBox->setCore(ExampleBoxTranCore);
-        ExampleBox->addChild(ExampleBoxGeo);
+    NodeRecPtr ExampleCone = Node::create();
+    ExampleCone->setCore(ConeTranCore);
+    ExampleCone->addChild(ExampleConeGeo);
+    ExampleCone->setTravMask(0);
 
+    return NodeTransitPtr(ExampleCone);
 }
 
+NodeTransitPtr createSphere(void)
+{
+    // Make Object Nodes
+    NodeRecPtr ExampleSphereGeo = makeSphere(4, 100);
+
+    MaterialRecPtr RedMaterial = createMaterial(Color4f(1.0f,0.0f,0.0f,1.0f));
+    dynamic_cast<Geometry*>(ExampleSphereGeo->getCore())->setMaterial(RedMaterial);
+
+    Matrix mat;
+    mat.setTranslate(250.0,0.0,0.0);
+
+    TransformRecPtr SphereTranCore = Transform::create();
+    SphereTranCore->setMatrix(mat);
+
+    NodeRecPtr ExampleSphere = Node::create();
+    ExampleSphere->setCore(SphereTranCore);
+    ExampleSphere->addChild(ExampleSphereGeo);
+    ExampleSphere->setTravMask(0);
+
+    return NodeTransitPtr(ExampleSphere);
+}
+
+NodeTransitPtr createBox(void)
+{
+    // Make Object Nodes
+    NodeRecPtr ExampleBoxGeo = makeBox(100, 100, 100, 1, 1, 1);
+
+    MaterialRecPtr GreenMaterial = createMaterial(Color4f(0.0f,1.0f,0.0f,1.0f));
+    dynamic_cast<Geometry*>(ExampleBoxGeo->getCore())->setMaterial(GreenMaterial);
+
+    Matrix mat;
+    mat.setTranslate(250.0,250.0,0.0);
+
+    TransformRecPtr ExampleBoxTranCore = Transform::create();
+    ExampleBoxTranCore->setMatrix(mat);
+
+    NodeRecPtr ExampleBox = Node::create();
+    ExampleBox->setCore(ExampleBoxTranCore);
+    ExampleBox->addChild(ExampleBoxGeo);
+    ExampleBox->setTravMask(0);
+
+    return NodeTransitPtr(ExampleBox);
+}
 
 // Callback functions
-
-
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

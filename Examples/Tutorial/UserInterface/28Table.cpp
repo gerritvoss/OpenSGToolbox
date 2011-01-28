@@ -33,14 +33,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
-
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 28Table Headers
 #include "OSGLookAndFeelManager.h"
@@ -60,135 +55,85 @@ void reshape(Vec2f Size);
 #include "OSGTable.h"
 #include "OSGAbstractTableModel.h"
 
-PanelRefPtr createSelectionModePanel(void);
-PanelRefPtr createSelectionOptionPanel(void);
-RadioButtonGroupRefPtr SelectionButtonGroup;
+PanelTransitPtr createSelectionOptionPanel(Table* const ExampleTable,
+                                           CheckboxButton* const CellSelectionButton);
 
-// Declare the Table so it can
-// be referenced by ActionListeners
-TableRefPtr table;
-CheckboxButtonRefPtr CellSelectionButton;
-CheckboxButtonRefPtr RowSelectionButton;
-CheckboxButtonRefPtr ColumnSelectionButton;
-/******************************************************
-
-  Create ActionListeners to dynamically
-  change the Table selection characteristics
-  while running the program.
-
- ******************************************************/
-class SingleSelectionListener : public ButtonSelectedListener
+void handleSingleSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                         Table* const ExampleTable,
+                                         Button* const CellSelectionButton)
 {
-  public:
+    ExampleTable->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+    ExampleTable->getRowSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-        table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+    CellSelectionButton->setEnabled(true);
+}
 
-        CellSelectionButton->setEnabled(true);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e){}
-};
-
-class SingleIntervalSelectionListener : public ButtonSelectedListener
+void handleSingleIntervalSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                                 Table* const ExampleTable,
+                                                 ToggleButton* const CellSelectionButton)
 {
-  public:
+    ExampleTable->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+    ExampleTable->getRowSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+    CellSelectionButton->setEnabled(true);
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-        table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-        CellSelectionButton->setEnabled(true);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e){}
-};
-
-class MultipleIntervalSelectionListener : public ButtonSelectedListener
+void handleMultipleIntervalSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                                   Table* const ExampleTable,
+                                                   ToggleButton* const CellSelectionButton)
 {
-  public:
+    ExampleTable->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+    ExampleTable->getRowSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+    CellSelectionButton->setEnabled(false);
+    CellSelectionButton->setSelected(false);
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->getColumnModel()->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-        table->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-        CellSelectionButton->setEnabled(false);
-        CellSelectionButton->setSelected(false);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e){}
-};
-
-class RowSelectionListener : public ButtonSelectedListener
+void handleRowSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                         Table* const ExampleTable)
 {
-  public:
+    ExampleTable->setRowSelectionAllowed(true);
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->setRowSelectionAllowed(true);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->setRowSelectionAllowed(false);
-    }
-};
-
-class ColumnSelectionListener : public ButtonSelectedListener
+void handleRowSelectionButtonDeselected(ButtonSelectedEventDetails* const details,
+                                         Table* const ExampleTable)
 {
-  public:
+    ExampleTable->setRowSelectionAllowed(false);
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->setColumnSelectionAllowed(true);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
-        table->setColumnSelectionAllowed(false);
-    }
-};
-
-class CellSelectionListener : public ButtonSelectedListener
+void handleColumnSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                         Table* const ExampleTable)
 {
-  public:
+    ExampleTable->setColumnSelectionAllowed(true);
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        RowSelectionButton->setSelected(true);
-        ColumnSelectionButton->setSelected(true);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
-        RowSelectionButton->setSelected(false);
-        ColumnSelectionButton->setSelected(false);
-    }
-};
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void handleColumnSelectionButtonDeselected(ButtonSelectedEventDetails* const details,
+                                         Table* const ExampleTable)
 {
-  public:
+    ExampleTable->setColumnSelectionAllowed(false);
+}
 
-    virtual void keyPressed(const KeyEventUnrecPtr e)
-    {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-        {
-            TutorialWindow->closeWindow();
-        }
-    }
+void handleCellSelectionButtonSelected(ButtonSelectedEventDetails* const details,
+                                       ToggleButton* const RowSelectionButton,
+                                       ToggleButton* const ColumnSelectionButton)
+{
+    RowSelectionButton->setSelected(true);
+    ColumnSelectionButton->setSelected(true);
+}
 
-    virtual void keyReleased(const KeyEventUnrecPtr e)
-    {
-    }
+void handleCellSelectionButtonDeselected(ButtonSelectedEventDetails* const details,
+                                         ToggleButton* const RowSelectionButton,
+                                         ToggleButton* const ColumnSelectionButton)
+{
+    RowSelectionButton->setSelected(false);
+    ColumnSelectionButton->setSelected(false);
+}
 
-    virtual void keyTyped(const KeyEventUnrecPtr e)
+void keyPressed(KeyEventDetails* const details)
+{
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-};
+}
 
 class ExampleTableModel;
 
@@ -216,33 +161,33 @@ class ExampleTableModel : public AbstractTableModel
 
     // Creates some functions to do what the Table requires to be done
     // and which are needed for a non-basic table
-    virtual UInt32 getColumnCount(void) const
+    UInt32 getColumnCount(void) const
     {
         return _ColumnValues.size();
     }
 
-    virtual boost::any getColumnValue(UInt32 columnIndex) const
+    boost::any getColumnValue(UInt32 columnIndex) const
     {
         return _ColumnValues[columnIndex];
     }
 
-    virtual UInt32 getRowCount(void) const
+    UInt32 getRowCount(void) const
     {
         return _CellValues.size() / _ColumnValues.size();
     }
 
-    virtual boost::any getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
+    boost::any getValueAt(UInt32 rowIndex, UInt32 columnIndex) const
     {
         return _CellValues[rowIndex*_ColumnValues.size() + columnIndex];
     }
 
-    virtual bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
+    bool isCellEditable(UInt32 rowIndex, UInt32 columnIndex) const
     {
         // Only returns true if the column is 0; means cell is editable, otherwise, returns false and cell is not editable
         return columnIndex == 0;
     }
 
-    virtual void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex)
+    void setValueAt(const boost::any& aValue, UInt32 rowIndex, UInt32 columnIndex)
     {
         // 
         if(columnIndex == 0 && aValue.type() == typeid(std::string))
@@ -251,7 +196,7 @@ class ExampleTableModel : public AbstractTableModel
         }
     }
 
-    virtual const std::type_info& getColumnType(const UInt32& columnIndex)
+    const std::type_info& getColumnType(const UInt32& columnIndex)
     {
         return typeid(void);
     }
@@ -323,71 +268,71 @@ class ExampleTableModel : public AbstractTableModel
         return _type.getGroupId();
     }
 
-    virtual       FieldContainerType &getType         (void)
+    FieldContainerType &getType         (void)
     {
         return _type;
     }
 
-    virtual const FieldContainerType &getType         (void) const
+    const FieldContainerType &getType         (void) const
     {
         return _type;
     }
 
-	static ExampleTableModelTransitPtr create(void)
-	{
-		ExampleTableModelTransitPtr fc;
+    static ExampleTableModelTransitPtr create(void)
+    {
+        ExampleTableModelTransitPtr fc;
 
-		if(getClassType().getPrototype() != NULL)
-		{
-			FieldContainerTransitPtr tmpPtr =
-				getClassType().getPrototype()-> shallowCopy();
+        if(getClassType().getPrototype() != NULL)
+        {
+            FieldContainerTransitPtr tmpPtr =
+                getClassType().getPrototype()-> shallowCopy();
 
-			fc = dynamic_pointer_cast<ExampleTableModel>(tmpPtr);
-		}
+            fc = dynamic_pointer_cast<ExampleTableModel>(tmpPtr);
+        }
 
-		return fc;
-	}
+        return fc;
+    }
 
-	static ExampleTableModel *createEmpty(void)
-	{
-		ExampleTableModel *returnValue;
+    static ExampleTableModel *createEmpty(void)
+    {
+        ExampleTableModel *returnValue;
 
-		newPtr<ExampleTableModel>(returnValue, Thread::getCurrentLocalFlags());
+        newPtr<ExampleTableModel>(returnValue, Thread::getCurrentLocalFlags());
 
-		returnValue->_pFieldFlags->_bNamespaceMask &=
-			~Thread::getCurrentLocalFlags();
+        returnValue->_pFieldFlags->_bNamespaceMask &=
+            ~Thread::getCurrentLocalFlags();
 
-		return returnValue;
-	}
+        return returnValue;
+    }
 
-	static ExampleTableModel *createEmptyLocal(BitVector bFlags)
-	{
-		ExampleTableModel *returnValue;
+    static ExampleTableModel *createEmptyLocal(BitVector bFlags)
+    {
+        ExampleTableModel *returnValue;
 
-		newPtr<ExampleTableModel>(returnValue, bFlags);
+        newPtr<ExampleTableModel>(returnValue, bFlags);
 
-		returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
+        returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
 
-		return returnValue;
-	}
+        return returnValue;
+    }
 
-	FieldContainerTransitPtr shallowCopy(void) const
-	{
-		ExampleTableModel *tmpPtr;
+    FieldContainerTransitPtr shallowCopy(void) const
+    {
+        ExampleTableModel *tmpPtr;
 
-		newPtr(tmpPtr,
-			   dynamic_cast<const ExampleTableModel *>(this),
-			   Thread::getCurrentLocalFlags());
+        newPtr(tmpPtr,
+               dynamic_cast<const ExampleTableModel *>(this),
+               Thread::getCurrentLocalFlags());
 
-		tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
+        tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
 
-		FieldContainerTransitPtr returnValue(tmpPtr);
+        FieldContainerTransitPtr returnValue(tmpPtr);
 
-		return returnValue;
-	}
+        return returnValue;
+    }
 
     FieldContainerTransitPtr shallowCopyLocal(
-        BitVector bFlags) const
+                                              BitVector bFlags) const
     {
         ExampleTableModel *tmpPtr;
 
@@ -401,7 +346,7 @@ class ExampleTableModel : public AbstractTableModel
     }
 
     FieldContainerTransitPtr shallowCopyDependent(
-        BitVector bFlags) const
+                                                  BitVector bFlags) const
     {
         ExampleTableModel *tmpPtr;
 
@@ -415,7 +360,7 @@ class ExampleTableModel : public AbstractTableModel
     }
 
     FieldContainer *createAspectCopy(
-        const FieldContainer *pRefAspect) const
+                                     const FieldContainer *pRefAspect) const
     {
         ExampleTableModel *returnValue;
 
@@ -428,30 +373,27 @@ class ExampleTableModel : public AbstractTableModel
 };
 
 
-ExampleTableModel::TypeObject ExampleTableModel::_type(
-    "ExampleTableModel",
-    "AbstractTableModel",
-    "NULL",
-    0,
-    reinterpret_cast<PrototypeCreateF>(&ExampleTableModel::createEmptyLocal),
-    NULL,
-    NULL,
-    NULL,//reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
-    false,
-    0,
-    "",
-    "ExampleTableModel"
-    );
+ExampleTableModel::TypeObject
+    ExampleTableModel::_type("ExampleTableModel",
+                             "AbstractTableModel",
+                             "NULL",
+                             0,
+                             reinterpret_cast<PrototypeCreateF>(&ExampleTableModel::createEmptyLocal),
+                             NULL,
+                             NULL,
+                             NULL,//reinterpret_cast<InitalInsertDescFunc>(&DefaultListComponentGenerator::classDescInserter),
+                             false,
+                             0,
+                             "",
+                             "ExampleTableModel"
+                            );
 
 OSG_BEGIN_NAMESPACE
 
 OSG_GEN_CONTAINERPTR(ExampleTableModel);
-/*! \ingroup GrpContribUserInterfaceFieldTraits
-    \ingroup GrpLibOSGContribUserInterface
- */
 template <>
 struct FieldTraits<ExampleTableModel *> :
-    public FieldTraitsFCPtrBase<ExampleTableModel *>
+public FieldTraitsFCPtrBase<ExampleTableModel *>
 {
   private:
 
@@ -466,89 +408,79 @@ struct FieldTraits<ExampleTableModel *> :
     static OSG_CONTRIBUSERINTERFACE_DLLMAPPING DataType &getType(void);
 
     template<typename RefCountPolicy> inline
-    static const Char8    *getSName     (void);
+        static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFExampleTableModelPtr"; }
     template<typename RefCountPolicy> inline
-    static const Char8    *getMName     (void);
+        static const Char8    *getMName     (void);
 
-//    static const char *getMName(void) { return "MFExampleTableModelPtr"; }
 };
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
     return "SFRecExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
     return "SFUnrecExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<WeakRefCountPolicy>(void)
 {
     return "SFWeakExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getSName<NoRefCountPolicy>(void)
 {
     return "SFUnrefdExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<RecordedRefCountPolicy>(void)
 {
     return "MFRecExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<UnrecordedRefCountPolicy>(void)
 {
     return "MFUnrecExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<WeakRefCountPolicy>(void)
 {
     return "MFWeakExampleTableModelPtr"; 
 }
 
-template<> inline
+    template<> inline
 const Char8 *FieldTraits<ExampleTableModel *, 0>::getMName<NoRefCountPolicy>(void)
 {
     return "MFUnrefdExampleTableModelPtr"; 
 }
 
-/*! \ingroup GrpContribUserInterfaceFieldSFields */
 typedef PointerSField<ExampleTableModel *,
-                      RecordedRefCountPolicy  > SFRecExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldSFields */
+        RecordedRefCountPolicy  > SFRecExampleTableModelPtr;
 typedef PointerSField<ExampleTableModel *,
-                      UnrecordedRefCountPolicy> SFUnrecExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldSFields */
+        UnrecordedRefCountPolicy> SFUnrecExampleTableModelPtr;
 typedef PointerSField<ExampleTableModel *,
-                      WeakRefCountPolicy      > SFWeakExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldSFields */
+        WeakRefCountPolicy      > SFWeakExampleTableModelPtr;
 typedef PointerSField<ExampleTableModel *,
-                      NoRefCountPolicy        > SFUncountedExampleTableModelPtr;
+        NoRefCountPolicy        > SFUncountedExampleTableModelPtr;
 
 
-/*! \ingroup GrpContribUserInterfaceFieldMFields */
 typedef PointerMField<ExampleTableModel *,
-                      RecordedRefCountPolicy  > MFRecExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldMFields */
+        RecordedRefCountPolicy  > MFRecExampleTableModelPtr;
 typedef PointerMField<ExampleTableModel *,
-                      UnrecordedRefCountPolicy> MFUnrecExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldMFields */
+        UnrecordedRefCountPolicy> MFUnrecExampleTableModelPtr;
 typedef PointerMField<ExampleTableModel *,
-                      WeakRefCountPolicy      > MFWeakExampleTableModelPtr;
-/*! \ingroup GrpContribUserInterfaceFieldMFields */
+        WeakRefCountPolicy      > MFWeakExampleTableModelPtr;
 typedef PointerMField<ExampleTableModel *,
-                      NoRefCountPolicy        > MFUncountedExampleTableModelPtr;
+        NoRefCountPolicy        > MFUncountedExampleTableModelPtr;
 OSG_END_NAMESPACE
 
 int main(int argc, char **argv)
@@ -556,235 +488,254 @@ int main(int argc, char **argv)
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-    scene->setCore(OSG::Group::create());
-    scene->addChild(TorusGeometryNode);
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
+        scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    // Create TableRefPtr
-    table = Table::create();
-    table->setPreferredSize(Vec2f(500, 500));
-    ExampleTableModelUnrecPtr TheTableModel(ExampleTableModel::create());
-    table->setModel(TheTableModel);
-    table->updateLayout();
+        // Create TableRecPtr
+        TableRecPtr ExampleTable = Table::create();
+        ExampleTable->setPreferredSize(Vec2f(500, 500));
+        ExampleTableModelUnrecPtr TheTableModel = ExampleTableModel::create();
+        ExampleTable->setModel(TheTableModel);
+        ExampleTable->updateLayout();
 
-    /******************************************************
+        /******************************************************
 
-      Create a ScrollPanel to display the Table
-      within (see 27ScrollPanel for more 
-      information).
+          Create a ScrollPanel to display the Table
+          within (see 27ScrollPanel for more 
+          information).
 
-     ******************************************************/
-    ScrollPanelRefPtr TheScrollPanel = ScrollPanel::create();
-    TheScrollPanel->setPreferredSize(Vec2f(402,200));
-    TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    TheScrollPanel->setViewComponent(table);
+         ******************************************************/
+        ScrollPanelRecPtr TheScrollPanel = ScrollPanel::create();
+        TheScrollPanel->setPreferredSize(Vec2f(402,200));
+        TheScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        TheScrollPanel->setViewComponent(ExampleTable);
 
-    //Create the Selection Mode Panel
-    PanelRefPtr SelectionModePanel = createSelectionModePanel();
+        CheckboxButtonRecPtr CellSelectionButton = CheckboxButton::create();
 
-    //Create the Selection Options Panel
-    PanelRefPtr SelectionOptionPanel = createSelectionOptionPanel();
+        //Create the Selection Mode Panel
+        //Label
+        LabelRecPtr SelectionModeLabel = Label::create();
+        SelectionModeLabel->setText("Selection Mode");
+        SelectionModeLabel->setAlignment(Vec2f(0.0,0.5));
 
-    // Create MainFramelayout
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
-    MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
-    MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+        //Buttons
+        RadioButtonRecPtr SingleSelectionButton = RadioButton::create();
+        SingleSelectionButton->setText("Single Selection");
+        SingleSelectionButton->setSelected(true);
+        SingleSelectionButton->setPreferredSize(Vec2f(180,30));
+        SingleSelectionButton->setAlignment(Vec2f(0.0,0.5));
+        SingleSelectionButton->
+            connectButtonSelected(boost::bind(handleSingleSelectionButtonSelected,
+                                              _1,
+                                              ExampleTable.get(),
+                                              CellSelectionButton.get()));
 
+        RadioButtonRecPtr SingleIntervalSelectionButton = RadioButton::create();
+        SingleIntervalSelectionButton->setText("Single Interval Selection");
+        SingleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
+        SingleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
+        SingleIntervalSelectionButton->connectButtonSelected(boost::bind(handleSingleIntervalSelectionButtonSelected,
+                                                                         _1,
+                                                                         ExampleTable.get(),
+                                                                         CellSelectionButton.get()));
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        RadioButtonRecPtr MultipleIntervalSelectionButton = RadioButton::create();
+        MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
+        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
+        MultipleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
+        MultipleIntervalSelectionButton->connectButtonSelected(boost::bind(handleMultipleIntervalSelectionButtonSelected,
+                                                                           _1,
+                                                                           ExampleTable.get(),
+                                                                           CellSelectionButton.get()));
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    MainInternalWindow->pushToChildren(TheScrollPanel);
-    MainInternalWindow->pushToChildren(SelectionModePanel);
-    MainInternalWindow->pushToChildren(SelectionOptionPanel);
-    MainInternalWindow->setLayout(MainInternalWindowLayout);
-    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
-    MainInternalWindow->setDrawTitlebar(false);
-    MainInternalWindow->setResizable(false);
+        RadioButtonGroupRecPtr SelectionButtonGroup = RadioButtonGroup::create();
+        SelectionButtonGroup->addButton(SingleSelectionButton);
+        SelectionButtonGroup->addButton(SingleIntervalSelectionButton);
+        SelectionButtonGroup->addButton(MultipleIntervalSelectionButton);
 
-    //Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-    TutorialDrawingSurface->setGraphics(TutorialGraphics);
-    TutorialDrawingSurface->setEventProducer(TutorialWindow);
-
-    TutorialDrawingSurface->openWindow(MainInternalWindow);
-
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
-
-    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
-
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-
-    // Show the whole Scene
-    mgr->showAll();
+        //Box Layout
+        BoxLayoutRecPtr PanelLayout = BoxLayout::create();
+        PanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
+        PanelLayout->setMinorAxisAlignment(0.5f);
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-                               WinSize,
-                               "28Table.");
+        //The Panel
+        PanelRecPtr SelectionModePanel = Panel::create();
+        SelectionModePanel->pushToChildren(SelectionModeLabel);
+        SelectionModePanel->pushToChildren(SingleSelectionButton);
+        SelectionModePanel->pushToChildren(SingleIntervalSelectionButton);
+        SelectionModePanel->pushToChildren(MultipleIntervalSelectionButton);
+        SelectionModePanel->setLayout(PanelLayout);
+        SelectionModePanel->setPreferredSize(Vec2f(300, 200));
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Create the Selection Options Panel
+        PanelRecPtr SelectionOptionPanel = createSelectionOptionPanel(ExampleTable,
+                                                                      CellSelectionButton);
+
+        // Create MainFramelayout
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+
+
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(TheScrollPanel);
+        MainInternalWindow->pushToChildren(SelectionModePanel);
+        MainInternalWindow->pushToChildren(SelectionOptionPanel);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
+
+        //Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
+
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+
+
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
+
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
+
+        // Show the whole Scene
+        sceneManager.showAll();
+
+
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "28Table.");
+
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
     return 0;
 }
 
-SingleSelectionListener TheSingleSelectionListener;
-SingleIntervalSelectionListener TheSingleIntervalSelectionListener;
-MultipleIntervalSelectionListener TheMultipleIntervalSelectionListener;
-
-PanelRefPtr createSelectionModePanel(void)
-{
-
-    //Label
-    LabelRefPtr SelectionModeLabel = Label::create();
-    SelectionModeLabel->setText("Selection Mode");
-    SelectionModeLabel->setAlignment(Vec2f(0.0,0.5));
-
-    //Buttons
-    RadioButtonRefPtr SingleSelectionButton = RadioButton::create();
-    SingleSelectionButton->setText("Single Selection");
-    SingleSelectionButton->setSelected(true);
-    SingleSelectionButton->setPreferredSize(Vec2f(180,30));
-    SingleSelectionButton->setAlignment(Vec2f(0.0,0.5));
-    SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionListener);
-
-    RadioButtonRefPtr SingleIntervalSelectionButton = RadioButton::create();
-    SingleIntervalSelectionButton->setText("Single Interval Selection");
-    SingleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
-    SingleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
-    SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionListener);
-
-    RadioButtonRefPtr MultipleIntervalSelectionButton = RadioButton::create();
-    MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
-    MultipleIntervalSelectionButton->setPreferredSize(Vec2f(180,30));
-    MultipleIntervalSelectionButton->setAlignment(Vec2f(0.0,0.5));
-    MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionListener);
-
-    SelectionButtonGroup = RadioButtonGroup::create();
-    SelectionButtonGroup->addButton(SingleSelectionButton);
-    SelectionButtonGroup->addButton(SingleIntervalSelectionButton);
-    SelectionButtonGroup->addButton(MultipleIntervalSelectionButton);
-
-    //Box Layout
-    BoxLayoutRefPtr PanelLayout = BoxLayout::create();
-    PanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
-    PanelLayout->setMinorAxisAlignment(0.5f);
-
-
-    //The Panel
-    PanelRefPtr ThePanel = Panel::create();
-    ThePanel->pushToChildren(SelectionModeLabel);
-    ThePanel->pushToChildren(SingleSelectionButton);
-    ThePanel->pushToChildren(SingleIntervalSelectionButton);
-    ThePanel->pushToChildren(MultipleIntervalSelectionButton);
-    ThePanel->setLayout(PanelLayout);
-    ThePanel->setPreferredSize(Vec2f(300, 200));
-    return ThePanel;
-}
-
-RowSelectionListener TheRowSelectionListener;
-ColumnSelectionListener TheColumnSelectionListener;
-CellSelectionListener TheCellSelectionListener;
-
-PanelRefPtr createSelectionOptionPanel(void)
+PanelTransitPtr createSelectionOptionPanel(Table* const ExampleTable,
+                                           CheckboxButton* const CellSelectionButton)
 {
     //Label
-    LabelRefPtr SelectionOptionLabel = Label::create();
+    LabelRecPtr SelectionOptionLabel = Label::create();
     SelectionOptionLabel->setText("Selection Options");
     SelectionOptionLabel->setAlignment(Vec2f(0.0,0.5));
 
     //Buttons
-    RowSelectionButton = CheckboxButton::create();
+    CheckboxButtonRecPtr RowSelectionButton = CheckboxButton::create();
     RowSelectionButton->setText("Row Selection");
     RowSelectionButton->setPreferredSize(Vec2f(180,30));
     RowSelectionButton->setAlignment(Vec2f(0.0,0.5));
     RowSelectionButton->setSelected(true);
-    RowSelectionButton->addButtonSelectedListener(&TheRowSelectionListener);
+    RowSelectionButton->connectButtonSelected(boost::bind(handleRowSelectionButtonSelected,
+                                                          _1,
+                                                          ExampleTable));
+    RowSelectionButton->connectButtonDeselected(boost::bind(handleRowSelectionButtonDeselected,
+                                                            _1,
+                                                            ExampleTable));
 
-    ColumnSelectionButton = CheckboxButton::create();
+    CheckboxButtonRecPtr ColumnSelectionButton = CheckboxButton::create();
     ColumnSelectionButton->setText("Column Selection");
     ColumnSelectionButton->setPreferredSize(Vec2f(180,30));
     ColumnSelectionButton->setAlignment(Vec2f(0.0,0.5));
     ColumnSelectionButton->setSelected(true);
-    ColumnSelectionButton->addButtonSelectedListener(&TheColumnSelectionListener);
+    ColumnSelectionButton->connectButtonSelected(boost::bind(handleColumnSelectionButtonSelected,
+                                                             _1,
+                                                             ExampleTable));
+    ColumnSelectionButton->connectButtonDeselected(boost::bind(handleColumnSelectionButtonDeselected,
+                                                               _1,
+                                                               ExampleTable));
 
 
-    CellSelectionButton = CheckboxButton::create();
     CellSelectionButton->setText("Cell Selection");
     CellSelectionButton->setPreferredSize(Vec2f(180,30));
     CellSelectionButton->setAlignment(Vec2f(0.0,0.5));
     CellSelectionButton->setSelected(false);
-    CellSelectionButton->addButtonSelectedListener(&TheCellSelectionListener);
+    CellSelectionButton->connectButtonSelected(boost::bind(handleCellSelectionButtonSelected,
+                                                           _1,
+                                                           RowSelectionButton.get(),
+                                                           ColumnSelectionButton.get()));
+    CellSelectionButton->connectButtonDeselected(boost::bind(handleCellSelectionButtonDeselected,
+                                                             _1,
+                                                             RowSelectionButton.get(),
+                                                             ColumnSelectionButton.get()));
 
     //Box Layout
-    BoxLayoutRefPtr PanelLayout = BoxLayout::create();
+    BoxLayoutRecPtr PanelLayout = BoxLayout::create();
     PanelLayout->setOrientation(BoxLayout::VERTICAL_ORIENTATION);
     PanelLayout->setMinorAxisAlignment(0.5f);
 
 
     //The Panel
-    PanelRefPtr ThePanel = Panel::create();
+    PanelRecPtr ThePanel = Panel::create();
     ThePanel->pushToChildren(SelectionOptionLabel);
     ThePanel->pushToChildren(RowSelectionButton);
     ThePanel->pushToChildren(ColumnSelectionButton);
     ThePanel->pushToChildren(CellSelectionButton);
     ThePanel->setLayout(PanelLayout);
     ThePanel->setPreferredSize(Vec2f(300, 200));
-    return ThePanel;
+
+    return PanelTransitPtr(ThePanel);
 }
+
 // Callback functions
-
-
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
+

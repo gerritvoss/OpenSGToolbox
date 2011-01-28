@@ -34,13 +34,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 18List Headers
 #include "OSGLookAndFeelManager.h"
@@ -51,161 +47,146 @@ void reshape(Vec2f Size);
 // List header files
 #include "OSGDefaultListModel.h"
 
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-  public:
-
-    virtual void keyPressed(const KeyEventUnrecPtr e)
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
+
+void handleAction(ActionEventDetails* const details)
+{
+    MenuButton* TheMenuButton(dynamic_cast<MenuButton*>(details->getSource()));
+    if(TheMenuButton != NULL)
+    {
+        try
         {
-            TutorialWindow->closeWindow();
+            std::string StrValue = boost::any_cast<std::string>(TheMenuButton->getSelectionValue());
+            std::cout << "Selected: " << StrValue << std::endl;
+        }
+        catch(boost::bad_any_cast &ex)
+        {
+            std::cerr << "Error: " << ex.what() << std::endl;
         }
     }
-
-    virtual void keyReleased(const KeyEventUnrecPtr e)
-    {
-    }
-
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-    }
-};
-
-class ExampleMenuButtonActionListener : public ActionListener
-{
-  public:
-
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        MenuButtonRefPtr TheMenuButton(dynamic_cast<MenuButton*>(e->getSource()));
-        if(TheMenuButton != NULL)
-        {
-            try
-            {
-                std::string StrValue = boost::any_cast<std::string>(TheMenuButton->getSelectionValue());
-                std::cout << "Selected: " << StrValue << std::endl;
-            }
-            catch(boost::bad_any_cast &)
-            {
-            }
-        }
-    }
-};
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-    scene->setCore(OSG::Group::create());
-    scene->addChild(TorusGeometryNode);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
+        scene->addChild(TorusGeometryNode);
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    //Create list data model to use for the Popup menu
-    DefaultListModelRefPtr ExampleListModel = DefaultListModel::create();
-    ExampleListModel->pushBack(boost::any(std::string("Red")));
-    ExampleListModel->pushBack(boost::any(std::string("Green")));
-    ExampleListModel->pushBack(boost::any(std::string("Blue")));
-    ExampleListModel->pushBack(boost::any(std::string("Orange")));
-    ExampleListModel->pushBack(boost::any(std::string("Purple")));
-    ExampleListModel->pushBack(boost::any(std::string("Yellow")));
-    ExampleListModel->pushBack(boost::any(std::string("White")));
-    ExampleListModel->pushBack(boost::any(std::string("Black")));
-    ExampleListModel->pushBack(boost::any(std::string("Gray")));
-    ExampleListModel->pushBack(boost::any(std::string("Brown")));
-    ExampleListModel->pushBack(boost::any(std::string("Indigo")));
-    ExampleListModel->pushBack(boost::any(std::string("Pink")));
-    ExampleListModel->pushBack(boost::any(std::string("Violet")));
-    ExampleListModel->pushBack(boost::any(std::string("Mauve")));
-    ExampleListModel->pushBack(boost::any(std::string("Peach")));
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    //Create the MenuButton
-    MenuButtonRefPtr ExampleMenuButton = MenuButton::create();
+        //Create list data model to use for the Popup menu
+        DefaultListModelRecPtr ExampleListModel = DefaultListModel::create();
+        ExampleListModel->pushBack(boost::any(std::string("Red")));
+        ExampleListModel->pushBack(boost::any(std::string("Green")));
+        ExampleListModel->pushBack(boost::any(std::string("Blue")));
+        ExampleListModel->pushBack(boost::any(std::string("Orange")));
+        ExampleListModel->pushBack(boost::any(std::string("Purple")));
+        ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+        ExampleListModel->pushBack(boost::any(std::string("White")));
+        ExampleListModel->pushBack(boost::any(std::string("Black")));
+        ExampleListModel->pushBack(boost::any(std::string("Gray")));
+        ExampleListModel->pushBack(boost::any(std::string("Brown")));
+        ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+        ExampleListModel->pushBack(boost::any(std::string("Pink")));
+        ExampleListModel->pushBack(boost::any(std::string("Violet")));
+        ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+        ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
-    ExampleMenuButton->setText("Menu Button");
-    ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
-    ExampleMenuButton->setModel(ExampleListModel);
-    ExampleMenuButtonActionListener TheActionListener;
-    ExampleMenuButton->addMenuActionListener(&TheActionListener);
+        //Create the MenuButton
+        MenuButtonRecPtr ExampleMenuButton = MenuButton::create();
 
-    // Create MainFramelayout
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
-    MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
-    MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+        ExampleMenuButton->setText("Menu Button");
+        ExampleMenuButton->setPreferredSize(Vec2f(120, 20));
+        ExampleMenuButton->setModel(ExampleListModel);
+        ExampleMenuButton->connectActionPerformed(boost::bind(handleAction, _1));
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-    MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        // Create MainFramelayout
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    MainInternalWindow->pushToChildren(ExampleMenuButton);
-    MainInternalWindow->setLayout(MainInternalWindowLayout);
-    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
-    MainInternalWindow->setDrawTitlebar(false);
-    MainInternalWindow->setResizable(false);
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-    TutorialDrawingSurface->setGraphics(TutorialGraphics);
-    TutorialDrawingSurface->setEventProducer(TutorialWindow);
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(ExampleMenuButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    TutorialDrawingSurface->openWindow(MainInternalWindow);
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
-
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-
-    // Show the whole Scene
-    mgr->showAll();
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-                               WinSize,
-                               "43MenuButton");
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
+
+        // Show the whole Scene
+        sceneManager.showAll();
+
+
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "43MenuButton");
+
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -215,13 +196,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

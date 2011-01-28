@@ -3,14 +3,14 @@ Welcome to the 01Button tutorial.  In this tutorial,
 you will see examples of how to create the following 
 OGS User Interface components:
 	
-	ActionListener
+	Action
 	Button
 	ToggleButton
 	
 Buttons are often used to create interactivity
 within the interface (via clicking, etc).  This
 tutorial details how to create simple Buttons and
-modify their basic features.  The ActionListener
+modify their basic features.  The Action
 class is used to create the desired result when
 actions are preformed (again, clicking, etc).  A
 ToggleButton remains pressed, hence "Toggle."
@@ -98,7 +98,7 @@ void keyTyped(KeyEventDetails* const details)
 
 /******************************************************
 
-  Create an ActionListener to display text
+  Create an Action to display text
   in the Console Window when the Button is
   pressed (causing an action).
 
@@ -217,7 +217,7 @@ int main(int argc, char **argv)
         ExampleButton->setActiveTextColor(Color4f(1.0, 0.0, 0.0, 1.0));
         ExampleButton->setAlignment(Vec2f(1.0,0.0));
 
-        // Create an ActionListener and assign it to ExampleButton
+        // Create an Action and assign it to ExampleButton
         // This Class is defined above, and will cause the output
         // window to display "Button 1 Action" when pressed
         ExampleButton->connectActionPerformed(boost::bind(actionPerformed, _1));

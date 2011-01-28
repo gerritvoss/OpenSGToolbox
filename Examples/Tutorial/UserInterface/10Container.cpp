@@ -37,13 +37,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 10Container Headers
 #include "OSGButton.h"
@@ -58,72 +54,63 @@ void reshape(Vec2f Size);
 #include "OSGLineBorder.h"
 #include "OSGBevelBorder.h"
 
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
 
-    /******************************************************
-            
-                Creates some Button components
-                and edit their Text.
+        /******************************************************
 
-    ******************************************************/
+          Creates some Button components
+          and edit their Text.
 
-    ButtonRefPtr ExampleButton1 = OSG::Button::create();
-    ButtonRefPtr ExampleButton2 = OSG::Button::create();
-    ButtonRefPtr ExampleButton3 = OSG::Button::create();
-    ButtonRefPtr ExampleButton4 = OSG::Button::create();
-    ButtonRefPtr ExampleButton5 = OSG::Button::create();
-    ButtonRefPtr ExampleButton6 = OSG::Button::create();
-    
+         ******************************************************/
+
+        ButtonRecPtr ExampleButton1 = Button::create();
+        ButtonRecPtr ExampleButton2 = Button::create();
+        ButtonRecPtr ExampleButton3 = Button::create();
+        ButtonRecPtr ExampleButton4 = Button::create();
+        ButtonRecPtr ExampleButton5 = Button::create();
+        ButtonRecPtr ExampleButton6 = Button::create();
+
         ExampleButton1->setText("This");
 
         ExampleButton2->setText("is a");
@@ -136,65 +123,65 @@ int main(int argc, char **argv)
 
         ExampleButton6->setText("layout");
 
-    
-    /******************************************************
 
-            Create some Flow and BoxLayouts to be 
-            used with the Main Frame and two 
-            Panels.
+        /******************************************************
 
-    ******************************************************/
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    FlowLayoutRefPtr ExamplePanel1Layout = OSG::FlowLayout::create();
-    FlowLayoutRefPtr ExamplePanel2Layout = OSG::FlowLayout::create();
+          Create some Flow and BoxLayouts to be 
+          used with the Main Frame and two 
+          Panels.
+
+         ******************************************************/
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        FlowLayoutRecPtr ExamplePanel1Layout = FlowLayout::create();
+        FlowLayoutRecPtr ExamplePanel2Layout = FlowLayout::create();
 
         ExamplePanel1Layout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
 
 
-    /******************************************************
-            
-            Create two Backgrounds to be used with
-            Panels and MainInternalWindow.
+        /******************************************************
 
-    ******************************************************/
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-    ColorLayerRefPtr ExamplePanelBackground = OSG::ColorLayer::create();
+          Create two Backgrounds to be used with
+          Panels and MainInternalWindow.
+
+         ******************************************************/
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
+        ColorLayerRecPtr ExamplePanelBackground = ColorLayer::create();
 
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
         ExamplePanelBackground->setColor(Color4f(0.0,0.0,0.0,1.0));
-    
-    /******************************************************
-            
-            Create a Border to be used with
-            the two Panels.
 
-    ******************************************************/
-    LineBorderRefPtr ExamplePanelBorder = OSG::LineBorder::create();
+        /******************************************************
+
+          Create a Border to be used with
+          the two Panels.
+
+         ******************************************************/
+        LineBorderRecPtr ExamplePanelBorder = LineBorder::create();
         ExamplePanelBorder->setColor(Color4f(0.9, 0.9, 0.9, 1.0));
         ExamplePanelBorder->setWidth(3);
 
 
-    /******************************************************
+        /******************************************************
 
-        Create MainInternalWindow and two Panel Components and
-        edit their characteristics.
+          Create MainInternalWindow and two Panel Components and
+          edit their characteristics.
 
-        -setPreferredSize(Vec2f): Determine the 
-			size of the Panel.
-        -pushToChildren(ComponentName):
-			Adds a Component to the
-			ComponentContainer as a Child (meaning it 
-			will be displayed within it).
-        -setLayout(LayoutName): Determines the 
-			Layout of the ComponentContainer.
+          -setPreferredSize(Vec2f): Determine the 
+          size of the Panel.
+          -pushToChildren(ComponentName):
+          Adds a Component to the
+          ComponentContainer as a Child (meaning it 
+          will be displayed within it).
+          -setLayout(LayoutName): Determines the 
+          Layout of the ComponentContainer.
 
-    ******************************************************/
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    PanelRefPtr ExamplePanel1 = OSG::Panel::create();
-    PanelRefPtr ExamplePanel2 = OSG::Panel::create();
-    
-    // Edit Panel1, Panel2
+         ******************************************************/
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        PanelRecPtr ExamplePanel1 = Panel::create();
+        PanelRecPtr ExamplePanel2 = Panel::create();
+
+        // Edit Panel1, Panel2
         ExamplePanel1->setPreferredSize(Vec2f(200, 200));
         ExamplePanel1->pushToChildren(ExampleButton1);
         ExamplePanel1->pushToChildren(ExampleButton2);
@@ -211,53 +198,51 @@ int main(int argc, char **argv)
         ExamplePanel2->setBackgrounds(ExamplePanelBackground);
         ExamplePanel2->setBorders(ExamplePanelBorder);
 
-    // Create The Main InternalWindow
-       MainInternalWindow->pushToChildren(ExamplePanel1);
-       MainInternalWindow->pushToChildren(ExamplePanel2);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-	   MainInternalWindow->setAllInsets(5);
-    
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create The Main InternalWindow
+        MainInternalWindow->pushToChildren(ExamplePanel1);
+        MainInternalWindow->pushToChildren(ExamplePanel2);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
+        MainInternalWindow->setAllInsets(5);
+
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "10Container");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "10Container");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -267,13 +252,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

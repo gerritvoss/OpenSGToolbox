@@ -3,7 +3,7 @@
 // This tutorial explains how use CardLayout
 // 
 // Includes: Using CardLayout, including a brief introduction
-// to ActionListeners
+// to Action
 
 
 // General OpenSG configuration, needed everywhere
@@ -34,13 +34,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 11CardLayout Headers
 #include "OSGButton.h"
@@ -52,242 +48,220 @@ void reshape(Vec2f Size);
 #include "OSGCardLayout.h"
 //#include "OSGUIDefines.h"
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
-    /******************************************************
-
-            Create CardLayout and its ComponentContainer
-            so they can be referenced in the 
-            ActionListeners (this is required
-            when using ActionListeners in this
-            manner).
-
-    ******************************************************/
-    CardLayoutRefPtr ExampleCardLayout;
-    PanelRefPtr ExampleCardPanel;
-
-    /******************************************************
-
-            Create ActionListeners to use with
-            CardLayout and assign each its action.
-
-            EditCP loops with the CardLayout are
-            used in the following manner:
-            CardLayoutName->FUNCTION(CardLayoutContainer)
-
-    ******************************************************/
-class NextCardActionListener : public ActionListener
-{
-  public:
-
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        // Displays the next Card in CardLayout
-        ExampleCardLayout->next(ExampleCardPanel);
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-};
+}
 
-class BackCardActionListener : public ActionListener
+/******************************************************
+
+  Create CardLayout and its ComponentContainer
+  so they can be referenced in the 
+  Action (this is required
+  when using Action in this
+  manner).
+
+ ******************************************************/
+
+/******************************************************
+
+  Create Action to use with
+  CardLayout and assign each its action.
+
+  EditCP loops with the CardLayout are
+  used in the following manner:
+  CardLayoutName->FUNCTION(CardLayoutContainer)
+
+ ******************************************************/
+void handleNextCardAction(ActionEventDetails* const details,
+                          CardLayout* const ExampleCardLayout,
+                          Panel* const ExampleCardPanel)
 {
-  public:
+    // Displays the next Card in CardLayout
+    ExampleCardLayout->next(ExampleCardPanel);
+}
 
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        ExampleCardLayout->previous(ExampleCardPanel);
-    }
-
-};
-class FirstCardActionListener : public ActionListener
+void handleBackCardAction(ActionEventDetails* const details,
+                          CardLayout* const ExampleCardLayout,
+                          Panel* const ExampleCardPanel)
 {
-  public:
+    ExampleCardLayout->previous(ExampleCardPanel);
+}
 
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        ExampleCardLayout->first(ExampleCardPanel);
-
-
-    }
-};
-class LastCardActionListener : public ActionListener
+void handleFirstCardAction(ActionEventDetails* const details,
+                          CardLayout* const ExampleCardLayout,
+                          Panel* const ExampleCardPanel)
 {
-  public:
+    ExampleCardLayout->first(ExampleCardPanel);
+}
 
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        ExampleCardLayout->last(ExampleCardPanel);
-
-
-    }
-};
+void handleLastCardAction(ActionEventDetails* const details,
+                          CardLayout* const ExampleCardLayout,
+                          Panel* const ExampleCardPanel)
+{
+    ExampleCardLayout->last(ExampleCardPanel);
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
-    
-    /******************************************************
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-            Create BorderLayout and some
-            BorderLayoutConstraints to be used 
-            to set up CardLayout.
+        /******************************************************
 
-    ******************************************************/
-    
-    BorderLayoutRefPtr MainInternalWindowLayout = OSG::BorderLayout::create();
-    BorderLayoutConstraintsRefPtr ExampleButton1Constraints = OSG::BorderLayoutConstraints::create();
-    BorderLayoutConstraintsRefPtr ExampleButton2Constraints = OSG::BorderLayoutConstraints::create();
-    BorderLayoutConstraintsRefPtr ExampleButton7Constraints = OSG::BorderLayoutConstraints::create();
-    BorderLayoutConstraintsRefPtr ExampleButton8Constraints = OSG::BorderLayoutConstraints::create();
-    BorderLayoutConstraintsRefPtr ExampleCardPanelConstraints = OSG::BorderLayoutConstraints::create();
-        
+          Create BorderLayout and some
+          BorderLayoutConstraints to be used 
+          to set up CardLayout.
+
+         ******************************************************/
+
+        BorderLayoutRecPtr MainInternalWindowLayout = BorderLayout::create();
+        BorderLayoutConstraintsRecPtr ExampleButton1Constraints = BorderLayoutConstraints::create();
+        BorderLayoutConstraintsRecPtr ExampleButton2Constraints = BorderLayoutConstraints::create();
+        BorderLayoutConstraintsRecPtr ExampleButton7Constraints = BorderLayoutConstraints::create();
+        BorderLayoutConstraintsRecPtr ExampleButton8Constraints = BorderLayoutConstraints::create();
+        BorderLayoutConstraintsRecPtr ExampleCardPanelConstraints = BorderLayoutConstraints::create();
+
         ExampleButton1Constraints->setRegion(BorderLayoutConstraints::BORDER_EAST);
-            
+
         ExampleButton2Constraints->setRegion(BorderLayoutConstraints::BORDER_WEST);
-            
+
         ExampleButton7Constraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
-            
+
         ExampleButton8Constraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
-            
+
         ExampleCardPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 
-    /******************************************************
+        /******************************************************
 
-            Create CardLayout.  CardLayout shows 
-            a single Component at a time, meaning
-            it is not exactly practical to use it
-            alone for a Layout.  This tutorial uses
-            the BorderLayout to include a Panel in
-            the Center Region, and within that Panel
-            using a CardLayout.  A single card is 
-			displayed at one time within a 
-			ComponentContainer using CardLayout.
+          Create CardLayout.  CardLayout shows 
+          a single Component at a time, meaning
+          it is not exactly practical to use it
+          alone for a Layout.  This tutorial uses
+          the BorderLayout to include a Panel in
+          the Center Region, and within that Panel
+          using a CardLayout.  A single card is 
+          displayed at one time within a 
+          ComponentContainer using CardLayout.
 
-            CardLayout has four functions:
-            next, previous, first, and last.
+          CardLayout has four functions:
+          next, previous, first, and last.
 
-            ->next(CardContainerName): Causes 
-			    CardLayout to display the next card.
-			->previous(CardContainerName): Causes
-				CardLayout to display the 
-				previous card.
-			->first(CardContainerName): Causes
-				CardLayout to display the
-				first card.
-			->last(CardContainerName): Causes
-				CardLayout to display the
-				last card.
-			
-            These are most useful when combined with 
-            ActionListeners, as shown at the top of 
-            this Tutorial, to assign actions to the 
-			Buttons or Components to allow the user 
-			to cycle through the Card Layout and 
-			view different ExampleCards.
+          ->next(CardContainerName): Causes 
+          CardLayout to display the next card.
+          ->previous(CardContainerName): Causes
+          CardLayout to display the 
+          previous card.
+          ->first(CardContainerName): Causes
+          CardLayout to display the
+          first card.
+          ->last(CardContainerName): Causes
+          CardLayout to display the
+          last card.
 
-			Note that CardContainerName is the name
-			of the ComponentContainer which is using the
-			CardLayout, while the begin/endEditCP
-			is performed on the CardLayout itself.
+          These are most useful when combined with 
+          Action, as shown at the top of 
+          this Tutorial, to assign actions to the 
+          Buttons or Components to allow the user 
+          to cycle through the Card Layout and 
+          view different ExampleCards.
 
-    ******************************************************/
-    
-    ExampleCardLayout = OSG::CardLayout::create();
-    ExampleCardPanel = OSG::Panel::create();
+          Note that CardContainerName is the name
+          of the ComponentContainer which is using the
+          CardLayout, while the begin/endEditCP
+          is performed on the CardLayout itself.
 
-    /******************************************************
+         ******************************************************/
 
-            Create Button Components to be used with 
-            CardLayout to allow for interactivity.
+        CardLayoutRecPtr ExampleCardLayout = CardLayout::create();
+        PanelRecPtr ExampleCardPanel = Panel::create();
 
-    ******************************************************/
-    ButtonRefPtr ExampleButton1 = OSG::Button::create();
-    ButtonRefPtr ExampleButton2 = OSG::Button::create();
-    ButtonRefPtr ExampleButton3 = OSG::Button::create();
-    ButtonRefPtr ExampleButton4 = OSG::Button::create();
-    ButtonRefPtr ExampleButton5 = OSG::Button::create();
-    ButtonRefPtr ExampleButton6 = OSG::Button::create();    
-    ButtonRefPtr ExampleButton7 = OSG::Button::create();
-    ButtonRefPtr ExampleButton8 = OSG::Button::create();
+        /******************************************************
+
+          Create Button Components to be used with 
+          CardLayout to allow for interactivity.
+
+         ******************************************************/
+        ButtonRecPtr ExampleButton1 = Button::create();
+        ButtonRecPtr ExampleButton2 = Button::create();
+        ButtonRecPtr ExampleButton3 = Button::create();
+        ButtonRecPtr ExampleButton4 = Button::create();
+        ButtonRecPtr ExampleButton5 = Button::create();
+        ButtonRecPtr ExampleButton6 = Button::create();    
+        ButtonRecPtr ExampleButton7 = Button::create();
+        ButtonRecPtr ExampleButton8 = Button::create();
 
         ExampleButton1->setText("Next Card");
         ExampleButton1->setConstraints(ExampleButton1Constraints);
-    
-    // Add ActionListener
-    NextCardActionListener TheNextCardActionListener;
-    ExampleButton1->addActionListener( &TheNextCardActionListener);
-    
+
+        // Add Action
+        ExampleButton1->connectActionPerformed(boost::bind(handleNextCardAction, _1,
+                                                           ExampleCardLayout.get(),
+                                                           ExampleCardPanel.get()));
+
         ExampleButton2->setText("Previous Card");
         ExampleButton2->setConstraints(ExampleButton2Constraints);
 
-    // Add ActionListener
-    BackCardActionListener TheBackCardActionListener;
-    ExampleButton2->addActionListener( &TheBackCardActionListener);
+        // Add Action
+        ExampleButton2->connectActionPerformed(boost::bind(handleBackCardAction, _1,
+                                                           ExampleCardLayout.get(),
+                                                           ExampleCardPanel.get()));
 
         ExampleButton3->setText("This");
 
         ExampleButton4->setText("is");
 
         ExampleButton5->setText("Card");
-    
+
         ExampleButton6->setText("Layout");
 
         ExampleButton7->setText("First Card");
         ExampleButton7->setConstraints(ExampleButton7Constraints);
-        
-    // Add ActionListener
-    FirstCardActionListener TheFirstCardActionListener;
-    ExampleButton7->addActionListener( &TheFirstCardActionListener);
+
+        // Add Action
+        ExampleButton7->connectActionPerformed(boost::bind(handleFirstCardAction, _1,
+                                                           ExampleCardLayout.get(),
+                                                           ExampleCardPanel.get()));
 
         ExampleButton8->setText("Last Card");
         ExampleButton8->setConstraints(ExampleButton8Constraints);
-    
-    // Add ActionListener
-    LastCardActionListener TheLastCardActionListener;
-    ExampleButton8->addActionListener( &TheLastCardActionListener);
 
+        // Add Action
+        ExampleButton8->connectActionPerformed(boost::bind(handleLastCardAction, _1,
+                                                           ExampleCardLayout.get(),
+                                                           ExampleCardPanel.get()));
 
         ExampleCardPanel->setLayout(ExampleCardLayout);
         ExampleCardPanel->pushToChildren(ExampleButton3);
@@ -299,61 +273,59 @@ int main(int argc, char **argv)
 
 
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(ExampleButton1);
-       MainInternalWindow->pushToChildren(ExampleButton2);
-       MainInternalWindow->pushToChildren(ExampleButton7);
-       MainInternalWindow->pushToChildren(ExampleButton8);
-       MainInternalWindow->pushToChildren(ExampleCardPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
-    
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(ExampleButton1);
+        MainInternalWindow->pushToChildren(ExampleButton2);
+        MainInternalWindow->pushToChildren(ExampleButton7);
+        MainInternalWindow->pushToChildren(ExampleButton8);
+        MainInternalWindow->pushToChildren(ExampleCardPanel);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "11CardLayout");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "11CardLayout");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -363,13 +335,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

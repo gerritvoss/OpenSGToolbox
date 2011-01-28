@@ -1,20 +1,20 @@
 /*************************************************
-Welcome to the 03Border tutorial.  In this
-tutorial, you will see how to use the 
-different Borders available and add them
-to components.  The following Borders are
+  Welcome to the 03Border tutorial.  In this
+  tutorial, you will see how to use the 
+  different Borders available and add them
+  to components.  The following Borders are
 introduced:
-	
-	BevelBorder
-	CompoundBorder
-	EmptyBorder
-	EtchedBorder
-	LineBorder
-	MatteBorder
-	MultiColorMatteBorder
-    RoundedCornerLineBorder
-	ShadowBorder
-	PolygonBorder
+
+BevelBorder
+CompoundBorder
+EmptyBorder
+EtchedBorder
+LineBorder
+MatteBorder
+MultiColorMatteBorder
+RoundedCornerLineBorder
+ShadowBorder
+PolygonBorder
 
 Borders are used to quite simply give 
 borders to components.  They can be added to 
@@ -29,18 +29,18 @@ requirements of each Border are not listed
 here):
 
 All Borders (where applicable):
-	Creating Border
-    Setting Color
-	Setting Width
-	Specifying style
-	Adding Borders to components
+Creating Border
+Setting Color
+Setting Width
+Specifying style
+Adding Borders to components
 
 These tutorials contain potentially relevant
 information:
 
 
 
-*************************************************/
+ *************************************************/
 
 
 // General OpenSG configuration, needed everywhere
@@ -71,13 +71,9 @@ information:
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // Include Border header files
 #include "OSGBorders.h"
@@ -85,101 +81,91 @@ void reshape(Vec2f Size);
 #include "OSGButton.h"
 #include "OSGFlowLayout.h"
 
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    // Set up Window
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Torus Node
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    /******************************************************
+        /******************************************************
 
-        Create Border components and assign
-        each attribute to each Border.  Note
-        that the LookAndFeelManager automatically
-        assigns default settings to Borders.
-        Each attribute will be set individually
-        in this tutorial.
+          Create Border components and assign
+          each attribute to each Border.  Note
+          that the LookAndFeelManager automatically
+          assigns default settings to Borders.
+          Each attribute will be set individually
+          in this tutorial.
 
-    ******************************************************/
-    BevelBorderRefPtr ExampleBevelBorder = OSG::BevelBorder::create();
-    CompoundBorderRefPtr ExampleCompoundBorder = OSG::CompoundBorder::create();
-    EtchedBorderRefPtr ExampleEtchedBorder = OSG::EtchedBorder::create();
-    LineBorderRefPtr ExampleLineBorder = OSG::LineBorder::create();
-    MatteBorderRefPtr ExampleMatteBorder = OSG::MatteBorder::create();
-    EmptyBorderRefPtr ExampleEmptyBorder = OSG::EmptyBorder::create();
-    MultiColorMatteBorderRefPtr ExampleMultiColorMatteBorder = OSG::MultiColorMatteBorder::create();
-    RoundedCornerLineBorderRefPtr ExampleRoundedCornerLineBorder = OSG::RoundedCornerLineBorder::create();
-    ShadowBorderRefPtr ExampleShadowBorder = OSG::ShadowBorder::create();
-    PolygonBorderRefPtr ExamplePolygonBorder = OSG::PolygonBorder::create();
-    
-    /******************************************************
+         ******************************************************/
+        BevelBorderRecPtr ExampleBevelBorder = BevelBorder::create();
+        CompoundBorderRecPtr ExampleCompoundBorder = CompoundBorder::create();
+        EtchedBorderRecPtr ExampleEtchedBorder = EtchedBorder::create();
+        LineBorderRecPtr ExampleLineBorder = LineBorder::create();
+        MatteBorderRecPtr ExampleMatteBorder = MatteBorder::create();
+        EmptyBorderRecPtr ExampleEmptyBorder = EmptyBorder::create();
+        MultiColorMatteBorderRecPtr ExampleMultiColorMatteBorder = MultiColorMatteBorder::create();
+        RoundedCornerLineBorderRecPtr ExampleRoundedCornerLineBorder = RoundedCornerLineBorder::create();
+        ShadowBorderRecPtr ExampleShadowBorder = ShadowBorder::create();
+        PolygonBorderRecPtr ExamplePolygonBorder = PolygonBorder::create();
 
-        The BevelBorder causes the Border to appear
-		raised or indented.
+        /******************************************************
 
-		-setRaised(bool): Determines whether Border
-			appears Raised (true) or indented (false).
-        -setWidth(int): Determines the Width
-			of the Border in pixels.
-		-setHighlightInner(Color4f): See below.
-		-setHighlightOuter(Color4f): See below.
-		-setShadowInner(Color4f): See below.
-		-setShadowOuter(Color4f): See below.
+          The BevelBorder causes the Border to appear
+          raised or indented.
 
-		These four functions determine the color
-		of the BevelBorder.  While setRaised(true):
-		HightlightInner and HighlightOuter are bottom
-		and right, and left and top while false.  The 
-		ShadowInner and ShadowOuter are the opposite 
-		sides.			
+          -setRaised(bool): Determines whether Border
+          appears Raised (true) or indented (false).
+          -setWidth(int): Determines the Width
+          of the Border in pixels.
+          -setHighlightInner(Color4f): See below.
+          -setHighlightOuter(Color4f): See below.
+          -setShadowInner(Color4f): See below.
+          -setShadowOuter(Color4f): See below.
 
-    ******************************************************/
+          These four functions determine the color
+          of the BevelBorder.  While setRaised(true):
+          HightlightInner and HighlightOuter are bottom
+          and right, and left and top while false.  The 
+          ShadowInner and ShadowOuter are the opposite 
+          sides.			
+
+         ******************************************************/
 
         ExampleBevelBorder->setRaised(true);
         ExampleBevelBorder->setWidth(5);
@@ -188,174 +174,174 @@ int main(int argc, char **argv)
         ExampleBevelBorder->setShadowInner(Color4f(1.0, 0.5, 1.0, 1.0));
         ExampleBevelBorder->setShadowOuter(Color4f(0.5, 1.0, 1.0, 1.0));
 
-    /******************************************************
+        /******************************************************
 
-        The CompoundBorder takes two other Borders
-		and creates a new Border using both.
+          The CompoundBorder takes two other Borders
+          and creates a new Border using both.
 
-		-setInnerBorder(BorderName): Determines 
-			the inner Border.
-		-setOuterBorder(BorderName): Determines
-			the outer Border.
+          -setInnerBorder(BorderName): Determines 
+          the inner Border.
+          -setOuterBorder(BorderName): Determines
+          the outer Border.
 
-		Note: It is possible to create
-		CompoundBorders using CompoundBorders
-		using CompoundBorders using other 
-		CompoundBorders, etc. 
+Note: It is possible to create
+CompoundBorders using CompoundBorders
+using CompoundBorders using other 
+CompoundBorders, etc. 
 
-    ******************************************************/
+         ******************************************************/
 
         ExampleCompoundBorder->setInnerBorder(ExampleBevelBorder);
         ExampleCompoundBorder->setOuterBorder(ExampleMatteBorder);
-   
-    /******************************************************
 
-        The EmptyBorder has a transparent Border
-		which is not visible.
+        /******************************************************
 
-		-setBottomWidth(int): Determine the bottom
-			Width of the Border in pixels.
-		-setLeftWidth(int): Determine the left
-			Width of the Border in pixels.
-		-setRightWidth(int): Determine the right
-			Width of the Border in pixels.
-		-setTopWidth(int): Determine the top
-			Width of the Border in pixels.
+          The EmptyBorder has a transparent Border
+          which is not visible.
 
-    ******************************************************/
+          -setBottomWidth(int): Determine the bottom
+          Width of the Border in pixels.
+          -setLeftWidth(int): Determine the left
+          Width of the Border in pixels.
+          -setRightWidth(int): Determine the right
+          Width of the Border in pixels.
+          -setTopWidth(int): Determine the top
+          Width of the Border in pixels.
+
+         ******************************************************/
 
         ExampleEmptyBorder->setBottomWidth(5);
         ExampleEmptyBorder->setLeftWidth(5);
         ExampleEmptyBorder->setRightWidth(30);
         ExampleEmptyBorder->setTopWidth(30);
 
-    /******************************************************
+        /******************************************************
 
-        The EtchedBorder causes the Border to appear
-		raised or indented, but in a different
-		style than BevelBorder.
+          The EtchedBorder causes the Border to appear
+          raised or indented, but in a different
+          style than BevelBorder.
 
-		-setWidth(int): Determine the Width of
-			the Border in pixels.  This works
-			best with a Width of a multiple of 2.
-		-setHighlight(Color4f): Determine the
-			hightlight Color of the Border.
-		-setShadow(Color4f): Determine the
-			shadow Color of the Border.	
-		-setRaised(bool): Determine if the 
-			Border appears raised (true) or
-			indented (false).
+          -setWidth(int): Determine the Width of
+          the Border in pixels.  This works
+          best with a Width of a multiple of 2.
+          -setHighlight(Color4f): Determine the
+          hightlight Color of the Border.
+          -setShadow(Color4f): Determine the
+          shadow Color of the Border.	
+          -setRaised(bool): Determine if the 
+          Border appears raised (true) or
+          indented (false).
 
-    ******************************************************/
+         ******************************************************/
 
         ExampleEtchedBorder->setWidth(4);
         ExampleEtchedBorder->setHighlight(Color4f(1.0, 1.0, 1.0, 1.0));
         ExampleEtchedBorder->setShadow(Color4f(0.8, 0.8, 0.8, 1.0));
         ExampleEtchedBorder->setRaised(false);
-    
-	/******************************************************
 
-        The LineBorder is simply a plain Line Border.
+        /******************************************************
 
-		-setWidth(int): Determines Width of	
-			the Border in pixels.
-		-setColor(Color4f): Determine the Color
-			of the Border.
+          The LineBorder is simply a plain Line Border.
 
-    ******************************************************/
+          -setWidth(int): Determines Width of	
+          the Border in pixels.
+          -setColor(Color4f): Determine the Color
+          of the Border.
+
+         ******************************************************/
 
         ExampleLineBorder->setWidth(1);
         ExampleLineBorder->setColor(Color4f(.7, 0.0, .5, 1.0));
- 
-	/******************************************************
 
-        The MatteBorder is a LineBorder, except
-		each edge Width can be specified
-		individually.
+        /******************************************************
 
-		-setLeftWidth(int): Determines Width of	
-			the left side of the Border in pixels.
-		-setRightWidth(int): Determines Width of	
-			the right side of the Border in pixels.
-		-setBottomWidth(int): Determines Width of	
-			the bottom side of the Border in pixels.
-		-setTopWidth(int): Determines Width of	
-			the top side of the Border in pixels.			
-		-setColor(Color4f): Determine the Color
-			of the Border.
+          The MatteBorder is a LineBorder, except
+          each edge Width can be specified
+          individually.
 
-    ******************************************************/
+          -setLeftWidth(int): Determines Width of	
+          the left side of the Border in pixels.
+          -setRightWidth(int): Determines Width of	
+          the right side of the Border in pixels.
+          -setBottomWidth(int): Determines Width of	
+          the bottom side of the Border in pixels.
+          -setTopWidth(int): Determines Width of	
+          the top side of the Border in pixels.			
+          -setColor(Color4f): Determine the Color
+          of the Border.
+
+         ******************************************************/
 
         ExampleMatteBorder->setLeftWidth(3);
         ExampleMatteBorder->setRightWidth(2);
         ExampleMatteBorder->setBottomWidth(5);
         ExampleMatteBorder->setTopWidth(1);
         ExampleMatteBorder->setColor(Color4f(1.0, .5, .5, 1.0));
-	
-	/******************************************************
 
-        The MultiColorMatteBorder is a MatteBorder,
-		except each edge Color can also be
-		specified individually.
+        /******************************************************
 
-		-setLeftWidth(int): Determines Width of	
-			the left side of the Border in pixels.
-		-setRightWidth(int): Determines Width of	
-			the right side of the Border in pixels.
-		-setBottomWidth(int): Determines Width of	
-			the bottom side of the Border in pixels.
-		-setTopWidth(int): Determines Width of	
-			the top side of the Border in pixels.			
+          The MultiColorMatteBorder is a MatteBorder,
+          except each edge Color can also be
+          specified individually.
 
-		-setLeftLineTopColor(Color4f): See below.
-		-setLeftLineBottomCo(Color4f): See below.
-		-setRightLineTopColor(Color4f): See below.
-		-setRightLineBottomColor(Color4f): See below.
-		-setBottomLineLeftColor(Color4f): See below.
-		-setBottomLineRightColor(Color4f): See below.
-		-setTopLineLeftColor(Color4f): See below.
-		-setTopLineRightColor(Color4f): See below.
+          -setLeftWidth(int): Determines Width of	
+          the left side of the Border in pixels.
+          -setRightWidth(int): Determines Width of	
+          the right side of the Border in pixels.
+          -setBottomWidth(int): Determines Width of	
+          the bottom side of the Border in pixels.
+          -setTopWidth(int): Determines Width of	
+          the top side of the Border in pixels.			
 
-		These functions are used to create 
-		ColorUIGradients for each of the Border's
-		edges.  The functions themselves explain
-		which part of the Border they are applicable
-		to (bottom, right, etc).
+          -setLeftLineTopColor(Color4f): See below.
+          -setLeftLineBottomCo(Color4f): See below.
+          -setRightLineTopColor(Color4f): See below.
+          -setRightLineBottomColor(Color4f): See below.
+          -setBottomLineLeftColor(Color4f): See below.
+          -setBottomLineRightColor(Color4f): See below.
+          -setTopLineLeftColor(Color4f): See below.
+          -setTopLineRightColor(Color4f): See below.
 
-    ******************************************************/
+          These functions are used to create 
+          ColorUIGradients for each of the Border's
+          edges.  The functions themselves explain
+          which part of the Border they are applicable
+          to (bottom, right, etc).
+
+         ******************************************************/
 
         ExampleMultiColorMatteBorder->setLeftWidth(10);
-        ExampleMultiColorMatteBorder->setLeftLineTopColor(Color4f(1.0,0.0,0.0,1.0));
-        ExampleMultiColorMatteBorder->setLeftLineBottomColor(Color4f(1.0,1.0,1.0,1.0));
+        ExampleMultiColorMatteBorder->setLeftLineLeftColor(Color4f(1.0,0.0,0.0,1.0));
+        ExampleMultiColorMatteBorder->setLeftLineRightColor(Color4f(1.0,1.0,1.0,1.0));
         ExampleMultiColorMatteBorder->setRightWidth(10);
-        ExampleMultiColorMatteBorder->setRightLineTopColor(Color4f(0.0,1.0,0.0,1.0));
-        ExampleMultiColorMatteBorder->setRightLineBottomColor(Color4f(0.0,0.0,1.0,1.0));
+        ExampleMultiColorMatteBorder->setRightLineLeftColor(Color4f(0.0,1.0,0.0,1.0));
+        ExampleMultiColorMatteBorder->setRightLineRightColor(Color4f(0.0,0.0,1.0,1.0));
         ExampleMultiColorMatteBorder->setBottomWidth(10);
-        ExampleMultiColorMatteBorder->setBottomLineLeftColor(Color4f(1.0,1.0,1.0,1.0));
-        ExampleMultiColorMatteBorder->setBottomLineRightColor(Color4f(0.0,0.0,1.0,1.0));
+        ExampleMultiColorMatteBorder->setBottomLineTopColor(Color4f(1.0,1.0,1.0,1.0));
+        ExampleMultiColorMatteBorder->setBottomLineBottomColor(Color4f(0.0,0.0,1.0,1.0));
         ExampleMultiColorMatteBorder->setTopWidth(10);
-        ExampleMultiColorMatteBorder->setTopLineLeftColor(Color4f(1.0,0.0,0.0,1.0));
-        ExampleMultiColorMatteBorder->setTopLineRightColor(Color4f(0.0,1.0,0.0,1.0));
-    
-	/******************************************************
+        ExampleMultiColorMatteBorder->setTopLineTopColor(Color4f(1.0,0.0,0.0,1.0));
+        ExampleMultiColorMatteBorder->setTopLineBottomColor(Color4f(0.0,1.0,0.0,1.0));
 
-        The RoundedCornerLineBorder is a LineBorder
-		with rounded corners.
+        /******************************************************
 
-		-setWidth(int): Determines Width of	
-			the Border in pixels.
-		-setColor(Color4f): Determine the Color
-			of the Border.
-		-setCornerRadius(int): Determine the radius
-			of the corner in pixels.
+          The RoundedCornerLineBorder is a LineBorder
+          with rounded corners.
 
-    ******************************************************/
+          -setWidth(int): Determines Width of	
+          the Border in pixels.
+          -setColor(Color4f): Determine the Color
+          of the Border.
+          -setCornerRadius(int): Determine the radius
+          of the corner in pixels.
+
+         ******************************************************/
 
         ExampleRoundedCornerLineBorder->setWidth(2);
         ExampleRoundedCornerLineBorder->setColor(Color4f(1.0, 0.5, 0.5, 1.0));
         ExampleRoundedCornerLineBorder->setCornerRadius(15);
-    
-    // The ShadowBorder
+
+        // The ShadowBorder
         ExampleShadowBorder->setTopOffset(0);
         ExampleShadowBorder->setBottomOffset(5);
         ExampleShadowBorder->setLeftOffset(0);
@@ -366,65 +352,65 @@ int main(int argc, char **argv)
         ExampleShadowBorder->setEdgeColor(Color4f(0.0, 0.0, 0.0, 0.0));
         ExampleShadowBorder->setInternalToEdgeColorLength(5);
 
-    // The PolygonBorder
+        // The PolygonBorder
         ExamplePolygonBorder->setWidth(4.0f);
         ExamplePolygonBorder->setColor(Color4f(1.0, 0.0, 0.0, 1.0));
         //ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.2, 0.2));
         //ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(1.0, 0.0));
         //ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.0, 1.0));
-		
+
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.0, 0.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.4, 0.1));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.5, 0.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.6, 0.1));
-		
+
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(1.0, 0.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.9, 0.4));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(1.0, 0.5));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.9, 0.6));
-		
+
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(1.0, 1.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.6, 0.9));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.5, 1.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.4, 0.9));
-		
+
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.0, 1.0));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.1, 0.6));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.0, 0.5));
         ExamplePolygonBorder->editMFVertices()->push_back(Vec2f(0.1, 0.4));
 
-    /******************************************************
+        /******************************************************
 
-        Create Button Components to display each 
-        of the different Borders.  Buttons will 
-        be placed via the Flow layout.  
+          Create Button Components to display each 
+          of the different Borders.  Buttons will 
+          be placed via the Flow layout.  
 
-		Note that by setting the ActiveBorder
-		and RolloverBorder, the Button will
-		have the same Border even if the Button 
-		is pressed or if the Mouse is hovering 
-		above the Button (Active/Rollover 
-		respectively).
+          Note that by setting the ActiveBorder
+          and RolloverBorder, the Button will
+          have the same Border even if the Button 
+          is pressed or if the Mouse is hovering 
+          above the Button (Active/Rollover 
+          respectively).
 
-    ******************************************************/
+         ******************************************************/
 
-    ButtonRefPtr ExampleBevelBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleCompoundBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleEmptyBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleEtchedBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleLineBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleMatteBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleMultiColorMatteBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleoundedCornerLineBorderButton = OSG::Button::create();
-    ButtonRefPtr ExampleShadowBorderButton = OSG::Button::create();
-    ButtonRefPtr ExamplePolygonBorderButton = OSG::Button::create();
-    
+        ButtonRecPtr ExampleBevelBorderButton = Button::create();
+        ButtonRecPtr ExampleCompoundBorderButton = Button::create();
+        ButtonRecPtr ExampleEmptyBorderButton = Button::create();
+        ButtonRecPtr ExampleEtchedBorderButton = Button::create();
+        ButtonRecPtr ExampleLineBorderButton = Button::create();
+        ButtonRecPtr ExampleMatteBorderButton = Button::create();
+        ButtonRecPtr ExampleMultiColorMatteBorderButton = Button::create();
+        ButtonRecPtr ExampleoundedCornerLineBorderButton = Button::create();
+        ButtonRecPtr ExampleShadowBorderButton = Button::create();
+        ButtonRecPtr ExamplePolygonBorderButton = Button::create();
+
         ExampleBevelBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleBevelBorderButton->setText("Bevel Border");
         ExampleBevelBorderButton->setBorder(ExampleBevelBorder);
         ExampleBevelBorderButton->setActiveBorder(ExampleBevelBorder);
         ExampleBevelBorderButton->setRolloverBorder(ExampleBevelBorder);
-    
+
         ExampleCompoundBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleCompoundBorderButton->setText("Compound Border");
         ExampleCompoundBorderButton->setBorder(ExampleCompoundBorder);
@@ -436,7 +422,7 @@ int main(int argc, char **argv)
         ExampleEmptyBorderButton->setBorder(ExampleEmptyBorder);
         ExampleEmptyBorderButton->setActiveBorder(ExampleEmptyBorder);
         ExampleEmptyBorderButton->setRolloverBorder(ExampleEmptyBorder);
-    
+
         ExampleEtchedBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleEtchedBorderButton->setText("Etched Border");
         ExampleEtchedBorderButton->setBorder(ExampleEtchedBorder);
@@ -455,8 +441,8 @@ int main(int argc, char **argv)
         ExampleMatteBorderButton->setRolloverBorder(ExampleMatteBorder);
         // Note that when ExampleMatteBorderButton is pressed, the Border will revert to the 
         // default Border for Buttons, a "pressed" BevelBorder.  This is because no
-		// ActiveBorder is specified.
-    
+        // ActiveBorder is specified.
+
         ExampleMultiColorMatteBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleMultiColorMatteBorderButton->setText("Multi-Color Matte Border");
         ExampleMultiColorMatteBorderButton->setBorder(ExampleMultiColorMatteBorder);
@@ -482,66 +468,62 @@ int main(int argc, char **argv)
         ExamplePolygonBorderButton->setRolloverBorder(ExamplePolygonBorder);
 
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-       MainInternalWindow->pushToChildren(ExampleBevelBorderButton);
-       MainInternalWindow->pushToChildren(ExampleCompoundBorderButton);
-       MainInternalWindow->pushToChildren(ExampleEtchedBorderButton);
-       MainInternalWindow->pushToChildren(ExampleEmptyBorderButton);
-       MainInternalWindow->pushToChildren(ExampleLineBorderButton);
-       MainInternalWindow->pushToChildren(ExampleMatteBorderButton);
-       MainInternalWindow->pushToChildren(ExampleMultiColorMatteBorderButton);
-       MainInternalWindow->pushToChildren(ExampleoundedCornerLineBorderButton);
-       MainInternalWindow->pushToChildren(ExampleShadowBorderButton);
-       MainInternalWindow->pushToChildren(ExamplePolygonBorderButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        LayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        MainInternalWindow->pushToChildren(ExampleBevelBorderButton);
+        MainInternalWindow->pushToChildren(ExampleCompoundBorderButton);
+        MainInternalWindow->pushToChildren(ExampleEtchedBorderButton);
+        MainInternalWindow->pushToChildren(ExampleEmptyBorderButton);
+        MainInternalWindow->pushToChildren(ExampleLineBorderButton);
+        MainInternalWindow->pushToChildren(ExampleMatteBorderButton);
+        MainInternalWindow->pushToChildren(ExampleMultiColorMatteBorderButton);
+        MainInternalWindow->pushToChildren(ExampleoundedCornerLineBorderButton);
+        MainInternalWindow->pushToChildren(ExampleShadowBorderButton);
+        MainInternalWindow->pushToChildren(ExamplePolygonBorderButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
- 
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
-
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "03Border");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "03Border");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -551,13 +533,14 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
+

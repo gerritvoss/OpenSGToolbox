@@ -61,6 +61,7 @@ int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
+
     {
         // Set up Window
         WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
@@ -77,29 +78,29 @@ int main(int argc, char **argv)
         TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
         // Make Torus Node (creates Torus in background of scene)
-        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
         // Make Main Scene Node and add the Torus
-        NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
         // Create the Graphics
-        GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
         // Initialize the LookAndFeelManager to enable default settings
         LookAndFeelManager::the()->getLookAndFeel()->init();
 
-        ColorChooserRefPtr TheColorChooser = ColorChooser::create();
+        ColorChooserRecPtr TheColorChooser = ColorChooser::create();
         TheColorChooser->setColor(Color4f(1.0f,0.0f,0.0f,1.0f));
 
         // Create Background to be used with the MainInternalWindow
-        ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
         // Create The Internal Window
-        InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-        LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        LayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
         // Assign the Button to the MainInternalWindow so it will be displayed
         // when the view is rendered.
         MainInternalWindow->pushToChildren(TheColorChooser);
@@ -111,19 +112,19 @@ int main(int argc, char **argv)
 
 
         // Create the Drawing Surface
-        UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
 
         TutorialDrawingSurface->openWindow(MainInternalWindow);
         // Create the UI Foreground Object
-        UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
         sceneManager.setRoot(scene);
 
         // Add the UI Foreground Object to the Scene
-        ViewportRefPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
         // Show the whole Scene

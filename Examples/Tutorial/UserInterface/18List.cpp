@@ -34,13 +34,9 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 18List Headers
 #include "OSGLookAndFeelManager.h"
@@ -56,397 +52,349 @@ void reshape(Vec2f Size);
 #include "OSGDefaultListModel.h"
 #include "OSGDefaultListSelectionModel.h"
 
-
-
-// Declare the SelectionModel up front to allow for
-// the ActionListeners
-ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
-ToggleButtonRefPtr SingleSelectionButton;
-ToggleButtonRefPtr SingleIntervalSelectionButton;
-ToggleButtonRefPtr MultipleIntervalSelectionButton;
-
-// Create ListModel   
-ListRefPtr ExampleList;
-DefaultListModelRefPtr ExampleListModel;
-DefaultListModelRefPtr ExampleListModel2;
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details,
+                List* const ExampleList,
+                ListModel* const ExampleListModel,
+                ListModel* const ExampleListModel2)
 {
-  public:
-
-    virtual void keyPressed(const KeyEventUnrecPtr e)
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-        {
-            TutorialWindow->closeWindow();
-        }
-
-        switch(e->getKey())
-        {
-            case KeyEvent::KEY_S:
-                ExampleList->setSelectable(!ExampleList->getSelectable());
-                break;
-            case KeyEvent::KEY_M:
-                if(ExampleList->getModel() == ExampleListModel)
-                {
-                    ExampleList->setModel(ExampleListModel2);
-                }
-                else
-                {
-                    ExampleList->setModel(ExampleListModel);
-                }
-                break;
-        }
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
 
-    virtual void keyReleased(const KeyEventUnrecPtr e)
+    switch(details->getKey())
     {
+        case KeyEventDetails::KEY_S:
+            ExampleList->setSelectable(!ExampleList->getSelectable());
+            break;
+        case KeyEventDetails::KEY_M:
+            if(ExampleList->getModel() == ExampleListModel)
+            {
+                ExampleList->setModel(ExampleListModel2);
+            }
+            else
+            {
+                ExampleList->setModel(ExampleListModel);
+            }
+            break;
     }
+}
 
-    virtual void keyTyped(const KeyEventUnrecPtr e)
-    {
-    }
-};
-
-
-
-class SingleSelectionButtonSelectedListener : public ButtonSelectedListener
+void handleSingleSelection(ButtonSelectedEventDetails* const details,
+                           List* const ExampleList,
+                           ToggleButton* const SingleIntervalSelectionButton,
+                           ToggleButton* const MultipleIntervalSelectionButton)
 {
-  public:
+    SingleIntervalSelectionButton->setSelected(false);
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
+    MultipleIntervalSelectionButton->setSelected(false);
 
-        SingleIntervalSelectionButton->setSelected(false);
+    ExampleList->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
+}
 
-        MultipleIntervalSelectionButton->setSelected(false);
-
-        ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_SELECTION);
-
-    }
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
-    }
-
-};
-
-class SingleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
+void handleSingleIntervalSelection(ButtonSelectedEventDetails* const details,
+                                   List* const ExampleList,
+                                   ToggleButton* const SingleSelectionButton,
+                                   ToggleButton* const MultipleIntervalSelectionButton)
 {
-  public:
+    SingleSelectionButton->setSelected(false);
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {
-        SingleSelectionButton->setSelected(false);
+    MultipleIntervalSelectionButton->setSelected(false);
 
-        MultipleIntervalSelectionButton->setSelected(false);
+    ExampleList->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+}
 
-        ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-    }
+void handleMultipleIntervalSelection(ButtonSelectedEventDetails* const details,
+                                     List* const ExampleList,
+                                     ToggleButton* const SingleIntervalSelectionButton,
+                                     ToggleButton* const SingleSelectionButton)
+{    
+    SingleSelectionButton->setSelected(false);
 
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
+    SingleIntervalSelectionButton->setSelected(false);
 
-    }
-};
+    ExampleList->getSelectionModel()->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+}
 
-class MultipleIntervalSelectionButtonSelectedListener : public ButtonSelectedListener
+
+void handleAddItem(ActionEventDetails* const details,
+                   List* const ExampleList)
 {
-  public:
+    UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+    dynamic_cast<DefaultListModel*>(ExampleList->getModel())->insert(SelectedItemIndex, boost::any(std::string("Added")));
+}
 
-    virtual void buttonSelected(const ButtonSelectedEventUnrecPtr e)
-    {    
-        SingleSelectionButton->setSelected(false);
-
-        SingleIntervalSelectionButton->setSelected(false);
-
-        ExampleListSelectionModel->setSelectionMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-    }
-
-    virtual void buttonDeselected(const ButtonSelectedEventUnrecPtr e)
-    {
-    }
-
-};
-
-class AddItemButtonSelectedListener : public ActionListener
+void handleRemoveItem(ActionEventDetails* const details,
+                      List* const ExampleList)
 {
-  public:
-
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::cout << "Add Item Action" << std::endl;
-        UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-        ExampleListModel->insert(SelectedItemIndex, boost::any(std::string("Added")));
-    }
-
-};
-
-class RemoveItemButtonSelectedListener : public ActionListener
-{
-  public:
-
-    virtual void actionPerformed(const ActionEventUnrecPtr e)
-    {
-        std::cout << "Remove Item Action" << std::endl;
-        UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
-        ExampleListModel->erase(SelectedItemIndex);
-    }
-
-};
+    UInt32 SelectedItemIndex(ExampleList->getSelectionModel()->getMinSelectionIndex());
+    dynamic_cast<DefaultListModel*>(ExampleList->getModel())->erase(SelectedItemIndex);
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    /******************************************************
+        /******************************************************
 
-            Create and edit some ToggleButtons to
-			allow for dynamically changing
-			List selection options.           
+          Create a List.  A List has several 
+          parts to it:
+          -ListModel: Contains the data which is to be
+          displayed in the List.  Data is added
+          as shown below
+          -ListCellRenderer: Creates the Components to
+          be used within the List (the default
+          setting is to create Labels using 
+          the desired text).
+          -ListSelectionModel: Determines how
+          the List may be selected.
 
-    ******************************************************/
-    SingleSelectionButton = OSG::ToggleButton::create();
-    SingleIntervalSelectionButton = OSG::ToggleButton::create();
-    MultipleIntervalSelectionButton = OSG::ToggleButton::create();
+          To add values to the list:
 
-        SingleSelectionButton->setText("Single Selection");
-        SingleSelectionButton->setPreferredSize(Vec2f(160, 50));
-        SingleSelectionButtonSelectedListener TheSingleSelectionButtonSelectedListener;
-        SingleSelectionButton->addButtonSelectedListener(&TheSingleSelectionButtonSelectedListener);
-    
-        SingleIntervalSelectionButton->setText("Single Interval Selection");
-        SingleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
-        SingleIntervalSelectionButtonSelectedListener TheSingleIntervalSelectionButtonSelectedListener;
-        SingleIntervalSelectionButton->addButtonSelectedListener(&TheSingleIntervalSelectionButtonSelectedListener);
-    
-        MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
-        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
-        MultipleIntervalSelectionButtonSelectedListener TheMultipleIntervalSelectionButtonSelectedListener;
-        MultipleIntervalSelectionButton->addButtonSelectedListener(&TheMultipleIntervalSelectionButtonSelectedListener);
+          First, create SFStrings and use the 
+          .setValue("Value") function to set their
+          values.  Then, use the .pushBack(&SFStringName)
+          to add them to the List.
 
-    ButtonRefPtr AddItemButton = OSG::Button::create();
-		AddItemButton->setText("Add Item");
-    AddItemButtonSelectedListener TheAddItemButtonSelectedListener;
-    AddItemButton->addActionListener(&TheAddItemButtonSelectedListener);
+          Next, create the CellRenderer and ListSelectionModel
+          defaults.
 
-    ButtonRefPtr RemoveItemButton = OSG::Button::create();
-		RemoveItemButton->setText("Remove Item");
-    RemoveItemButtonSelectedListener TheRemoveItemButtonSelectedListener;
-    RemoveItemButton->addActionListener(&TheRemoveItemButtonSelectedListener);
+          Finally, actually create the List.  Set
+          its Model, CellRenderer, and SelectionModel
+          as shown below.  Finally, choose the
+          type of display for the List (choices outlined
+          below).
 
-    /******************************************************
+         ******************************************************/
 
-            Create a List.  A List has several 
-			parts to it:
-			-ListModel: Contains the data which is to be
-			    displayed in the List.  Data is added
-				as shown below
-			-ListCellRenderer: Creates the Components to
-				be used within the List (the default
-				setting is to create Labels using 
-				the desired text).
-			-ListSelectionModel: Determines how
-				the List may be selected.
+        // Add data to it
+        DefaultListModelRecPtr ExampleListModel = DefaultListModel::create();
+        ExampleListModel->pushBack(boost::any(std::string("Red")));
+        ExampleListModel->pushBack(boost::any(std::string("Green")));
+        ExampleListModel->pushBack(boost::any(std::string("Blue")));
+        ExampleListModel->pushBack(boost::any(std::string("Orange")));
+        ExampleListModel->pushBack(boost::any(std::string("Purple")));
+        ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+        ExampleListModel->pushBack(boost::any(std::string("White")));
+        ExampleListModel->pushBack(boost::any(std::string("Black")));
+        ExampleListModel->pushBack(boost::any(std::string("Gray")));
+        ExampleListModel->pushBack(boost::any(std::string("Brown")));
+        ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+        ExampleListModel->pushBack(boost::any(std::string("Pink")));
+        ExampleListModel->pushBack(boost::any(std::string("Violet")));
+        ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+        ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
-			To add values to the list:
-            
-            First, create SFStrings and use the 
-            .setValue("Value") function to set their
-            values.  Then, use the .pushBack(&SFStringName)
-            to add them to the List.
+        DefaultListModelRecPtr ExampleListModel2 = DefaultListModel::create();
+        ExampleListModel2->pushBack(boost::any(std::string("One")));
+        ExampleListModel2->pushBack(boost::any(std::string("Two")));
+        ExampleListModel2->pushBack(boost::any(std::string("Three")));
+        ExampleListModel2->pushBack(boost::any(std::string("Four")));
+        ExampleListModel2->pushBack(boost::any(std::string("Five")));
+        ExampleListModel2->pushBack(boost::any(std::string("Six")));
+        ExampleListModel2->pushBack(boost::any(std::string("Seven")));
+        ExampleListModel2->pushBack(boost::any(std::string("Eight")));
+        ExampleListModel2->pushBack(boost::any(std::string("Nine")));
+        ExampleListModel2->pushBack(boost::any(std::string("Ten")));
+        ExampleListModel2->pushBack(boost::any(std::string("Eleven")));
+        ExampleListModel2->pushBack(boost::any(std::string("Twelve")));
+        ExampleListModel2->pushBack(boost::any(std::string("Thirteen")));
+        ExampleListModel2->pushBack(boost::any(std::string("Fourteen")));
 
-            Next, create the CellRenderer and ListSelectionModel
-            defaults.
+        /******************************************************
 
-            Finally, actually create the List.  Set
-            its Model, CellRenderer, and SelectionModel
-            as shown below.  Finally, choose the
-            type of display for the List (choices outlined
-            below).
+          Create ListCellRenderer and 
+          ListSelectionModel.  Most 
+          often the defauls will be used.
 
-    ******************************************************/
+            Note: the ListSelectionModel was
+            created above and is referenced
+            by the Action.
 
-    // Add data to it
-	ExampleListModel = DefaultListModel::create();
-    ExampleListModel->pushBack(boost::any(std::string("Red")));
-    ExampleListModel->pushBack(boost::any(std::string("Green")));
-    ExampleListModel->pushBack(boost::any(std::string("Blue")));
-    ExampleListModel->pushBack(boost::any(std::string("Orange")));
-    ExampleListModel->pushBack(boost::any(std::string("Purple")));
-    ExampleListModel->pushBack(boost::any(std::string("Yellow")));
-    ExampleListModel->pushBack(boost::any(std::string("White")));
-    ExampleListModel->pushBack(boost::any(std::string("Black")));
-    ExampleListModel->pushBack(boost::any(std::string("Gray")));
-    ExampleListModel->pushBack(boost::any(std::string("Brown")));
-    ExampleListModel->pushBack(boost::any(std::string("Indigo")));
-    ExampleListModel->pushBack(boost::any(std::string("Pink")));
-    ExampleListModel->pushBack(boost::any(std::string("Violet")));
-    ExampleListModel->pushBack(boost::any(std::string("Mauve")));
-    ExampleListModel->pushBack(boost::any(std::string("Peach")));
-    
-	ExampleListModel2 = DefaultListModel::create();
-    ExampleListModel2->pushBack(boost::any(std::string("One")));
-    ExampleListModel2->pushBack(boost::any(std::string("Two")));
-    ExampleListModel2->pushBack(boost::any(std::string("Three")));
-    ExampleListModel2->pushBack(boost::any(std::string("Four")));
-    ExampleListModel2->pushBack(boost::any(std::string("Five")));
-    ExampleListModel2->pushBack(boost::any(std::string("Six")));
-    ExampleListModel2->pushBack(boost::any(std::string("Seven")));
-    ExampleListModel2->pushBack(boost::any(std::string("Eight")));
-    ExampleListModel2->pushBack(boost::any(std::string("Nine")));
-    ExampleListModel2->pushBack(boost::any(std::string("Ten")));
-    ExampleListModel2->pushBack(boost::any(std::string("Eleven")));
-    ExampleListModel2->pushBack(boost::any(std::string("Twelve")));
-    ExampleListModel2->pushBack(boost::any(std::string("Thirteen")));
-    ExampleListModel2->pushBack(boost::any(std::string("Fourteen")));
-
-    /******************************************************
-
-            Create ListCellRenderer and 
-			ListSelectionModel.  Most 
-			often the defauls will be used.
-			
-			Note: the ListSelectionModel was
-			created above and is referenced
-			by the ActionListeners.
-
-    ******************************************************/    
+         ******************************************************/    
 
 
-    /******************************************************
+        /******************************************************
 
-            Create List itself and assign its 
-			Model, CellRenderer, and SelectionModel
-			to it.
-			-setOrientation(ENUM): Determine the
-				Layout of the cells (Horizontal
-				or Vertical).  Takes List::VERTICAL_ORIENTATION
-				and List::HORIZONTAL_ORIENTATION arguments.
+          Create List itself and assign its 
+          Model, CellRenderer, and SelectionModel
+          to it.
+          -setOrientation(ENUM): Determine the
+          Layout of the cells (Horizontal
+          or Vertical).  Takes List::VERTICAL_ORIENTATION
+          and List::HORIZONTAL_ORIENTATION arguments.
 
-    ******************************************************/    
-    ExampleList = List::create();
+         ******************************************************/    
+        ListRecPtr ExampleList = List::create();
         ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
         //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
-		ExampleList->setModel(ExampleListModel);
-
-    ExampleList->setSelectionModel(ExampleListSelectionModel);
+        ExampleList->setModel(ExampleListModel);
 
 
-    /******************************************************
+        /******************************************************
 
-            Determine the SelectionModel
-            -SINGLE_SELECTION lets you select ONE item
-                via a single mouse click
-            -SINGLE_INTERVAL_SELECTION lets you select
-                one interval via mouse and SHIFT key
-            -MULTIPLE_INTERVAL_SELECTION lets you select
-                via mouse, and SHIFT and CONTRL keys
+          Determine the SelectionModel
+          -SINGLE_SELECTION lets you select ONE item
+          via a single mouse click
+          -SINGLE_INTERVAL_SELECTION lets you select
+          one interval via mouse and SHIFT key
+          -MULTIPLE_INTERVAL_SELECTION lets you select
+          via mouse, and SHIFT and CONTRL keys
 
             Note: this tutorial is currently set up
             to allow for this to be changed via 
-			TogggleButtons with ActionListeners attached 
-            to them so this code is commented out.
+            TogggleButtons with Action attached 
+to them so this code is commented out.
 
-    ******************************************************/
+         ******************************************************/
 
-    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
-    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-    //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
+        //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
+        //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
+        //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
 
-    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+        // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+        ScrollPanelRecPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    ExampleScrollPanel->setViewComponent(ExampleList);
+        ExampleScrollPanel->setViewComponent(ExampleList);
 
-    // Create MainFramelayout
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
+        /******************************************************
+
+          Create and edit some ToggleButtons to
+          allow for dynamically changing
+          List selection options.           
+
+         ******************************************************/
+        ToggleButtonRecPtr SingleSelectionButton = ToggleButton::create();
+        ToggleButtonRecPtr SingleIntervalSelectionButton = ToggleButton::create();
+        ToggleButtonRecPtr MultipleIntervalSelectionButton = ToggleButton::create();
+
+        SingleSelectionButton->setText("Single Selection");
+        SingleSelectionButton->setPreferredSize(Vec2f(160, 50));
+        SingleSelectionButton->connectButtonSelected(boost::bind(handleSingleSelection, _1,
+                                                           ExampleList.get(),
+                                                           SingleIntervalSelectionButton.get(),
+                                                           MultipleIntervalSelectionButton.get()));
+
+        SingleIntervalSelectionButton->setText("Single Interval Selection");
+        SingleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
+        SingleIntervalSelectionButton->connectButtonSelected(boost::bind(handleSingleIntervalSelection, _1,
+                                                                         ExampleList.get(),
+                                                                         SingleSelectionButton.get(),
+                                                                         MultipleIntervalSelectionButton.get()));
+
+        MultipleIntervalSelectionButton->setText("Multiple Interval Selection");
+        MultipleIntervalSelectionButton->setPreferredSize(Vec2f(160, 50));
+        MultipleIntervalSelectionButton->connectButtonSelected(boost::bind(handleMultipleIntervalSelection, _1,
+                                                                         ExampleList.get(),
+                                                                         SingleIntervalSelectionButton.get(),
+                                                                         SingleSelectionButton.get()));
+
+        ButtonRecPtr AddItemButton = Button::create();
+        AddItemButton->setText("Add Item");
+        AddItemButton->connectActionPerformed(boost::bind(handleAddItem, _1,
+                                                          ExampleList.get()));
+
+        ButtonRecPtr RemoveItemButton = Button::create();
+        RemoveItemButton->setText("Remove Item");
+        RemoveItemButton->connectActionPerformed(boost::bind(handleRemoveItem, _1,
+                                                             ExampleList.get()));
+
+
+        // Create MainFramelayout
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
         MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
         MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
         MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
-    
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(SingleSelectionButton);
-       MainInternalWindow->pushToChildren(SingleIntervalSelectionButton);
-       MainInternalWindow->pushToChildren(MultipleIntervalSelectionButton);
-       MainInternalWindow->pushToChildren(ExampleScrollPanel);
-       MainInternalWindow->pushToChildren(AddItemButton);
-       MainInternalWindow->pushToChildren(RemoveItemButton);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-	   MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-	   MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
-	   MainInternalWindow->setDrawTitlebar(false);
-	   MainInternalWindow->setResizable(false);
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(SingleSelectionButton);
+        MainInternalWindow->pushToChildren(SingleIntervalSelectionButton);
+        MainInternalWindow->pushToChildren(MultipleIntervalSelectionButton);
+        MainInternalWindow->pushToChildren(ExampleScrollPanel);
+        MainInternalWindow->pushToChildren(AddItemButton);
+        MainInternalWindow->pushToChildren(RemoveItemButton);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1,
+                                                    ExampleList.get(),
+                                                    ExampleListModel.get(),
+                                                    ExampleListModel2.get()));
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
+
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
         TutorialViewport->addForeground(TutorialUIForeground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "18List");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "18List");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -456,13 +404,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }

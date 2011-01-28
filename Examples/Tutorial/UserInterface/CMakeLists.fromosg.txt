@@ -1,7 +1,9 @@
 
-PROJECT(OpenSGExamplesUserInterface)
+SET(TUTORIALS_PROJECT "UserInterface")
 
-MESSAGE(STATUS "Building user interface examples integrated")
+PROJECT(OpenSGExamples${TUTORIALS_PROJECT})
+
+MESSAGE(STATUS "Building ${TUTORIALS_PROJECT} examples integrated")
 
 #############################################################################
 # find sources
@@ -15,9 +17,21 @@ LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/49LookAndFeel.cpp")
 #############################################################################
 # get dependencies
 
-SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGText OSGWindow OSGWindowGLUT
-                   OSGContribUserInterface OSGTBFileIO)
+SET(OSG_COMPONENTS OSGBase 
+                   OSGCluster 
+                   OSGDrawable 
+                   OSGFileIO 
+                   OSGImageFileIO 
+                   OSGDynamics 
+                   OSGGroup 
+                   OSGState 
+                   OSGSystem 
+                   OSGUtil 
+                   OSGWindow 
+                   OSGTBFileIO 
+                   OSGText 
+                   OSGContribUserInterface 
+                   )
 
 IF(UNIX)
     IF(APPLE)
@@ -35,7 +49,7 @@ SET(DEP_INCLUDE_DIRS)
 SET(DEP_LIBRARY_DIRS)
 SET(DEP_LIBRARIES)
 
-SET(OSG_EXTERNAL_COMPONENTS Boost GLUT)
+SET(OSG_EXTERNAL_COMPONENTS Boost)
 
 #############
 #### X11 (optional)
@@ -83,7 +97,7 @@ FOREACH(SRC ${SRCFILES})
 
     ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
 
-    ADD_DEPENDENCIES(OSGAllToolboxTests ${EXE})
+    ADD_DEPENDENCIES(OSGAll${TUTORIALS_PROJECT}Examples ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})
         ADD_DEPENDENCIES(${EXE} ${OSGDEP})

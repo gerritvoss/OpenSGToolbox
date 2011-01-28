@@ -31,259 +31,269 @@
 #include "OSGGraphics2D.h"
 #include "OSGLookAndFeelManager.h"
 #include "OSGGradientBackground.h"
+#include "OSGFunctorListComponentGenerator.h"
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 // 18List Headers
 #include "OSGLookAndFeelManager.h"
 #include "OSGColorLayer.h"
+#include "OSGLineBorder.h"
 #include "OSGBevelBorder.h"
 #include "OSGFlowLayout.h"
 #include "OSGLabel.h"
 #include "OSGScrollPanel.h"
+
+#include <sstream>
 
 // List header files
 #include "OSGList.h"
 #include "OSGMFieldListModel.h"
 #include "OSGDefaultListSelectionModel.h"
 
-
-
-// Declare the SelectionModel up front to allow for
-// the ActionListeners
-ListSelectionModelPtr ExampleListSelectionModel(new DefaultListSelectionModel());
-
-// Create ListModel   
-ListRefPtr ExampleList;
-MFieldListModelRefPtr ExampleListModel;
-
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
+ComponentTransitPtr generateListComponent(List* const Parent,
+                                          const boost::any& Value,
+                                          UInt32 Index,
+                                          bool IsSelected,
+                                          bool HasFocus)
+{
+    std::string ValueString;
+    Color3f ColorValue;
+    try
+    {
+        MFieldListModel::MFieldIndexed MFieldValue = boost::any_cast<MFieldListModel::MFieldIndexed>(Value);
+        std::ostringstream TheOSStream;
+        OutStream TheOutStream(TheOSStream);
+        MFieldValue.first->pushIndexedValueToStream(TheOutStream,
+                                                    MFieldValue.second);
+        ValueString = TheOSStream.str();
+        ColorValue = static_cast<const
+            GradientBackground::MFColorType*>(MFieldValue.first->getField())->operator[](MFieldValue.second);
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
 
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
+    ColorLayerRecPtr LabelBackground = ColorLayer::create();
+    LabelBackground->setColor(Color4f(ColorValue.red(),ColorValue.green(),ColorValue.blue(),1.0f));
 
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    LabelRefPtr TheComponent = Label::create();
+
+    TheComponent->setBackgrounds(LabelBackground);
+    TheComponent->setText(ValueString);
+
+    if(IsSelected)
+    {
+        LineBorderRecPtr LabelBorder = LineBorder::create();
+        LabelBorder->setWidth(1.0f);
+        LabelBorder->setColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+        TheComponent->setBorders(LabelBorder);
+    }
+    else
+    {
+        TheComponent->setBorders(NULL);
+    }
+
+    return ComponentTransitPtr(TheComponent);
+}
 
 int main(int argc, char **argv)
 {
     // OSG init
     osgInit(argc,argv);
 
-    TutorialWindow = createNativeWindow();
-    TutorialWindow->initWindow();
+    {
+        // Set up Window
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
+        TutorialWindow->initWindow();
 
-    TutorialWindow->setDisplayCallback(display);
-    TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-    TutorialKeyListener TheKeyListener;
-    TutorialWindow->addKeyListener(&TheKeyListener);
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
 
-    // Make Torus Node (creates Torus in background of scene)
-    NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
 
-    // Make Main Scene Node and add the Torus
-    NodeRefPtr scene = OSG::Node::create();
-        scene->setCore(OSG::Group::create());
+        // Make Torus Node (creates Torus in background of scene)
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+
+        // Make Main Scene Node and add the Torus
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
         scene->addChild(TorusGeometryNode);
 
-    // Create the Graphics
-    GraphicsRefPtr TutorialGraphics = OSG::Graphics2D::create();
+        // Create the Graphics
+        GraphicsRecPtr TutorialGraphics = Graphics2D::create();
 
-    // Initialize the LookAndFeelManager to enable default settings
-    LookAndFeelManager::the()->getLookAndFeel()->init();
+        // Initialize the LookAndFeelManager to enable default settings
+        LookAndFeelManager::the()->getLookAndFeel()->init();
 
-    GradientBackgroundRefPtr TheBackground = GradientBackground::create();
-    TheBackground->addLine(Color3f(1.0,0.0,0.0), 0.0);
-    TheBackground->addLine(Color3f(0.0,1.0,0.0), 0.2);
-    TheBackground->addLine(Color3f(0.0,0.0,1.0), 0.4);
-    TheBackground->addLine(Color3f(0.0,1.0,1.0), 0.6);
-    TheBackground->addLine(Color3f(1.0,1.0,0.0), 0.8);
-    TheBackground->addLine(Color3f(1.0,1.0,1.0), 1.0);
+        GradientBackgroundRecPtr TheBackground = GradientBackground::create();
+        TheBackground->addLine(Color3f(1.0,0.0,0.0), 0.0);
+        TheBackground->addLine(Color3f(0.0,1.0,0.0), 0.2);
+        TheBackground->addLine(Color3f(0.0,0.0,1.0), 0.4);
+        TheBackground->addLine(Color3f(0.0,1.0,1.0), 0.6);
+        TheBackground->addLine(Color3f(1.0,1.0,0.0), 0.8);
+        TheBackground->addLine(Color3f(1.0,1.0,1.0), 1.0);
 
-    /******************************************************
+        /******************************************************
 
-            Create a List.  A List has several 
-			parts to it:
-			-ListModel: Contains the data which is to be
-			    displayed in the List.  Data is added
-				as shown below
-			-ListCellRenderer: Creates the Components to
-				be used within the List (the default
-				setting is to create Labels using 
-				the desired text).
-			-ListSelectionModel: Determines how
-				the List may be selected.
+          Create a List.  A List has several 
+          parts to it:
+          -ListModel: Contains the data which is to be
+          displayed in the List.  Data is added
+          as shown below
+          -ListCellRenderer: Creates the Components to
+          be used within the List (the default
+          setting is to create Labels using 
+          the desired text).
+          -ListSelectionModel: Determines how
+          the List may be selected.
 
-			To add values to the list:
-            
-            First, create SFStrings and use the 
-            .setValue("Value") function to set their
-            values.  Then, use the .pushBack(&SFStringName)
-            to add them to the List.
+          To add values to the list:
 
-            Next, create the CellRenderer and ListSelectionModel
-            defaults.
+          First, create SFStrings and use the 
+          .setValue("Value") function to set their
+          values.  Then, use the .pushBack(&SFStringName)
+          to add them to the List.
 
-            Finally, actually create the List.  Set
-            its Model, CellRenderer, and SelectionModel
-            as shown below.  Finally, choose the
-            type of display for the List (choices outlined
-            below).
+          Next, create the CellRenderer and ListSelectionModel
+          defaults.
 
-    ******************************************************/
+          Finally, actually create the List.  Set
+          its Model, CellRenderer, and SelectionModel
+          as shown below.  Finally, choose the
+          type of display for the List (choices outlined
+          below).
 
-    // Add data to it
-	ExampleListModel = MFieldListModel::create();
-    ExampleListModel->setContainer(TheBackground);
-    ExampleListModel->setFieldId(GradientBackground::ColorFieldId);
+         ******************************************************/
 
-    /******************************************************
+        // Add data to it
+        MFieldListModelRecPtr ExampleListModel = MFieldListModel::create();
+        ExampleListModel->setContainer(TheBackground);
+        ExampleListModel->setFieldId(GradientBackground::ColorFieldId);
 
-            Create ListCellRenderer and 
-			ListSelectionModel.  Most 
-			often the defauls will be used.
-			
-			Note: the ListSelectionModel was
-			created above and is referenced
-			by the ActionListeners.
+        /******************************************************
 
-    ******************************************************/    
+          Create ListCellRenderer and 
+          ListSelectionModel.  Most 
+          often the defauls will be used.
 
+            Note: the ListSelectionModel was
+            created above and is referenced
+            by the Action.
 
-    /******************************************************
+         ******************************************************/    
 
-            Create List itself and assign its 
-			Model, CellRenderer, and SelectionModel
-			to it.
-			-setOrientation(ENUM): Determine the
-				Layout of the cells (Horizontal
-				or Vertical).  Takes List::VERTICAL_ORIENTATION
-				and List::HORIZONTAL_ORIENTATION arguments.
+        FunctorListComponentGeneratorRecPtr ListCompGenerator =
+            FunctorListComponentGenerator::create();
 
-    ******************************************************/    
-    ExampleList = List::create();
+        ListCompGenerator->setGenerateFunction(boost::bind(generateListComponent, _1, _2, _3, _4, _5));
+
+        /******************************************************
+
+          Create List itself and assign its 
+          Model
+          to it.
+          -setOrientation(ENUM): Determine the
+          Layout of the cells (Horizontal
+          or Vertical).  Takes List::VERTICAL_ORIENTATION
+          and List::HORIZONTAL_ORIENTATION arguments.
+
+         ******************************************************/    
+        ListRecPtr ExampleList = List::create();
         ExampleList->setPreferredSize(Vec2f(200, 300));
         ExampleList->setOrientation(List::VERTICAL_ORIENTATION);
         //ExampleList->setOrientation(List::HORIZONTAL_ORIENTATION);
-		ExampleList->setModel(ExampleListModel);
+        ExampleList->setModel(ExampleListModel);
+        ExampleList->setCellGenerator(ListCompGenerator);
 
-    ExampleList->setSelectionModel(ExampleListSelectionModel);
 
-
-    /******************************************************
-
-            Determine the SelectionModel
-            -SINGLE_SELECTION lets you select ONE item
-                via a single mouse click
-            -SINGLE_INTERVAL_SELECTION lets you select
-                one interval via mouse and SHIFT key
-            -MULTIPLE_INTERVAL_SELECTION lets you select
-                via mouse, and SHIFT and CONTRL keys
-
-            Note: this tutorial is currently set up
-            to allow for this to be changed via 
-			TogggleButtons with ActionListeners attached 
-            to them so this code is commented out.
-
-    ******************************************************/
-
-    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_SELECTION);
-    //SelectionModel.setMode(DefaultListSelectionModel::SINGLE_INTERVAL_SELECTION);
-    //SelectionModel.setMode(DefaultListSelectionModel::MULTIPLE_INTERVAL_SELECTION);
-
-    // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
-    ScrollPanelRefPtr ExampleScrollPanel = ScrollPanel::create();
+        // Create a ScrollPanel for easier viewing of the List (see 27ScrollPanel)
+        ScrollPanelRecPtr ExampleScrollPanel = ScrollPanel::create();
         ExampleScrollPanel->setPreferredSize(Vec2f(200,300));
         ExampleScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         //ExampleScrollPanel->setVerticalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    ExampleScrollPanel->setViewComponent(ExampleList);
+        ExampleScrollPanel->setViewComponent(ExampleList);
 
-    // Create MainFramelayout
-    FlowLayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-    MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
-    MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
-    MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+        // Create MainFramelayout
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        MainInternalWindowLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
 
-    LabelRefPtr ListLabel = Label::create();
-    ListLabel->setText("Background Colors List");
-    ListLabel->setPreferredSize(Vec2f(200.0f, ListLabel->getPreferredSize().y()));
+        LabelRecPtr ListLabel = Label::create();
+        ListLabel->setText("Background Colors List");
+        ListLabel->setPreferredSize(Vec2f(200.0f, ListLabel->getPreferredSize().y()));
 
-    // Create The Main InternalWindow
-    // Create Background to be used with the Main InternalWindow
-    ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
+        // Create The Main InternalWindow
+        // Create Background to be used with the Main InternalWindow
+        ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-    InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-    MainInternalWindow->pushToChildren(ListLabel);
-    MainInternalWindow->pushToChildren(ExampleScrollPanel);
-    MainInternalWindow->setLayout(MainInternalWindowLayout);
-    MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-    MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-    MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
-    MainInternalWindow->setDrawTitlebar(false);
-    MainInternalWindow->setResizable(false);
+        InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
+        MainInternalWindow->pushToChildren(ListLabel);
+        MainInternalWindow->pushToChildren(ExampleScrollPanel);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+        MainInternalWindow->setDrawTitlebar(false);
+        MainInternalWindow->setResizable(false);
 
-    // Create the Drawing Surface
-    UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
+        // Create the Drawing Surface
+        UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    
-	TutorialDrawingSurface->openWindow(MainInternalWindow);
 
-    // Create the UI Foreground Object
-    UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
+
+        // Create the UI Foreground Object
+        UIForegroundRecPtr TutorialUIForeground = UIForeground::create();
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
-    // Create the SimpleSceneManager helper
-    mgr = new SimpleSceneManager;
 
-    // Tell the Manager what to manage
-    mgr->setWindow(TutorialWindow);
-    mgr->setRoot(scene);
+        // Tell the Manager what to manage
+        sceneManager.setRoot(scene);
 
-    // Add the UI Foreground Object to the Scene
-    ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-    TutorialViewport->addForeground(TutorialUIForeground);
-    TutorialViewport->setBackground(TheBackground);
+        // Add the UI Foreground Object to the Scene
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->addForeground(TutorialUIForeground);
+        TutorialViewport->setBackground(TheBackground);
 
-    // Show the whole Scene
-    mgr->showAll();
+        // Show the whole Scene
+        sceneManager.showAll();
 
 
-    //Open Window
-    Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
-    Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
-    TutorialWindow->openWindow(WinPos,
-            WinSize,
-            "44MFieldList");
+        //Open Window
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
+        TutorialWindow->openWindow(WinPos,
+                                   WinSize,
+                                   "44MFieldList");
 
-    //Enter main Loop
-    TutorialWindow->mainLoop();
+        //Enter main Loop
+        TutorialWindow->mainLoop();
+    }
 
     osgExit();
 
@@ -293,13 +303,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
