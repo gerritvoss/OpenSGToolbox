@@ -11,7 +11,7 @@ MACRO(OSG_CONFIGURE_VLC)
             IF(EXISTS ${OSG_SUPPORT_ROOT}/lib/osgvlc.lib)
                 SET(VLC_LIBRARY_RELEASE ${OSG_SUPPORT_ROOT}/lib/osgvlc.lib)
             ENDIF()
-            IF(EXISTS ${OSG_SUPPORT_ROOT}/lib/osggdalD.lib)
+            IF(EXISTS ${OSG_SUPPORT_ROOT}/lib/osgvlc.lib)
                 SET(VLC_LIBRARY_DEBUG ${OSG_SUPPORT_ROOT}/lib/osgvlcD.lib)
             ENDIF()
     

@@ -117,6 +117,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING VideoWrapper : public VideoWrapperBase
 
     virtual Real32 getAudioVolume(void) const = 0;
     virtual void setAudioVolume(Real32 volume) = 0;
+    virtual void setMute(bool Mute) = 0;
+    virtual bool isMuted(void) const = 0;
 
     virtual bool updateImage(void) = 0;
 

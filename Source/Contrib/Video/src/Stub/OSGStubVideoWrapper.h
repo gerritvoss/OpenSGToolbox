@@ -108,6 +108,8 @@ class OSG_CONTRIBVIDEO_DLLMAPPING StubVideoWrapper : public StubVideoWrapperBase
 
     virtual Real32 getAudioVolume(void) const;
     virtual void setAudioVolume(Real32 volume);
+    virtual void setMute(bool Mute);
+    virtual bool isMuted(void) const;
 
     virtual bool updateImage(void);
     /*=========================  PROTECTED  ===============================*/

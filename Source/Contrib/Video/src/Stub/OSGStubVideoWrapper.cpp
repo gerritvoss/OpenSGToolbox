@@ -244,6 +244,17 @@ void StubVideoWrapper::setAudioVolume(Real32 volume)
     //The Stub Video Wrapper does nothing, intentionally
 }
 
+void StubVideoWrapper::setMute(bool Mute)
+{
+    //The Stub Video Wrapper does nothing, intentionally
+}
+
+bool StubVideoWrapper::isMuted(void) const
+{
+    //The Stub Video Wrapper does nothing, intentionally
+    return false;
+}
+
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -

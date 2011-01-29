@@ -46,28 +46,17 @@ VideoManager *VLCManager::the(void)
     return _the;
 }
 
-VideoWrapperRefPtr VLCManager::createVideoWrapper(void) const
+VideoWrapperTransitPtr VLCManager::createVideoWrapper(void) const
 {
-	return VLCVideoWrapper::create();
+	return VideoWrapperTransitPtr(VLCVideoWrapper::create());
 }
 
-void VLCManager::init(int   argc, char *argv[])
+bool VLCManager::init(int   argc, char *argv[])
 {
-	// this will change
-	/*
-    HRESULT hr;
-    hr = CoInitialize(NULL);
-    if (FAILED(hr))
-    {
-        printf("ERROR - Could not initialize COM library");
-        return;
-    }
-	*/
 }
 
-void VLCManager::exit(void)
+bool VLCManager::exit(void)
 {
-    //CoUninitialize();
 }
 
 /*-------------------------------------------------------------------------*/

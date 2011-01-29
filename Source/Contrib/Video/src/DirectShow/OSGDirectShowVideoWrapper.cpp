@@ -783,6 +783,21 @@ Real32 DirectShowVideoWrapper::getAudioVolume(void) const
 	}
 }
 
+void DirectShowVideoWrapper::setMute(bool Mute)
+{
+    /*! \todo Implement
+     */
+    SWARNING << "NYI" << std::endl;
+}
+
+bool DirectShowVideoWrapper::isMuted(void) const
+{
+    /*! \todo Implement
+     */
+    SWARNING << "NYI" << std::endl;
+    return false;
+}
+
 bool DirectShowVideoWrapper::close(void)
 {
     uninitVideo();
@@ -823,15 +838,20 @@ bool DirectShowVideoWrapper::updateImage(void)
         
         _pSampleGrabber->GetCurrentBuffer(&_BufferSize, (long*)_FrameBuffer);
     
-		if(getImage() == NULL ||
-		getImage()->getWidth() != _VideoWidth ||
-		getImage()->getHeight() != _VideoHeight)
+        if(getImage() == NULL ||
+           getImage()->getWidth() != _VideoWidth ||
+           getImage()->getHeight() != _VideoHeight)
 		{
             ImageUnrecPtr NewImage(Image::create());
 			setImage(NewImage);
             try
             {
-			    getImage()->set(Image::OSG_BGR_PF,_VideoWidth,_VideoHeight,1,1,1,0.0,reinterpret_cast<const UInt8*>(_FrameBuffer),Image::OSG_UINT8_IMAGEDATA);
+			    getImage()->set(Image::OSG_BGR_PF,
+                                _VideoWidth,
+                                _VideoHeight,
+                                1,1,1,0.0,
+                                reinterpret_cast<const UInt8*>(_FrameBuffer),
+                                Image::OSG_UINT8_IMAGEDATA);
             }
             catch(...)
             {

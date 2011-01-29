@@ -37,6 +37,8 @@
 // To put a texture into the background
 #include "OSGVideoManager.h"
 
+#include <boost/filesystem/convenience.hpp>
+
 
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
@@ -58,10 +60,9 @@ void handleKeyTyped(KeyEventDetails* const details,
         getDefaultVideoManager()->exit();
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-    Int64 JumpAmount(50000000);
+    Real64 JumpAmount(1.0f);
     switch(details->getKey())
     {
-    case KeyEventDetails::KEY_P:
     case KeyEventDetails::KEY_SPACE:
 		video->pauseToggle();
 		break;
@@ -87,9 +88,31 @@ void handleKeyTyped(KeyEventDetails* const details,
     case KeyEventDetails::KEY_V:
         video->jump(-JumpAmount);
         break;
-    /*case KeyEventDetails::KEY_U:
-        UpdateImage = !UpdateImage;
-        break;*/
+    case KeyEventDetails::KEY_N:
+        video->setRate(video->getRate() + 0.1f);
+        break;
+    case KeyEventDetails::KEY_M:
+        video->setRate(video->getRate() - 0.1f);
+        break;
+    case KeyEventDetails::KEY_MINUS:
+        video->setAudioVolume(video->getAudioVolume() - 0.1f);
+        std::cout << "Volume: " << video->getAudioVolume() <<  std::endl;
+        break;
+    case KeyEventDetails::KEY_EQUALS:
+        video->setAudioVolume(video->getAudioVolume() + 0.1f);
+        std::cout << "Volume: " << video->getAudioVolume() <<  std::endl;
+        break;
+    case KeyEventDetails::KEY_I:
+        std::cout << "Dimensions: " << video->getWidth()
+                  << "x"            << video->getHeight()
+                  << std::endl;
+        std::cout << "Duration: " << video->getDuration()
+                  << std::endl;
+        std::cout << "Position: " << video->getPosition()
+                  << std::endl;
+        std::cout << "Rate: " << video->getRate()
+                  << std::endl;
+        break;
     case KeyEventDetails::KEY_W:
         nodeSwitch->setChoice((nodeSwitch->getChoice() + 1) % 
             dynamic_cast<Node*>(nodeSwitch->getParents().front())->getNChildren());
@@ -106,14 +129,27 @@ void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
 }
 
-void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
+void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
 {
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
 }
 
-void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
 {
-    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
+    if(details->getUnitsToScroll() > 0)
+    {
+        for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
+    else if(details->getUnitsToScroll() < 0)
+    {
+        for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+        {
+            mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+        }
+    }
 }
   
 void handleVideoPaused(VideoEventDetails* const details)
@@ -159,10 +195,11 @@ void handleVideoSeeked(VideoEventDetails* const details)
 void handleVideoEnded(VideoEventDetails* const details)
 {
 	std::cout << "Reached End" << std::endl;
-	dynamic_cast<VideoWrapper*>(details->getSource())->pause();
-	dynamic_cast<VideoWrapper*>(details->getSource())->seek(0);
+	//dynamic_cast<VideoWrapper*>(details->getSource())->pause();
+	dynamic_cast<VideoWrapper*>(details->getSource())->stop();
+	//dynamic_cast<VideoWrapper*>(details->getSource())->seek(0);
 	dynamic_cast<VideoWrapper*>(details->getSource())->play();
-	dynamic_cast<VideoWrapper*>(details->getSource())->unpause();
+	//dynamic_cast<VideoWrapper*>(details->getSource())->unpause();
 }
 
 int main(int argc, char **argv)
@@ -183,14 +220,14 @@ int main(int argc, char **argv)
         //Attach to events
         TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
-        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
 
         VideoWrapperRecPtr TheVideo  = getDefaultVideoManager()->createVideoWrapper();
-	    TheVideo->attachUpdateProducer(TutorialWindow);
+        TheVideo->attachUpdateProducer(TutorialWindow);
 
 	    TheVideo->connectStarted(boost::bind(handleVideoStarted, _1));
 	    TheVideo->connectPaused(boost::bind(handleVideoPaused, _1));
@@ -202,17 +239,32 @@ int main(int argc, char **argv)
 	    TheVideo->connectOpened(boost::bind(handleVideoOpened, _1));
 	    TheVideo->connectEnded(boost::bind(handleVideoEnded, _1));
         
-        TheVideo->open(BoostPath("./Data/Wildlife.wmv"), TutorialWindow);
+        BoostPath VideoFilePath("./Data/ExampleVideo.avi");
+        if(argc >= 2)
+        {
+            VideoFilePath = BoostPath(argv[1]);
+            if(!boost::filesystem::exists(VideoFilePath))
+            {
+                std::cerr << "Could not load file: "<< VideoFilePath.string()
+                          << ", because no such files exists."<< std::endl;
+                VideoFilePath = BoostPath("./Data/ExampleVideo.avi");
+            }
+        }
+
+        TheVideo->open(VideoFilePath, TutorialWindow);
 	    TheVideo->pause();
         if(TheVideo->hasAudio())
         {
 	        TheVideo->enableAudio();
-	        TheVideo->setAudioVolume(1.0f);
+	        TheVideo->setAudioVolume(0.5f);
         }
 
-        // create the scene
-	    TheVideo->updateImage();
+        //Wait for the video to initialize
+        std::cout << "Dimensions: " << TheVideo->getWidth()
+                  << "x"            << TheVideo->getHeight()
+                  << std::endl;
         Real32 AspectRatio(static_cast<Real32>(TheVideo->getWidth())/static_cast<Real32>(TheVideo->getHeight()));
+        //Real32 AspectRatio(4.0f/3.0f);
 
         // Set filtering modes. LINEAR is cheap and good if the image size
         // changes very little (i.e. the window is about the same size as 
@@ -235,6 +287,7 @@ int main(int argc, char **argv)
         StateChunkUnrecPtr pMChunk = MaterialChunk::create();
 	    VideoMaterial->addChunk(pMChunk);
 
+        // create the scene
         //Plane Geometry
 	    GeometryRecPtr PlaneGeometry = makePlaneGeo(10.0*AspectRatio,10.0,10,10);
         PlaneGeometry->setMaterial(VideoMaterial);
