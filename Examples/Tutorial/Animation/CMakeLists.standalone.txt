@@ -27,8 +27,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGUtil 
                    OSGWindow 
                    OSGTBFileIO 
-                   OSGTBAnimation 
-                   )
+                   OSGTBAnimation)
 
 
 IF(UNIX)
@@ -102,7 +101,6 @@ ENDIF(Boost_FOUND)
 #### OpenSG
 
 FIND_PACKAGE(OpenSG REQUIRED COMPONENTS ${OSG_COMPONENTS})
-
 
 #############################################################################
 # build executables

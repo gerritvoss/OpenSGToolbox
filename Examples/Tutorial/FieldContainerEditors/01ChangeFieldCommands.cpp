@@ -105,7 +105,7 @@ void keyTyped(KeyEventDetails* const details)
 
     /******************************************************
 
-         Create an ActionListener to display text
+         Create an connection to display text
          in the Console Window when the Button is
          pressed (causing an action).
 

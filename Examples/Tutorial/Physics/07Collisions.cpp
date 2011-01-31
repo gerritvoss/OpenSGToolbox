@@ -25,7 +25,7 @@
 
 //Physics
 #include "OSGPhysics.h"
-#include "OSGCollisionEvent.h"
+#include "OSGCollisionEventDetails.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols

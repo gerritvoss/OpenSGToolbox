@@ -31,7 +31,6 @@
 #include "OSGSceneFileHandler.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGWindowUtils.h"
 
 //Physics

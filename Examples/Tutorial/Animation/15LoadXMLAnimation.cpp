@@ -20,9 +20,6 @@
 #include "OSGWindowUtils.h"
 
 // Input
-#include "OSGKeyListener.h"
-
-
 #include "OSGSimpleMaterial.h"
 
 #include "OSGComponentTransform.h"

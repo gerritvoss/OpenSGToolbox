@@ -131,9 +131,6 @@ void handleUndoManagerStateChanged(ChangeEventDetails* const details,
 	}
 }
 
-// Setup a FontListener to change the label's font
-// when a different item in the FontList is
-// selected
 void handleUndoRedoListSelectionChanged(ListSelectionEventDetails* const details,
                                         UndoManagerPtr TheUndoManager)
 {

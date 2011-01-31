@@ -1,7 +1,8 @@
+SET(TUTORIALS_PROJECT "Animation")
 
-PROJECT(OpenSGExamplesAnimation)
+PROJECT(OpenSGExamples${TUTORIALS_PROJECT})
 
-MESSAGE(STATUS "Building anim examples integrated")
+MESSAGE(STATUS "Building ${TUTORIALS_PROJECT} examples integrated")
 
 #############################################################################
 # find sources
@@ -9,16 +10,28 @@ MESSAGE(STATUS "Building anim examples integrated")
 FILE(GLOB SRCFILES "*.cpp")
 
 # stuff that is broken -- these examples need to be fixed
-#LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/clusterclientshader.cpp")
-LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/04ShaderAnimation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/13MeshBlending.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/14SkeletonLoader.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/15LoadXMLAnimation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/16LoadXMLSkeleton.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/17LoadXMLSkeletonAnimation.cpp")
 LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/23BlendXMLAnimations.cpp")
 
 #############################################################################
 # get dependencies
 
-SET(OSG_COMPONENTS OSGBase OSGCluster OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGWindow OSGWindowGLUT OSGTBAnimation
-                   OSGDynamics OSGTBFileIO)
+SET(OSG_COMPONENTS OSGBase 
+                   OSGDrawable 
+                   OSGFileIO 
+                   OSGImageFileIO 
+                   OSGDynamics 
+                   OSGGroup 
+                   OSGState 
+                   OSGSystem 
+                   OSGUtil 
+                   OSGWindow 
+                   OSGTBFileIO 
+                   OSGTBAnimation)
 
 IF(UNIX)
     IF(APPLE)
@@ -84,7 +97,7 @@ FOREACH(SRC ${SRCFILES})
 
     ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
 
-    ADD_DEPENDENCIES(OSGAllToolboxTests ${EXE})
+    ADD_DEPENDENCIES(OSGAll${TUTORIALS_PROJECT}Examples ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})
         ADD_DEPENDENCIES(${EXE} ${OSGDEP})

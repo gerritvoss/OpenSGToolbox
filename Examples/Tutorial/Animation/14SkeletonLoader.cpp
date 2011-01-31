@@ -16,7 +16,6 @@
 #include "OSGWindowUtils.h"
 
 // Input
-#include "OSGKeyListener.h"
 
 #include "OSGLineChunk.h"
 #include "OSGBlendChunk.h"

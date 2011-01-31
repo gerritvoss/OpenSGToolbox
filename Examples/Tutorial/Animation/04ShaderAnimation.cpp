@@ -22,8 +22,6 @@
 #include "OSGShaderVariableVec4f.h"
 
 // Input
-#include "OSGKeyListener.h"
-#include "OSGWindowAdapter.h"
 #include "OSGWindowUtils.h"
 
 #include <sstream>

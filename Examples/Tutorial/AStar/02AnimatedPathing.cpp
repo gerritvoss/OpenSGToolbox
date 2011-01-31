@@ -191,7 +191,7 @@ int main(int argc, char **argv)
         Time StartTime;
         StartTime = getSystemTime();
 		OctreePtr TheOctree =
-            Octree::buildTree(RootNode,SceneMask,6,0.5,true);
+            Octree::buildTree(RootNode,SceneMask,6,1.5,true);
 
         SLOG << "Building Octree: " << getSystemTime() - StartTime << " s" << std::endl;
         Pnt3f Min,Max;

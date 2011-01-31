@@ -29,7 +29,6 @@
 // Input
 #include "OSGWindowUtils.h"
 #include "OSGWindowEventProducer.h"
-//#include "OSGKeyListener.h"
 
 //Animation
 #include "OSGKeyframeSequences.h"

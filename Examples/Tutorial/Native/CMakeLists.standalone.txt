@@ -24,6 +24,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGUtil 
                    OSGWindow 
                    OSGFileIO
+                   OSGImageFileIO
                    OSGTBFileIO
                    OSGDynamics
                    OSGTBAnimation

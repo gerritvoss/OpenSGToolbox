@@ -8,8 +8,6 @@
 #include "OSGViewport.h"
 #include "OSGWindowUtils.h"
 
-// Input
-#include "OSGKeyListener.h"
 
 #include "OSGBlendChunk.h"
 #include "OSGLineChunk.h"

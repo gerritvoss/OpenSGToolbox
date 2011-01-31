@@ -1,4 +1,4 @@
-// OpenSG Tutorial Example: Show an animated texture in hte background
+// OpenSG Tutorial Example: Show an animated texture in the background
 //
 // This example shows how to use the TextureBackground to show animated
 // pictures behind the 3D graphics, and how to do it as efficiently as 
@@ -49,8 +49,8 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
 //Ctrl+q handler
 void handleKeyTyped(KeyEventDetails* const details,
-              VideoWrapper* const video,
-              Switch* const nodeSwitch)
+                    VideoWrapper* const video,
+                    Switch* const nodeSwitch)
 {
     if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
        KeyEventDetails::KEY_MODIFIER_COMMAND)

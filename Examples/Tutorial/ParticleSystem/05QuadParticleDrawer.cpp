@@ -9,9 +9,6 @@
 #include "OSGSimpleGeometry.h"
 #include "OSGWindowUtils.h"
 
-// Input
-#include "OSGKeyListener.h"
-
 #include "OSGBlendChunk.h"
 #include "OSGTextureObjChunk.h"
 #include "OSGTextureEnvChunk.h"

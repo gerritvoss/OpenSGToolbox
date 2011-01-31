@@ -11,7 +11,6 @@
 #include "OSGWindowUtils.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGSimpleGeometry.h"
 #include "OSGBlendChunk.h"
 #include "OSGPointChunk.h"

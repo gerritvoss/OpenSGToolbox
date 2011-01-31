@@ -21,7 +21,6 @@
 #include "OSGDirectionalLight.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGWindowUtils.h"
 
 //Physics

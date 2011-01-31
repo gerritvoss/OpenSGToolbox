@@ -197,7 +197,7 @@ int main(int argc, char **argv)
         ZapSound->setStreaming(false);
         ZapSound->setLooping(1);
 
-        //Attach Sound Listener
+        //Attach Sound Events
         ZapSound->connectSoundPlayed  (boost::bind(handleSoundPlayed,   _1));
         ZapSound->connectSoundStopped (boost::bind(handleSoundStopped,  _1));
         ZapSound->connectSoundPaused  (boost::bind(handleSoundPaused,   _1));
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
         ClickSound->setStreaming(false);
         ClickSound->setLooping(0);
 
-        //Attach Sound Listener
+        //Attach Sound Events
         ClickSound->connectSoundPlayed  (boost::bind(handleSoundPlayed,   _1));
         ClickSound->connectSoundStopped (boost::bind(handleSoundStopped,  _1));
         ClickSound->connectSoundPaused  (boost::bind(handleSoundPaused,   _1));

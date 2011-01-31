@@ -1,7 +1,9 @@
 
-PROJECT(OpenSGExamplesLua)
+SET(TUTORIALS_PROJECT "Lua")
 
-MESSAGE(STATUS "Building simple examples integrated")
+PROJECT(OpenSGExamples${TUTORIALS_PROJECT})
+
+MESSAGE(STATUS "Building ${TUTORIALS_PROJECT} examples integrated")
 
 #############################################################################
 # find sources
@@ -13,10 +15,19 @@ LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/04LuaDebugWithParticleSystem.cp
 #############################################################################
 # get dependencies
 
-SET(OSG_COMPONENTS OSGBase OSGDrawable OSGFileIO OSGGroup OSGState
-                   OSGSystem OSGUtil OSGText OSGWindow OSGTBFileIO
-                   OSGContribUserInterface OSGContribParticleSystem
-                   OSGContribLua OSGContribLuaToolbox )
+SET(OSG_COMPONENTS OSGBase 
+                   OSGDrawable 
+                   OSGFileIO 
+                   OSGTBFileIO 
+                   OSGImageFileIO 
+                   OSGDynamics 
+                   OSGGroup 
+                   OSGState 
+                   OSGSystem 
+                   OSGUtil 
+                   OSGWindow 
+                   OSGContribLua 
+                   )
 
 IF(UNIX)
     IF(APPLE)
@@ -80,7 +91,7 @@ FOREACH(SRC ${SRCFILES})
 
     ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
 
-    ADD_DEPENDENCIES(OSGAllToolboxTests ${EXE})
+    ADD_DEPENDENCIES(OSGAll${TUTORIALS_PROJECT}Examples ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})
         ADD_DEPENDENCIES(${EXE} ${OSGDEP})

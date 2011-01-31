@@ -27,6 +27,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGDynamics 
                    OSGWindow 
                    OSGContribPhysics 
+                   OSGTBFileIO 
                    )
 
 IF(UNIX)

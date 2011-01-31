@@ -29,7 +29,6 @@
 #include "OSGContainerUtils.h"
 
 // Input
-#include "OSGKeyListener.h"
 #include "OSGWindowUtils.h"
 
 //Animation
