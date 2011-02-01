@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="ListComponentGenerator"
-	parent="ComponentGenerator"
+	name="FunctorListComponentGenerator"
+	parent="ListComponentGenerator"
 	library="ContribUserInterface"
 	pointerfieldtypes="both"
-	structure="abstract"
+	structure="concrete"
 	systemcomponent="true"
 	parentsystemcomponent="true"
 	decoratable="false"
@@ -13,5 +13,5 @@
 	isNodeCore="false"
 	authors="David Kabala (djkabala@gmail.com)"
 >
-A UI List ComponentGenerator.
+A UI Functor List ComponentGenerator.
 </FieldContainer>

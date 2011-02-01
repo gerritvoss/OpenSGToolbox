@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -43,19 +43,16 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include <OSGConfig.h>
+#include "OSGConfig.h"
 
-#include "OSGDefaultListComponentGenerator.h"
+#include "OSGFunctorComboBoxComponentGenerator.h"
 #include "OSGComponent.h"
-#include "OSGLabel.h"
-#include "OSGStringUtils.h"
-#include "OSGList.h"
 
 OSG_BEGIN_NAMESPACE
 
 // Documentation for this class is emitted in the
-// OSGDefaultListComponentGeneratorBase.cpp file.
-// To modify it, please change the .fcd file (OSGDefaultListComponentGenerator.fcd) and
+// OSGFunctorComboBoxComponentGeneratorBase.cpp file.
+// To modify it, please change the .fcd file (OSGFunctorComboBoxComponentGenerator.fcd) and
 // regenerate the base file.
 
 /***************************************************************************\
@@ -66,7 +63,7 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void DefaultListComponentGenerator::initMethod(InitPhase ePhase)
+void FunctorComboBoxComponentGenerator::initMethod(InitPhase ePhase)
 {
     Inherited::initMethod(ePhase);
 
@@ -80,112 +77,20 @@ void DefaultListComponentGenerator::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
-ComponentTransitPtr DefaultListComponentGenerator::getListComponent(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus)
+ComponentTransitPtr FunctorComboBoxComponentGenerator::getComboBoxComponent(ComboBox* const Parent,
+                                                                            const boost::any& Value,
+                                                                            UInt32 Index,
+                                                                            bool IsSelected,
+                                                                            bool HasFocus)
 {
-    if(Value.empty()){
-        return ComponentTransitPtr(NULL);
-    }
-
-    std::string Text(getText(Parent, Value, Index, IsSelected, HasFocus));
-    return getListComponentFromString(Parent, Text, Index, IsSelected, HasFocus);
-}
-
-ComponentTransitPtr DefaultListComponentGenerator::getListComponentFromString(List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus)
-{
-    ComponentRefPtr TheComponent;
-
-    if(getDrawObjectPrototype() != NULL)
+    if(!_GenerateFunctor.empty())
     {
-        TheComponent = dynamic_pointer_cast<Component>(getDrawObjectPrototype()->shallowCopy());
+        return _GenerateFunctor(Parent, Value, Index, IsSelected, HasFocus);
     }
     else
     {
-        TheComponent = Label::create();
-    }
-
-    if(TheComponent->getType().isDerivedFrom(TextComponent::getClassType()))
-    {
-        dynamic_pointer_cast<TextComponent>(TheComponent)->setText(Value);
-
-        applyTextColor(dynamic_pointer_cast<TextComponent>(TheComponent), Parent, Value, Index, IsSelected, HasFocus);
-    }
-
-    applyBordersAndBackground(TheComponent, Parent, Value, Index, IsSelected, HasFocus);
-
-    return ComponentTransitPtr(TheComponent.get());
-}
-
-std::string DefaultListComponentGenerator::getText(List* const Parent, const boost::any& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
-{
-    if(Value.empty()){
-        return std::string("");
-    }
-
-    std::string ValueString;
-    try
-    {
-        ValueString = lexical_cast(Value);
-    }
-    catch (boost::bad_lexical_cast &)
-    {
-        //Could not convert to string
-    }
-    return ValueString;
-}
-
-void DefaultListComponentGenerator::applyBordersAndBackground(Component* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
-{
-    if(IsSelected && HasFocus)
-    {
-        if(getFocusedBorderHasPriority())
-        {
-            TheComponent->setBorders(getFocusedBorder());
-        }
-        else
-        {
-            TheComponent->setBorders(getSelectedBorder());
-        }
-        if(getFocusedBackgroundHasPriority())
-        {
-            TheComponent->setBackgrounds(getFocusedBackground());
-        }
-        else
-        {
-            TheComponent->setBackgrounds(getSelectedBackground());
-        }
-    }
-    else if(IsSelected)
-    {
-        TheComponent->setBorders(getSelectedBorder());
-        TheComponent->setBackgrounds(getSelectedBackground());
-    }
-    else if(HasFocus)
-    {
-        TheComponent->setBorders(getFocusedBorder());
-        TheComponent->setBackgrounds(getFocusedBackground());
-    }
-}
-
-void DefaultListComponentGenerator::applyTextColor(TextComponent* const TheComponent, List* const Parent, const std::string& Value, UInt32 Index, bool IsSelected, bool HasFocus) const
-{
-    if(IsSelected && HasFocus)
-    {
-        if(getFocusedTextColorHasPriority())
-        {
-            TheComponent->setTextColors(getFocusedTextColor());
-        }
-        else
-        {
-            TheComponent->setTextColors(getSelectedTextColor());
-        }
-    }
-    else if(IsSelected)
-    {
-        TheComponent->setTextColors(getSelectedTextColor());
-    }
-    else if(HasFocus)
-    {
-        TheComponent->setTextColors(getFocusedTextColor());
+        SFATAL << "Cannot generate component because the generate functor has not been defined." << std::endl;
+        return ComponentTransitPtr(NULL);
     }
 }
 
@@ -195,33 +100,33 @@ void DefaultListComponentGenerator::applyTextColor(TextComponent* const TheCompo
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DefaultListComponentGenerator::DefaultListComponentGenerator(void) :
+FunctorComboBoxComponentGenerator::FunctorComboBoxComponentGenerator(void) :
     Inherited()
 {
 }
 
-DefaultListComponentGenerator::DefaultListComponentGenerator(const DefaultListComponentGenerator &source) :
+FunctorComboBoxComponentGenerator::FunctorComboBoxComponentGenerator(const FunctorComboBoxComponentGenerator &source) :
     Inherited(source)
 {
 }
 
-DefaultListComponentGenerator::~DefaultListComponentGenerator(void)
+FunctorComboBoxComponentGenerator::~FunctorComboBoxComponentGenerator(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DefaultListComponentGenerator::changed(ConstFieldMaskArg whichField, 
+void FunctorComboBoxComponentGenerator::changed(ConstFieldMaskArg whichField, 
                             UInt32            origin,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 }
 
-void DefaultListComponentGenerator::dump(      UInt32    ,
+void FunctorComboBoxComponentGenerator::dump(      UInt32    ,
                          const BitVector ) const
 {
-    SLOG << "Dump DefaultListComponentGenerator NI" << std::endl;
+    SLOG << "Dump FunctorComboBoxComponentGenerator NI" << std::endl;
 }
 
 OSG_END_NAMESPACE
