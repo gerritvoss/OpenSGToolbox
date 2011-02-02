@@ -101,7 +101,8 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
         InternalTargetGeometriesFieldId = BaseGeometryFieldId + 1,
         InternalWeightsFieldId = InternalTargetGeometriesFieldId + 1,
         MorphPropertiesFieldId = InternalWeightsFieldId + 1,
-        NextFieldId = MorphPropertiesFieldId + 1
+        BlendingMethodFieldId = MorphPropertiesFieldId + 1,
+        NextFieldId = BlendingMethodFieldId + 1
     };
 
     static const OSG::BitVector BaseGeometryFieldMask =
@@ -112,6 +113,8 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
         (TypeTraits<BitVector>::One << InternalWeightsFieldId);
     static const OSG::BitVector MorphPropertiesFieldMask =
         (TypeTraits<BitVector>::One << MorphPropertiesFieldId);
+    static const OSG::BitVector BlendingMethodFieldMask =
+        (TypeTraits<BitVector>::One << BlendingMethodFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -119,6 +122,7 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
     typedef MFUnrecGeometryPtr MFInternalTargetGeometriesType;
     typedef SFUnrecChildGeoVectorPropertyPtr SFInternalWeightsType;
     typedef MFUInt16          MFMorphPropertiesType;
+    typedef SFUInt16          SFBlendingMethodType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -149,11 +153,17 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
                   MFUInt16            *editMFMorphProperties(void);
             const MFUInt16            *getMFMorphProperties (void) const;
 
+                  SFUInt16            *editSFBlendingMethod (void);
+            const SFUInt16            *getSFBlendingMethod  (void) const;
+
 
                   Geometry * getBaseGeometry   (void) const;
 
                   UInt16              &editMorphProperties(const UInt32 index);
                   UInt16               getMorphProperties (const UInt32 index) const;
+
+                  UInt16              &editBlendingMethod (void);
+                  UInt16               getBlendingMethod  (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -161,6 +171,7 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
     /*! \{                                                                 */
 
             void setBaseGeometry   (Geometry * const value);
+            void setBlendingMethod (const UInt16 value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -229,6 +240,7 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
     MFUnrecGeometryPtr _mfInternalTargetGeometries;
     SFUnrecChildGeoVectorPropertyPtr _sfInternalWeights;
     MFUInt16          _mfMorphProperties;
+    SFUInt16          _sfBlendingMethod;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -273,6 +285,8 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometryBase : public Geometry
     EditFieldHandlePtr editHandleInternalWeights(void);
     GetFieldHandlePtr  getHandleMorphProperties (void) const;
     EditFieldHandlePtr editHandleMorphProperties(void);
+    GetFieldHandlePtr  getHandleBlendingMethod  (void) const;
+    EditFieldHandlePtr editHandleBlendingMethod (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

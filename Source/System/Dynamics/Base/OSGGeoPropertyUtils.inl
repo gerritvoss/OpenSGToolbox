@@ -35,21 +35,65 @@ OSG_BEGIN_NAMESPACE
 template<class TypeT> inline
 void zeroGeoPropertyTmpl(GeoVectorProperty* GeoProp)
 {
+    //If this property should be treated as a normal
+    if(GeoProp->getUsage() & GeoProperty::UsageTangentSpace &&
+       GeoProp->getDimension() == 3 &&
+       (
+        GeoProp->getFormat() == GL_FLOAT ||
+        GeoProp->getFormat() == GL_DOUBLE/* ||*/
+        /*GeoProp->getFormat() == GL_FIXED*/
+      ))
+    {
+        if(GeoProp->getFormat() == GL_FLOAT)
+        {
+            zeroNormGeoPropertyTmpl<GLfloat>(GeoProp);
+        }
+        else if(GeoProp->getFormat() == GL_DOUBLE)
+        {
+            zeroNormGeoPropertyTmpl<GLdouble>(GeoProp);
+        }
+        return;
+    }
+
     TypeT*  BasePropData(reinterpret_cast<TypeT*>(GeoProp->editData()));
 
     UInt32 NumElements(GeoProp->size() * GeoProp->getDimension());
+    TypeT ZeroElement(TypeTraits<TypeT>::getZeroElement());
     for(UInt32 i(0) ; i<NumElements ; ++i)
     {
-        *BasePropData = TypeTraits<TypeT>::getZeroElement();
+        *BasePropData = ZeroElement;
         ++BasePropData;
     }
 }
 
 template<class TypeT> inline
-void morphGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
-                                  GeoVectorProperty* TargetGeoProp,
-                                  GeoVectorProperty* ResultGeoProp,
-                                  Real32 Weight)
+void zeroNormGeoPropertyTmpl(GeoVectorProperty* GeoProp)
+{
+    assert(GeoProp->getDimension() == 3 && "Can only do Normal zeroing on properties with dimension 3");
+
+    TypeT*  GeoPropData(reinterpret_cast<TypeT*>(GeoProp->editData()));
+
+    UInt32 NumElements(GeoProp->size() * GeoProp->getDimension());
+    TypeT ZeroElement(TypeTraits<TypeT>::getZeroElement());
+    TypeT OneElement(TypeTraits<TypeT>::getOneElement());
+    for(UInt32 i(0) ; i<NumElements ; ++i)
+    {
+        if((i % 3) == 2)
+        {
+            *GeoPropData = OneElement;
+        }
+        else
+        {
+            *GeoPropData = ZeroElement;
+        }
+        ++GeoPropData;
+    }
+}
+
+template<class TypeT> inline
+void morphGeoPropertyTmpl(GeoVectorProperty* TargetGeoProp,
+                          GeoVectorProperty* ResultGeoProp,
+                          Real32 Weight)
 {
     //If this property should be treated as a normal
     if(ResultGeoProp->getUsage() & GeoProperty::UsageTangentSpace &&
@@ -62,67 +106,60 @@ void morphGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
     {
         if(ResultGeoProp->getFormat() == GL_FLOAT)
         {
-            morphNormGeoPropertyTmpl<GLfloat>(BaseGeoProp,
-                                              TargetGeoProp,
+            morphNormGeoPropertyTmpl<GLfloat>(TargetGeoProp,
                                               ResultGeoProp,
                                               Weight);
         }
         else if(ResultGeoProp->getFormat() == GL_DOUBLE)
         {
-            morphNormGeoPropertyTmpl<GLdouble>(BaseGeoProp,
-                                               TargetGeoProp,
+            morphNormGeoPropertyTmpl<GLdouble>(TargetGeoProp,
                                                ResultGeoProp,
                                                Weight);
         }
         //else if(ResultGeoProp->getFormat() == GL_FIXED)
         //{
-        //morphNormGeoPropertyTmpl<GLfixed>(BaseGeoProp,
-        //TargetGeoProp,
+        //morphNormGeoPropertyTmpl<GLfixed>(TargetGeoProp,
         //ResultGeoProp,
         //Weight);
         //return;
         return;
     }
 
-    assert(TargetGeoProp->size() == ResultGeoProp->size() &&
-           TargetGeoProp->size() == BaseGeoProp->size());
+    assert(TargetGeoProp->size() == ResultGeoProp->size());
 
-    const TypeT*  BasePropData(reinterpret_cast<const TypeT*>(BaseGeoProp->getData()));
     const TypeT*  TargetPropData(reinterpret_cast<const TypeT*>(TargetGeoProp->getData()));
     TypeT*  ResultPropData(reinterpret_cast<TypeT*>(ResultGeoProp->editData()));
 
     UInt32 NumElements(ResultGeoProp->size() * ResultGeoProp->getDimension());
     for(UInt32 i(0) ; i<NumElements ; ++i)
     {
-        *ResultPropData += Weight * (*TargetPropData - *BasePropData);
+        *ResultPropData += Weight * (*TargetPropData);
 
-        ++BasePropData;
         ++TargetPropData;
         ++ResultPropData;
     }
 }
 
 template<class TypeT> inline
-void morphNormGeoPropertyTmpl(GeoVectorProperty* BaseGeoProp,
-                          GeoVectorProperty* TargetGeoProp,
-                          GeoVectorProperty* ResultGeoProp,
-                          Real32 Weight)
+void morphNormGeoPropertyTmpl(GeoVectorProperty* TargetGeoProp,
+                              GeoVectorProperty* ResultGeoProp,
+                              Real32 Weight)
 {
     assert(TargetGeoProp->getDimension() == 3 && "Can only do Normal morphs on properties with dimension 3");
-    assert(TargetGeoProp->size() == ResultGeoProp->size() &&
-           TargetGeoProp->size() == BaseGeoProp->size());
+    assert(TargetGeoProp->size() == ResultGeoProp->size());
 
-    const Vector<TypeT,3>*  BasePropData(reinterpret_cast<const Vector<TypeT,3>*>(BaseGeoProp->getData()));
     const Vector<TypeT,3>*  TargetPropData(reinterpret_cast<const Vector<TypeT,3>*>(TargetGeoProp->getData()));
     Vector<TypeT,3>*  ResultPropData(reinterpret_cast<Vector<TypeT,3>*>(ResultGeoProp->editData()));
 
+    Vector<TypeT,3> BaseNormal(TypeTraits<TypeT>::getZeroElement(),
+                               TypeTraits<TypeT>::getZeroElement(),
+                               TypeTraits<TypeT>::getOneElement());
     for(UInt32 i(0) ; i<ResultGeoProp->size() ; ++i)
     {
-        QuaternionBase<TypeT> q(*TargetPropData,*BasePropData);
+        QuaternionBase<TypeT> q(*TargetPropData,BaseNormal);
         q.scaleAngle(Weight);
         q.multVec(*ResultPropData,*ResultPropData);
 
-        ++BasePropData;
         ++TargetPropData;
         ++ResultPropData;
     }

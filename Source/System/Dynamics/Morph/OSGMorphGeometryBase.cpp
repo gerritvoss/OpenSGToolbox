@@ -113,6 +113,10 @@ OSG_BEGIN_NAMESPACE
     
 */
 
+/*! \var UInt16          MorphGeometryBase::_sfBlendingMethod
+    
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -186,6 +190,18 @@ void MorphGeometryBase::classDescInserter(TypeObject &oType)
         (Field::MFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&MorphGeometry::editHandleMorphProperties),
         static_cast<FieldGetMethodSig >(&MorphGeometry::getHandleMorphProperties));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUInt16::Description(
+        SFUInt16::getClassType(),
+        "BlendingMethod",
+        "",
+        BlendingMethodFieldId, BlendingMethodFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&MorphGeometry::editHandleBlendingMethod),
+        static_cast<FieldGetMethodSig >(&MorphGeometry::getHandleBlendingMethod));
 
     oType.addInitialDesc(pDesc);
 }
@@ -266,6 +282,16 @@ MorphGeometryBase::TypeObject MorphGeometryBase::_type(
     "\t\tcardinality=\"multi\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"BlendingMethod\"\n"
+    "\t\ttype=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "        defaultValue=\"MorphGeometry::Relative\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -357,6 +383,19 @@ const MFUInt16 *MorphGeometryBase::getMFMorphProperties(void) const
 }
 
 
+SFUInt16 *MorphGeometryBase::editSFBlendingMethod(void)
+{
+    editSField(BlendingMethodFieldMask);
+
+    return &_sfBlendingMethod;
+}
+
+const SFUInt16 *MorphGeometryBase::getSFBlendingMethod(void) const
+{
+    return &_sfBlendingMethod;
+}
+
+
 
 
 void MorphGeometryBase::pushToInternalTargetGeometries(Geometry * const value)
@@ -436,6 +475,10 @@ UInt32 MorphGeometryBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _mfMorphProperties.getBinSize();
     }
+    if(FieldBits::NoField != (BlendingMethodFieldMask & whichField))
+    {
+        returnValue += _sfBlendingMethod.getBinSize();
+    }
 
     return returnValue;
 }
@@ -460,6 +503,10 @@ void MorphGeometryBase::copyToBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (MorphPropertiesFieldMask & whichField))
     {
         _mfMorphProperties.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (BlendingMethodFieldMask & whichField))
+    {
+        _sfBlendingMethod.copyToBin(pMem);
     }
 }
 
@@ -487,6 +534,11 @@ void MorphGeometryBase::copyFromBin(BinaryDataHandler &pMem,
     {
         editMField(MorphPropertiesFieldMask, _mfMorphProperties);
         _mfMorphProperties.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (BlendingMethodFieldMask & whichField))
+    {
+        editSField(BlendingMethodFieldMask);
+        _sfBlendingMethod.copyFromBin(pMem);
     }
 }
 
@@ -616,7 +668,8 @@ MorphGeometryBase::MorphGeometryBase(void) :
     _sfInternalWeights        (this,
                           InternalWeightsFieldId,
                           GeoVectorProperty::ParentsFieldId),
-    _mfMorphProperties        ()
+    _mfMorphProperties        (),
+    _sfBlendingMethod         (UInt16(MorphGeometry::Normalized))
 {
 }
 
@@ -627,7 +680,8 @@ MorphGeometryBase::MorphGeometryBase(const MorphGeometryBase &source) :
     _sfInternalWeights        (this,
                           InternalWeightsFieldId,
                           GeoVectorProperty::ParentsFieldId),
-    _mfMorphProperties        (source._mfMorphProperties        )
+    _mfMorphProperties        (source._mfMorphProperties        ),
+    _sfBlendingMethod         (source._sfBlendingMethod         )
 {
 }
 
@@ -821,6 +875,31 @@ EditFieldHandlePtr MorphGeometryBase::editHandleMorphProperties(void)
 
 
     editMField(MorphPropertiesFieldMask, _mfMorphProperties);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr MorphGeometryBase::getHandleBlendingMethod  (void) const
+{
+    SFUInt16::GetHandlePtr returnValue(
+        new  SFUInt16::GetHandle(
+             &_sfBlendingMethod,
+             this->getType().getFieldDesc(BlendingMethodFieldId),
+             const_cast<MorphGeometryBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr MorphGeometryBase::editHandleBlendingMethod (void)
+{
+    SFUInt16::EditHandlePtr returnValue(
+        new  SFUInt16::EditHandle(
+             &_sfBlendingMethod,
+             this->getType().getFieldDesc(BlendingMethodFieldId),
+             this));
+
+
+    editSField(BlendingMethodFieldMask);
 
     return returnValue;
 }

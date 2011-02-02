@@ -242,17 +242,35 @@ void MorphGeometry::updateMorph(void)
     {
         GeoVectorProperty* BaseProp(getBaseGeometry()->getProperty(getMorphProperties(i)));
 
-        //Reset the property
-        GeoVectorPropertyUnrecPtr Prop(dynamic_pointer_cast<GeoVectorProperty>(getBaseGeometry()->getProperty(getMorphProperties(i))->clone()));
+        GeoVectorPropertyUnrecPtr Prop(getProperty(getMorphProperties(i)));
+        switch(getBlendingMethod())
+        {
+            case Relative:
+                {
+                    //Reset the Base mesh
+                    UInt32 NumBytesToCopy(Prop->getFormatSize() * BaseProp->size() * BaseProp->getDimension());
+                    memcpy(Prop->editData(), BaseProp->getData(), NumBytesToCopy);
+                }
+                break;
+            default:
+                SWARNING << "Invalid blending method: " << getBlendingMethod()
+                         << ". Using Normalized method." << std::endl;
+            case Normalized:
+                {
+                    Real32 Weight(1.0f);
+                    for(UInt32 j(0) ; j < getNumMorphTargets() ; ++j)
+                    {
+                        Weight -= osgAbs(getMorphTargetWeight(j));
+                    }
+                    //Zero out the property
+                    zeroGeoProperty(Prop);
+
+                    //Call the morph property with the given property format
+                    morphGeoProperty(BaseProp, Prop, Weight);
+                }
+                break;
+        }
         setProperty(Prop, getMorphProperties(i));
-
-        //GeoVectorProperty* Prop(getProperty(getMorphProperties(i)));
-        //assert( Prop->size() == BaseProp->size() &&
-                //Prop->getDimension() == BaseProp->getDimension()&&
-                //Prop->getFormat() == BaseProp->getFormat());
-        //UInt32 NumBytesToCopy(Prop->getFormatSize() * BaseProp->size() * BaseProp->getDimension());
-        //memcpy(Prop->editData(), BaseProp->getData(), NumBytesToCopy);
-
 
         //Loop through all morph targets
         Geometry* Target;
@@ -271,7 +289,7 @@ void MorphGeometry::updateMorph(void)
             TargetProp = Target->getProperty(getMorphProperties(i));
 
             //Call the morph property with the given property format
-            morphGeoProperty(BaseProp, TargetProp, Prop, Weight);
+            morphGeoProperty(TargetProp, Prop, Weight);
         }
     }
 }
@@ -328,63 +346,30 @@ void MorphGeometry::changed(ConstFieldMaskArg whichField,
         {
             if(getBaseGeometry()->getTypes() != NULL)
             {
-                setTypes(getBaseGeometry()->getTypes());
+                GeoIntegralPropertyUnrecPtr Prop = dynamic_pointer_cast<GeoIntegralProperty>(getBaseGeometry()->getTypes()->clone());
+                setTypes(Prop);
             }
             if(getBaseGeometry()->getLengths() != NULL)
             {
-                setLengths(getBaseGeometry()->getLengths());
-            }
-            if(getBaseGeometry()->getPositions() != NULL)
-            {
-                setPositions(getBaseGeometry()->getPositions());
-            }
-            if(getBaseGeometry()->getNormals() != NULL)
-            {
-                setNormals(getBaseGeometry()->getNormals());
-            }
-            if(getBaseGeometry()->getColors() != NULL)
-            {
-                setColors(getBaseGeometry()->getColors());
-            }
-            if(getBaseGeometry()->getSecondaryColors() != NULL)
-            {
-                setSecondaryColors(getBaseGeometry()->getSecondaryColors());
-            }
-            if(getBaseGeometry()->getTexCoords() != NULL)
-            {
-                setTexCoords(getBaseGeometry()->getTexCoords());
-            }
-            if(getBaseGeometry()->getTexCoords1() != NULL)
-            {
-                setTexCoords1(getBaseGeometry()->getTexCoords1());
-            }
-            if(getBaseGeometry()->getTexCoords2() != NULL)
-            {
-                setTexCoords2(getBaseGeometry()->getTexCoords2());
-            }
-            if(getBaseGeometry()->getTexCoords3() != NULL)
-            {
-                setTexCoords3(getBaseGeometry()->getTexCoords3());
-            }
-            if(getBaseGeometry()->getTexCoords4() != NULL)
-            {
-                setTexCoords4(getBaseGeometry()->getTexCoords4());
-            }
-            if(getBaseGeometry()->getTexCoords5() != NULL)
-            {
-                setTexCoords5(getBaseGeometry()->getTexCoords5());
-            }
-            if(getBaseGeometry()->getTexCoords6() != NULL)
-            {
-                setTexCoords6(getBaseGeometry()->getTexCoords6());
-            }
-            if(getBaseGeometry()->getTexCoords7() != NULL)
-            {
-                setTexCoords7(getBaseGeometry()->getTexCoords7());
+                GeoIntegralPropertyUnrecPtr Prop = dynamic_pointer_cast<GeoIntegralProperty>(getBaseGeometry()->getLengths()->clone());
+                setLengths(Prop);
             }
             if(getBaseGeometry()->getIndices() != NULL)
             {
-                setIndices(getBaseGeometry()->getIndices());
+                GeoIntegralPropertyUnrecPtr Prop = dynamic_pointer_cast<GeoIntegralProperty>(getBaseGeometry()->getIndices()->clone());
+                setIndices(Prop);
+            }
+            for(UInt16 i(0) ; i<Geometry::LastIndex ; ++i)
+            {
+                if(getBaseGeometry()->getProperty(i) != NULL)
+                {
+                    GeoVectorPropertyUnrecPtr Prop = dynamic_pointer_cast<GeoVectorProperty>(getBaseGeometry()->getProperty(i)->clone());
+                    setProperty(Prop, i);
+                }
+                else
+                {
+                    setProperty(NULL, i);
+                }
             }
             setMaterial(getBaseGeometry()->getMaterial());
         }
@@ -392,18 +377,10 @@ void MorphGeometry::changed(ConstFieldMaskArg whichField,
         {
             setTypes(NULL);
             setLengths(NULL);
-            setPositions(NULL);
-            setNormals(NULL);
-            setColors(NULL);
-            setSecondaryColors(NULL);
-            setTexCoords(NULL);
-            setTexCoords1(NULL);
-            setTexCoords2(NULL);
-            setTexCoords3(NULL);
-            setTexCoords4(NULL);
-            setTexCoords5(NULL);
-            setTexCoords6(NULL);
-            setTexCoords7(NULL);
+            for(UInt16 i(0) ; i<Geometry::LastIndex ; ++i)
+            {
+                setProperty(NULL, i);
+            }
             setIndices(NULL);
             setMaterial(NULL);
         }

@@ -36,6 +36,7 @@
 #include "OSGMorphGeometry.h"
 #include "OSGFieldAnimation.h"
 #include "OSGAnimationGroup.h"
+#include "OSGGeoFunctions.h"
 
 // Activate the OpenSG namespace
 // This is not strictly necessary, you can also prefix all OpenSG symbols
@@ -129,6 +130,11 @@ int main(int argc, char **argv)
         TheMorphGeometry->addMorphTarget(Target0TorusGeometry, 0.0f);
         TheMorphGeometry->addMorphTarget(Target1TorusGeometry, 0.0f);
         TheMorphGeometry->addMorphTarget(Target2TorusGeometry, 0.0f);
+        TheMorphGeometry->setBlendingMethod(MorphGeometry::Normalized);
+
+        TheMorphGeometry->editMFMorphProperties()->clear();
+        TheMorphGeometry->editMFMorphProperties()->push_back(Geometry::PositionsIndex);
+        TheMorphGeometry->editMFMorphProperties()->push_back(Geometry::NormalsIndex);
 
         NodeRefPtr TorusGeometryNode = Node::create();
         TorusGeometryNode->setCore(TheMorphGeometry);

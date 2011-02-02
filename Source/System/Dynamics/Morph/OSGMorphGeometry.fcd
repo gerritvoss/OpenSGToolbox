@@ -23,7 +23,7 @@
     of the morph targets&apos; vertices elements must have the same structure. The
     combination of the morph targets can interpolate the data of any of the vertex attributes of the base and target meshes.
 
-    OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, and a set of vertex properties to interpolate.
+    OSG::Morph is specified as a base mesh, a set of other meshes, a set of weights, a method for combining them, and a set of vertex properties to interpolate.
     By default only the Positions attribute is interpolated.  You can add or remove vertex attributes to interpolate by changing the 
     MorphProperties field.  The MorphProperteis field uses the vertex attributes defined in OSG::Geometry.
 	<Field
@@ -62,6 +62,16 @@
 		cardinality="multi"
 		visibility="external"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="BlendingMethod"
+		type="UInt16"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="MorphGeometry::Normalized"
 	>
 	</Field>
 </FieldContainer>

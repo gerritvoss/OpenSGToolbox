@@ -106,6 +106,31 @@ void MorphGeometryBase::setInternalWeights(GeoVectorProperty * const value)
 
     _sfInternalWeights.setValue(value);
 }
+//! Get the value of the MorphGeometry::_sfBlendingMethod field.
+
+inline
+UInt16 &MorphGeometryBase::editBlendingMethod(void)
+{
+    editSField(BlendingMethodFieldMask);
+
+    return _sfBlendingMethod.getValue();
+}
+
+//! Get the value of the MorphGeometry::_sfBlendingMethod field.
+inline
+      UInt16  MorphGeometryBase::getBlendingMethod(void) const
+{
+    return _sfBlendingMethod.getValue();
+}
+
+//! Set the value of the MorphGeometry::_sfBlendingMethod field.
+inline
+void MorphGeometryBase::setBlendingMethod(const UInt16 value)
+{
+    editSField(BlendingMethodFieldMask);
+
+    _sfBlendingMethod.setValue(value);
+}
 
 //! Get the value of the \a index element the MorphGeometry::_mfInternalTargetGeometries field.
 inline
@@ -158,6 +183,9 @@ void MorphGeometryBase::execSync (      MorphGeometryBase *pFrom,
                                 syncMode,
                                 uiSyncInfo,
                                 oOffsets);
+
+    if(FieldBits::NoField != (BlendingMethodFieldMask & whichField))
+        _sfBlendingMethod.syncWith(pFrom->_sfBlendingMethod);
 }
 #endif
 

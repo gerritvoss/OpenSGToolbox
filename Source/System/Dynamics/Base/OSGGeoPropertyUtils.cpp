@@ -33,52 +33,44 @@ void zeroGeoProperty(GeoVectorProperty* GeoProp)
     }
 }
 
-void morphGeoProperty(GeoVectorProperty* BaseGeoProp,
-                      GeoVectorProperty* TargetGeoProp,
+void morphGeoProperty(GeoVectorProperty* TargetGeoProp,
                       GeoVectorProperty* ResultGeoProp,
                       Real32 Weight)
 {
     switch(ResultGeoProp->getFormat())
     {
         case GL_UNSIGNED_BYTE:
-            morphGeoPropertyTmpl<GLubyte>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLubyte>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
         case GL_BYTE:
-            morphGeoPropertyTmpl<GLbyte>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLbyte>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
         case GL_UNSIGNED_SHORT:
-            morphGeoPropertyTmpl<GLushort>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLushort>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
         case GL_SHORT:
-            morphGeoPropertyTmpl<GLshort>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLshort>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
         case GL_FLOAT:
-            morphGeoPropertyTmpl<GLfloat>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLfloat>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;
         //case GL_FIXED:
-            //morphGeoPropertyTmpl<GLfixed>(BaseGeoProp,
-                                   //TargetGeoProp,
+            //morphGeoPropertyTmpl<GLfixed>(TargetGeoProp,
                                    //ResultGeoProp,
                                    //Weight);
             //break;
         case GL_DOUBLE:
-            morphGeoPropertyTmpl<GLdouble>(BaseGeoProp,
-                                   TargetGeoProp,
+            morphGeoPropertyTmpl<GLdouble>(TargetGeoProp,
                                    ResultGeoProp,
                                    Weight);
             break;

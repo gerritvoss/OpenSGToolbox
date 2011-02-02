@@ -61,6 +61,12 @@ class OSG_TBANIMATION_DLLMAPPING MorphGeometry : public MorphGeometryBase
     typedef MorphGeometryBase Inherited;
     typedef MorphGeometry     Self;
 
+    enum BlendMethods
+    {
+        Relative   = 0,
+        Normalized = 1
+    };
+
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
