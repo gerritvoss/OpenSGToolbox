@@ -1,0 +1,12 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01SimpleScript.cpp  Example
+   \example 02LuaConsole.cpp  Example
+   \example 03LuaDebugger.cpp  Example
+   \example 04LuaDebugWithParticleSystem.cpp  Example
+   \example 05LuaActivity.cpp  Example
+   \example 06ToolboxBindings.cpp  Example
+ */

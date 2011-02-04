@@ -71,7 +71,15 @@ CONFIGURE_FILE("${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}Def.cpp.in"
 OSG_ADD_DIRECTORY("${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}")
 
 ##############################################################################
+# setup documentation
+##############################################################################
+SET(OSG_${PROJECT_NAME}_DOXY_EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Octree)
+
+SET(OSG_${PROJECT_NAME}_DOXY_EXTERNAL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/Include/${PROJECT_NAME}.include)
+
+##############################################################################
 # setup build
 ##############################################################################
 
 OSG_SETUP_PROJECT("OSG_COMPILECONTRIBOCTREELIB")
+

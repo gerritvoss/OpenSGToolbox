@@ -1,0 +1,10 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01NativeWindow.cpp  Example
+   \example 02FCFileTypeIO.cpp  Example
+   \example 03ColladaImport.cpp  Example
+   \example 04CgFXMaterial.cpp  Example
+ */

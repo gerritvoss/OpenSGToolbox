@@ -76,3 +76,10 @@ OSG_ADD_DIRECTORY("${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}")
 ##############################################################################
 
 OSG_SETUP_PROJECT("OSG_COMPILETBFILEIOLIB")
+
+##############################################################################
+# setup documentation
+##############################################################################
+SET(OSG_${PROJECT_NAME}_DOXY_EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../Examples/Tutorial/Native)
+
+SET(OSG_${PROJECT_NAME}_DOXY_EXTERNAL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../Doc/Include/${PROJECT_NAME}.include)

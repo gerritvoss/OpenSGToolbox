@@ -1,0 +1,10 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01AStarPathing.cpp  Example
+   \example 02AnimatedPathing.cpp  Example
+   \example 03MultiplePaths.cpp  Example
+   \example 04AStarHeuristics.cpp  Example
+ */

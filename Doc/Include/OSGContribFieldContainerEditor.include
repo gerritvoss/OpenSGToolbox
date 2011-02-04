@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/FieldContainerEditorMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/FieldContainerEditor/FieldContainerEditor.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/FieldContainerEditor/FieldContainerEditorTutorials.dox

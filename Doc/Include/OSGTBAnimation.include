@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Doc/AnimationMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Source/System/Dynamics/Animation.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Examples/Tutorial/Animation/AnimationTutorials.dox

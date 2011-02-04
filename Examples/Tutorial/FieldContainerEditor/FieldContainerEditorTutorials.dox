@@ -1,0 +1,9 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01ChangeFieldCommands.cpp  Example
+   \example 02GenericFieldEditor.cpp  Example
+   \example 03GenericFieldContainerEditor.cpp  Example
+ */

@@ -14,4 +14,6 @@
 15LoadXMLAnimation
 16LoadXMLSkeleton
 17LoadXMLSkeletonAnimation
+18FileAnimation
 23BlendXMLAnimations
+Makefile

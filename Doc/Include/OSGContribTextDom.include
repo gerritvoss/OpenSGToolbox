@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/TextDomMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/TextDom/TextDom.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/TextDom/TextDomTutorials.dox

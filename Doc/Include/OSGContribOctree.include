@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/OctreeMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/Octree/Octree.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Octree/OctreeTutorials.dox

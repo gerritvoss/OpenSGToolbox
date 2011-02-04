@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/BulletMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/Bullet/Bullet.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Bullet/BulletTutorials.dox

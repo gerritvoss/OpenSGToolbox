@@ -1,0 +1,24 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01Animation.cpp Basic #OSG::Animation Example
+   \example 02TransformAnimation.cpp #OSG::TransformAnimator animation example
+   \example 03MFieldAnimation.cpp MultiField animation example
+   \example 04ShaderAnimation.cpp Shader parameter animation example
+   \example 05TextureAnimation.cpp Texture animation example
+   \example 06BlendedAnimation.cpp #OSG::BlendedKeyframeSequenceAnimator animation example
+   \example 07AnimationGroup.cpp #OSG::AnimationGroup animation example
+   \example 08MorphGeometry.cpp #OSG::Morph example
+   \example 09TextureSelecteAnimation.cpp Texture select animation example
+   \example 10SkeletonDrawer.cpp #OSG::SkeletonDrawable example
+   \example 11BoneAnimation.cpp Bone animation example
+   \example 12SkeletonAnimation.cpp Skeleton animation example
+   \example 13MeshBlending.cpp #OSG::SkeletonBlendedGeometry example
+   \example 14SkeletonLoader.cpp #OSG::SkeletonBlendedGeometry loading example
+   \example 15LoadXMLAnimation.cpp Animation loading example
+   \example 16LoadXMLSkeleton.cpp Skeleton loading example
+   \example 17LoadXMLSkeletonAnimation.cpp Skeleton animation loading example
+   \example 18FileAnimation.cpp Animation loading example
+ */

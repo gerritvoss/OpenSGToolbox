@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Doc/TBFileIOMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Source/System/FileIO/TBFileIO.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../Examples/Tutorial/Native/NativeTutorials.dox

@@ -1,0 +1,4 @@
+
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/VideoMainPage.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/Video/Video.dox
+INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Video/VideoTutorials.dox

@@ -1,0 +1,10 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01DefaultSound.cpp  Example
+   \example 02Sound3D.cpp  Example
+   \example 03SoundGroup.cpp  Example
+   \example 04XMLSoundLoading.cpp  Example
+ */

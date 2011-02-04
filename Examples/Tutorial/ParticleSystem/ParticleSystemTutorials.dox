@@ -1,0 +1,43 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01ParticleSystemDrawers.cpp Example
+   \example 02DynamicDistributions.cpp Example using OSG::Distribution
+   \htmlonly
+   <br>
+   <iframe title="YouTube video player" class="youtube-player" type="text/html" width="600" height="450" src="http://www.youtube.com/embed/_rzUxT5mAFc" frameborder="0" allowFullScreen></iframe>
+   <br>
+   \endhtmlonly
+   \example 03RateParticleGenerator.cpp Example
+   \example 04BurstParticleGenerator.cpp Example
+   \example 05aQuadSequenceParticleDrawer.cpp Example
+   \example 05bQuadSequenceParticleDrawer.cpp Example
+   \example 05QuadParticleDrawer.cpp Example
+   \example 06Explosion.cpp Example
+   \example 07AgeSizeParticleAffector.cpp Example
+   \example 08DistanceFadeAffector.cpp Example
+   \example 09DistanceKillParticleAffector.cpp Example
+   \example 10GravityParticleSystemAffector.cpp Example
+   \example 11DistanceAttractRepelParticleAffector.cpp Example
+   \example 12NodeParticleDrawer.cpp Example
+   \example 13GeometryCollision.cpp Example
+   \example 14ParticleSorting.cpp Example
+   \example 15FCFileTypeIO.cpp Example
+   \example 16FullTest.cpp Example
+   \example 17RandomMovement.cpp Example
+   \example 18GravityFieldParticleAffector.cpp Example
+   \example 19UniformFieldParticleAffector.cpp Example
+   \example 20RocketLauncher.cpp Example
+   \example 21Fireworks.cpp Example
+   \example 22VortexParticleAffector.cpp Example
+   \example 23RadialFieldParticleAffector.cpp Example
+   \example 24NewtonFieldParticleAffector.cpp Example
+   \example 25AirFieldParticleAffector.cpp Example
+   \example 26DragParticleAffector.cpp Example
+   \example 27TurbulenceParticleAffector.cpp Example
+   \example 28ConserveVelocityParticleAffector.cpp Example
+   \example 29AgeFadeAffector.cpp Example
+   \example 30SineWaveParticleAffector.cpp Example
+ */

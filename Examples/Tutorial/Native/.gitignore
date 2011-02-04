@@ -1,2 +1,7 @@
 01NativeWindow
 02FCFileTypeIO
+03ColladaImport
+04CgFXMaterial
+Makefile
+TestFieldContainers.xml
+TestFieldContainers2.xml

@@ -1,0 +1,8 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01ParticleTrailGenerator.cpp  Example
+   \example 02ParticleSysParticleTrailGenerator.cpp  Example
+ */

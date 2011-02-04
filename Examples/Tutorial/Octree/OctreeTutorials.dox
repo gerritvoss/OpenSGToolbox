@@ -1,0 +1,7 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01OctreeConstruction.cpp  Example
+ */

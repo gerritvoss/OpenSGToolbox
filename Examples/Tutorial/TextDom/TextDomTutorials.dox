@@ -1,0 +1,13 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01PlainDocumentModel.cpp  Example
+   \example 02StyledDocumentModel.cpp  Example
+   \example 03TextDomArea.cpp  Example
+   \example 04SyntaxHighlighter.cpp  Example
+   \example 05SearchWindow.cpp  Example
+   \example 06Editor.cpp  Example
+   \example 07UIRectTextDomArea.cpp  Example
+ */

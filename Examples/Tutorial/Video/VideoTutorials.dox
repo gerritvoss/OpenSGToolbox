@@ -1,0 +1,8 @@
+#include "OSGConfig.h"
+
+using namespace OSG;
+
+/*! 
+   \example 01PlayVideo.cpp  Example
+   \example 02ShaderVideo.cpp  Example
+ */
