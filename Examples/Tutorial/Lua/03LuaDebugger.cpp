@@ -48,7 +48,6 @@
 
 //Lua Manager
 #include "OSGLuaManager.h"
-#include "OSGToolbox_wrap.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
@@ -94,40 +93,40 @@ void keyTyped(KeyEventDetails* const details)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-   if(details->getKey() == KeyEventDetails::KEY_E && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
-   {
-       clearError();
-       LuaManager::the()->runScript(CodeTextArea->getText());
-   }
+    if(details->getKey() == KeyEventDetails::KEY_E && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        clearError();
+        LuaManager::the()->runScript(CodeTextArea->getText());
+    }
 }
 
 void executeScriptButtonAction(ActionEventDetails* const details)
 {
-   clearError();
-   LuaManager::the()->runScript(CodeTextArea->getText());
+    clearError();
+    LuaManager::the()->runScript(CodeTextArea->getText());
 }
 
 
 void clearScriptButtonAction(ActionEventDetails* const details)
 {
-   CodeTextArea->selectAll();
-   CodeTextArea->deleteSelectedText();
-   clearError();
+    CodeTextArea->selectAll();
+    CodeTextArea->deleteSelectedText();
+    clearError();
 }
 
 
 void saveScriptButtonAction(ActionEventDetails* const details)
 {
-	std::vector<WindowEventProducer::FileDialogFilter> Filters;
+    std::vector<WindowEventProducer::FileDialogFilter> Filters;
     Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
     Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-	BoostPath SavePath = dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->getEventProducer()->saveFileDialog("Save Lua Script to?",
-		Filters,
-		std::string("LuaScript.lua"),
-		BoostPath("Data"),
-		true);
-    
+    BoostPath SavePath = dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->getEventProducer()->saveFileDialog("Save Lua Script to?",
+                                                                                                                                                          Filters,
+                                                                                                                                                          std::string("LuaScript.lua"),
+                                                                                                                                                          BoostPath("Data"),
+                                                                                                                                                          true);
+
     //Try to write the file
     std::ofstream OutFile(SavePath.string().c_str());
     if(OutFile)
@@ -145,15 +144,15 @@ void openScriptButtonAction(ActionEventDetails* const details)
     Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
     Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-	std::vector<BoostPath> FilesToOpen;
-	FilesToOpen = dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->getEventProducer()->openFileDialog("Open Lua Script File.",
-		Filters,
-		BoostPath("Data"),
-		false);
+    std::vector<BoostPath> FilesToOpen;
+    FilesToOpen = dynamic_cast<Component*>(details->getSource())->getParentWindow()->getParentDrawingSurface()->getEventProducer()->openFileDialog("Open Lua Script File.",
+                                                                                                                                                   Filters,
+                                                                                                                                                   BoostPath("Data"),
+                                                                                                                                                   false);
 
     //Try to open the file
     if(FilesToOpen.size() > 0 &&
-        boost::filesystem::exists(FilesToOpen.front()))
+       boost::filesystem::exists(FilesToOpen.front()))
     {
         std::ifstream InFile(FilesToOpen.front().string().c_str());
         if(InFile)
@@ -162,8 +161,8 @@ void openScriptButtonAction(ActionEventDetails* const details)
             InStrStream << InFile.rdbuf();
             InFile.close();
             //Set the Text of the TextArea to the text of the file
-                CodeTextArea->setText(InStrStream.str());
-           clearError();
+            CodeTextArea->setText(InStrStream.str());
+            clearError();
         }
     }
 }
@@ -173,26 +172,26 @@ void handlLuaError(LuaErrorEventDetails* const details)
     std::string ErrorType("");
     switch(details->getStatus())
     {
-    case LUA_ERRSYNTAX:
-        //Syntax Error
-        ErrorType = "Lua Syntax Error";
-        break;
-    case LUA_ERRMEM:
-        //Memory Allocation Error
-        ErrorType = "Lua Memory Allocation Error";
-        break;
-    case LUA_ERRRUN:
-        //Memory Allocation Error
-        ErrorType = "Lua Runtime Error";
-        break;
-    case LUA_ERRERR:
-        //Memory Allocation Error
-        ErrorType = "Lua Error in Error Handler";
-        break;
-    default:
-        //Unknown
-        ErrorType = "Lua Unknown Error";
-        break;
+        case LUA_ERRSYNTAX:
+            //Syntax Error
+            ErrorType = "Lua Syntax Error";
+            break;
+        case LUA_ERRMEM:
+            //Memory Allocation Error
+            ErrorType = "Lua Memory Allocation Error";
+            break;
+        case LUA_ERRRUN:
+            //Memory Allocation Error
+            ErrorType = "Lua Runtime Error";
+            break;
+        case LUA_ERRERR:
+            //Memory Allocation Error
+            ErrorType = "Lua Error in Error Handler";
+            break;
+        default:
+            //Unknown
+            ErrorType = "Lua Unknown Error";
+            break;
     }
     ErrorTextArea->moveCaretToEnd();
     if(ErrorTextArea->getText().size() != 0)
@@ -205,20 +204,19 @@ void handlLuaError(LuaErrorEventDetails* const details)
     InfoTabPanel->setSelectedIndex(1);
 
     //Fill Stack Trace
-    if(details->getStackTraceEnabled() && 
-        (details->getStatus() == LUA_ERRMEM ||
-         details->getStatus() == LUA_ERRERR ||
-         details->getStatus() == LUA_ERRRUN))
+    if(details->getStatus() == LUA_ERRMEM ||
+       details->getStatus() == LUA_ERRERR ||
+       details->getStatus() == LUA_ERRRUN)
     {
         std::stringstream ss;
         ss << "Lua Stack Trace: " << std::endl;
-        
-        MFString::StorageType::const_iterator ListItor(details->getMFStackTrace()->begin());
-        for(; ListItor != details->getMFStackTrace()->end() ; ++ListItor)
-        {
-            ss << "     " << (*ListItor) << std::endl;
-        }
-        StackTraceTextArea->write(ss.str());
+
+        //MFString::StorageType::const_iterator ListItor(details->getMFStackTrace()->begin());
+        //for(; ListItor != details->getMFStackTrace()->end() ; ++ListItor)
+        //{
+        //ss << "     " << (*ListItor) << std::endl;
+        //}
+        //StackTraceTextArea->write(ss.str());
     }
 }
 
@@ -226,10 +224,10 @@ void codeAreaCaretChanged(CaretEventDetails* const details)
 {
     //Update Caret Position Labels
     //Line
-        LineValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretLine()+1));
+    LineValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretLine()+1));
 
     //Column
-        ColumnValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretColumn()+1));
+    ColumnValueLabel->setText(boost::lexical_cast<std::string>(CodeTextArea->getCaretColumn()+1));
 }
 
 #ifdef OSG_WITH_LUA_DEBUGGER
@@ -239,7 +237,7 @@ void handleUpdateTreeEvent(KeyEventDetails* const details,
                            LuaIntrospectionTreeModel* const theModel)
 {
     if(details->getKey() == KeyEventDetails::KEY_R &&
-        details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         theTree->scrollRowToVisible(0);
         theTree->collapsePath(theModel->getRootPath());
@@ -273,7 +271,7 @@ void addIntrospectionTreeTab(TabPanel* const tabPanel)
 
     LabelRefPtr IntrospectionTreeTabLabel = OSG::Label::create();
     IntrospectionTreeTabLabel->setText("Variable Itrospection");
-    
+
     tabPanel->addTab(IntrospectionTreeTabLabel, TreeScrollPanel);
 }
 
@@ -285,9 +283,6 @@ int main(int argc, char **argv)
     osgInit(argc,argv);
 
     {
-        //Toolbox Bindings
-        LuaManager::the()->openLuaBindingLib(getOSGToolboxLuaBindingsLibFunctor());
-
         // Set up Window
         WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
         TutorialWindow->initWindow();
@@ -302,6 +297,14 @@ int main(int argc, char **argv)
 
         TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
+        //Setup the Lua Manager
+
+        BoostPath ModulePath("./Data/");
+        std::string PackagePath = std::string("?;")
+            + (ModulePath / "?.lua" ).file_string() + ";"
+            + (ModulePath / "?" /  "init.lua").file_string();
+        LuaManager::the()->setPackagePath(PackagePath);
+
         // Make Torus Node (creates Torus in background of scene)
         GeometryRefPtr TorusGeometry = makeTorusGeo(.5, 2, 16, 16);
         setName(TorusGeometry,"Torus Geometry");
@@ -310,47 +313,47 @@ int main(int argc, char **argv)
 
         NodeRefPtr TorusGeometryNode = Node::create();
         setName(TorusGeometryNode,"Torus Geometry Node");
-            TorusGeometryNode->setCore(TorusGeometry);
+        TorusGeometryNode->setCore(TorusGeometry);
 
         //Torus Transformation Node
         TransformRefPtr TheTorusNodeTransform = Transform::create();
 
         NodeRefPtr TheTorusTransfromNode = Node::create();
-            TheTorusTransfromNode->setCore(TheTorusNodeTransform);
-            TheTorusTransfromNode->addChild(TorusGeometryNode);
+        TheTorusTransfromNode->setCore(TheTorusNodeTransform);
+        TheTorusTransfromNode->addChild(TorusGeometryNode);
         setName(TheTorusTransfromNode,"Torus Transform Node");
 
         // Make Main Scene Node and add the Torus
         NodeRefPtr scene = OSG::Node::create();
-            scene->setCore(OSG::Group::create());
-            scene->addChild(TheTorusTransfromNode);
+        scene->setCore(OSG::Group::create());
+        scene->addChild(TheTorusTransfromNode);
         setName(scene,"Scene Node");
 
         //Light Beacon Node
         TransformRefPtr TheLightBeaconNodeTransform = Transform::create();
 
         NodeRefPtr TheLightBeaconNode = Node::create();
-            TheLightBeaconNode->setCore(TheLightBeaconNodeTransform);
+        TheLightBeaconNode->setCore(TheLightBeaconNodeTransform);
         setName(TheLightBeaconNode,"Light Beacon Node");
 
 
         //Light Node
         DirectionalLightRefPtr TheLightCore = DirectionalLight::create();
-            TheLightCore->setDirection(Vec3f(1.0,0.0,0.0));
-            TheLightCore->setAmbient(Color4f(1.0,1.0,1.0,1.0));
-            TheLightCore->setDiffuse(Color4f(1.0,1.0,1.0,1.0));
-            TheLightCore->setSpecular(Color4f(1.0,1.0,1.0,1.0));
-            TheLightCore->setBeacon(TheLightBeaconNode);
+        TheLightCore->setDirection(Vec3f(1.0,0.0,0.0));
+        TheLightCore->setAmbient(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setDiffuse(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setSpecular(Color4f(1.0,1.0,1.0,1.0));
+        TheLightCore->setBeacon(TheLightBeaconNode);
 
         NodeRefPtr TheLightNode = Node::create();
-            TheLightNode->setCore(TheLightCore);
-            TheLightNode->addChild(scene);
+        TheLightNode->setCore(TheLightCore);
+        TheLightNode->addChild(scene);
         setName(TheLightNode,"Light Node");
-        
+
         NodeRefPtr RootNode = Node::create();
-            RootNode->setCore(Group::create());
-            RootNode->addChild(TheLightNode);
-            RootNode->addChild(TheLightBeaconNode);
+        RootNode->setCore(Group::create());
+        RootNode->addChild(TheLightNode);
+        RootNode->addChild(TheLightBeaconNode);
         setName(RootNode,"Root Node");
 
         // Create the Graphics
@@ -362,244 +365,244 @@ int main(int argc, char **argv)
 
         //Create the default font
         CodeFont = OSG::UIFont::create();
-            CodeFont->setFamily("Courier New");
-            CodeFont->setSize(21);
-            CodeFont->setGlyphPixelSize(22);
-            CodeFont->setAntiAliasing(false);
+        CodeFont->setFamily("Courier New");
+        CodeFont->setSize(21);
+        CodeFont->setGlyphPixelSize(22);
+        CodeFont->setAntiAliasing(false);
 
         // Create a TextArea component
         CodeTextArea = OSG::TextArea::create();
 
-            CodeTextArea->setPreferredSize(Vec2f(600, 600));
-            CodeTextArea->setText(getCodeText());
-            CodeTextArea->setMinSize(Vec2f(300, 600));
-            CodeTextArea->setFont(CodeFont);
-            CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
+        CodeTextArea->setPreferredSize(Vec2f(600, 600));
+        CodeTextArea->setText(getCodeText());
+        CodeTextArea->setMinSize(Vec2f(300, 600));
+        CodeTextArea->setFont(CodeFont);
+        CodeTextArea->setTextColors(Color4f(0.0,0.0,0.0,1.0));
         setName(CodeTextArea,"Code TextArea");
         CodeTextArea->connectCaretChanged(boost::bind(&codeAreaCaretChanged, _1));
 
         // Create a ScrollPanel
         ScrollPanelRefPtr TextAreaScrollPanel = ScrollPanel::create();
-            TextAreaScrollPanel->setPreferredSize(Vec2f(200,600));
-            TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        TextAreaScrollPanel->setPreferredSize(Vec2f(200,600));
+        TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         // Add the TextArea to the ScrollPanel so it is displayed
-	    TextAreaScrollPanel->setViewComponent(CodeTextArea);
-        
+        TextAreaScrollPanel->setViewComponent(CodeTextArea);
+
         //Create the Error Text Area
         ErrorTextArea = OSG::TextArea::create();
 
-            ErrorTextArea->setPreferredSize(Vec2f(600, 150));
-            ErrorTextArea->setText("");
-            ErrorTextArea->setMinSize(Vec2f(300, 150));
-            ErrorTextArea->setFont(CodeFont);
-            ErrorTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
-            ErrorTextArea->setEditable(false);
+        ErrorTextArea->setPreferredSize(Vec2f(600, 150));
+        ErrorTextArea->setText("");
+        ErrorTextArea->setMinSize(Vec2f(300, 150));
+        ErrorTextArea->setFont(CodeFont);
+        ErrorTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        ErrorTextArea->setEditable(false);
         setName(ErrorTextArea,"Error TextArea");
         LuaManager::the()->connectLuaError(boost::bind(&handlLuaError, _1));
-        
+
         // Create a ScrollPanel
         ScrollPanelRefPtr ErrorAreaScrollPanel = ScrollPanel::create();
-            ErrorAreaScrollPanel->setPreferredSize(Vec2f(200,150));
-            ErrorAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        ErrorAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        ErrorAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         // Add the TextArea to the ScrollPanel so it is displayed
-	    ErrorAreaScrollPanel->setViewComponent(ErrorTextArea);
+        ErrorAreaScrollPanel->setViewComponent(ErrorTextArea);
 
         //Create the StackTrace Text Area
         StackTraceTextArea = OSG::TextArea::create();
 
-            StackTraceTextArea->setPreferredSize(Vec2f(600, 150));
-            StackTraceTextArea->setText("");
-            StackTraceTextArea->setMinSize(Vec2f(300, 150));
-            StackTraceTextArea->setFont(CodeFont);
-            StackTraceTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
-            StackTraceTextArea->setEditable(false);
+        StackTraceTextArea->setPreferredSize(Vec2f(600, 150));
+        StackTraceTextArea->setText("");
+        StackTraceTextArea->setMinSize(Vec2f(300, 150));
+        StackTraceTextArea->setFont(CodeFont);
+        StackTraceTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        StackTraceTextArea->setEditable(false);
         setName(StackTraceTextArea,"Stack Trace TextArea");
-        
+
         // Create a ScrollPanel
         ScrollPanelRefPtr StackTraceAreaScrollPanel = ScrollPanel::create();
-            StackTraceAreaScrollPanel->setPreferredSize(Vec2f(200,150));
-            StackTraceAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        StackTraceAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        StackTraceAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         // Add the TextArea to the ScrollPanel so it is displayed
-	    StackTraceAreaScrollPanel->setViewComponent(StackTraceTextArea);
-        
+        StackTraceAreaScrollPanel->setViewComponent(StackTraceTextArea);
+
         //Create the Message Text Area
         MessageTextArea = OSG::TextArea::create();
 
-            MessageTextArea->setPreferredSize(Vec2f(600, 150));
-            MessageTextArea->setText("");
-            MessageTextArea->setMinSize(Vec2f(300, 150));
-            MessageTextArea->setFont(CodeFont);
-            MessageTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
-            MessageTextArea->setEditable(false);
+        MessageTextArea->setPreferredSize(Vec2f(600, 150));
+        MessageTextArea->setText("");
+        MessageTextArea->setMinSize(Vec2f(300, 150));
+        MessageTextArea->setFont(CodeFont);
+        MessageTextArea->setTextColors(Color4f(0.2,0.0,0.0,1.0));
+        MessageTextArea->setEditable(false);
         setName(MessageTextArea,"Message TextArea");
-        
+
         // Create a ScrollPanel
         ScrollPanelRefPtr MessageAreaScrollPanel = ScrollPanel::create();
-            MessageAreaScrollPanel->setPreferredSize(Vec2f(200,150));
-            MessageAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
+        MessageAreaScrollPanel->setPreferredSize(Vec2f(200,150));
+        MessageAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         // Add the TextArea to the ScrollPanel so it is displayed
-	    MessageAreaScrollPanel->setViewComponent(MessageTextArea);
+        MessageAreaScrollPanel->setViewComponent(MessageTextArea);
 
         //Tab Panel
         LabelRefPtr MessageTabLabel = OSG::Label::create();
-            MessageTabLabel->setText("Output");
+        MessageTabLabel->setText("Output");
 
         LabelRefPtr ErrorTabLabel = OSG::Label::create();
-            ErrorTabLabel->setText("Error");
+        ErrorTabLabel->setText("Error");
 
         LabelRefPtr StackTraceTabLabel = OSG::Label::create();
-            StackTraceTabLabel->setText("Stack");
+        StackTraceTabLabel->setText("Stack");
 
-        
+
 
         InfoTabPanel = OSG::TabPanel::create();
-            InfoTabPanel->addTab(MessageTabLabel, MessageAreaScrollPanel);
-            InfoTabPanel->addTab(ErrorTabLabel, ErrorAreaScrollPanel);
-            InfoTabPanel->addTab(StackTraceTabLabel, StackTraceAreaScrollPanel);
+        InfoTabPanel->addTab(MessageTabLabel, MessageAreaScrollPanel);
+        InfoTabPanel->addTab(ErrorTabLabel, ErrorAreaScrollPanel);
+        InfoTabPanel->addTab(StackTraceTabLabel, StackTraceAreaScrollPanel);
 #ifdef OSG_WITH_LUA_DEBUGGER
-            addIntrospectionTreeTab(InfoTabPanel);
+        addIntrospectionTreeTab(InfoTabPanel);
 #endif
-            InfoTabPanel->setTabAlignment(0.5f);
-            InfoTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+        InfoTabPanel->setTabAlignment(0.5f);
+        InfoTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
         InfoTabPanel->setSelectedIndex(0);
         setName(InfoTabPanel,"Info Tab Panel");
 
 
         //Split Panel
         BorderLayoutConstraintsRefPtr SplitPanelConstraints = BorderLayoutConstraints::create();
-            SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+        SplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 
         SplitPanelRefPtr MainSplitPanel = OSG::SplitPanel::create();
-            MainSplitPanel->setMinComponent(TextAreaScrollPanel);
-            MainSplitPanel->setMaxComponent(InfoTabPanel);
-            MainSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
-            MainSplitPanel->setDividerPosition(0.7);
-            // location from the left/top
-            MainSplitPanel->setDividerSize(4);
-            MainSplitPanel->setMaxDividerPosition(.8);
-            MainSplitPanel->setMinDividerPosition(.2);
-            MainSplitPanel->setConstraints(SplitPanelConstraints);
-        
+        MainSplitPanel->setMinComponent(TextAreaScrollPanel);
+        MainSplitPanel->setMaxComponent(InfoTabPanel);
+        MainSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
+        MainSplitPanel->setDividerPosition(0.7);
+        // location from the left/top
+        MainSplitPanel->setDividerSize(4);
+        MainSplitPanel->setMaxDividerPosition(.8);
+        MainSplitPanel->setMinDividerPosition(.2);
+        MainSplitPanel->setConstraints(SplitPanelConstraints);
+
 
         //Execute Script Button
         ButtonRefPtr ExecuteButton = Button::create();
-            ExecuteButton->setText("Execute");
+        ExecuteButton->setText("Execute");
         setName(ExecuteButton,"Execute Button");
         ExecuteButton->connectActionPerformed(boost::bind(&executeScriptButtonAction, _1));
-        
+
         ButtonRefPtr OpenButton = Button::create();
-            OpenButton->setText("Open");
+        OpenButton->setText("Open");
         setName(OpenButton,"Open Button");
         OpenButton->connectActionPerformed(boost::bind(&openScriptButtonAction, _1));
-        
+
         ButtonRefPtr SaveButton = Button::create();
-            SaveButton->setText("Save");
+        SaveButton->setText("Save");
         setName(SaveButton,"Save Button");
         SaveButton->connectActionPerformed(boost::bind(&saveScriptButtonAction, _1));
-        
+
         ButtonRefPtr ClearButton = Button::create();
-            ClearButton->setText("Clear");
+        ClearButton->setText("Clear");
         setName(ClearButton,"Clear Button");
         ClearButton->connectActionPerformed(boost::bind(&clearScriptButtonAction, _1));
 
         //Make the Button Panel
         FlowLayoutRefPtr ButtonPanelLayout = OSG::FlowLayout::create();
-            ButtonPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
+        ButtonPanelLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
 
         BorderLayoutConstraintsRefPtr ButtonPanelConstraints = BorderLayoutConstraints::create();
-            ButtonPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
+        ButtonPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_NORTH);
         PanelRefPtr ButtonPanel = Panel::createEmpty();
-           ButtonPanel->setPreferredSize(Vec2f(400.0f, 50.0f));
-           ButtonPanel->pushToChildren(ExecuteButton);
-           ButtonPanel->pushToChildren(OpenButton);
-           ButtonPanel->pushToChildren(SaveButton);
-           ButtonPanel->pushToChildren(ClearButton);
-           ButtonPanel->setLayout(ButtonPanelLayout);
-           ButtonPanel->setConstraints(ButtonPanelConstraints);
+        ButtonPanel->setPreferredSize(Vec2f(400.0f, 50.0f));
+        ButtonPanel->pushToChildren(ExecuteButton);
+        ButtonPanel->pushToChildren(OpenButton);
+        ButtonPanel->pushToChildren(SaveButton);
+        ButtonPanel->pushToChildren(ClearButton);
+        ButtonPanel->setLayout(ButtonPanelLayout);
+        ButtonPanel->setConstraints(ButtonPanelConstraints);
         setName(ButtonPanel,"Button Panel");
 
         //Code Area Info
         LabelRefPtr LineLabel = Label::create();
-            LineLabel->setText("Line:");
-            LineLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
-            LineLabel->setAlignment(Vec2f(1.0f, 0.5f));
+        LineLabel->setText("Line:");
+        LineLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+        LineLabel->setAlignment(Vec2f(1.0f, 0.5f));
 
         LineValueLabel = Label::create();
-            LineValueLabel->setText("");
-            LineValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+        LineValueLabel->setText("");
+        LineValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
 
         LabelRefPtr ColumnLabel = Label::create();
-            ColumnLabel->setText("Column:");
-            ColumnLabel->setPreferredSize(Vec2f(55.0f, 30.0f));
-            ColumnLabel->setAlignment(Vec2f(1.0f, 0.5f));
+        ColumnLabel->setText("Column:");
+        ColumnLabel->setPreferredSize(Vec2f(55.0f, 30.0f));
+        ColumnLabel->setAlignment(Vec2f(1.0f, 0.5f));
 
         ColumnValueLabel = Label::create();
-            ColumnValueLabel->setText("");
-            ColumnValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
+        ColumnValueLabel->setText("");
+        ColumnValueLabel->setPreferredSize(Vec2f(40.0f, 30.0f));
         //TextArea Info Panel
         BorderLayoutConstraintsRefPtr CodeAreaInfoPanelConstraints = BorderLayoutConstraints::create();
-            CodeAreaInfoPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
+        CodeAreaInfoPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_SOUTH);
 
         PanelRefPtr CodeAreaInfoPanel = Panel::create();
 
         SpringLayoutRefPtr CodeAreaInfoLayout = OSG::SpringLayout::create();
 
-	    //ColumnValueLabel
+        //ColumnValueLabel
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ColumnValueLabel, 0, SpringLayoutConstraints::EAST_EDGE, CodeAreaInfoPanel);
 
-	    //ColumnLabel    
+        //ColumnLabel    
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, ColumnLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, ColumnLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, ColumnLabel, -1, SpringLayoutConstraints::WEST_EDGE, ColumnValueLabel);
 
-	    //LineValueLabel    
+        //LineValueLabel    
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, LineValueLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, LineValueLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, LineValueLabel, -1, SpringLayoutConstraints::WEST_EDGE, ColumnLabel);
 
-	    //LineLabel    
+        //LineLabel    
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, LineLabel, 0, SpringLayoutConstraints::NORTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, LineLabel, 0, SpringLayoutConstraints::SOUTH_EDGE, CodeAreaInfoPanel);
         CodeAreaInfoLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, LineLabel, -1, SpringLayoutConstraints::WEST_EDGE, LineValueLabel);
 
-       CodeAreaInfoPanel->setPreferredSize(Vec2f(400.0f, 22.0f));
-       CodeAreaInfoPanel->pushToChildren(LineLabel);
-       CodeAreaInfoPanel->pushToChildren(LineValueLabel);
-       CodeAreaInfoPanel->pushToChildren(ColumnLabel);
-       CodeAreaInfoPanel->pushToChildren(ColumnValueLabel);
-       CodeAreaInfoPanel->setConstraints(CodeAreaInfoPanelConstraints);
-       CodeAreaInfoPanel->setBorders(NULL);
-       CodeAreaInfoPanel->setLayout(CodeAreaInfoLayout);
+        CodeAreaInfoPanel->setPreferredSize(Vec2f(400.0f, 22.0f));
+        CodeAreaInfoPanel->pushToChildren(LineLabel);
+        CodeAreaInfoPanel->pushToChildren(LineValueLabel);
+        CodeAreaInfoPanel->pushToChildren(ColumnLabel);
+        CodeAreaInfoPanel->pushToChildren(ColumnValueLabel);
+        CodeAreaInfoPanel->setConstraints(CodeAreaInfoPanelConstraints);
+        CodeAreaInfoPanel->setBorders(NULL);
+        CodeAreaInfoPanel->setLayout(CodeAreaInfoLayout);
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
         ColorLayerRefPtr MainInternalWindowBackground = OSG::ColorLayer::create();
-            MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
+        MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
         BorderLayoutRefPtr MainInternalWindowLayout = BorderLayout::create();
 
         InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
-       MainInternalWindow->pushToChildren(ButtonPanel);
-       MainInternalWindow->pushToChildren(MainSplitPanel);
-       MainInternalWindow->pushToChildren(CodeAreaInfoPanel);
-       MainInternalWindow->setLayout(MainInternalWindowLayout);
-       MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
-       MainInternalWindow->setTitle("Lua Debugger");
+        MainInternalWindow->pushToChildren(ButtonPanel);
+        MainInternalWindow->pushToChildren(MainSplitPanel);
+        MainInternalWindow->pushToChildren(CodeAreaInfoPanel);
+        MainInternalWindow->setLayout(MainInternalWindowLayout);
+        MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
+        MainInternalWindow->setTitle("Lua Debugger");
         setName(MainInternalWindow,"Internal Window");
 
         // Create the Drawing Surface
         UIDrawingSurfaceRefPtr TutorialDrawingSurface = UIDrawingSurface::create();
-            TutorialDrawingSurface->setGraphics(TutorialGraphics);
-            TutorialDrawingSurface->setEventProducer(TutorialWindow);
-    	
-	    TutorialDrawingSurface->openWindow(MainInternalWindow);
+        TutorialDrawingSurface->setGraphics(TutorialGraphics);
+        TutorialDrawingSurface->setEventProducer(TutorialWindow);
+
+        TutorialDrawingSurface->openWindow(MainInternalWindow);
 
         // Create the UI Foreground Object
         UIForegroundRefPtr TutorialUIForeground = OSG::UIForeground::create();
 
-            TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+        TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
 
         //Scene Background
         GradientBackgroundRefPtr SceneBackground = GradientBackground::create();
@@ -627,8 +630,8 @@ int main(int argc, char **argv)
                                    WinSize,
                                    "03LuaDebugger");
 
-       MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-       MainInternalWindow->setPreferredSize(WinSize * 0.85);
+        MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setPreferredSize(WinSize * 0.85);
 
         //Enter main Loop
         TutorialWindow->mainLoop();
@@ -656,6 +659,6 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr)
 
 std::string getCodeText(void)
 {
-	return "print(\"Hello World\")";
+    return "print(\"Hello World\")";
 }
 

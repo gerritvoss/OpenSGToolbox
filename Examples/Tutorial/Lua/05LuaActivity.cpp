@@ -27,35 +27,18 @@
 // Activate the OpenSG namespace
 OSG_USING_NAMESPACE
 
-// The SimpleSceneManager to manage simple applications
-SimpleSceneManager *mgr;
-WindowEventProducerRefPtr TutorialWindow;
-
 // Forward declaration so we can have the interesting stuff upfront
-void display(void);
-void reshape(Vec2f Size);
+void display(SimpleSceneManager *mgr);
+void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-// Create a class to allow for the use of the Ctrl+q
-class TutorialKeyListener : public KeyListener
+void keyPressed(KeyEventDetails* const details)
 {
-public:
-
-   virtual void keyPressed(const KeyEventUnrecPtr e)
-   {
-       if(e->getKey() == KeyEvent::KEY_Q && e->getModifiers() & KeyEvent::KEY_MODIFIER_COMMAND)
-       {
-            TutorialWindow->closeWindow();
-       }
-   }
-
-   virtual void keyReleased(const KeyEventUnrecPtr e)
-   {
-   }
-
-   virtual void keyTyped(const KeyEventUnrecPtr e)
-   {
-   }
-};
+    if(details->getKey() == KeyEventDetails::KEY_Q &&
+       details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+    }
+}
 
 int main(int argc, char **argv)
 {
@@ -64,72 +47,85 @@ int main(int argc, char **argv)
 
     {
         // Set up Window
-        TutorialWindow = createNativeWindow();
+        WindowEventProducerRecPtr TutorialWindow = createNativeWindow();
         TutorialWindow->initWindow();
 
-        TutorialWindow->setDisplayCallback(display);
-        TutorialWindow->setReshapeCallback(reshape);
+        // Create the SimpleSceneManager helper
+        SimpleSceneManager sceneManager;
+        TutorialWindow->setDisplayCallback(boost::bind(display, &sceneManager));
+        TutorialWindow->setReshapeCallback(boost::bind(reshape, _1, &sceneManager));
 
-        TutorialKeyListener TheKeyListener;
-        TutorialWindow->addKeyListener(&TheKeyListener);
-        
+        // Tell the Manager what to manage
+        sceneManager.setWindow(TutorialWindow);
+
+        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
+
         //Make the Lua Activity
-        LuaActivityRefPtr TheLuaActivity = LuaActivity::create();
-        std::string LuaCode = 
-            "eventFuncTable = {}\n"
+        std::string LuaButtonCode = 
+            "if(not eventFuncTable) then eventFuncTable = {} end\n"
             "\n"
-            "function eventFuncTable.handleEvent(Event, EventID)\n"
+            "function eventFuncTable.handleButtonEvent(Event, EventID)\n"
             "    print(\"Source:  \", Event:getFieldValue(\"Source\"))\n"
             "    print(\"TimeStamp:  \", Event:getFieldValue(\"TimeStamp\"))\n"
             "    print(\"Button:  \", Event:getFieldValue(\"Button\"))\n"
             "    print(\"Position:  \", Event:getFieldValue(\"Location\"):x(), \", \", Event:getFieldValue(\"Location\"):y())\n"
             "end";
-        TheLuaActivity->setCode(LuaCode);
-        TheLuaActivity->setEntryFunction("eventFuncTable.handleEvent");
 
-        TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::MousePressedMethodId);
-        //TutorialWindow->attachActivity(TheLuaActivity, WindowEventProducer::KeyTypedMethodId);
+        std::string LuaKeyCode = 
+            "if(not eventFuncTable) then eventFuncTable = {} end\n"
+            "\n"
+            "function eventFuncTable.handleKeyEvent(Event, EventID)\n"
+            "    print(\"Source:  \", Event:getFieldValue(\"Source\"))\n"
+            "    print(\"TimeStamp:  \", Event:getFieldValue(\"TimeStamp\"))\n"
+            "    print(\"Key:  \", Event:getFieldValue(\"Key\"))\n"
+            "end";
+        LuaActivityRecPtr TheLuaButtonActivity = LuaActivity::create();
+        TheLuaButtonActivity->setCode(LuaButtonCode);
+        TheLuaButtonActivity->setEntryFunction("eventFuncTable.handleButtonEvent");
+
+        LuaActivityRecPtr TheLuaKeyActivity = LuaActivity::create();
+        TheLuaKeyActivity->setCode(LuaKeyCode);
+        TheLuaKeyActivity->setEntryFunction("eventFuncTable.handleKeyEvent");
+
+        TutorialWindow->attachActivity(WindowEventProducer::MousePressedEventId, TheLuaButtonActivity);
+        TutorialWindow->attachActivity(WindowEventProducer::KeyTypedEventId, TheLuaKeyActivity);
 
         // Make Torus Node (creates Torus in background of scene)
-        NodeRefPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
+        NodeRecPtr TorusGeometryNode = makeTorus(.5, 2, 16, 16);
         setName(TorusGeometryNode,"TorusGeometryNode");
 
         // Make Main Scene Node and add the Torus
-        NodeRefPtr scene = OSG::Node::create();
-            scene->setCore(OSG::Group::create());
-            scene->addChild(TorusGeometryNode);
+        NodeRecPtr scene = Node::create();
+        scene->setCore(Group::create());
+        scene->addChild(TorusGeometryNode);
         setName(scene,"Scene Node");
 
         //Scene Background
-        GradientBackgroundRefPtr SceneBackground = GradientBackground::create();
+        GradientBackgroundRecPtr SceneBackground = GradientBackground::create();
         SceneBackground->addLine(Color3f(0.0,0.0,0.0),0.0);
         setName(SceneBackground,"Scene Background");
 
-        // Create the SimpleSceneManager helper
-        mgr = new SimpleSceneManager;
 
         // Tell the Manager what to manage
-        mgr->setWindow(TutorialWindow);
-        mgr->setRoot(scene);
+        sceneManager.setRoot(scene);
 
         // Add the UI Foreground Object to the Scene
-        ViewportRefPtr TutorialViewport = mgr->getWindow()->getPort(0);
-            TutorialViewport->setBackground(SceneBackground);
+        ViewportRecPtr TutorialViewport = sceneManager.getWindow()->getPort(0);
+        TutorialViewport->setBackground(SceneBackground);
 
         // Show the whole Scene
-        mgr->showAll();
+        sceneManager.showAll();
 
 
         //Open Window
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
-                WinSize,
-                "05LuaActivity");
+                                   WinSize,
+                                   "05LuaActivity");
 
         //Enter main Loop
         TutorialWindow->mainLoop();
-
         TutorialWindow = NULL;
     }
 
@@ -142,13 +138,13 @@ int main(int argc, char **argv)
 
 
 // Redraw the window
-void display(void)
+void display(SimpleSceneManager *mgr)
 {
     mgr->redraw();
 }
 
 // React to size changes
-void reshape(Vec2f Size)
+void reshape(Vec2f Size, SimpleSceneManager *mgr)
 {
     mgr->resize(Size.x(), Size.y());
 }
