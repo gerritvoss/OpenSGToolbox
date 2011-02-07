@@ -125,15 +125,15 @@ void TextArea::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 				    }
 			    }
 			    std::string drawnText = getWrappedLine(i);
-			    Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
-			    TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity()*Opacity);//draw before selection text
-			    TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
-				    getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
-				    getSelectionBoxColor(), getOpacity()*Opacity);
-			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
-				    drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
-			    TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
-				    drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity()*Opacity);
+                Pnt2f offset = Pnt2f(_LineContents[i]._LeftHorizontalOffset, _LineContents[i]._VerticalOffset);
+                TheGraphics->drawText(offset,drawnText.substr(0, StartSelection), getFont(), TextColor, getOpacity()*Opacity);//draw before selection text
+                TheGraphics->drawRect(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selection rect
+                                      getFont()->getBounds(drawnText.substr(0, EndSelection))+Vec2f(offset),
+                                      getSelectionBoxColor(), getOpacity()*Opacity);
+                TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, StartSelection)).x(), 0), //draw selected text
+                                      drawnText.substr(StartSelection, EndSelection-StartSelection), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
+                TheGraphics->drawText(offset+Vec2f(getFont()->getBounds(drawnText.substr(0, EndSelection)).x(), 0), //draw after selection text
+                                      drawnText.substr(EndSelection, drawnText.size()-EndSelection), getFont(), TextColor, getOpacity()*Opacity);
 		    }
         }
 
@@ -144,9 +144,9 @@ void TextArea::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 		{
 			Pnt2f TempTopLeft, TempBottomRight;
 			getFont()->getBounds(getWrappedLine(i).substr(0, getCaretPosition()-_LineContents[i]._StartPosition), TempTopLeft, TempBottomRight);
-			TheGraphics->drawLine(Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
-				Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
-				.5, TextColor, getOpacity()*Opacity);
+            TheGraphics->drawLine(Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset),
+                                  Pnt2f(_LineContents[i]._LeftHorizontalOffset+TempBottomRight.x(), _LineContents[i]._VerticalOffset+TempBottomRight.y()),
+                                  .5, TextColor, getOpacity()*Opacity);
 		}
 	}
 }
@@ -363,6 +363,59 @@ UInt32 TextArea::numLines(void) const
     return _LineContents.size();
 }
 
+const std::string TextArea::getWordAtLocation(Pnt2f location) const
+{
+    std::string Result("");
+    Int32 Position = findTextPosition(DrawingSurfaceToComponent(location, this));
+    if(!isPunctuationChar(getText()[Position]))
+    {
+        Int32 BeginWord = 0;
+        Int32 EndWord = getText().size();
+        for(Int32 i = Position; i < getText().size(); i++)
+        {
+            if(!isWordChar(getText()[i]))
+            {
+                EndWord = i;
+                break;
+            }
+        }
+        for(Int32 i = Position; i >= 0; i--)
+        {
+            if(!isWordChar(getText()[i]))
+            {
+                BeginWord = i + 1;
+                break;
+            }
+        }
+        Result = getText().substr(BeginWord,EndWord - BeginWord);
+    }
+    return Result;
+}
+
+Int32 TextArea::getLineAtLocation(Pnt2f location) const
+{
+    Pnt2f LocalLocation(DrawingSurfaceToComponent(location, this));
+	//find row it belongs in
+	Int32 row(-1);
+	for(Int32 i = 0; i < _LineContents.size(); ++i)
+	{
+		if(LocalLocation.y() >= _LineContents[i]._VerticalOffset &&
+           LocalLocation.y() < _LineContents[i]._VerticalOffset + getLineHeight())
+		{
+            row = i;
+            break;
+		}
+	}
+    return row;
+}
+
+Real32 TextArea::getLineHeight(void) const
+{
+    Pnt2f TempTopLeft, TempBottomRight;
+    getFont()->getBounds("|", TempTopLeft, TempBottomRight);
+    return TempBottomRight.y() - TempTopLeft.y();
+}
+
 void TextArea::mouseClicked(MouseEventDetails* const e)
 {	
 	Int32 Position(0);
@@ -381,7 +434,8 @@ void TextArea::mouseClicked(MouseEventDetails* const e)
 				EndWord = Position + 1;
 				BeginWord = Position;
 			}
-			else{
+			else
+            {
 				for(Int32 i = Position; i < getText().size(); i++)
 				{
 					if(!isWordChar(getText()[i]))
@@ -427,7 +481,7 @@ void TextArea::mousePressed(MouseEventDetails* const e)
 	Inherited::mousePressed(e);
 }
 
-Int32 TextArea::findTextPosition(OSG::Pnt2f Input)
+Int32 TextArea::findTextPosition(OSG::Pnt2f Input) const
 {
 	//find row it belongs in
 	Int32 row(0);

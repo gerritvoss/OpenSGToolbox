@@ -135,6 +135,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
     void moveCaretLine(Int32 delta);
     void setCaretLine(UInt32 line);
 
+	Int32 findTextPosition(Pnt2f location) const;
+    const std::string getWordAtLocation(Pnt2f location) const;
+    Int32 getLineAtLocation(Pnt2f location) const;
+    Real32 getLineHeight(void) const;
+
     virtual void detachFromEventProducer(void);
 
     /*=========================  PROTECTED  ===============================*/
@@ -186,7 +191,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
     friend class FieldContainer;
     friend class TextAreaBase;
 
-	Int32 findTextPosition(Pnt2f Input);
     static void initMethod(void);
 
 	std::vector<TextLine> _LineContents;
