@@ -4,37 +4,17 @@ using namespace OSG;
 
 /*! 
    \example 01SimplePhysics.cpp Simple physics example that uses OSG::PhysicsWorld,OSG::PhysicsSpace,OSG::PhysicsHandler,OSG::PhysicsBody,OSG::PhysicsBoxGeom,OSG::PhysicsSphereGeom,OSG::PhysicsTriMeshGeom
-   \htmlonly
-   <br>
-   <iframe title="YouTube video player"
-           class="youtube-player"
-           type="text/html"
-           width="600"
-           height="450"
-           src="http://www.youtube.com/embed/oN6jTuEMti4"
-           frameborder="0"
-           allowFullScreen>
-   </iframe>
-   <br>
-   \endhtmlonly
+   \n
+   \toolbox_video{oN6jTuEMti4}
+   \n
 
 
 
 
    \example 02Joints.cpp Example
-   \htmlonly
-   <br>
-   <iframe title="YouTube video player"
-           class="youtube-player"
-           type="text/html"
-           width="600"
-           height="450"
-           src="http://www.youtube.com/embed/HwSGATV9KuY"
-           frameborder="0"
-           allowFullScreen>
-   </iframe>
-   <br>
-   \endhtmlonly
+   \n
+   \toolbox_video{HwSGATV9KuY}
+   \n
 
 
 
@@ -60,22 +40,11 @@ using namespace OSG;
 
 
    \example 07Collisions.cpp  Example
-   \htmlonly
-   <br>
-   <iframe title="YouTube video player"
-           class="youtube-player"
-           type="text/html"
-           width="600"
-           height="450"
-           src="http://www.youtube.com/embed/aE8aIk6XQ3o"
-           frameborder="0"
-           allowFullScreen>
-   </iframe>
-   <br>
-   \endhtmlonly
+   \toolbox_video{aE8aIk6XQ3o}
 
 
 
 
    \example 08LoadFromXML.cpp  Example
+   \toolbox_video{aE8aIk6XQ3o}
  */

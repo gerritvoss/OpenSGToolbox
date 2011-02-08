@@ -305,6 +305,7 @@ int main(int argc, char **argv)
                                                              _1,
                                                              ExampleTree.get(),
                                                              ExampleTreeModel.get()));
+        CreateNodeButton->setPreferredSize(Vec2f(100, 20));
 
         //Remove Node Button
         ButtonRecPtr RemoveNodeButton = Button::create();
@@ -313,6 +314,7 @@ int main(int argc, char **argv)
                                                              _1,
                                                              ExampleTree.get(),
                                                              ExampleTreeModel.get()));
+        RemoveNodeButton->setPreferredSize(Vec2f(100, 20));
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow

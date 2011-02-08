@@ -529,7 +529,7 @@ int main(int argc, char **argv)
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.7f));
         MainInternalWindow->setDrawTitlebar(false);
         MainInternalWindow->setResizable(false);
 

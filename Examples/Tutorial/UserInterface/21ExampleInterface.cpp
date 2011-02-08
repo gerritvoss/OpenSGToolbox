@@ -523,7 +523,7 @@ PanelTransitPtr createLeftPanelRadioTextPanel(void)
     PanelRecPtr LeftPanelRadioTextPanel = Panel::createEmpty();
     LeftPanelRadioTextPanel->setPreferredSize(Vec2f(180, 500));
     LeftPanelRadioTextPanel->pushToChildren(LeftPanelRadioTextPanelRadioPanel);
-    LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextArea);
+    //LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextArea);
     LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextFieldLabel);
     LeftPanelRadioTextPanel->pushToChildren(LeftPanelTextField);
     LeftPanelRadioTextPanel->setLayout(LeftPanelRadioTextPanelLayout);

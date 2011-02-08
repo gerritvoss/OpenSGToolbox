@@ -90,7 +90,7 @@ class ComponentTreeItemGenerator : public DefaultTreeComponentGenerator
                 }
                 else
                 {
-                    LabelText = std::string("Unnamed")
+                    LabelText = std::string("Unnamed");
                 }
                 LabelText += std::string(" [") +
                     TheComponent->getType().getCName() + "]";

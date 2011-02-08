@@ -315,7 +315,7 @@ void mouseReleased(MouseEventDetails* const e, SimpleSceneManager *mgr)
     }
 }
 
-void mouseMoved(MouseEventDetails* const e, SimpleSceneManager *mgr)
+void mouseDragged(MouseEventDetails* const e, SimpleSceneManager *mgr)
 {
     if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
@@ -323,11 +323,24 @@ void mouseMoved(MouseEventDetails* const e, SimpleSceneManager *mgr)
     }
 }
 
-void mouseDragged(MouseEventDetails* const e, SimpleSceneManager *mgr)
+void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *mgr)
 {
-    if(dynamic_cast<WindowEventProducer*>(e->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
+    if(dynamic_cast<WindowEventProducer*>(details->getSource())->getKeyModifiers() & KeyEventDetails::KEY_MODIFIER_CAPS_LOCK)
     {
-        mgr->mouseMove(e->getLocation().x(), e->getLocation().y());
+        if(details->getUnitsToScroll() > 0)
+        {
+            for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
+            {
+                mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
+            }
+        }
+        else if(details->getUnitsToScroll() < 0)
+        {
+            for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
+            {
+                mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
+            }
+        }
     }
 }
 
@@ -718,8 +731,8 @@ int main(int argc, char **argv)
 
         TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
-        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
+        TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
         // Make Torus Node
         NodeRecPtr SceneGeometryNode(NULL);

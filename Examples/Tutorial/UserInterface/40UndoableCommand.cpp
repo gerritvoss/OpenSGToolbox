@@ -392,6 +392,7 @@ int main(int argc, char **argv)
         CommandManagerPtr TheCommandManager = CommandManager::create(TheUndoManager);
         ButtonRecPtr BorderRedButton = Button::create();
         BorderRedButton->setText("Border Red");
+        BorderRedButton->setPreferredSize(Vec2f(85, 20));
         BorderRedButton->connectActionPerformed(boost::bind(handleSetBorderColorAction,
                                                             _1,
                                                             TheCommandManager,
@@ -400,6 +401,7 @@ int main(int argc, char **argv)
 
         ButtonRecPtr BorderGreenButton = Button::create();
         BorderGreenButton->setText("Border Green");
+        BorderGreenButton->setPreferredSize(Vec2f(85, 20));
         BorderGreenButton->connectActionPerformed(boost::bind(handleSetBorderColorAction,
                                                             _1,
                                                             TheCommandManager,
@@ -408,6 +410,7 @@ int main(int argc, char **argv)
 
         ButtonRecPtr BorderBlueButton = Button::create();
         BorderBlueButton->setText("Border Blue");
+        BorderBlueButton->setPreferredSize(Vec2f(85, 20));
         BorderBlueButton->connectActionPerformed(boost::bind(handleSetBorderColorAction,
                                                             _1,
                                                             TheCommandManager,
@@ -417,6 +420,7 @@ int main(int argc, char **argv)
         //Background
         ButtonRecPtr BackgroundRedButton = Button::create();
         BackgroundRedButton->setText("Background Red");
+        BackgroundRedButton->setPreferredSize(Vec2f(105, 20));
         BackgroundRedButton->connectActionPerformed(boost::bind(handleSetBackgroundColorAction,
                                                                 _1,
                                                                 TheCommandManager,
@@ -425,6 +429,7 @@ int main(int argc, char **argv)
 
         ButtonRecPtr BackgroundGreenButton = Button::create();
         BackgroundGreenButton->setText("Background Green");
+        BackgroundGreenButton->setPreferredSize(Vec2f(105, 20));
         BackgroundGreenButton->connectActionPerformed(boost::bind(handleSetBackgroundColorAction,
                                                                 _1,
                                                                 TheCommandManager,
@@ -433,6 +438,7 @@ int main(int argc, char **argv)
 
         ButtonRecPtr BackgroundBlueButton = Button::create();
         BackgroundBlueButton->setText("Background Blue");
+        BackgroundBlueButton->setPreferredSize(Vec2f(105, 20));
         BackgroundBlueButton->connectActionPerformed(boost::bind(handleSetBackgroundColorAction,
                                                                 _1,
                                                                 TheCommandManager,

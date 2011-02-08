@@ -324,11 +324,13 @@ to them so this code is commented out.
         AddItemButton->setText("Add Item");
         AddItemButton->connectActionPerformed(boost::bind(handleAddItem, _1,
                                                           ExampleList.get()));
+        AddItemButton->setPreferredSize(Vec2f(100, 20));
 
         ButtonRecPtr RemoveItemButton = Button::create();
         RemoveItemButton->setText("Remove Item");
         RemoveItemButton->connectActionPerformed(boost::bind(handleRemoveItem, _1,
                                                              ExampleList.get()));
+        RemoveItemButton->setPreferredSize(Vec2f(100, 20));
 
 
         // Create MainFramelayout
