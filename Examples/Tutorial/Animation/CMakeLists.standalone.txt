@@ -13,6 +13,15 @@ SET(CMAKE_VERBOSE_MAKEFILE OFF)
 
 FILE(GLOB SRCFILES "*.cpp")
 
+# stuff that is broken -- these examples need to be fixed
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/01Animation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/13MeshBlending.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/14SkeletonLoader.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/15LoadXMLAnimation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/16LoadXMLSkeleton.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/17LoadXMLSkeletonAnimation.cpp")
+LIST(REMOVE_ITEM SRCFILES "${PROJECT_SOURCE_DIR}/23BlendXMLAnimations.cpp")
+
 #############################################################################
 # get dependencies
 

@@ -68,11 +68,6 @@ void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
 }
 
-void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
-{
-    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
-}
-
 void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
 {
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
@@ -85,7 +80,6 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
         for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
         {
             mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
-            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
     else if(details->getUnitsToScroll() < 0)
@@ -93,7 +87,6 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
         for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
         {
             mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
-            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
 }
@@ -121,7 +114,6 @@ int main(int argc, char **argv)
         //Attach to events
         TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
-        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
         TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, TutorialWindow.get()));

@@ -71,11 +71,6 @@ void mouseReleased(MouseEventDetails* const details, SimpleSceneManager *mgr)
     mgr->mouseButtonRelease(details->getButton(), details->getLocation().x(), details->getLocation().y());
 }
 
-void mouseMoved(MouseEventDetails* const details, SimpleSceneManager *mgr)
-{
-    mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
-}
-
 void mouseDragged(MouseEventDetails* const details, SimpleSceneManager *mgr)
 {
     mgr->mouseMove(details->getLocation().x(), details->getLocation().y());
@@ -88,7 +83,6 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
         for(UInt32 i(0) ; i<details->getUnitsToScroll() ;++i)
         {
             mgr->mouseButtonPress(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
-            mgr->mouseButtonRelease(Navigator::DOWN_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
     else if(details->getUnitsToScroll() < 0)
@@ -96,7 +90,6 @@ void mouseWheelMoved(MouseWheelEventDetails* const details, SimpleSceneManager *
         for(UInt32 i(0) ; i<abs(details->getUnitsToScroll()) ;++i)
         {
             mgr->mouseButtonPress(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
-            mgr->mouseButtonRelease(Navigator::UP_MOUSE,details->getLocation().x(),details->getLocation().y());
         }
     }
 }
@@ -122,35 +115,26 @@ int main(int argc, char **argv)
         //Attach to events
         TutorialWindow->connectMousePressed(boost::bind(mousePressed, _1, &sceneManager));
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
-        TutorialWindow->connectMouseMoved(boost::bind(mouseMoved, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
         TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1, TutorialWindow.get()));
 
         //Shader Chunk
         SimpleSHLChunkUnrecPtr TheSHLChunk = SimpleSHLChunk::create();
-        //TheSHLChunk->setVertexProgram(createSHLVertexProg());
+        TheSHLChunk->setVertexProgram(createSHLVertexProg());
         TheSHLChunk->setFragmentProgram(createSHLFragProg());
-        TheSHLChunk->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
-        TheSHLChunk->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
+        //TheSHLChunk->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
+        //TheSHLChunk->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
 
         //Shader Parameter Chunk
-        //SimpleSHLVariableChunkUnrecPtr SHLParameters = SimpleSHLVariableChunk::create();
-        ////Color Parameter
-        //SHLParameters->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
-        //SHLParameters->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
-
-        ShaderVariableVec4fUnrecPtr Color1Parameter;
-        ShaderVariableVec4fUnrecPtr Color2Parameter;
-
-        Color1Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(TheSHLChunk->getVariables()->getVariable("Color1")));
-        Color2Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(TheSHLChunk->getVariables()->getVariable("Color2")));
-        //Color1Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color1")));
-        //Color2Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color2")));
+        SimpleSHLVariableChunkUnrecPtr SHLParameters = SimpleSHLVariableChunk::create();
+        //Color Parameter
+        SHLParameters->addUniformVariable("Color1",Vec4f(0.0f,1.0f,0.0f,1.0f));
+        SHLParameters->addUniformVariable("Color2",Vec4f(1.0f,1.0f,1.0f,1.0f));
 
         ChunkMaterialUnrecPtr ShaderMaterial = ChunkMaterial::create();
         ShaderMaterial->addChunk(TheSHLChunk);
-        //ShaderMaterial->addChunk(SHLParameters);
+        ShaderMaterial->addChunk(SHLParameters);
 
         //Torus Node
         GeometryUnrecPtr TorusGeometry = makeTorusGeo(5.0f,20.0f, 32,32);
@@ -171,6 +155,14 @@ int main(int argc, char **argv)
         sceneManager.showAll();
 
         //Create the Animations
+
+        ShaderVariableVec4fUnrecPtr Color1Parameter;
+        ShaderVariableVec4fUnrecPtr Color2Parameter;
+
+        Color1Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color1")));
+        Color2Parameter = dynamic_cast<ShaderVariableVec4f*>(const_cast<ShaderVariable*>(SHLParameters->getVariables()->getVariable("Color2")));
+        commitChanges();
+
         AnimationUnrecPtr TheAnimation = setupAnimation(Color1Parameter, "value");
         TheAnimation->attachUpdateProducer(TutorialWindow);
         TheAnimation->start();
@@ -213,10 +205,13 @@ std::string createSHLVertexProg(void)
 
     FragCodeStream
         << "//Vertex Shader\n"
+        << "attribute vec4 Position;//Position\n"
+        << "attribute vec3 Normal;//Normal\n"
 
         << "void main(void)\n"
         << "{\n"
-        << "    gl_Position = ftransform();\n"
+        << "    gl_FrontColor = vec4(gl_NormalMatrix * Normal, 1.0);\n"
+        << "    gl_Position = gl_ModelViewProjectionMatrix * Position;\n"
         << "}\n";
 
 
@@ -234,7 +229,7 @@ std::string createSHLFragProg(void)
 
         << "void main()\n"
         << "{\n"
-        << "    gl_FragColor = mix(Color1,Color2,1.0-(0.3*gl_Color.r + 0.59*gl_Color.g + 0.11*gl_Color.b));\n"
+        << "    gl_FragColor = mix(Color1,Color2,1.0-gl_Color.r);\n"
         << "}\n";
 
 
