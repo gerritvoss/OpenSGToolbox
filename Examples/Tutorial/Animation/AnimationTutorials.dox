@@ -4,21 +4,147 @@ using namespace OSG;
 
 /*! 
    \example 01Animation.cpp Basic #OSG::Animation Example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 02TransformAnimation.cpp #OSG::TransformAnimator animation example
+   \n
+   \toolbox_video{8desXanZty4}
+   \n
+
+
+
+
    \example 03MFieldAnimation.cpp MultiField animation example
+   \n
+   \toolbox_video{dhh4_W-Za1s}
+   \n
+
+
+
+
    \example 04ShaderAnimation.cpp Shader parameter animation example
+   \n
+   \toolbox_video{pLGuW0YIU1M}
+   \n
+
+
+
+
    \example 05TextureAnimation.cpp Texture animation example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 06BlendedAnimation.cpp #OSG::BlendedKeyframeSequenceAnimator animation example
+   \n
+   \toolbox_video{aHg6flXWXlk}
+   \n
+
+
+
+
    \example 07AnimationGroup.cpp #OSG::AnimationGroup animation example
+   \n
+   \toolbox_video{FhrFtohJO7k}
+   \n
+
+
+
+
    \example 08MorphGeometry.cpp #OSG::Morph example
+   \n
+   \toolbox_video{5PSL0i14-30}
+   \n
+
+
+
+
    \example 09TextureSelecteAnimation.cpp Texture select animation example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 10SkeletonDrawer.cpp #OSG::SkeletonDrawable example
+   \n
+   \toolbox_video{o18ejADtRs8}
+   \n
+
+
+
+
    \example 11BoneAnimation.cpp Bone animation example
+   \n
+   \toolbox_video{liOVDYG13S0}
+   \n
+
+
+
+
    \example 12SkeletonAnimation.cpp Skeleton animation example
+   \n
+   \toolbox_video{BwBM0pF0hmY}
+   \n
+
+
+
+
    \example 13MeshBlending.cpp #OSG::SkeletonBlendedGeometry example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 14SkeletonLoader.cpp #OSG::SkeletonBlendedGeometry loading example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 15LoadXMLAnimation.cpp Animation loading example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 16LoadXMLSkeleton.cpp Skeleton loading example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 17LoadXMLSkeletonAnimation.cpp Skeleton animation loading example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 18FileAnimation.cpp Animation loading example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
  */
