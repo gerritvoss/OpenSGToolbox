@@ -387,7 +387,10 @@ const std::string TextArea::getWordAtLocation(Pnt2f location) const
                 break;
             }
         }
-        Result = getText().substr(BeginWord,EndWord - BeginWord);
+        if(BeginWord < EndWord)
+        {
+            Result = getText().substr(BeginWord,EndWord - BeginWord);
+        }
     }
     return Result;
 }
