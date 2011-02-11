@@ -677,6 +677,28 @@ void Button::setDisabledTexture(TextureObjChunk* const TheTexture, Vec2f Size)
     setDisabledDrawObject(DrawObjectCanvas);
 }
 
+void Button::setImages(Image* const TheImage, Vec2f Size)
+{
+    TextureObjChunkRefPtr TextureObjChunk(NULL);
+    if(TheImage != NULL)
+    {
+        TextureObjChunk = TextureObjChunk::create();
+        TextureObjChunk->setImage(TheImage);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
+        TextureObjChunk->setMagFilter(GL_LINEAR);
+        //TextureObjChunk->setEnvMode(GL_MODULATE);
+    }
+    setTextures(TextureObjChunk, Size);
+}
+
+void Button::setImages(const std::string& Path, Vec2f Size)
+{
+    ImageRefPtr LoadedImage = ImageFileHandler::the()->read(Path.c_str());
+    setImages(LoadedImage, Size);
+}
+
 void Button::setImage(Image* const TheImage, Vec2f Size)
 {
     TextureObjChunkRefPtr TextureObjChunk;
@@ -688,9 +710,9 @@ void Button::setImage(Image* const TheImage, Vec2f Size)
     {
         TextureObjChunk = TextureObjChunk::create();
         TextureObjChunk->setImage(TheImage);
-        TextureObjChunk->setWrapS(GL_CLAMP);
-        TextureObjChunk->setWrapT(GL_CLAMP);
-        TextureObjChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
         TextureObjChunk->setMagFilter(GL_LINEAR);
         //TextureObjChunk->setEnvMode(GL_MODULATE);
     }
@@ -709,9 +731,9 @@ void Button::setActiveImage(Image* const TheImage, Vec2f Size)
     {
         TextureObjChunk = TextureObjChunk::create();
         TextureObjChunk->setImage(TheImage);
-        TextureObjChunk->setWrapS(GL_CLAMP);
-        TextureObjChunk->setWrapT(GL_CLAMP);
-        TextureObjChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
         TextureObjChunk->setMagFilter(GL_LINEAR);
         //TextureObjChunk->setEnvMode(GL_MODULATE);
     }
@@ -730,9 +752,9 @@ void Button::setFocusedImage(Image* const TheImage, Vec2f Size)
     {
         TextureObjChunk = TextureObjChunk::create();
         TextureObjChunk->setImage(TheImage);
-        TextureObjChunk->setWrapS(GL_CLAMP);
-        TextureObjChunk->setWrapT(GL_CLAMP);
-        TextureObjChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
         TextureObjChunk->setMagFilter(GL_LINEAR);
         //TextureObjChunk->setEnvMode(GL_MODULATE);
     }
@@ -751,9 +773,9 @@ void Button::setRolloverImage(Image* const TheImage, Vec2f Size)
     {
         TextureObjChunk = TextureObjChunk::create();
         TextureObjChunk->setImage(TheImage);
-        TextureObjChunk->setWrapS(GL_CLAMP);
-        TextureObjChunk->setWrapT(GL_CLAMP);
-        TextureObjChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
         TextureObjChunk->setMagFilter(GL_LINEAR);
         //TextureObjChunk->setEnvMode(GL_MODULATE);
     }
@@ -772,9 +794,9 @@ void Button::setDisabledImage(Image* const TheImage, Vec2f Size)
     {
         TextureObjChunk = TextureObjChunk::create();
         TextureObjChunk->setImage(TheImage);
-        TextureObjChunk->setWrapS(GL_CLAMP);
-        TextureObjChunk->setWrapT(GL_CLAMP);
-        TextureObjChunk->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
         TextureObjChunk->setMagFilter(GL_LINEAR);
         //TextureObjChunk->setEnvMode(GL_MODULATE);
     }
@@ -863,31 +885,31 @@ void Button::changed(ConstFieldMaskArg whichField,
 	if(whichField & DrawObjectFieldMask &&
 		getDrawObject() != NULL)
 	{
-        getDrawObject()->setSize(getDrawObject()->getPreferredSize());
+        getDrawObject()->setSize(getDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & ActiveDrawObjectFieldMask &&
 		getActiveDrawObject() != NULL)
 	{
-        getActiveDrawObject()->setSize(getActiveDrawObject()->getPreferredSize());
+        getActiveDrawObject()->setSize(getActiveDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & RolloverDrawObjectFieldMask &&
 		getRolloverDrawObject() != NULL)
 	{
-        getRolloverDrawObject()->setSize(getRolloverDrawObject()->getPreferredSize());
+        getRolloverDrawObject()->setSize(getRolloverDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & DisabledDrawObjectFieldMask &&
 		getDisabledDrawObject() != NULL)
 	{
-        getDisabledDrawObject()->setSize(getDisabledDrawObject()->getPreferredSize());
+        getDisabledDrawObject()->setSize(getDisabledDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & FocusedDrawObjectFieldMask &&
 		getFocusedDrawObject() != NULL)
 	{
-        getFocusedDrawObject()->setSize(getFocusedDrawObject()->getPreferredSize());
+        getFocusedDrawObject()->setSize(getFocusedDrawObject()->getRequestedSize());
 	}
 }
 

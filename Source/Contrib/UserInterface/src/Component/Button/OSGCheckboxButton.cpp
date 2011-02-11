@@ -164,49 +164,49 @@ void CheckboxButton::changed(ConstFieldMaskArg whichField,
 	if(whichField & CheckboxDrawObjectFieldMask &&
 		getCheckboxDrawObject() != NULL)
 	{
-        getCheckboxDrawObject()->setSize(getCheckboxDrawObject()->getPreferredSize());
+        getCheckboxDrawObject()->setSize(getCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & SelectedCheckboxDrawObjectFieldMask &&
 		getSelectedCheckboxDrawObject() != NULL)
 	{
-        getSelectedCheckboxDrawObject()->setSize(getSelectedCheckboxDrawObject()->getPreferredSize());
+        getSelectedCheckboxDrawObject()->setSize(getSelectedCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & ActiveCheckboxDrawObjectFieldMask &&
 		getActiveCheckboxDrawObject() != NULL)
 	{
-        getActiveCheckboxDrawObject()->setSize(getActiveCheckboxDrawObject()->getPreferredSize());
+        getActiveCheckboxDrawObject()->setSize(getActiveCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & ActiveSelectedCheckboxDrawObjectFieldMask &&
 		getActiveSelectedCheckboxDrawObject() != NULL)
 	{
-        getActiveSelectedCheckboxDrawObject()->setSize(getActiveSelectedCheckboxDrawObject()->getPreferredSize());
+        getActiveSelectedCheckboxDrawObject()->setSize(getActiveSelectedCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & RolloverCheckboxDrawObjectFieldMask &&
 		getRolloverCheckboxDrawObject() != NULL)
 	{
-        getRolloverCheckboxDrawObject()->setSize(getRolloverCheckboxDrawObject()->getPreferredSize());
+        getRolloverCheckboxDrawObject()->setSize(getRolloverCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & RolloverSelectedCheckboxDrawObjectFieldMask &&
 		getRolloverSelectedCheckboxDrawObject() != NULL)
 	{
-        getRolloverSelectedCheckboxDrawObject()->setSize(getRolloverSelectedCheckboxDrawObject()->getPreferredSize());
+        getRolloverSelectedCheckboxDrawObject()->setSize(getRolloverSelectedCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & DisabledCheckboxDrawObjectFieldMask &&
 		getDisabledCheckboxDrawObject() != NULL)
 	{
-        getDisabledCheckboxDrawObject()->setSize(getDisabledCheckboxDrawObject()->getPreferredSize());
+        getDisabledCheckboxDrawObject()->setSize(getDisabledCheckboxDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & DisabledSelectedCheckboxDrawObjectFieldMask &&
 		getDisabledSelectedCheckboxDrawObject() != NULL)
 	{
-        getDisabledSelectedCheckboxDrawObject()->setSize(getDisabledSelectedCheckboxDrawObject()->getPreferredSize());
+        getDisabledSelectedCheckboxDrawObject()->setSize(getDisabledSelectedCheckboxDrawObject()->getRequestedSize());
 	}
 	
 }

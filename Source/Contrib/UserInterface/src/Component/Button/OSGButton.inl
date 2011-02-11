@@ -58,4 +58,20 @@ void Button::resetArmed(void)
     _ActionFireElps = 0.0;
 }
 
+inline
+void Button::setTextures(TextureObjChunk* const TheTexture, Vec2f Size)
+{
+    setTexture        (TheTexture, Size);
+    setActiveTexture  (TheTexture, Size);
+    setFocusedTexture (TheTexture, Size);
+    setRolloverTexture(TheTexture, Size);
+    setDisabledTexture(TheTexture, Size);
+}
+
+inline
+void Button::setImages(const BoostPath& Path, Vec2f Size)
+{
+    setImages(Path.string(), Size);
+}
+
 OSG_END_NAMESPACE

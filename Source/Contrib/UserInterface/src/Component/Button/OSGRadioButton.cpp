@@ -169,49 +169,49 @@ void RadioButton::changed(ConstFieldMaskArg whichField,
 	if(whichField & RadioDrawObjectFieldMask &&
 		getRadioDrawObject() != NULL)
 	{
-        getRadioDrawObject()->setSize(getRadioDrawObject()->getPreferredSize());
+        getRadioDrawObject()->setSize(getRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & SelectedRadioDrawObjectFieldMask &&
 		getSelectedRadioDrawObject() != NULL)
 	{
-        getSelectedRadioDrawObject()->setSize(getSelectedRadioDrawObject()->getPreferredSize());
+        getSelectedRadioDrawObject()->setSize(getSelectedRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & ActiveRadioDrawObjectFieldMask &&
 		getActiveRadioDrawObject() != NULL)
 	{
-        getActiveRadioDrawObject()->setSize(getActiveRadioDrawObject()->getPreferredSize());
+        getActiveRadioDrawObject()->setSize(getActiveRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & ActiveSelectedRadioDrawObjectFieldMask &&
 		getActiveSelectedRadioDrawObject() != NULL)
 	{
-        getActiveSelectedRadioDrawObject()->setSize(getActiveSelectedRadioDrawObject()->getPreferredSize());
+        getActiveSelectedRadioDrawObject()->setSize(getActiveSelectedRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & RolloverRadioDrawObjectFieldMask &&
 		getRolloverRadioDrawObject() != NULL)
 	{
-        getRolloverRadioDrawObject()->setSize(getRolloverRadioDrawObject()->getPreferredSize());
+        getRolloverRadioDrawObject()->setSize(getRolloverRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & RolloverSelectedRadioDrawObjectFieldMask &&
 		getRolloverSelectedRadioDrawObject() != NULL)
 	{
-        getRolloverSelectedRadioDrawObject()->setSize(getRolloverSelectedRadioDrawObject()->getPreferredSize());
+        getRolloverSelectedRadioDrawObject()->setSize(getRolloverSelectedRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & DisabledRadioDrawObjectFieldMask &&
 		getDisabledRadioDrawObject() != NULL)
 	{
-        getDisabledRadioDrawObject()->setSize(getDisabledRadioDrawObject()->getPreferredSize());
+        getDisabledRadioDrawObject()->setSize(getDisabledRadioDrawObject()->getRequestedSize());
 	}
 	
 	if(whichField & DisabledSelectedRadioDrawObjectFieldMask &&
 		getDisabledSelectedRadioDrawObject() != NULL)
 	{
-        getDisabledSelectedRadioDrawObject()->setSize(getDisabledSelectedRadioDrawObject()->getPreferredSize());
+        getDisabledSelectedRadioDrawObject()->setSize(getDisabledSelectedRadioDrawObject()->getRequestedSize());
 	}
 }
 

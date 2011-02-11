@@ -105,18 +105,23 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Button : public ButtonBase
     void setFocusedTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setRolloverTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setDisabledTexture(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setTextures(TextureObjChunk* const TheTexture, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
     void setImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setFocusedImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setRolloverImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setDisabledImage(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setImages(Image* const TheImage, Vec2f Size = Vec2f(-1.0f,-1.0f));
     
     void setImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setActiveImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setFocusedImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setRolloverImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
     void setDisabledImage(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+
+    void setImages(const std::string& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
+    void setImages(const BoostPath& Path, Vec2f Size = Vec2f(-1.0f,-1.0f));
 
 	void getTextBounds(Pnt2f& TextTopLeft, Pnt2f& TextBottomRight) const;
 
