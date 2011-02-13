@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -62,6 +62,7 @@
 #include "OSGLayoutConstraints.h"       // Constraints Class
 #include "OSGBorder.h"                  // Border Class
 #include "OSGLayer.h"                   // Background Class
+#include "OSGComponent.h"               // ToolTip Class
 #include "OSGFieldContainer.h"          // ParentContainer Class
 #include "OSGPopupMenu.h"               // PopupMenu Class
 
@@ -170,7 +171,7 @@ OSG_BEGIN_NAMESPACE
     
 */
 
-/*! \var std::string     ComponentBase::_sfToolTipText
+/*! \var Component *     ComponentBase::_sfToolTip
     
 */
 
@@ -490,15 +491,15 @@ void ComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFString::Description(
-        SFString::getClassType(),
-        "ToolTipText",
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "ToolTip",
         "",
-        ToolTipTextFieldId, ToolTipTextFieldMask,
+        ToolTipFieldId, ToolTipFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleToolTipText),
-        static_cast<FieldGetMethodSig >(&Component::getHandleToolTipText));
+        static_cast<FieldEditMethodSig>(&Component::editHandleToolTip),
+        static_cast<FieldGetMethodSig >(&Component::getHandleToolTip));
 
     oType.addInitialDesc(pDesc);
 
@@ -637,7 +638,7 @@ ComponentBase::TypeObject ComponentBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    fieldsUnmarkedOnCreate=\"EnabledFieldMask\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     "    childFields=\"multi\"\n"
     ">\n"
     "A UI Component Interface.\n"
@@ -843,12 +844,13 @@ ComponentBase::TypeObject ComponentBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"ToolTipText\"\n"
-    "\t\ttype=\"std::string\"\n"
-    "\t\tcategory=\"data\"\n"
+    "\t\tname=\"ToolTip\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -867,8 +869,6 @@ ComponentBase::TypeObject ComponentBase::_type(
     "\t   cardinality=\"single\"\n"
     "\t   visibility=\"external\"\n"
     "\t   access=\"none\"\n"
-    "       doRefCount=\"false\"\n"
-    "       passFieldMask=\"true\"\n"
     "       category=\"parentpointer\"\n"
     "\t   >\n"
     "\t  The Component Container this Component is contained in.\n"
@@ -1058,6 +1058,18 @@ ComponentBase::TypeObject ComponentBase::_type(
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
     "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"ToolTipActivated\"\n"
+    "\t\tdetailsType=\"ComponentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
+    "\t>\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"ToolTipDeactivated\"\n"
+    "\t\tdetailsType=\"ComponentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
+    "\t>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Component Interface.\n"
     );
@@ -1197,7 +1209,21 @@ EventDescription *ComponentBase::_eventDesc[] =
                           ComponentDisabledEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
-                          static_cast<EventGetMethod>(&ComponentBase::getHandleComponentDisabledSignal))
+                          static_cast<EventGetMethod>(&ComponentBase::getHandleComponentDisabledSignal)),
+
+    new EventDescription("ToolTipActivated", 
+                          "",
+                          ToolTipActivatedEventId, 
+                          FieldTraits<ComponentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ComponentBase::getHandleToolTipActivatedSignal)),
+
+    new EventDescription("ToolTipDeactivated", 
+                          "",
+                          ToolTipDeactivatedEventId, 
+                          FieldTraits<ComponentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ComponentBase::getHandleToolTipDeactivatedSignal))
 
 };
 
@@ -1494,18 +1520,18 @@ SFUnrecLayerPtr     *ComponentBase::editSFRolloverBackground(void)
     return &_sfRolloverBackground;
 }
 
-SFString *ComponentBase::editSFToolTipText(void)
+//! Get the Component::_sfToolTip field.
+const SFUnrecComponentPtr *ComponentBase::getSFToolTip(void) const
 {
-    editSField(ToolTipTextFieldMask);
-
-    return &_sfToolTipText;
+    return &_sfToolTip;
 }
 
-const SFString *ComponentBase::getSFToolTipText(void) const
+SFUnrecComponentPtr *ComponentBase::editSFToolTip        (void)
 {
-    return &_sfToolTipText;
-}
+    editSField(ToolTipFieldMask);
 
+    return &_sfToolTip;
+}
 
 SFReal32 *ComponentBase::editSFOpacity(void)
 {
@@ -1702,9 +1728,9 @@ UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfRolloverBackground.getBinSize();
     }
-    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
-        returnValue += _sfToolTipText.getBinSize();
+        returnValue += _sfToolTip.getBinSize();
     }
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
@@ -1831,9 +1857,9 @@ void ComponentBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfRolloverBackground.copyToBin(pMem);
     }
-    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
-        _sfToolTipText.copyToBin(pMem);
+        _sfToolTip.copyToBin(pMem);
     }
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
@@ -1880,122 +1906,152 @@ void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (PositionFieldMask & whichField))
     {
+        editSField(PositionFieldMask);
         _sfPosition.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ClipBoundsFieldMask & whichField))
     {
+        editSField(ClipBoundsFieldMask);
         _sfClipBounds.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MinSizeFieldMask & whichField))
     {
+        editSField(MinSizeFieldMask);
         _sfMinSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MaxSizeFieldMask & whichField))
     {
+        editSField(MaxSizeFieldMask);
         _sfMaxSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (PreferredSizeFieldMask & whichField))
     {
+        editSField(PreferredSizeFieldMask);
         _sfPreferredSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
+        editSField(SizeFieldMask);
         _sfSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (VisibleFieldMask & whichField))
     {
+        editSField(VisibleFieldMask);
         _sfVisible.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (EnabledFieldMask & whichField))
     {
+        editSField(EnabledFieldMask);
         _sfEnabled.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedFieldMask & whichField))
     {
+        editSField(FocusedFieldMask);
         _sfFocused.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ConstraintsFieldMask & whichField))
     {
+        editSField(ConstraintsFieldMask);
         _sfConstraints.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BorderFieldMask & whichField))
     {
+        editSField(BorderFieldMask);
         _sfBorder.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BackgroundFieldMask & whichField))
     {
+        editSField(BackgroundFieldMask);
         _sfBackground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DisabledBorderFieldMask & whichField))
     {
+        editSField(DisabledBorderFieldMask);
         _sfDisabledBorder.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DisabledBackgroundFieldMask & whichField))
     {
+        editSField(DisabledBackgroundFieldMask);
         _sfDisabledBackground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DragEnabledFieldMask & whichField))
     {
+        editSField(DragEnabledFieldMask);
         _sfDragEnabled.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ScrollTrackingCharacteristicsFieldMask & whichField))
     {
+        editSField(ScrollTrackingCharacteristicsFieldMask);
         _sfScrollTrackingCharacteristics.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedBorderFieldMask & whichField))
     {
+        editSField(FocusedBorderFieldMask);
         _sfFocusedBorder.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedBackgroundFieldMask & whichField))
     {
+        editSField(FocusedBackgroundFieldMask);
         _sfFocusedBackground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (RolloverBorderFieldMask & whichField))
     {
+        editSField(RolloverBorderFieldMask);
         _sfRolloverBorder.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
     {
+        editSField(RolloverBackgroundFieldMask);
         _sfRolloverBackground.copyFromBin(pMem);
     }
-    if(FieldBits::NoField != (ToolTipTextFieldMask & whichField))
+    if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
-        _sfToolTipText.copyFromBin(pMem);
+        editSField(ToolTipFieldMask);
+        _sfToolTip.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (OpacityFieldMask & whichField))
     {
+        editSField(OpacityFieldMask);
         _sfOpacity.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ParentContainerFieldMask & whichField))
     {
+        editSField(ParentContainerFieldMask);
         _sfParentContainer.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ClippingFieldMask & whichField))
     {
+        editSField(ClippingFieldMask);
         _sfClipping.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
+        editSField(PopupMenuFieldMask);
         _sfPopupMenu.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
     {
+        editSField(FocusedForegroundFieldMask);
         _sfFocusedForeground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
     {
+        editSField(RolloverForegroundFieldMask);
         _sfRolloverForeground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
     {
+        editSField(DisabledForegroundFieldMask);
         _sfDisabledForeground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ForegroundFieldMask & whichField))
     {
+        editSField(ForegroundFieldMask);
         _sfForeground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
+        editSField(CursorFieldMask);
         _sfCursor.copyFromBin(pMem);
     }
 }
@@ -2121,6 +2177,18 @@ void ComponentBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _ComponentDisabledEvent.set_combiner(ConsumableEventCombiner(e));
         _ComponentDisabledEvent(dynamic_cast<ComponentDisabledEventDetailsType* const>(e), ComponentDisabledEventId);
         break;
+    case ToolTipActivatedEventId:
+        OSG_ASSERT(dynamic_cast<ToolTipActivatedEventDetailsType* const>(e));
+
+        _ToolTipActivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ToolTipActivatedEvent(dynamic_cast<ToolTipActivatedEventDetailsType* const>(e), ToolTipActivatedEventId);
+        break;
+    case ToolTipDeactivatedEventId:
+        OSG_ASSERT(dynamic_cast<ToolTipDeactivatedEventDetailsType* const>(e));
+
+        _ToolTipDeactivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ToolTipDeactivatedEvent(dynamic_cast<ToolTipDeactivatedEventDetailsType* const>(e), ToolTipDeactivatedEventId);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
@@ -2189,6 +2257,12 @@ boost::signals2::connection ComponentBase::connectEvent(UInt32 eventId,
         break;
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.connect(listener, at);
+        break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.connect(listener, at);
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.connect(listener, at);
         break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
@@ -2263,6 +2337,12 @@ boost::signals2::connection  ComponentBase::connectEvent(UInt32 eventId,
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.connect(group, listener, at);
         break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.connect(group, listener, at);
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.connect(group, listener, at);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
@@ -2333,6 +2413,12 @@ void  ComponentBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_
     case ComponentDisabledEventId:
         _ComponentDisabledEvent.disconnect(group);
         break;
+    case ToolTipActivatedEventId:
+        _ToolTipActivatedEvent.disconnect(group);
+        break;
+    case ToolTipDeactivatedEventId:
+        _ToolTipDeactivatedEvent.disconnect(group);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
@@ -2400,6 +2486,12 @@ void  ComponentBase::disconnectAllSlotsEvent(UInt32 eventId)
     case ComponentDisabledEventId:
         _ComponentDisabledEvent.disconnect_all_slots();
         break;
+    case ToolTipActivatedEventId:
+        _ToolTipActivatedEvent.disconnect_all_slots();
+        break;
+    case ToolTipDeactivatedEventId:
+        _ToolTipDeactivatedEvent.disconnect_all_slots();
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
@@ -2466,6 +2558,12 @@ bool  ComponentBase::isEmptyEvent(UInt32 eventId) const
         break;
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.empty();
+        break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.empty();
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.empty();
         break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
@@ -2535,6 +2633,12 @@ UInt32  ComponentBase::numSlotsEvent(UInt32 eventId) const
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.num_slots();
         break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.num_slots();
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.num_slots();
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
@@ -2569,7 +2673,7 @@ ComponentBase::ComponentBase(void) :
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
     _sfRolloverBackground     (NULL),
-    _sfToolTipText            (),
+    _sfToolTip                (NULL),
     _sfOpacity                (Real32(1.0)),
     _sfParentContainer        (NULL),
     _sfClipping               (bool(true)),
@@ -2606,7 +2710,7 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
     _sfRolloverBackground     (NULL),
-    _sfToolTipText            (source._sfToolTipText            ),
+    _sfToolTip                (NULL),
     _sfOpacity                (source._sfOpacity                ),
     _sfParentContainer        (NULL),
     _sfClipping               (source._sfClipping               ),
@@ -2675,7 +2779,7 @@ bool ComponentBase::unlinkParent(
 
         if(pTypedParent != NULL)
         {
-            if(_sfParentContainer.getValue() == pParent)
+            if(_sfParentContainer.getValue() == pTypedParent)
             {
                 editSField(ParentContainerFieldMask);
 
@@ -2684,8 +2788,15 @@ bool ComponentBase::unlinkParent(
                 return true;
             }
 
-            FWARNING(("ComponentBase::unlinkParent: "
-                      "Child <-> Parent link inconsistent.\n"));
+            SWARNING << "Child (["          << this
+                     << "] id ["            << this->getId()
+                     << "] type ["          << this->getType().getCName()
+                     << "] parentFieldId [" << parentFieldId
+                     << "]) - Parent (["    << pParent
+                     << "] id ["            << pParent->getId()
+                     << "] type ["          << pParent->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -2711,7 +2822,7 @@ bool ComponentBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfConstraints.getValue())
+            if(_sfConstraints.getValue() == pTypedChild)
             {
                 editSField(ConstraintsFieldMask);
 
@@ -2720,8 +2831,15 @@ bool ComponentBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("ComponentBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -2758,6 +2876,8 @@ void ComponentBase::onCreate(const Component *source)
         pThis->setRolloverBorder(source->getRolloverBorder());
 
         pThis->setRolloverBackground(source->getRolloverBackground());
+
+        pThis->setToolTip(source->getToolTip());
 
         pThis->setPopupMenu(source->getPopupMenu());
 
@@ -3298,27 +3418,30 @@ EditFieldHandlePtr ComponentBase::editHandleRolloverBackground(void)
     return returnValue;
 }
 
-GetFieldHandlePtr ComponentBase::getHandleToolTipText     (void) const
+GetFieldHandlePtr ComponentBase::getHandleToolTip         (void) const
 {
-    SFString::GetHandlePtr returnValue(
-        new  SFString::GetHandle(
-             &_sfToolTipText,
-             this->getType().getFieldDesc(ToolTipTextFieldId),
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfToolTip,
+             this->getType().getFieldDesc(ToolTipFieldId),
              const_cast<ComponentBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr ComponentBase::editHandleToolTipText    (void)
+EditFieldHandlePtr ComponentBase::editHandleToolTip        (void)
 {
-    SFString::EditHandlePtr returnValue(
-        new  SFString::EditHandle(
-             &_sfToolTipText,
-             this->getType().getFieldDesc(ToolTipTextFieldId),
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfToolTip,
+             this->getType().getFieldDesc(ToolTipFieldId),
              this));
 
+    returnValue->setSetMethod(
+        boost::bind(&Component::setToolTip,
+                    static_cast<Component *>(this), _1));
 
-    editSField(ToolTipTextFieldMask);
+    editSField(ToolTipFieldMask);
 
     return returnValue;
 }
@@ -3762,6 +3885,28 @@ GetEventHandlePtr ComponentBase::getHandleComponentDisabledSignal(void) const
     return returnValue;
 }
 
+GetEventHandlePtr ComponentBase::getHandleToolTipActivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ToolTipActivatedEventType>(
+             const_cast<ToolTipActivatedEventType *>(&_ToolTipActivatedEvent),
+             _producerType.getEventDescription(ToolTipActivatedEventId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr ComponentBase::getHandleToolTipDeactivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ToolTipDeactivatedEventType>(
+             const_cast<ToolTipDeactivatedEventType *>(&_ToolTipDeactivatedEvent),
+             _producerType.getEventDescription(ToolTipDeactivatedEventId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void ComponentBase::execSyncV(      FieldContainer    &oFrom,
@@ -3803,6 +3948,8 @@ void ComponentBase::resolveLinks(void)
     static_cast<Component *>(this)->setRolloverBorder(NULL);
 
     static_cast<Component *>(this)->setRolloverBackground(NULL);
+
+    static_cast<Component *>(this)->setToolTip(NULL);
 
     static_cast<Component *>(this)->setPopupMenu(NULL);
 
@@ -4198,28 +4345,19 @@ void ComponentBase::setRolloverBackground(Layer * const value)
 
     _sfRolloverBackground.setValue(value);
 }
-//! Get the value of the Component::_sfToolTipText field.
 
-std::string &ComponentBase::editToolTipText(void)
+//! Get the value of the Component::_sfToolTip field.
+Component * ComponentBase::getToolTip(void) const
 {
-    editSField(ToolTipTextFieldMask);
-
-    return _sfToolTipText.getValue();
+    return _sfToolTip.getValue();
 }
 
-//! Get the value of the Component::_sfToolTipText field.
-const std::string &ComponentBase::getToolTipText(void) const
+//! Set the value of the Component::_sfToolTip field.
+void ComponentBase::setToolTip(Component * const value)
 {
-    return _sfToolTipText.getValue();
-}
+    editSField(ToolTipFieldMask);
 
-
-//! Set the value of the Component::_sfToolTipText field.
-void ComponentBase::setToolTipText(const std::string &value)
-{
-    editSField(ToolTipTextFieldMask);
-
-    _sfToolTipText.setValue(value);
+    _sfToolTip.setValue(value);
 }
 //! Get the value of the Component::_sfOpacity field.
 

@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -70,7 +70,7 @@
 #include "OSGLayoutConstraintsFields.h" // Constraints type
 #include "OSGBorderFields.h"            // Border type
 #include "OSGLayerFields.h"             // Background type
-#include "OSGBaseFields.h"              // ToolTipText type
+#include "OSGComponentFields.h"         // ToolTip type
 #include "OSGFieldContainerFields.h"    // ParentContainer type
 #include "OSGPopupMenuFields.h"         // PopupMenu type
 
@@ -124,6 +124,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef ComponentEventDetails ComponentResizedEventDetailsType;
     typedef ComponentEventDetails ComponentEnabledEventDetailsType;
     typedef ComponentEventDetails ComponentDisabledEventDetailsType;
+    typedef ComponentEventDetails ToolTipActivatedEventDetailsType;
+    typedef ComponentEventDetails ToolTipDeactivatedEventDetailsType;
 
     typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
     typedef boost::signals2::signal<void (MouseEventDetails* const, UInt32), ConsumableEventCombiner> MouseMovedEventType;
@@ -145,6 +147,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentResizedEventType;
     typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentEnabledEventType;
     typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ComponentDisabledEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ToolTipActivatedEventType;
+    typedef boost::signals2::signal<void (ComponentEventDetails* const, UInt32), ConsumableEventCombiner> ToolTipDeactivatedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -172,8 +176,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         FocusedBackgroundFieldId = FocusedBorderFieldId + 1,
         RolloverBorderFieldId = FocusedBackgroundFieldId + 1,
         RolloverBackgroundFieldId = RolloverBorderFieldId + 1,
-        ToolTipTextFieldId = RolloverBackgroundFieldId + 1,
-        OpacityFieldId = ToolTipTextFieldId + 1,
+        ToolTipFieldId = RolloverBackgroundFieldId + 1,
+        OpacityFieldId = ToolTipFieldId + 1,
         ParentContainerFieldId = OpacityFieldId + 1,
         ClippingFieldId = ParentContainerFieldId + 1,
         PopupMenuFieldId = ClippingFieldId + 1,
@@ -225,8 +229,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << RolloverBorderFieldId);
     static const OSG::BitVector RolloverBackgroundFieldMask =
         (TypeTraits<BitVector>::One << RolloverBackgroundFieldId);
-    static const OSG::BitVector ToolTipTextFieldMask =
-        (TypeTraits<BitVector>::One << ToolTipTextFieldId);
+    static const OSG::BitVector ToolTipFieldMask =
+        (TypeTraits<BitVector>::One << ToolTipFieldId);
     static const OSG::BitVector OpacityFieldMask =
         (TypeTraits<BitVector>::One << OpacityFieldId);
     static const OSG::BitVector ParentContainerFieldMask =
@@ -268,7 +272,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
     typedef SFUnrecBorderPtr  SFRolloverBorderType;
     typedef SFUnrecLayerPtr   SFRolloverBackgroundType;
-    typedef SFString          SFToolTipTextType;
+    typedef SFUnrecComponentPtr SFToolTipType;
     typedef SFReal32          SFOpacityType;
     typedef SFParentFieldContainerPtr SFParentContainerType;
     typedef SFBool            SFClippingType;
@@ -300,7 +304,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         ComponentResizedEventId = ComponentMovedEventId + 1,
         ComponentEnabledEventId = ComponentResizedEventId + 1,
         ComponentDisabledEventId = ComponentEnabledEventId + 1,
-        NextProducedEventId = ComponentDisabledEventId + 1
+        ToolTipActivatedEventId = ComponentDisabledEventId + 1,
+        ToolTipDeactivatedEventId = ToolTipActivatedEventId + 1,
+        NextProducedEventId = ToolTipDeactivatedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -376,9 +382,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual       SFUnrecBorderPtr    *editSFRolloverBorder (void);
     virtual const SFUnrecLayerPtr     *getSFRolloverBackground(void) const;
     virtual       SFUnrecLayerPtr     *editSFRolloverBackground(void);
-
-    virtual       SFString            *editSFToolTipText    (void);
-    virtual const SFString            *getSFToolTipText     (void) const;
+    virtual const SFUnrecComponentPtr *getSFToolTip        (void) const;
+    virtual       SFUnrecComponentPtr *editSFToolTip        (void);
 
     virtual       SFReal32            *editSFOpacity        (void);
     virtual const SFReal32            *getSFOpacity         (void) const;
@@ -448,8 +453,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     virtual       Layer * getRolloverBackground(void) const;
 
-    virtual       std::string         &editToolTipText    (void);
-    virtual const std::string         &getToolTipText     (void) const;
+    virtual       Component * getToolTip        (void) const;
 
     virtual       Real32              &editOpacity        (void);
     virtual       Real32               getOpacity         (void) const;
@@ -494,7 +498,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual void setFocusedBackground(Layer * const value);
     virtual void setRolloverBorder (Border * const value);
     virtual void setRolloverBackground(Layer * const value);
-    virtual void setToolTipText    (const std::string &value);
+    virtual void setToolTip        (Component * const value);
     virtual void setOpacity        (const Real32 value);
     virtual void setClipping       (const bool value);
     virtual void setPopupMenu      (PopupMenu * const value);
@@ -765,6 +769,28 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     bool   isEmptyComponentDisabled         (void) const;
     UInt32 numSlotsComponentDisabled        (void) const;
     
+    //ToolTipActivated
+    boost::signals2::connection connectToolTipActivated(const ToolTipActivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectToolTipActivated(const ToolTipActivatedEventType::group_type &group,
+                                                       const ToolTipActivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectToolTipActivated       (const ToolTipActivatedEventType::group_type &group);
+    void   disconnectAllSlotsToolTipActivated(void);
+    bool   isEmptyToolTipActivated          (void) const;
+    UInt32 numSlotsToolTipActivated         (void) const;
+    
+    //ToolTipDeactivated
+    boost::signals2::connection connectToolTipDeactivated(const ToolTipDeactivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectToolTipDeactivated(const ToolTipDeactivatedEventType::group_type &group,
+                                                       const ToolTipDeactivatedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectToolTipDeactivated     (const ToolTipDeactivatedEventType::group_type &group);
+    void   disconnectAllSlotsToolTipDeactivated(void);
+    bool   isEmptyToolTipDeactivated        (void) const;
+    UInt32 numSlotsToolTipDeactivated       (void) const;
+    
     
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -794,6 +820,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     ComponentResizedEventType _ComponentResizedEvent;
     ComponentEnabledEventType _ComponentEnabledEvent;
     ComponentDisabledEventType _ComponentDisabledEvent;
+    ToolTipActivatedEventType _ToolTipActivatedEvent;
+    ToolTipDeactivatedEventType _ToolTipDeactivatedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -825,7 +853,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFUnrecLayerPtr   _sfFocusedBackground;
     SFUnrecBorderPtr  _sfRolloverBorder;
     SFUnrecLayerPtr   _sfRolloverBackground;
-    SFString          _sfToolTipText;
+    SFUnrecComponentPtr _sfToolTip;
     SFReal32          _sfOpacity;
     SFParentFieldContainerPtr _sfParentContainer;
     SFBool            _sfClipping;
@@ -922,8 +950,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     EditFieldHandlePtr editHandleRolloverBorder (void);
     GetFieldHandlePtr  getHandleRolloverBackground (void) const;
     EditFieldHandlePtr editHandleRolloverBackground(void);
-    GetFieldHandlePtr  getHandleToolTipText     (void) const;
-    EditFieldHandlePtr editHandleToolTipText    (void);
+    GetFieldHandlePtr  getHandleToolTip         (void) const;
+    EditFieldHandlePtr editHandleToolTip        (void);
     GetFieldHandlePtr  getHandleOpacity         (void) const;
     EditFieldHandlePtr editHandleOpacity        (void);
     GetFieldHandlePtr  getHandleParentContainer (void) const;
@@ -967,6 +995,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     GetEventHandlePtr getHandleComponentResizedSignal(void) const;
     GetEventHandlePtr getHandleComponentEnabledSignal(void) const;
     GetEventHandlePtr getHandleComponentDisabledSignal(void) const;
+    GetEventHandlePtr getHandleToolTipActivatedSignal(void) const;
+    GetEventHandlePtr getHandleToolTipDeactivatedSignal(void) const;
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Get                                 */
@@ -1018,6 +1048,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     void produceComponentResized    (ComponentResizedEventDetailsType* const e);
     void produceComponentEnabled    (ComponentEnabledEventDetailsType* const e);
     void produceComponentDisabled   (ComponentDisabledEventDetailsType* const e);
+    void produceToolTipActivated    (ToolTipActivatedEventDetailsType* const e);
+    void produceToolTipDeactivated  (ToolTipDeactivatedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */

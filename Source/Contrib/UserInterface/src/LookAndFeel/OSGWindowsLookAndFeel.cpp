@@ -72,7 +72,6 @@
 #include "OSGTextField.h"
 #include "OSGPasswordField.h"
 #include "OSGTextArea.h"
-#include "OSGToolTip.h"
 #include "OSGSeparator.h"
 
 #include "OSGMenuItem.h"
@@ -167,7 +166,7 @@ void WindowsLookAndFeel::init(void)
     TextFieldRefPtr WindowsTextField = TextField::createEmpty();
     PasswordFieldRefPtr WindowsPasswordField = PasswordField::createEmpty();
     TextAreaRefPtr WindowsTextArea = TextArea::createEmpty();
-    ToolTipRefPtr WindowsToolTip = ToolTip::createEmpty();
+    LabelRefPtr WindowsToolTip = Label::createEmpty();
     ScrollBarRefPtr WindowsScrollBar = ScrollBar::createEmpty();
     ScrollPanelRefPtr WindowsScrollPanel = ScrollPanel::createEmpty();
     UIViewportRefPtr WindowsUIViewport = UIViewport::createEmpty();
@@ -212,7 +211,6 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsTextField);
     pushToPrototypes(WindowsPasswordField);
     pushToPrototypes(WindowsTextArea);
-    pushToPrototypes(WindowsToolTip);
     pushToPrototypes(WindowsMenuItem);
     pushToPrototypes(WindowsComponentMenuItem);
     pushToPrototypes(WindowsMenu);
@@ -239,6 +237,8 @@ void WindowsLookAndFeel::init(void)
     pushToPrototypes(WindowsDefaultTreeComponentGenerator);
     pushToPrototypes(WindowsTree);
     pushToPrototypes(WindowsColorChooser);
+
+    setDefaultToolTip(WindowsToolTip);
 
     initPrototypes();
     

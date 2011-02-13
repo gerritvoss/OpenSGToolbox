@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -62,6 +62,7 @@
 #include "OSGLayoutConstraints.h"       // Constraints Class
 #include "OSGBorder.h"                  // Border Class
 #include "OSGLayer.h"                   // Background Class
+#include "OSGComponent.h"               // ToolTip Class
 #include "OSGFieldContainer.h"          // ParentContainer Class
 #include "OSGPopupMenu.h"               // PopupMenu Class
 
@@ -171,7 +172,7 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "    fieldsUnmarkedOnCreate=\"EnabledFieldMask\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     "    childFields=\"multi\"\n"
     ">\n"
     "A UI Component Interface.\n"
@@ -377,12 +378,13 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
-    "\t\tname=\"ToolTipText\"\n"
-    "\t\ttype=\"std::string\"\n"
-    "\t\tcategory=\"data\"\n"
+    "\t\tname=\"ToolTip\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -401,8 +403,6 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "\t   cardinality=\"single\"\n"
     "\t   visibility=\"external\"\n"
     "\t   access=\"none\"\n"
-    "       doRefCount=\"false\"\n"
-    "       passFieldMask=\"true\"\n"
     "       category=\"parentpointer\"\n"
     "\t   >\n"
     "\t  The Component Container this Component is contained in.\n"
@@ -592,6 +592,18 @@ ComponentDecoratorBase::TypeObject ComponentDecoratorBase::_type(
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
     "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"ToolTipActivated\"\n"
+    "\t\tdetailsType=\"ComponentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
+    "\t>\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"ToolTipDeactivated\"\n"
+    "\t\tdetailsType=\"ComponentEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
+    "\t>\n"
+    "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
     "A UI Component Interface.\n"
     );
@@ -731,7 +743,21 @@ EventDescription *ComponentDecoratorBase::_eventDesc[] =
                           ComponentDisabledEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
-                          static_cast<EventGetMethod>(&ComponentDecoratorBase::getHandleComponentDisabledSignal))
+                          static_cast<EventGetMethod>(&ComponentDecoratorBase::getHandleComponentDisabledSignal)),
+
+    new EventDescription("ToolTipActivated", 
+                          "",
+                          ToolTipActivatedEventId, 
+                          FieldTraits<ComponentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ComponentDecoratorBase::getHandleToolTipActivatedSignal)),
+
+    new EventDescription("ToolTipDeactivated", 
+                          "",
+                          ToolTipDeactivatedEventId, 
+                          FieldTraits<ComponentEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&ComponentDecoratorBase::getHandleToolTipDeactivatedSignal))
 
 };
 
@@ -1261,23 +1287,24 @@ SFUnrecLayerPtr *ComponentDecoratorBase::editSFRolloverBackground(void)
     }
 }
 
-SFString *ComponentDecoratorBase::editSFToolTipText(void)
+//! Get the ComponentDecorator::_sfToolTip field.
+const SFUnrecComponentPtr *ComponentDecoratorBase::getSFToolTip(void) const
 {
     if(_sfDecoratee.getValue() != NULL)
     {
-        return getDecoratee()->editSFToolTipText();
+        return getDecoratee()->getSFToolTip();
     }
     else
     {
         return NULL;
     }
 }
-
-const SFString *ComponentDecoratorBase::getSFToolTipText(void) const
+//! Get the ComponentDecorator::_sfToolTip field.
+SFUnrecComponentPtr *ComponentDecoratorBase::editSFToolTip(void)
 {
     if(_sfDecoratee.getValue() != NULL)
     {
-        return getDecoratee()->getSFToolTipText();
+        return getDecoratee()->editSFToolTip();
     }
     else
     {
@@ -1520,6 +1547,7 @@ void ComponentDecoratorBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (DecorateeFieldMask & whichField))
     {
+        editSField(DecorateeFieldMask);
         _sfDecoratee.copyFromBin(pMem);
     }
 }
@@ -1645,6 +1673,18 @@ void ComponentDecoratorBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _ComponentDisabledEvent.set_combiner(ConsumableEventCombiner(e));
         _ComponentDisabledEvent(dynamic_cast<ComponentDisabledEventDetailsType* const>(e), ComponentDisabledEventId);
         break;
+    case ToolTipActivatedEventId:
+        OSG_ASSERT(dynamic_cast<ToolTipActivatedEventDetailsType* const>(e));
+
+        _ToolTipActivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ToolTipActivatedEvent(dynamic_cast<ToolTipActivatedEventDetailsType* const>(e), ToolTipActivatedEventId);
+        break;
+    case ToolTipDeactivatedEventId:
+        OSG_ASSERT(dynamic_cast<ToolTipDeactivatedEventDetailsType* const>(e));
+
+        _ToolTipDeactivatedEvent.set_combiner(ConsumableEventCombiner(e));
+        _ToolTipDeactivatedEvent(dynamic_cast<ToolTipDeactivatedEventDetailsType* const>(e), ToolTipDeactivatedEventId);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
@@ -1713,6 +1753,12 @@ boost::signals2::connection ComponentDecoratorBase::connectEvent(UInt32 eventId,
         break;
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.connect(listener, at);
+        break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.connect(listener, at);
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.connect(listener, at);
         break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
@@ -1787,6 +1833,12 @@ boost::signals2::connection  ComponentDecoratorBase::connectEvent(UInt32 eventId
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.connect(group, listener, at);
         break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.connect(group, listener, at);
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.connect(group, listener, at);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
@@ -1857,6 +1909,12 @@ void  ComponentDecoratorBase::disconnectEvent(UInt32 eventId, const BaseEventTyp
     case ComponentDisabledEventId:
         _ComponentDisabledEvent.disconnect(group);
         break;
+    case ToolTipActivatedEventId:
+        _ToolTipActivatedEvent.disconnect(group);
+        break;
+    case ToolTipDeactivatedEventId:
+        _ToolTipDeactivatedEvent.disconnect(group);
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
@@ -1923,6 +1981,12 @@ void  ComponentDecoratorBase::disconnectAllSlotsEvent(UInt32 eventId)
         break;
     case ComponentDisabledEventId:
         _ComponentDisabledEvent.disconnect_all_slots();
+        break;
+    case ToolTipActivatedEventId:
+        _ToolTipActivatedEvent.disconnect_all_slots();
+        break;
+    case ToolTipDeactivatedEventId:
+        _ToolTipDeactivatedEvent.disconnect_all_slots();
         break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
@@ -1991,6 +2055,12 @@ bool  ComponentDecoratorBase::isEmptyEvent(UInt32 eventId) const
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.empty();
         break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.empty();
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.empty();
+        break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
@@ -2058,6 +2128,12 @@ UInt32  ComponentDecoratorBase::numSlotsEvent(UInt32 eventId) const
         break;
     case ComponentDisabledEventId:
         return _ComponentDisabledEvent.num_slots();
+        break;
+    case ToolTipActivatedEventId:
+        return _ToolTipActivatedEvent.num_slots();
+        break;
+    case ToolTipDeactivatedEventId:
+        return _ToolTipDeactivatedEvent.num_slots();
         break;
     default:
         SWARNING << "No event defined with ID " << eventId << std::endl;
@@ -2137,7 +2213,7 @@ bool ComponentDecoratorBase::unlinkParent(
 
         if(pTypedParent != NULL)
         {
-            if(_sfParentContainer.getValue() == pParent)
+            if(_sfParentContainer.getValue() == pTypedParent)
             {
                 editSField(ParentContainerFieldMask);
 
@@ -2146,8 +2222,15 @@ bool ComponentDecoratorBase::unlinkParent(
                 return true;
             }
 
-            FWARNING(("ComponentDecoratorBase::unlinkParent: "
-                      "Child <-> Parent link inconsistent.\n"));
+            SWARNING << "Child (["          << this
+                     << "] id ["            << this->getId()
+                     << "] type ["          << this->getType().getCName()
+                     << "] parentFieldId [" << parentFieldId
+                     << "]) - Parent (["    << pParent
+                     << "] id ["            << pParent->getId()
+                     << "] type ["          << pParent->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -2173,7 +2256,7 @@ bool ComponentDecoratorBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfConstraints.getValue())
+            if(_sfConstraints.getValue() == pTypedChild)
             {
                 editSField(ConstraintsFieldMask);
 
@@ -2182,8 +2265,15 @@ bool ComponentDecoratorBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("ComponentDecoratorBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -2220,6 +2310,8 @@ void ComponentDecoratorBase::onCreate(const ComponentDecorator *source)
         pThis->setRolloverBorder(source->getRolloverBorder());
 
         pThis->setRolloverBackground(source->getRolloverBackground());
+
+        pThis->setToolTip(source->getToolTip());
 
         pThis->setPopupMenu(source->getPopupMenu());
 
@@ -2787,27 +2879,30 @@ EditFieldHandlePtr ComponentDecoratorBase::editHandleRolloverBackground(void)
     return returnValue;
 }
 
-GetFieldHandlePtr ComponentDecoratorBase::getHandleToolTipText     (void) const
+GetFieldHandlePtr ComponentDecoratorBase::getHandleToolTip         (void) const
 {
-    SFString::GetHandlePtr returnValue(
-        new  SFString::GetHandle(
-             &_sfToolTipText,
-             this->getType().getFieldDesc(ToolTipTextFieldId),
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfToolTip,
+             this->getType().getFieldDesc(ToolTipFieldId),
              const_cast<ComponentDecoratorBase *>(this)));
 
     return returnValue;
 }
 
-EditFieldHandlePtr ComponentDecoratorBase::editHandleToolTipText    (void)
+EditFieldHandlePtr ComponentDecoratorBase::editHandleToolTip        (void)
 {
-    SFString::EditHandlePtr returnValue(
-        new  SFString::EditHandle(
-             &_sfToolTipText,
-             this->getType().getFieldDesc(ToolTipTextFieldId),
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfToolTip,
+             this->getType().getFieldDesc(ToolTipFieldId),
              this));
 
+    returnValue->setSetMethod(
+        boost::bind(&ComponentDecorator::setToolTip,
+                    static_cast<ComponentDecorator *>(this), _1));
 
-    editSField(ToolTipTextFieldMask);
+    editSField(ToolTipFieldMask);
 
     return returnValue;
 }
@@ -3251,6 +3346,28 @@ GetEventHandlePtr ComponentDecoratorBase::getHandleComponentDisabledSignal(void)
     return returnValue;
 }
 
+GetEventHandlePtr ComponentDecoratorBase::getHandleToolTipActivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ToolTipActivatedEventType>(
+             const_cast<ToolTipActivatedEventType *>(&_ToolTipActivatedEvent),
+             _producerType.getEventDescription(ToolTipActivatedEventId),
+             const_cast<ComponentDecoratorBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr ComponentDecoratorBase::getHandleToolTipDeactivatedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<ToolTipDeactivatedEventType>(
+             const_cast<ToolTipDeactivatedEventType *>(&_ToolTipDeactivatedEvent),
+             _producerType.getEventDescription(ToolTipDeactivatedEventId),
+             const_cast<ComponentDecoratorBase *>(this)));
+
+    return returnValue;
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void ComponentDecoratorBase::execSyncV(      FieldContainer    &oFrom,
@@ -3294,6 +3411,8 @@ void ComponentDecoratorBase::resolveLinks(void)
     static_cast<ComponentDecorator *>(this)->setRolloverBorder(NULL);
 
     static_cast<ComponentDecorator *>(this)->setRolloverBackground(NULL);
+
+    static_cast<ComponentDecorator *>(this)->setToolTip(NULL);
 
     static_cast<ComponentDecorator *>(this)->setPopupMenu(NULL);
 
@@ -3985,43 +4104,29 @@ void ComponentDecoratorBase::setRolloverBackground(Layer * const value)
     }
 }
 
-//! Get the value of the ComponentDecorator::_sfToolTipText field.
-std::string &ComponentDecoratorBase::editToolTipText(void)
+//! Get the value of the ComponentDecorator::_sfToolTip field.
+Component * ComponentDecoratorBase::getToolTip(void) const
 {
     if(_sfDecoratee.getValue() != NULL)
     {
-        return getDecoratee()->editToolTipText();
+        return getDecoratee()->getToolTip();
     }
     else
     {
-        return Inherited::editToolTipText();
+        return Inherited::getToolTip();
     }
 }
 
-//! Get the value of the ComponentDecorator::_sfToolTipText field.
-const std::string &ComponentDecoratorBase::getToolTipText(void) const
+//! Set the value of the ComponentDecorator::_sfToolTip field.
+void ComponentDecoratorBase::setToolTip(Component * const value)
 {
     if(_sfDecoratee.getValue() != NULL)
     {
-        return getDecoratee()->getToolTipText();
+        getDecoratee()->setToolTip(value);
     }
     else
     {
-        return Inherited::getToolTipText();
-    }
-}
-
-
-//! Set the value of the ComponentDecorator::_sfToolTipText field.
-void ComponentDecoratorBase::setToolTipText(const std::string &value)
-{
-    if(_sfDecoratee.getValue() != NULL)
-    {
-        getDecoratee()->setToolTipText(value);
-    }
-    else
-    {
-        Inherited::setToolTipText(value);
+        Inherited::setToolTip(value);
     }
 }
 

@@ -11,7 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
     childFields="multi"
     >
     A UI Internal Window.
@@ -35,16 +35,6 @@
         >
     </Field>
     <Field
-        name="ActiveToolTip"
-        type="ToolTip"
-        category="pointer"
-        cardinality="single"
-        visibility="external"
-        access="public"
-        defaultValue="NULL"
-        >
-    </Field>
-    <Field
         name="MenuBar"
         type="MenuBar"
         category="pointer"
@@ -64,4 +54,13 @@
         defaultValue="NULL"
         >
     </Field>
+	<Field
+		name="ToolTips"
+		type="Component"
+		category="pointer"
+		cardinality="multi"
+		visibility="external"
+		access="public"
+	>
+	</Field>
 </FieldContainer>

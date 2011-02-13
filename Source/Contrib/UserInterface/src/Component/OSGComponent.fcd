@@ -12,7 +12,7 @@
     useLocalIncludes="false"
     isNodeCore="false"
     fieldsUnmarkedOnCreate="EnabledFieldMask"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
     childFields="multi"
 >
 A UI Component Interface.
@@ -218,12 +218,13 @@ A UI Component Interface.
 	>
 	</Field>
 	<Field
-		name="ToolTipText"
-		type="std::string"
-		category="data"
+		name="ToolTip"
+		type="Component"
+		category="pointer"
 		cardinality="single"
 		visibility="external"
 		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 	<Field
@@ -242,8 +243,6 @@ A UI Component Interface.
 	   cardinality="single"
 	   visibility="external"
 	   access="none"
-       doRefCount="false"
-       passFieldMask="true"
        category="parentpointer"
 	   >
 	  The Component Container this Component is contained in.
@@ -429,6 +428,18 @@ A UI Component Interface.
 	</ProducedEvent>
 	<ProducedEvent
 		name="ComponentDisabled"
+		detailsType="ComponentEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="ToolTipActivated"
+		detailsType="ComponentEventDetails"
+		consumable="true"
+	>
+	</ProducedEvent>
+	<ProducedEvent
+		name="ToolTipDeactivated"
 		detailsType="ComponentEventDetails"
 		consumable="true"
 	>

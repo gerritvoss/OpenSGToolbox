@@ -107,27 +107,27 @@ void Label::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 	    }
 	    else
 	    {
-            //Draw Text Befor the Selection
+            //Draw Text Before the Selection
 		    TheGraphics->drawText(TempPos, getText().substr(0, _TextSelectionStart), getFont(), TextColor, getOpacity()*Opacity);
 
 		    //Draw Selection
             Pnt2f TextTopLeft, TextBottomRight;
             getFont()->getBounds(getText().substr(0, _TextSelectionStart), TextTopLeft, TextBottomRight);
 
-		    TheGraphics->drawQuad(TempPos + Vec2f(TextBottomRight.x(),0),
-			    TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
-			    TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
-			    TempPos + Vec2f(TextBottomRight),
-			    getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity()*Opacity);
+            TheGraphics->drawQuad(TempPos + Vec2f(TextBottomRight.x(),0),
+                                  TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd)).x(), 0),
+                                  TempPos + Vec2f(getFont()->getBounds(getText().substr(0, _TextSelectionEnd))),
+                                  TempPos + Vec2f(TextBottomRight),
+                                  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(),  getSelectionBoxColor(), getOpacity()*Opacity);
 
             //Draw Selected Text
-		    TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0), 
-			    getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
+            TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0), 
+                                  getText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
 
 		    //Draw Text After selection
             getFont()->getBounds(getText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
-		    TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0),
-			    getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity()*Opacity);
+            TheGraphics->drawText(TempPos + Vec2f(TextBottomRight.x(), 0),
+                                  getText().substr(_TextSelectionEnd, getText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity()*Opacity);
 	    }
     }
 }

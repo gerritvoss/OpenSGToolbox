@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,7 @@
 
 #include "OSGFieldContainerFields.h"    // Prototypes type
 #include "OSGBaseFields.h"              // TextCaretRate type
+#include "OSGComponentFields.h"         // DefaultToolTip type
 
 #include "OSGLookAndFeelFields.h"
 
@@ -87,6 +88,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(LookAndFeel);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -99,7 +102,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
         ToolTipPopupTimeFieldId = TextCaretRateFieldId + 1,
         SubMenuPopupTimeFieldId = ToolTipPopupTimeFieldId + 1,
         KeyAcceleratorMenuFlashTimeFieldId = SubMenuPopupTimeFieldId + 1,
-        NextFieldId = KeyAcceleratorMenuFlashTimeFieldId + 1
+        DefaultToolTipFieldId = KeyAcceleratorMenuFlashTimeFieldId + 1,
+        NextFieldId = DefaultToolTipFieldId + 1
     };
 
     static const OSG::BitVector PrototypesFieldMask =
@@ -112,6 +116,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
         (TypeTraits<BitVector>::One << SubMenuPopupTimeFieldId);
     static const OSG::BitVector KeyAcceleratorMenuFlashTimeFieldMask =
         (TypeTraits<BitVector>::One << KeyAcceleratorMenuFlashTimeFieldId);
+    static const OSG::BitVector DefaultToolTipFieldMask =
+        (TypeTraits<BitVector>::One << DefaultToolTipFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
@@ -120,6 +126,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
     typedef SFTime            SFToolTipPopupTimeType;
     typedef SFTime            SFSubMenuPopupTimeType;
     typedef SFTime            SFKeyAcceleratorMenuFlashTimeType;
+    typedef SFUnrecComponentPtr SFDefaultToolTipType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -156,6 +163,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
 
                   SFTime              *editSFKeyAcceleratorMenuFlashTime(void);
             const SFTime              *getSFKeyAcceleratorMenuFlashTime (void) const;
+            const SFUnrecComponentPtr *getSFDefaultToolTip (void) const;
+                  SFUnrecComponentPtr *editSFDefaultToolTip (void);
 
 
                   Time                &editTextCaretRate  (void);
@@ -170,6 +179,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
                   Time                &editKeyAcceleratorMenuFlashTime(void);
             const Time                &getKeyAcceleratorMenuFlashTime (void) const;
 
+                  Component * getDefaultToolTip (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -179,6 +190,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
             void setToolTipPopupTime(const Time &value);
             void setSubMenuPopupTime(const Time &value);
             void setKeyAcceleratorMenuFlashTime(const Time &value);
+            void setDefaultToolTip (Component * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -221,6 +233,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
     SFTime            _sfToolTipPopupTime;
     SFTime            _sfSubMenuPopupTime;
     SFTime            _sfKeyAcceleratorMenuFlashTime;
+    SFUnrecComponentPtr _sfDefaultToolTip;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -259,6 +272,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING LookAndFeelBase : public FieldContaine
     EditFieldHandlePtr editHandleSubMenuPopupTime(void);
     GetFieldHandlePtr  getHandleKeyAcceleratorMenuFlashTime (void) const;
     EditFieldHandlePtr editHandleKeyAcceleratorMenuFlashTime(void);
+    GetFieldHandlePtr  getHandleDefaultToolTip  (void) const;
+    EditFieldHandlePtr editHandleDefaultToolTip (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

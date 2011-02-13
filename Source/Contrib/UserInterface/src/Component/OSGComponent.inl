@@ -72,4 +72,11 @@ void Component::moveFocusPrev(void)
     moveFocus(-1);
 }
 
+inline
+bool Component::isToolTipActive(void) const
+{
+    return (getToolTip() != NULL && 
+            _IsToolTipActive);
+}
+
 OSG_END_NAMESPACE

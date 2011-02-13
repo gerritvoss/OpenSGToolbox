@@ -877,8 +877,17 @@ namespace OSG {
     
         virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
     
-        virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-        //virtual ToolTipRefPtr createToolTip(void);
+        virtual void setToolTipText(const std::string& ToolTipText);
+
+        bool isToolTipActive(void) const;
+
+        void activateToolTip(void);
+
+        void deactivateToolTip(void);
+
+        void setToolTipLocation(const Pnt2f& Location);
+        
+        Pnt2f getToolTipLocation(void) const;
         
         virtual Vec2f getPreferredScrollableViewportSize(void);
     

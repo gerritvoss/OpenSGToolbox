@@ -45,7 +45,6 @@
 #include "OSGComponentBase.h"
 #include "OSGGraphics.h"
 
-#include "OSGToolTipFields.h"
 #include "OSGInternalWindowFields.h"
 #include "OSGComponentContainerFields.h"
 #include "OSGUpdateEventDetailsFields.h"
@@ -169,10 +168,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 
     virtual Real32 getBaseline(const Real32& x, const Real32& y) const;
 
-    //Returns the tooltip location in this component's coordinate system
-    virtual Pnt2f getToolTipLocation(Pnt2f MousePosition);
-
-    virtual ToolTipTransitPtr createToolTip(void);
+    virtual ComponentTransitPtr createDefaultToolTip(void);
     
     //Scrollable Interface
     //Returns the preferred size of the viewport for a view component.
@@ -228,6 +224,62 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     virtual void setParentWindow(InternalWindow* const parent);
 
     virtual ComponentContainer* getParentContainer(void) const;
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                  ToolTips                                    */
+    /*! \{                                                                 */
+
+    /*! \brief Create a default ToolTip and insert it with text
+     *
+     * The DefaultToolTip defined by the currently active OSG::LookAndFeel is
+     * cloned.  If the type of the cloned Component is derived from
+     * OSG::TextComponent, then the text of the component is set with the text
+     * given as a parameter to this method.
+     *
+     *  \param[in] ToolTipText The text of the ToolTip
+     */
+    virtual void setToolTipText(const std::string& ToolTipText);
+
+    /*!
+     * \brief Is the ToolTip for this Component active
+     *
+     * \returns true if the ToolTip of this Component is active, false otherwise
+     */
+    bool isToolTipActive(void) const;
+
+    /*!
+     * \brief Activate the ToolTip on this Component
+     *
+     * If the ToolTips is already active, or there is no ToolTip associated with
+     * this Component, then nothing is done.
+     */
+    void activateToolTip(void);
+
+    /*!
+     * \brief Deactivate the ToolTip of this Component
+     *
+     * If the ToolTips is not already active, or there is no ToolTip associated with
+     * this Component, then nothing is done.
+     */
+    void deactivateToolTip(void);
+
+    /*!
+     * \brief Set the location of the ToolTip in Component space
+     *
+     * \param[in] Location Location, in Component space, to put the ToolTip
+     */
+    void setToolTipLocation(const Pnt2f& Location);
+    
+    /*!
+     * \brief Get the location of the ToolTip in Component space
+     *
+     * \returns The location of the ToolTip in Component space. The value retured is
+     * Pnt2f(0.0f,0.0f) if the ToolTip is not active.
+     */
+    Pnt2f getToolTipLocation(void) const;
+
+    /*! \}                                                                 */
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -279,16 +331,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
 
     virtual bool useBoundsForClipping(void) const;
 
-    void handleUpdate(UpdateEventDetails* const e);
-    void handleMouseEntered(MouseEventDetails* const e);
-    void handleMouseExited(MouseEventDetails* const e);
+    void handleToolTipActivateUpdate(UpdateEventDetails* const e);
+    void handleToolTipActivateMouseEntered(MouseEventDetails* const e);
+    void handleToolTipActivateMouseExited(MouseEventDetails* const e);
 
-    void deactivateTooltip(MouseEventDetails* const e);
+    void handleDeactivateToolTipEvent(MouseEventDetails* const e);
 
-    boost::signals2::connection _UpdateConnection;
+    boost::signals2::connection _ToolTipActivateUpdateConnection;
     
-    boost::signals2::connection _MouseEnterConnection,
-                                _MouseExitConnection;
+    boost::signals2::connection _ToolTipActivateMouseEnterConnection,
+                                _ToolTipActivateMouseExitConnection;
 
     boost::signals2::connection _ActiveTooltipClickConnection,
                                 _ActiveTooltipExitConnection,
@@ -298,22 +350,25 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     Real32 _TimeSinceMouseEntered;
     
 	bool _MouseInComponentLastMouse;
+    bool _IsToolTipActive;
 
 	virtual UInt32 queryCursor(const Pnt2f& CursorLoc) const;
 	
-    virtual Pnt2f               getClipTopLeft    (void) const;
-    virtual Pnt2f               getClipBottomRight(void) const;
-    virtual void setClipTopLeft    (const Pnt2f &value);
-    virtual void setClipBottomRight(const Pnt2f &value);
+    virtual Pnt2f getClipTopLeft    (void) const;
+    virtual Pnt2f getClipBottomRight(void) const;
+    virtual void  setClipTopLeft    (const Pnt2f &value);
+    virtual void  setClipBottomRight(const Pnt2f &value);
 
     InternalWindow* _ParentWindow;
 
-    void produceComponentResized (void);
-    void produceComponentMoved   (void);
-    void produceComponentEnabled (void);
-    void produceComponentDisabled(void);
-    void produceComponentVisible (void);
-    void produceComponentHidden  (void);
+    void produceComponentResized  (void);
+    void produceComponentMoved    (void);
+    void produceComponentEnabled  (void);
+    void produceComponentDisabled (void);
+    void produceComponentVisible  (void);
+    void produceComponentHidden   (void);
+    void produceToolTipActivated  (void);
+    void produceToolTipDeactivated(void);
 
     /*==========================  PRIVATE  ================================*/
 

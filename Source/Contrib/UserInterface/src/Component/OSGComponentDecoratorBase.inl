@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -987,6 +987,94 @@ inline
 void ComponentDecoratorBase::produceComponentDisabled(ComponentDisabledEventDetailsType* const e)
 {
     produceEvent(ComponentDisabledEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectToolTipActivated(const ToolTipActivatedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ToolTipActivatedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectToolTipActivated(const ToolTipActivatedEventType::group_type &group,
+                                                    const ToolTipActivatedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ToolTipActivatedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectToolTipActivated(const ToolTipActivatedEventType::group_type &group)
+{
+    _ToolTipActivatedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsToolTipActivated(void)
+{
+    _ToolTipActivatedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyToolTipActivated(void) const
+{
+    return _ToolTipActivatedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsToolTipActivated(void) const
+{
+    return _ToolTipActivatedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceToolTipActivated(ToolTipActivatedEventDetailsType* const e)
+{
+    produceEvent(ToolTipActivatedEventId, e);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectToolTipDeactivated(const ToolTipDeactivatedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _ToolTipDeactivatedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  ComponentDecoratorBase::connectToolTipDeactivated(const ToolTipDeactivatedEventType::group_type &group,
+                                                    const ToolTipDeactivatedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _ToolTipDeactivatedEvent.connect(group, listener, at);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectToolTipDeactivated(const ToolTipDeactivatedEventType::group_type &group)
+{
+    _ToolTipDeactivatedEvent.disconnect(group);
+}
+
+inline
+void  ComponentDecoratorBase::disconnectAllSlotsToolTipDeactivated(void)
+{
+    _ToolTipDeactivatedEvent.disconnect_all_slots();
+}
+
+inline
+bool  ComponentDecoratorBase::isEmptyToolTipDeactivated(void) const
+{
+    return _ToolTipDeactivatedEvent.empty();
+}
+
+inline
+UInt32  ComponentDecoratorBase::numSlotsToolTipDeactivated(void) const
+{
+    return _ToolTipDeactivatedEvent.num_slots();
+}
+
+inline
+void ComponentDecoratorBase::produceToolTipDeactivated(ToolTipDeactivatedEventDetailsType* const e)
+{
+    produceEvent(ToolTipDeactivatedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(ComponentDecorator);

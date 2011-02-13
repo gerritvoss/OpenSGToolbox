@@ -67,7 +67,6 @@
 #include "OSGTextField.h"
 #include "OSGPasswordField.h"
 #include "OSGTextArea.h"
-#include "OSGToolTip.h"
 
 #include "OSGMenuItem.h"
 #include "OSGMenu.h"
@@ -828,7 +827,7 @@ void DefaultLookAndFeel::init(void)
     DefaultToolTipBackground->setColor(Color4f(1.0,1.0,0.9,1.0));
 
     //Default ToolTip
-    ToolTipRefPtr DefaultToolTip = ToolTip::create();
+    LabelRefPtr DefaultToolTip = Label::create();
     DefaultToolTip->setEnabled(true);
     DefaultToolTip->setVisible(true);
 
@@ -853,7 +852,7 @@ void DefaultLookAndFeel::init(void)
     DefaultToolTip->setAlignment(Vec2f(0.0f,0.5f));
     DefaultToolTip->setTextColor(Color4f(0.0,0.0,0.0,1.0));
 
-    ToolTip::getClassType().setPrototype(DefaultToolTip);
+    setDefaultToolTip(DefaultToolTip);
 
     //************************** MenuItem*****************************
     //Default MenuItemBorder

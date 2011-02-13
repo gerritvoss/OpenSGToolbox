@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -59,6 +59,7 @@
 
 
 #include "OSGFieldContainer.h"          // Prototypes Class
+#include "OSGComponent.h"               // DefaultToolTip Class
 
 #include "OSGLookAndFeelBase.h"
 #include "OSGLookAndFeel.h"
@@ -100,6 +101,10 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var Time            LookAndFeelBase::_sfKeyAcceleratorMenuFlashTime
+    
+*/
+
+/*! \var Component *     LookAndFeelBase::_sfDefaultToolTip
     
 */
 
@@ -190,6 +195,18 @@ void LookAndFeelBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleKeyAcceleratorMenuFlashTime));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecComponentPtr::Description(
+        SFUnrecComponentPtr::getClassType(),
+        "DefaultToolTip",
+        "",
+        DefaultToolTipFieldId, DefaultToolTipFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&LookAndFeel::editHandleDefaultToolTip),
+        static_cast<FieldGetMethodSig >(&LookAndFeel::getHandleDefaultToolTip));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -267,6 +284,16 @@ LookAndFeelBase::TypeObject LookAndFeelBase::_type(
     "\t\tvisibility=\"external\"\n"
     "\t\tdefaultValue=\"0.15\"\n"
     "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"DefaultToolTip\"\n"
+    "\t\ttype=\"Component\"\n"
+    "\t\tcategory=\"pointer\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t\tdefaultValue=\"NULL\"\n"
     "\t>\n"
     "\t</Field>\n"
     "</FieldContainer>\n",
@@ -358,6 +385,19 @@ const SFTime *LookAndFeelBase::getSFKeyAcceleratorMenuFlashTime(void) const
 }
 
 
+//! Get the LookAndFeel::_sfDefaultToolTip field.
+const SFUnrecComponentPtr *LookAndFeelBase::getSFDefaultToolTip(void) const
+{
+    return &_sfDefaultToolTip;
+}
+
+SFUnrecComponentPtr *LookAndFeelBase::editSFDefaultToolTip (void)
+{
+    editSField(DefaultToolTipFieldMask);
+
+    return &_sfDefaultToolTip;
+}
+
 
 
 void LookAndFeelBase::pushToPrototypes(FieldContainer * const value)
@@ -441,6 +481,10 @@ UInt32 LookAndFeelBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfKeyAcceleratorMenuFlashTime.getBinSize();
     }
+    if(FieldBits::NoField != (DefaultToolTipFieldMask & whichField))
+    {
+        returnValue += _sfDefaultToolTip.getBinSize();
+    }
 
     return returnValue;
 }
@@ -470,6 +514,10 @@ void LookAndFeelBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfKeyAcceleratorMenuFlashTime.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (DefaultToolTipFieldMask & whichField))
+    {
+        _sfDefaultToolTip.copyToBin(pMem);
+    }
 }
 
 void LookAndFeelBase::copyFromBin(BinaryDataHandler &pMem,
@@ -479,26 +527,35 @@ void LookAndFeelBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (PrototypesFieldMask & whichField))
     {
+        editMField(PrototypesFieldMask, _mfPrototypes);
         _mfPrototypes.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (TextCaretRateFieldMask & whichField))
     {
+        editSField(TextCaretRateFieldMask);
         _sfTextCaretRate.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ToolTipPopupTimeFieldMask & whichField))
     {
+        editSField(ToolTipPopupTimeFieldMask);
         _sfToolTipPopupTime.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SubMenuPopupTimeFieldMask & whichField))
     {
+        editSField(SubMenuPopupTimeFieldMask);
         _sfSubMenuPopupTime.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
     {
+        editSField(KeyAcceleratorMenuFlashTimeFieldMask);
         _sfKeyAcceleratorMenuFlashTime.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (DefaultToolTipFieldMask & whichField))
+    {
+        editSField(DefaultToolTipFieldMask);
+        _sfDefaultToolTip.copyFromBin(pMem);
+    }
 }
-
 
 
 
@@ -509,8 +566,9 @@ LookAndFeelBase::LookAndFeelBase(void) :
     _mfPrototypes             (),
     _sfTextCaretRate          (Time(1.0)),
     _sfToolTipPopupTime       (Time(1.5)),
-    _sfSubMenuPopupTime       (Time(0.15)),
-    _sfKeyAcceleratorMenuFlashTime(Time(0.15))
+    _sfSubMenuPopupTime       (Time(0.25)),
+    _sfKeyAcceleratorMenuFlashTime(Time(0.15)),
+    _sfDefaultToolTip         (NULL)
 {
 }
 
@@ -520,7 +578,8 @@ LookAndFeelBase::LookAndFeelBase(const LookAndFeelBase &source) :
     _sfTextCaretRate          (source._sfTextCaretRate          ),
     _sfToolTipPopupTime       (source._sfToolTipPopupTime       ),
     _sfSubMenuPopupTime       (source._sfSubMenuPopupTime       ),
-    _sfKeyAcceleratorMenuFlashTime(source._sfKeyAcceleratorMenuFlashTime)
+    _sfKeyAcceleratorMenuFlashTime(source._sfKeyAcceleratorMenuFlashTime),
+    _sfDefaultToolTip         (NULL)
 {
 }
 
@@ -550,6 +609,8 @@ void LookAndFeelBase::onCreate(const LookAndFeel *source)
 
             ++PrototypesIt;
         }
+
+        pThis->setDefaultToolTip(source->getDefaultToolTip());
     }
 }
 
@@ -690,6 +751,35 @@ EditFieldHandlePtr LookAndFeelBase::editHandleKeyAcceleratorMenuFlashTime(void)
     return returnValue;
 }
 
+GetFieldHandlePtr LookAndFeelBase::getHandleDefaultToolTip  (void) const
+{
+    SFUnrecComponentPtr::GetHandlePtr returnValue(
+        new  SFUnrecComponentPtr::GetHandle(
+             &_sfDefaultToolTip,
+             this->getType().getFieldDesc(DefaultToolTipFieldId),
+             const_cast<LookAndFeelBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr LookAndFeelBase::editHandleDefaultToolTip (void)
+{
+    SFUnrecComponentPtr::EditHandlePtr returnValue(
+        new  SFUnrecComponentPtr::EditHandle(
+             &_sfDefaultToolTip,
+             this->getType().getFieldDesc(DefaultToolTipFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&LookAndFeel::setDefaultToolTip,
+                    static_cast<LookAndFeel *>(this), _1));
+
+    editSField(DefaultToolTipFieldMask);
+
+    return returnValue;
+}
+
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 void LookAndFeelBase::execSyncV(      FieldContainer    &oFrom,
@@ -715,6 +805,8 @@ void LookAndFeelBase::resolveLinks(void)
     Inherited::resolveLinks();
 
     static_cast<LookAndFeel *>(this)->clearPrototypes();
+
+    static_cast<LookAndFeel *>(this)->setDefaultToolTip(NULL);
 
 
 }

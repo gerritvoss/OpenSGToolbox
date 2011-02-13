@@ -273,7 +273,6 @@ typedef InternalWindow *InternalWindowP;
 OSG_END_NAMESPACE
 
 #include "OSGPopupMenu.h"
-#include "OSGToolTip.h"
 #include "OSGTitlebar.h"
 #include "OSGMenuBar.h"
 

@@ -53,7 +53,6 @@
 #include "OSGInternalWindow.h"
 #include "OSGUIDrawingSurface.h"
 #include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
-#include "OSGToolTip.h"
 #include "OSGUIDrawUtils.h"
 #include "OSGLookAndFeelManager.h"
 #include "OSGPopupMenu.h"
@@ -488,7 +487,7 @@ bool Component::useBoundsForClipping(void) const
 
 void Component::detachFromEventProducer(void)
 {
-    _UpdateConnection.disconnect();
+    _ToolTipActivateUpdateConnection.disconnect();
 }
 
 Pnt2f Component::getClipTopLeft(void) const
@@ -673,15 +672,22 @@ bool Component::isContained(const Pnt2f& p, bool TestAgainstClipBounds) const
     }
 }
 
-Pnt2f Component::getToolTipLocation(Pnt2f MousePosition)
+ComponentTransitPtr Component::createDefaultToolTip(void)
 {
-    //TODO:Implement
-    return DrawingSurfaceToComponent(MousePosition,this) + Vec2f(5,20);
-}
+    ComponentTransitPtr Result(NULL);
 
-ToolTipTransitPtr Component::createToolTip(void)
-{
-    return ToolTip::create();
+    //Get the active LookAndFeel
+    //Copy the default ToolTip
+    Component* DefaultTooltip = LookAndFeelManager::the()->getLookAndFeel()->getDefaultToolTip();
+
+    if(DefaultTooltip != NULL)
+    {
+        FieldContainerTransitPtr tmpPtr = DefaultTooltip->shallowCopy();
+
+        Result = dynamic_pointer_cast<Component>(tmpPtr);
+    }
+    
+    return Result;
 }
 
 void Component::getBounds(Pnt2f& TopLeft, Pnt2f& BottomRight) const
@@ -1172,14 +1178,9 @@ void Component::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-    if(getParentWindow() != NULL)
-    {
-        getParentWindow()->setActiveToolTip(NULL);
-    }
-
-    _UpdateConnection.disconnect();
-    _MouseEnterConnection.disconnect();
-    _MouseExitConnection.disconnect();
+    _ToolTipActivateUpdateConnection.disconnect();
+    _ToolTipActivateMouseEnterConnection.disconnect();
+    _ToolTipActivateMouseExitConnection.disconnect();
     _ActiveTooltipClickConnection.disconnect();
     _ActiveTooltipExitConnection.disconnect();
     _ActiveTooltipPressConnection.disconnect();
@@ -1192,7 +1193,8 @@ Component::Component(void) :
     Inherited(),
     _MouseInComponentLastMouse(false),
     _ParentWindow(NULL),
-    _TimeSinceMouseEntered(0.0)
+    _TimeSinceMouseEntered(0.0),
+    _IsToolTipActive(false)
 {
 }
 
@@ -1200,7 +1202,8 @@ Component::Component(const Component &source) :
     Inherited(source),
     _MouseInComponentLastMouse(false),
     _ParentWindow(NULL),
-    _TimeSinceMouseEntered(0.0)
+    _TimeSinceMouseEntered(0.0),
+    _IsToolTipActive(false)
 {
 }
 
@@ -1262,15 +1265,21 @@ void Component::changed(ConstFieldMaskArg whichField,
         }
     }
 
-    if( (whichField & ToolTipTextFieldMask))
+    if(whichField & ToolTipFieldMask)
     {
-        _MouseEnterConnection.disconnect();
-        _MouseExitConnection.disconnect();
+        _ToolTipActivateMouseEnterConnection.disconnect();
+        _ToolTipActivateMouseExitConnection.disconnect();
 
-        if(!getToolTipText().empty())
+        if(getToolTip() != NULL)
         {
-            _MouseEnterConnection = connectMouseEntered(boost::bind(&Component::handleMouseEntered, this, _1));
-            _MouseExitConnection = connectMouseExited(boost::bind(&Component::handleMouseExited, this, _1));
+            getToolTip()->setVisible(true);
+            getToolTip()->setEnabled(true);
+            getToolTip()->updateClipBounds();
+
+            getToolTip()->setPosition(Pnt2f(0.0f,0.0f));
+
+            _ToolTipActivateMouseEnterConnection = connectMouseEntered(boost::bind(&Component::handleToolTipActivateMouseEntered, this, _1));
+            _ToolTipActivateMouseExitConnection = connectMouseExited(boost::bind(&Component::handleToolTipActivateMouseExited, this, _1));
         }
     }
 
@@ -1332,6 +1341,19 @@ void Component::produceComponentHidden(void)
     Inherited::produceComponentHidden(Details);
 }
 
+void Component::produceToolTipActivated  (void)
+{
+    ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
+    
+    Inherited::produceToolTipActivated(Details);
+}
+
+void Component::produceToolTipDeactivated(void)
+{
+    ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
+    
+    Inherited::produceToolTipDeactivated(Details);
+}
 
 void Component::updateContainerLayout(void)
 {
@@ -1341,70 +1363,124 @@ void Component::updateContainerLayout(void)
     }
 }
 
-void Component::handleUpdate(UpdateEventDetails* const e)
+void Component::setToolTipText(const std::string& ToolTipText)
 {
-    _TimeSinceMouseEntered += e->getElapsedTime();
-    if(_TimeSinceMouseEntered >= LookAndFeelManager::the()->getLookAndFeel()->getToolTipPopupTime() &&
-       getParentWindow() != NULL &&
-       getParentWindow()->getActiveToolTip() == NULL)
+    ComponentRefPtr TheToolTip = createDefaultToolTip();
+    if(TheToolTip->getType().isDerivedFrom(TextComponent::getClassType()))
     {
-        ToolTipRefPtr TheToolTip = createToolTip();
-        TheToolTip->setTippedComponent(this);
-        if(getParentWindow() != NULL &&
-           getParentWindow()->getParentDrawingSurface() != NULL)
-        {
-            TheToolTip->setPosition(ComponentToFrame(getToolTipLocation(getParentWindow()->getParentDrawingSurface()->getMousePosition()), this));
-        }
-        else
-        {
-            TheToolTip->setPosition(ComponentToFrame(getToolTipLocation(Pnt2f(0,0)),this));
-        }
-        TheToolTip->setText(getToolTipText());
+        dynamic_pointer_cast<TextComponent>(TheToolTip)->setText(ToolTipText);
+    }
+
+    setToolTip(TheToolTip);
+}
+
+void Component::activateToolTip(void)
+{
+    if(getToolTip() != NULL &&
+       !isToolTipActive()   &&
+       getParentWindow() != NULL)
+    {
+        _IsToolTipActive = true;
+        getParentWindow()->pushToToolTips(getToolTip());
+
+        _ActiveTooltipClickConnection = connectMouseClicked(boost::bind(&Component::handleDeactivateToolTipEvent, this, _1));
+        _ActiveTooltipExitConnection = connectMouseExited(boost::bind(&Component::handleDeactivateToolTipEvent, this, _1));
+        _ActiveTooltipPressConnection = connectMousePressed(boost::bind(&Component::handleDeactivateToolTipEvent, this, _1));
+        _ActiveTooltipReleaseConnection = connectMouseReleased(boost::bind(&Component::handleDeactivateToolTipEvent, this, _1));
+
+        produceToolTipActivated();
+    }
+}
+
+void Component::deactivateToolTip(void)
+{
+    if(isToolTipActive())
+    {
+        _TimeSinceMouseEntered = 0.0f;
+        _IsToolTipActive = false;
+
+        _ActiveTooltipClickConnection.disconnect();
+        _ActiveTooltipExitConnection.disconnect();
+        _ActiveTooltipPressConnection.disconnect();
+        _ActiveTooltipReleaseConnection.disconnect();
 
         if(getParentWindow() != NULL)
         {
-            getParentWindow()->setActiveToolTip(TheToolTip);
+            getParentWindow()->removeObjFromToolTips(getToolTip());
+        }
+        produceToolTipDeactivated();
+    }
+}
+
+Pnt2f Component::getToolTipLocation(void) const
+{
+    Pnt2f Result(0.0f,0.0f);
+    if(getToolTip() != NULL)
+    {
+        Result = getToolTip()->getPosition();
+    }
+
+    return Result;
+}
+
+void Component::setToolTipLocation(const Pnt2f& Location)
+{
+    if(getToolTip() != NULL)
+    {
+        if(getParentWindow() != NULL &&
+           getParentWindow()->getParentDrawingSurface() != NULL)
+        {
+            getToolTip()->setPosition(ComponentToFrame(Location,this));
+        }
+        else
+        {
+            getToolTip()->setPosition(Location);
+        }
+    }
+}
+
+void Component::handleToolTipActivateUpdate(UpdateEventDetails* const e)
+{
+    _TimeSinceMouseEntered += e->getElapsedTime();
+    if(!isToolTipActive() &&
+       _TimeSinceMouseEntered >= LookAndFeelManager::the()->getLookAndFeel()->getToolTipPopupTime())
+    {
+        Pnt2f Location(0.0f,0.0f);
+
+        if(getParentWindow() != NULL &&
+           getParentWindow()->getParentDrawingSurface() != NULL)
+        {
+            //TODO: Make this configurable
+            Vec2f DefaultToolTipOffset(5,18);
+
+            Location = DrawingSurfaceToComponent(getParentWindow()->getParentDrawingSurface()->getMousePosition(),this)
+                         + DefaultToolTipOffset;
         }
 
-        _ActiveTooltipClickConnection = connectMouseClicked(boost::bind(&Component::deactivateTooltip, this, _1));
-        _ActiveTooltipExitConnection = connectMouseExited(boost::bind(&Component::deactivateTooltip, this, _1));
-        _ActiveTooltipPressConnection = connectMousePressed(boost::bind(&Component::deactivateTooltip, this, _1));
-        _ActiveTooltipReleaseConnection = connectMouseReleased(boost::bind(&Component::deactivateTooltip, this, _1));
+        setToolTipLocation(Location);
+        activateToolTip();
     }
 }
 
-void Component::handleMouseEntered(MouseEventDetails* const e)
+void Component::handleToolTipActivateMouseEntered(MouseEventDetails* const e)
 {
     _TimeSinceMouseEntered = 0.0f;
     if( getParentWindow() != NULL &&
         getParentWindow()->getParentDrawingSurface() != NULL &&
         getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
-        _UpdateConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&Component::handleUpdate, this, _1));
+        _ToolTipActivateUpdateConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectUpdate(boost::bind(&Component::handleToolTipActivateUpdate, this, _1));
     }
 }
 
-void Component::handleMouseExited(MouseEventDetails* const e)
+void Component::handleToolTipActivateMouseExited(MouseEventDetails* const e)
 {
-    if( getParentWindow() != NULL &&
-        getParentWindow()->getParentDrawingSurface() != NULL &&
-        getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
-    {
-        _UpdateConnection.disconnect();
-    }
+    _ToolTipActivateUpdateConnection.disconnect();
 }
 
-void Component::deactivateTooltip(MouseEventDetails* const e)
+void Component::handleDeactivateToolTipEvent(MouseEventDetails* const e)
 {
-    _TimeSinceMouseEntered = 0.0f;
-    if(getParentWindow() != NULL)
-    {
-        getParentWindow()->setActiveToolTip(NULL);
-    }
-    _ActiveTooltipClickConnection.disconnect();
-    _ActiveTooltipExitConnection.disconnect();
-    _ActiveTooltipPressConnection.disconnect();
-    _ActiveTooltipReleaseConnection.disconnect();
+    deactivateToolTip();
 }
 
 OSG_END_NAMESPACE

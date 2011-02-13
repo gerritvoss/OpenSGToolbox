@@ -29,6 +29,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGUtil 
                    OSGWindow 
                    OSGTBFileIO 
+                   OSGTBAnimation 
                    OSGText 
                    OSGContribUserInterface 
                    )

@@ -250,11 +250,11 @@ int main(int argc, char **argv)
         ExampleDrawObjectButton->setDrawObjectToTextAlignment(Button::ALIGN_DRAW_OBJECT_RIGHT_OF_TEXT);
         ExampleDrawObjectButton->setText("Icon");
 
-        ExampleDrawObjectButton->setImage(std::string("Data/Icon.png"));
-        ExampleDrawObjectButton->setActiveImage(std::string("Data/Icon.png"));
-        ExampleDrawObjectButton->setFocusedImage(std::string("Data/Icon.png"));
-        ExampleDrawObjectButton->setRolloverImage(std::string("Data/Icon.png"));
-        ExampleDrawObjectButton->setDisabledImage(std::string("Data/Icon.png"));
+        ExampleDrawObjectButton->setImage(std::string("./Data/Icon.png"));
+        ExampleDrawObjectButton->setActiveImage(std::string("./Data/Icon.png"));
+        ExampleDrawObjectButton->setFocusedImage(std::string("./Data/Icon.png"));
+        ExampleDrawObjectButton->setRolloverImage(std::string("./Data/Icon.png"));
+        ExampleDrawObjectButton->setDisabledImage(std::string("./Data/Icon.png"));
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow

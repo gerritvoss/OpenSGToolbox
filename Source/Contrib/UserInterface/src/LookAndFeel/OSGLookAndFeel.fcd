@@ -11,7 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
 >
 UI LookAndFeel Interface.
 	<Field
@@ -61,6 +61,16 @@ UI LookAndFeel Interface.
 		visibility="external"
 		defaultValue="0.15"
 		access="public"
+	>
+	</Field>
+	<Field
+		name="DefaultToolTip"
+		type="Component"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="public"
+		defaultValue="NULL"
 	>
 	</Field>
 </FieldContainer>

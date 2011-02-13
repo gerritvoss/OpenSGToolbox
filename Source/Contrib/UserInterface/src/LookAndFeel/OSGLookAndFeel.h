@@ -129,6 +129,8 @@ typedef LookAndFeel *LookAndFeelP;
 
 OSG_END_NAMESPACE
 
+#include "OSGComponent.h"
+
 #include "OSGLookAndFeelBase.inl"
 #include "OSGLookAndFeel.inl"
 

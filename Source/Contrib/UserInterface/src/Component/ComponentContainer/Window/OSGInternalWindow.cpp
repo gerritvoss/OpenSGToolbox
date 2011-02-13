@@ -47,7 +47,6 @@
 
 #include "OSGInternalWindow.h"
 #include "OSGUIDrawingSurface.h"
-#include "OSGToolTip.h"
 #include "OSGPopupMenu.h"
 #include "OSGMenuBar.h"
 #include "OSGLabel.h"
@@ -744,17 +743,17 @@ void InternalWindow::drawInternal(Graphics* const TheGraphics, Real32 Opacity) c
     {
         getMenuBar()->draw(TheGraphics, Opacity*getOpacity());
     }
+
+    //Draw all ToolTips
+    for(UInt32 i(0) ; i<getMFToolTips()->size() ; ++i)
+    {
+        getToolTips(i)->draw(TheGraphics, Opacity*getOpacity());
+    }
 }
 
 void InternalWindow::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
 {
     Inherited::drawUnclipped(TheGraphics, Opacity);
-
-    //If I have an active tooltip then draw it
-    if(getActiveToolTip() != NULL)
-    {
-        getActiveToolTip()->draw(TheGraphics, Opacity*getOpacity());
-    }
 
     //If I have an active popupMenu then draw it
     for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
@@ -989,14 +988,6 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
         getTitlebar()->setEnabled(getFocused());
     }
 
-    if( (whichField & ActiveToolTipFieldMask) &&
-        getActiveToolTip() != NULL)
-    {
-        getActiveToolTip()->setVisible(true);
-        getActiveToolTip()->setEnabled(true);
-        getActiveToolTip()->updateClipBounds();
-    }
-
     if( (whichField & ActivePopupMenusFieldMask) &&
         getMFActivePopupMenus()->size() > 0)
     {
@@ -1112,6 +1103,21 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
         getTitlebar() != NULL)
     {
         getTitlebar()->setDrawClose(getClosable());
+    }
+    if(whichField & ToolTipsFieldMask)
+    {
+        for(UInt32 i(0) ; i<getMFToolTips()->size() ; ++i)
+        {
+            getToolTips(i)->setParentWindow(this);
+            if(getToolTips(i)->getType().isDerivedFrom(ComponentContainer::getClassType()))
+            {
+                getToolTips(i)->setSize(getToolTips(i)->getPreferredSize());
+            }
+            else
+            {
+                getToolTips(i)->setSize(getToolTips(i)->getRequestedSize());
+            }
+        }
     }
 
     Inherited::changed(whichField, origin, details);

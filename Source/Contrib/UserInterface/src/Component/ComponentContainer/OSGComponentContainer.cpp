@@ -141,10 +141,10 @@ Vec2f ComponentContainer::getContentRequestedSize(void) const
 {
     if(getLayout() == NULL)
     {
-        Pnt2f Minimum(0.0f,0.0f), Maximum(0.0f,0.0f);
-
         if(getMFChildren()->size() > 0)
         {
+            Pnt2f Minimum(0.0f,0.0f), Maximum(0.0f,0.0f);
+
             Pnt2f ChildTopLeft, ChildBottomRight, ChildPosition;
 
             getChildren(0)->getBounds(ChildTopLeft, ChildBottomRight);
@@ -173,9 +173,13 @@ Vec2f ComponentContainer::getContentRequestedSize(void) const
                 Maximum[0] = osgMax(osgMax(ChildTopLeft.x(), ChildBottomRight.x()), Maximum.x());
                 Maximum[1] = osgMax(osgMax(ChildTopLeft.y(), ChildBottomRight.y()), Maximum.y());
             }
+            return Maximum - Minimum;
+        }
+        else
+        {
+            return getPreferredSize();
         }
 
-        return Maximum - Minimum;
     }
     else
     {

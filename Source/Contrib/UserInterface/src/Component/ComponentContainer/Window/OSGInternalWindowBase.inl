@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -90,22 +91,6 @@ void InternalWindowBase::setFocusedComponent(Component * const value)
     _sfFocusedComponent.setValue(value);
 }
 
-//! Get the value of the InternalWindow::_sfActiveToolTip field.
-inline
-ToolTip * InternalWindowBase::getActiveToolTip(void) const
-{
-    return _sfActiveToolTip.getValue();
-}
-
-//! Set the value of the InternalWindow::_sfActiveToolTip field.
-inline
-void InternalWindowBase::setActiveToolTip(ToolTip * const value)
-{
-    editSField(ActiveToolTipFieldMask);
-
-    _sfActiveToolTip.setValue(value);
-}
-
 //! Get the value of the InternalWindow::_sfMenuBar field.
 inline
 MenuBar * InternalWindowBase::getMenuBar(void) const
@@ -145,6 +130,13 @@ PopupMenu * InternalWindowBase::getActivePopupMenus(const UInt32 index) const
     return _mfActivePopupMenus[index];
 }
 
+//! Get the value of the \a index element the InternalWindow::_mfToolTips field.
+inline
+Component * InternalWindowBase::getToolTips(const UInt32 index) const
+{
+    return _mfToolTips[index];
+}
+
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
@@ -165,14 +157,17 @@ void InternalWindowBase::execSync (      InternalWindowBase *pFrom,
                                 uiSyncInfo,
                                 oOffsets);
 
-    if(FieldBits::NoField != (ActiveToolTipFieldMask & whichField))
-        _sfActiveToolTip.syncWith(pFrom->_sfActiveToolTip);
-
     if(FieldBits::NoField != (MenuBarFieldMask & whichField))
         _sfMenuBar.syncWith(pFrom->_sfMenuBar);
 
     if(FieldBits::NoField != (TitlebarFieldMask & whichField))
         _sfTitlebar.syncWith(pFrom->_sfTitlebar);
+
+    if(FieldBits::NoField != (ToolTipsFieldMask & whichField))
+        _mfToolTips.syncWith(pFrom->_mfToolTips,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
 }
 #endif
 

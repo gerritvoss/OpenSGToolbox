@@ -18722,28 +18722,146 @@ fail:
 }
 
 
+static int _wrap_ComponentRefPtr_setToolTipText(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("setToolTipText",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipText",1,"OSG::ComponentRefPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setToolTipText",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_setToolTipText",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  (*arg1)->setToolTipText((std::string const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_isToolTipActive(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isToolTipActive",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isToolTipActive",1,"OSG::ComponentRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_isToolTipActive",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  result = (bool)(*arg1)->isToolTipActive();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_activateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  
+  SWIG_check_num_args("activateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("activateToolTip",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_activateToolTip",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  (*arg1)->activateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_deactivateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  
+  SWIG_check_num_args("deactivateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("deactivateToolTip",1,"OSG::ComponentRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_deactivateToolTip",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  (*arg1)->deactivateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ComponentRefPtr_setToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("setToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipLocation",1,"OSG::ComponentRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setToolTipLocation",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
+    SWIG_fail_ptr("ComponentRefPtr_setToolTipLocation",1,SWIGTYPE_p_OSG__ComponentRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ComponentRefPtr_setToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->setToolTipLocation((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ComponentRefPtr_getToolTipLocation(lua_State* L) {
   int SWIG_arg = 0;
   OSG::ComponentRefPtr *arg1 = (OSG::ComponentRefPtr *) 0 ;
-  OSG::Pnt2f arg2 ;
-  OSG::Pnt2f *argp2 ;
   OSG::Pnt2f result;
   
-  SWIG_check_num_args("getToolTipLocation",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::ComponentRefPtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  SWIG_check_num_args("getToolTipLocation",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::ComponentRefPtr const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ComponentRefPtr,0))){
     SWIG_fail_ptr("ComponentRefPtr_getToolTipLocation",1,SWIGTYPE_p_OSG__ComponentRefPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
-    SWIG_fail_ptr("ComponentRefPtr_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
-  }
-  arg2 = *argp2;
-  
-  result = (*arg1)->getToolTipLocation(arg2);
+  result = (*arg1)->getToolTipLocation();
   {
     OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
@@ -20192,6 +20310,11 @@ static swig_lua_method swig_OSG_ComponentRefPtr_methods[] = {
     {"takeFocus", _wrap_ComponentRefPtr_takeFocus}, 
     {"isContained", _wrap_ComponentRefPtr_isContained}, 
     {"getBaseline", _wrap_ComponentRefPtr_getBaseline}, 
+    {"setToolTipText", _wrap_ComponentRefPtr_setToolTipText}, 
+    {"isToolTipActive", _wrap_ComponentRefPtr_isToolTipActive}, 
+    {"activateToolTip", _wrap_ComponentRefPtr_activateToolTip}, 
+    {"deactivateToolTip", _wrap_ComponentRefPtr_deactivateToolTip}, 
+    {"setToolTipLocation", _wrap_ComponentRefPtr_setToolTipLocation}, 
     {"getToolTipLocation", _wrap_ComponentRefPtr_getToolTipLocation}, 
     {"getPreferredScrollableViewportSize", _wrap_ComponentRefPtr_getPreferredScrollableViewportSize}, 
     {"getScrollableBlockIncrement", _wrap_ComponentRefPtr_getScrollableBlockIncrement}, 
@@ -20822,28 +20945,146 @@ fail:
 }
 
 
+static int _wrap_Component_setToolTipText(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("setToolTipText",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipText",1,"OSG::Component *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setToolTipText",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_setToolTipText",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  (arg1)->setToolTipText((std::string const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_isToolTipActive(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isToolTipActive",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isToolTipActive",1,"OSG::Component const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_isToolTipActive",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  result = (bool)((OSG::Component const *)arg1)->isToolTipActive();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_activateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  
+  SWIG_check_num_args("activateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("activateToolTip",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_activateToolTip",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  (arg1)->activateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_deactivateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  
+  SWIG_check_num_args("deactivateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("deactivateToolTip",1,"OSG::Component *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_deactivateToolTip",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  (arg1)->deactivateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_Component_setToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::Component *arg1 = (OSG::Component *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("setToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipLocation",1,"OSG::Component *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setToolTipLocation",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
+    SWIG_fail_ptr("Component_setToolTipLocation",1,SWIGTYPE_p_OSG__Component);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("Component_setToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (arg1)->setToolTipLocation((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_Component_getToolTipLocation(lua_State* L) {
   int SWIG_arg = 0;
   OSG::Component *arg1 = (OSG::Component *) 0 ;
-  OSG::Pnt2f arg2 ;
-  OSG::Pnt2f *argp2 ;
   OSG::Pnt2f result;
   
-  SWIG_check_num_args("getToolTipLocation",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::Component *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  SWIG_check_num_args("getToolTipLocation",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::Component const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__Component,0))){
     SWIG_fail_ptr("Component_getToolTipLocation",1,SWIGTYPE_p_OSG__Component);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
-    SWIG_fail_ptr("Component_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
-  }
-  arg2 = *argp2;
-  
-  result = (arg1)->getToolTipLocation(arg2);
+  result = ((OSG::Component const *)arg1)->getToolTipLocation();
   {
     OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
@@ -21140,6 +21381,11 @@ static swig_lua_method swig_OSG_Component_methods[] = {
     {"takeFocus", _wrap_Component_takeFocus}, 
     {"isContained", _wrap_Component_isContained}, 
     {"getBaseline", _wrap_Component_getBaseline}, 
+    {"setToolTipText", _wrap_Component_setToolTipText}, 
+    {"isToolTipActive", _wrap_Component_isToolTipActive}, 
+    {"activateToolTip", _wrap_Component_activateToolTip}, 
+    {"deactivateToolTip", _wrap_Component_deactivateToolTip}, 
+    {"setToolTipLocation", _wrap_Component_setToolTipLocation}, 
     {"getToolTipLocation", _wrap_Component_getToolTipLocation}, 
     {"getPreferredScrollableViewportSize", _wrap_Component_getPreferredScrollableViewportSize}, 
     {"getScrollableBlockIncrement", _wrap_Component_getScrollableBlockIncrement}, 
@@ -22081,28 +22327,146 @@ fail:
 }
 
 
+static int _wrap_InternalWindowRefPtr_setToolTipText(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("setToolTipText",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipText",1,"OSG::InternalWindowRefPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setToolTipText",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_setToolTipText",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  (*arg1)->setToolTipText((std::string const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_InternalWindowRefPtr_isToolTipActive(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isToolTipActive",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isToolTipActive",1,"OSG::InternalWindowRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_isToolTipActive",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
+  }
+  
+  result = (bool)(*arg1)->isToolTipActive();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_InternalWindowRefPtr_activateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
+  
+  SWIG_check_num_args("activateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("activateToolTip",1,"OSG::InternalWindowRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_activateToolTip",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
+  }
+  
+  (*arg1)->activateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_InternalWindowRefPtr_deactivateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
+  
+  SWIG_check_num_args("deactivateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("deactivateToolTip",1,"OSG::InternalWindowRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_deactivateToolTip",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
+  }
+  
+  (*arg1)->deactivateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_InternalWindowRefPtr_setToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("setToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipLocation",1,"OSG::InternalWindowRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setToolTipLocation",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_setToolTipLocation",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("InternalWindowRefPtr_setToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->setToolTipLocation((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_InternalWindowRefPtr_getToolTipLocation(lua_State* L) {
   int SWIG_arg = 0;
   OSG::InternalWindowRefPtr *arg1 = (OSG::InternalWindowRefPtr *) 0 ;
-  OSG::Pnt2f arg2 ;
-  OSG::Pnt2f *argp2 ;
   OSG::Pnt2f result;
   
-  SWIG_check_num_args("getToolTipLocation",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::InternalWindowRefPtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  SWIG_check_num_args("getToolTipLocation",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::InternalWindowRefPtr const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__InternalWindowRefPtr,0))){
     SWIG_fail_ptr("InternalWindowRefPtr_getToolTipLocation",1,SWIGTYPE_p_OSG__InternalWindowRefPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
-    SWIG_fail_ptr("InternalWindowRefPtr_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
-  }
-  arg2 = *argp2;
-  
-  result = (*arg1)->getToolTipLocation(arg2);
+  result = (*arg1)->getToolTipLocation();
   {
     OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
@@ -23555,6 +23919,11 @@ static swig_lua_method swig_OSG_InternalWindowRefPtr_methods[] = {
     {"getMouseContained", _wrap_InternalWindowRefPtr_getMouseContained}, 
     {"isContained", _wrap_InternalWindowRefPtr_isContained}, 
     {"getBaseline", _wrap_InternalWindowRefPtr_getBaseline}, 
+    {"setToolTipText", _wrap_InternalWindowRefPtr_setToolTipText}, 
+    {"isToolTipActive", _wrap_InternalWindowRefPtr_isToolTipActive}, 
+    {"activateToolTip", _wrap_InternalWindowRefPtr_activateToolTip}, 
+    {"deactivateToolTip", _wrap_InternalWindowRefPtr_deactivateToolTip}, 
+    {"setToolTipLocation", _wrap_InternalWindowRefPtr_setToolTipLocation}, 
     {"getToolTipLocation", _wrap_InternalWindowRefPtr_getToolTipLocation}, 
     {"getPreferredScrollableViewportSize", _wrap_InternalWindowRefPtr_getPreferredScrollableViewportSize}, 
     {"getScrollableBlockIncrement", _wrap_InternalWindowRefPtr_getScrollableBlockIncrement}, 
@@ -26573,28 +26942,146 @@ fail:
 }
 
 
+static int _wrap_ScrollPanelRefPtr_setToolTipText(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
+  std::string *arg2 = 0 ;
+  std::string temp2 ;
+  
+  SWIG_check_num_args("setToolTipText",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipText",1,"OSG::ScrollPanelRefPtr *");
+  if(!lua_isstring(L,2)) SWIG_fail_arg("setToolTipText",2,"std::string const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_setToolTipText",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
+  }
+  
+  temp2.assign(lua_tostring(L,2),lua_strlen(L,2)); arg2=&temp2;
+  (*arg1)->setToolTipText((std::string const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScrollPanelRefPtr_isToolTipActive(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
+  bool result;
+  
+  SWIG_check_num_args("isToolTipActive",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("isToolTipActive",1,"OSG::ScrollPanelRefPtr const *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_isToolTipActive",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
+  }
+  
+  result = (bool)(*arg1)->isToolTipActive();
+  lua_pushboolean(L,(int)(result!=0)); SWIG_arg++;
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScrollPanelRefPtr_activateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
+  
+  SWIG_check_num_args("activateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("activateToolTip",1,"OSG::ScrollPanelRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_activateToolTip",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
+  }
+  
+  (*arg1)->activateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScrollPanelRefPtr_deactivateToolTip(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
+  
+  SWIG_check_num_args("deactivateToolTip",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("deactivateToolTip",1,"OSG::ScrollPanelRefPtr *");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_deactivateToolTip",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
+  }
+  
+  (*arg1)->deactivateToolTip();
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_ScrollPanelRefPtr_setToolTipLocation(lua_State* L) {
+  int SWIG_arg = 0;
+  OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
+  OSG::Pnt2f *arg2 = 0 ;
+  
+  SWIG_check_num_args("setToolTipLocation",2,2)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("setToolTipLocation",1,"OSG::ScrollPanelRefPtr *");
+  if(!lua_isuserdata(L,2)) SWIG_fail_arg("setToolTipLocation",2,"OSG::Pnt2f const &");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_setToolTipLocation",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
+  }
+  
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_OSG__Pnt2f,0))){
+    SWIG_fail_ptr("ScrollPanelRefPtr_setToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
+  }
+  
+  (*arg1)->setToolTipLocation((OSG::Pnt2f const &)*arg2);
+  
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_ScrollPanelRefPtr_getToolTipLocation(lua_State* L) {
   int SWIG_arg = 0;
   OSG::ScrollPanelRefPtr *arg1 = (OSG::ScrollPanelRefPtr *) 0 ;
-  OSG::Pnt2f arg2 ;
-  OSG::Pnt2f *argp2 ;
   OSG::Pnt2f result;
   
-  SWIG_check_num_args("getToolTipLocation",2,2)
-  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::ScrollPanelRefPtr *");
-  if(!lua_isuserdata(L,2)) SWIG_fail_arg("getToolTipLocation",2,"OSG::Pnt2f");
+  SWIG_check_num_args("getToolTipLocation",1,1)
+  if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("getToolTipLocation",1,"OSG::ScrollPanelRefPtr const *");
   
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_OSG__ScrollPanelRefPtr,0))){
     SWIG_fail_ptr("ScrollPanelRefPtr_getToolTipLocation",1,SWIGTYPE_p_OSG__ScrollPanelRefPtr);
   }
   
-  
-  if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&argp2,SWIGTYPE_p_OSG__Pnt2f,0))){
-    SWIG_fail_ptr("ScrollPanelRefPtr_getToolTipLocation",2,SWIGTYPE_p_OSG__Pnt2f);
-  }
-  arg2 = *argp2;
-  
-  result = (*arg1)->getToolTipLocation(arg2);
+  result = (*arg1)->getToolTipLocation();
   {
     OSG::Pnt2f * resultptr = new OSG::Pnt2f((const OSG::Pnt2f &) result);
     SWIG_NewPointerObj(L,(void *) resultptr,SWIGTYPE_p_OSG__Pnt2f,1); SWIG_arg++;
@@ -28048,6 +28535,11 @@ static swig_lua_method swig_OSG_ScrollPanelRefPtr_methods[] = {
     {"takeFocus", _wrap_ScrollPanelRefPtr_takeFocus}, 
     {"isContained", _wrap_ScrollPanelRefPtr_isContained}, 
     {"getBaseline", _wrap_ScrollPanelRefPtr_getBaseline}, 
+    {"setToolTipText", _wrap_ScrollPanelRefPtr_setToolTipText}, 
+    {"isToolTipActive", _wrap_ScrollPanelRefPtr_isToolTipActive}, 
+    {"activateToolTip", _wrap_ScrollPanelRefPtr_activateToolTip}, 
+    {"deactivateToolTip", _wrap_ScrollPanelRefPtr_deactivateToolTip}, 
+    {"setToolTipLocation", _wrap_ScrollPanelRefPtr_setToolTipLocation}, 
     {"getToolTipLocation", _wrap_ScrollPanelRefPtr_getToolTipLocation}, 
     {"getPreferredScrollableViewportSize", _wrap_ScrollPanelRefPtr_getPreferredScrollableViewportSize}, 
     {"getScrollableBlockIncrement", _wrap_ScrollPanelRefPtr_getScrollableBlockIncrement}, 

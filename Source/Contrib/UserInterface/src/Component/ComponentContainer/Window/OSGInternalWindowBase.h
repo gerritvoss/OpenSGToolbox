@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,7 +67,6 @@
 
 #include "OSGComponentFields.h"         // FocusedComponent type
 #include "OSGPopupMenuFields.h"         // ActivePopupMenus type
-#include "OSGToolTipFields.h"           // ActiveToolTip type
 #include "OSGMenuBarFields.h"           // MenuBar type
 #include "OSGTitlebarFields.h"          // Titlebar type
 
@@ -90,6 +89,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(InternalWindow);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -99,30 +100,30 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
     {
         FocusedComponentFieldId = Inherited::NextFieldId,
         ActivePopupMenusFieldId = FocusedComponentFieldId + 1,
-        ActiveToolTipFieldId = ActivePopupMenusFieldId + 1,
-        MenuBarFieldId = ActiveToolTipFieldId + 1,
+        MenuBarFieldId = ActivePopupMenusFieldId + 1,
         TitlebarFieldId = MenuBarFieldId + 1,
-        NextFieldId = TitlebarFieldId + 1
+        ToolTipsFieldId = TitlebarFieldId + 1,
+        NextFieldId = ToolTipsFieldId + 1
     };
 
     static const OSG::BitVector FocusedComponentFieldMask =
         (TypeTraits<BitVector>::One << FocusedComponentFieldId);
     static const OSG::BitVector ActivePopupMenusFieldMask =
         (TypeTraits<BitVector>::One << ActivePopupMenusFieldId);
-    static const OSG::BitVector ActiveToolTipFieldMask =
-        (TypeTraits<BitVector>::One << ActiveToolTipFieldId);
     static const OSG::BitVector MenuBarFieldMask =
         (TypeTraits<BitVector>::One << MenuBarFieldId);
     static const OSG::BitVector TitlebarFieldMask =
         (TypeTraits<BitVector>::One << TitlebarFieldId);
+    static const OSG::BitVector ToolTipsFieldMask =
+        (TypeTraits<BitVector>::One << ToolTipsFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecComponentPtr SFFocusedComponentType;
     typedef MFUnrecPopupMenuPtr MFActivePopupMenusType;
-    typedef SFUnrecToolTipPtr SFActiveToolTipType;
     typedef SFUnrecMenuBarPtr SFMenuBarType;
     typedef SFUnrecTitlebarPtr SFTitlebarType;
+    typedef MFUnrecComponentPtr MFToolTipsType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -151,23 +152,23 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
                   SFUnrecComponentPtr *editSFFocusedComponent(void);
             const MFUnrecPopupMenuPtr *getMFActivePopupMenus(void) const;
                   MFUnrecPopupMenuPtr *editMFActivePopupMenus(void);
-            const SFUnrecToolTipPtr   *getSFActiveToolTip  (void) const;
-                  SFUnrecToolTipPtr   *editSFActiveToolTip  (void);
             const SFUnrecMenuBarPtr   *getSFMenuBar        (void) const;
                   SFUnrecMenuBarPtr   *editSFMenuBar        (void);
             const SFUnrecTitlebarPtr  *getSFTitlebar       (void) const;
                   SFUnrecTitlebarPtr  *editSFTitlebar       (void);
+            const MFUnrecComponentPtr *getMFToolTips       (void) const;
+                  MFUnrecComponentPtr *editMFToolTips       (void);
 
 
                   Component * getFocusedComponent(void) const;
 
                   PopupMenu * getActivePopupMenus(const UInt32 index) const;
 
-                  ToolTip * getActiveToolTip  (void) const;
-
                   MenuBar * getMenuBar        (void) const;
 
                   Titlebar * getTitlebar       (void) const;
+
+                  Component * getToolTips       (const UInt32 index) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -175,7 +176,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
     /*! \{                                                                 */
 
             void setFocusedComponent(Component * const value);
-            void setActiveToolTip  (ToolTip * const value);
             void setMenuBar        (MenuBar * const value);
             void setTitlebar       (Titlebar * const value);
 
@@ -194,6 +194,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
     void removeFromActivePopupMenus (UInt32               uiIndex );
     void removeObjFromActivePopupMenus(PopupMenu * const value   );
     void clearActivePopupMenus            (void                         );
+
+    void pushToToolTips            (Component * const value   );
+    void assignToolTips           (const MFUnrecComponentPtr &value);
+    void removeFromToolTips (UInt32               uiIndex );
+    void removeObjFromToolTips(Component * const value   );
+    void clearToolTips              (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -250,9 +256,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
 
     SFUnrecComponentPtr _sfFocusedComponent;
     MFUnrecPopupMenuPtr _mfActivePopupMenus;
-    SFUnrecToolTipPtr _sfActiveToolTip;
     SFUnrecMenuBarPtr _sfMenuBar;
     SFUnrecTitlebarPtr _sfTitlebar;
+    MFUnrecComponentPtr _mfToolTips;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -285,12 +291,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindowBase : public AbstractWi
     EditFieldHandlePtr editHandleFocusedComponent(void);
     GetFieldHandlePtr  getHandleActivePopupMenus (void) const;
     EditFieldHandlePtr editHandleActivePopupMenus(void);
-    GetFieldHandlePtr  getHandleActiveToolTip   (void) const;
-    EditFieldHandlePtr editHandleActiveToolTip  (void);
     GetFieldHandlePtr  getHandleMenuBar         (void) const;
     EditFieldHandlePtr editHandleMenuBar        (void);
     GetFieldHandlePtr  getHandleTitlebar        (void) const;
     EditFieldHandlePtr editHandleTitlebar       (void);
+    GetFieldHandlePtr  getHandleToolTips        (void) const;
+    EditFieldHandlePtr editHandleToolTips       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

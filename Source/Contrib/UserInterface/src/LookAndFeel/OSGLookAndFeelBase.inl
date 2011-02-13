@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,6 +47,7 @@
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -174,6 +175,22 @@ void LookAndFeelBase::setKeyAcceleratorMenuFlashTime(const Time &value)
     _sfKeyAcceleratorMenuFlashTime.setValue(value);
 }
 
+//! Get the value of the LookAndFeel::_sfDefaultToolTip field.
+inline
+Component * LookAndFeelBase::getDefaultToolTip(void) const
+{
+    return _sfDefaultToolTip.getValue();
+}
+
+//! Set the value of the LookAndFeel::_sfDefaultToolTip field.
+inline
+void LookAndFeelBase::setDefaultToolTip(Component * const value)
+{
+    editSField(DefaultToolTipFieldMask);
+
+    _sfDefaultToolTip.setValue(value);
+}
+
 //! Get the value of the \a index element the LookAndFeel::_mfPrototypes field.
 inline
 FieldContainer * LookAndFeelBase::getPrototypes(const UInt32 index) const
@@ -209,6 +226,9 @@ void LookAndFeelBase::execSync (      LookAndFeelBase *pFrom,
 
     if(FieldBits::NoField != (KeyAcceleratorMenuFlashTimeFieldMask & whichField))
         _sfKeyAcceleratorMenuFlashTime.syncWith(pFrom->_sfKeyAcceleratorMenuFlashTime);
+
+    if(FieldBits::NoField != (DefaultToolTipFieldMask & whichField))
+        _sfDefaultToolTip.syncWith(pFrom->_sfDefaultToolTip);
 }
 #endif
 
