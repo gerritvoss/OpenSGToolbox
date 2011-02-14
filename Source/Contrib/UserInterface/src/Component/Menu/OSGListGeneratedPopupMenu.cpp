@@ -50,7 +50,8 @@
 #include "OSGComponentMenuItem.h"
 #include "OSGListModel.h" // Model type
 #include "OSGComponentGenerator.h" // CellGenerator type
-#include "OSGStringUtils.h" // CellGenerator type
+#include "OSGStringUtils.h"
+#include "OSGPanel.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -113,9 +114,9 @@ void ListGeneratedPopupMenu::removeAllItems(void)
 
 MenuItem* ListGeneratedPopupMenu::getItem(const UInt32& Index)
 {
-	if(getModel() != NULL && Index < getMFChildren()->size())
+	if(getModel() != NULL && Index < _MenuPanel->getMFChildren()->size())
 	{
-		return dynamic_cast<MenuItem*>(getChildren(Index));
+		return dynamic_cast<MenuItem*>(_MenuPanel->getChildren(Index));
 	}
 	else
 	{
@@ -139,10 +140,10 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
 {
     bool changed(false);
 
-    if(getMFChildren()->size() > 0)
+    if(_MenuPanel->getMFChildren()->size() > 0)
     {
         changed = true;
-        clearChildren();
+        _MenuPanel->clearChildren();
     }
 
     if(getModel() != NULL)
@@ -176,7 +177,7 @@ void ListGeneratedPopupMenu::updateMenuItems(void)
                 }
                 dynamic_pointer_cast<MenuItem>(Item)->setText(TheText);
             }
-            pushToChildren(Item);
+            _MenuPanel->pushToChildren(Item);
         }
     }
 

@@ -2030,8 +2030,8 @@ void WindowsLookAndFeel::init(void)
 
     WindowsPopupMenu->setConstraints(NULL);
     //Sizes
-    WindowsPopupMenu->setMinSize(Vec2f(0,0));
-    WindowsPopupMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsPopupMenu->setMinSize(Vec2f(100,100));
+    WindowsPopupMenu->setMaxSize(Vec2f(600,600));
     WindowsPopupMenu->setPreferredSize(Vec2f(100,50));
 
     //Border
@@ -2086,8 +2086,8 @@ void WindowsLookAndFeel::init(void)
 
     WindowsListGeneratedPopupMenu->setConstraints(NULL);
     //Sizes
-    WindowsListGeneratedPopupMenu->setMinSize(Vec2f(0,0));
-    WindowsListGeneratedPopupMenu->setMaxSize(Vec2f(32767,32767)); //2^15
+    WindowsListGeneratedPopupMenu->setMinSize(Vec2f(100,100));
+    WindowsListGeneratedPopupMenu->setMaxSize(Vec2f(400,400));
     WindowsListGeneratedPopupMenu->setPreferredSize(Vec2f(100,50));
 
     //Border

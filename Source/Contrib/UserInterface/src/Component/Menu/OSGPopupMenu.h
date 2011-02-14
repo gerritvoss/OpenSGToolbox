@@ -46,6 +46,8 @@
 #include "OSGSeparator.h"
 #include "OSGSingleSelectionModel.h"
 #include "OSGMenuItemFields.h"
+#include "OSGScrollPanelFields.h"
+#include "OSGPanelFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -102,6 +104,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 	//Mouse Motion Events
     virtual void mouseMoved(MouseEventDetails* const e);
     virtual void mouseDragged(MouseEventDetails* const e);
+    virtual void mouseWheelMoved(MouseWheelEventDetails* const e);
 
     void cancel(void);
 
@@ -144,6 +147,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
 	/*! \{                                                                 */
 	void onCreate(const PopupMenu *Id = NULL);
 	void onDestroy();
+
+    void resolveLinks(void);
 	
 	/*! \}                                                                 */
     
@@ -158,6 +163,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING PopupMenu : public PopupMenuBase
     void producePopupMenuContentsChanged(void);
     
     void updateSeparatorSizes(void);
+
+    PanelRecPtr _MenuPanel;
+    ScrollPanelRecPtr _ScrollPanel;
 
     /*==========================  PRIVATE  ================================*/
 

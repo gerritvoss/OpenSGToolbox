@@ -563,8 +563,9 @@ void ComponentContainer::changed(ConstFieldMaskArg whichField,
         (whichField & BorderFieldMask) ||
         (whichField & DisabledBorderFieldMask) ||
         (whichField & FocusedBorderFieldMask) ||
-        (whichField & RolloverBorderFieldMask)) &&
-        getParentWindow())
+        (whichField & RolloverBorderFieldMask))
+        //&& getParentWindow()
+        )
     {
         //Layout needs to be recalculated
         updateLayout();

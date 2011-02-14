@@ -55,6 +55,7 @@
 #include "OSGSingleSelectionModel.h"
 #include "OSGMenuItem.h"
 #include "OSGInternalWindow.h"
+#include "OSGScrollPanel.h"
 
 #include <boost/bind.hpp>
 
@@ -92,13 +93,13 @@ void PopupMenu::updateLayout(void)
     //Determine the Max Preferred Width of my MenuItems
     Real32 MaxWidth(0);
     Real32 TotalHeight(0);
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        if(MaxWidth < getChildren(i)->getRequestedSize().x())
+        if(MaxWidth < _MenuPanel->getChildren(i)->getRequestedSize().x())
         {
-            MaxWidth = getChildren(i)->getRequestedSize().x();
+            MaxWidth = _MenuPanel->getChildren(i)->getRequestedSize().x();
         }
-        TotalHeight += getChildren(i)->getRequestedSize().y();
+        TotalHeight += _MenuPanel->getChildren(i)->getRequestedSize().y();
         if(i!=0)
         {
             TotalHeight += 1.0f;
@@ -112,31 +113,44 @@ void PopupMenu::updateLayout(void)
     getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
 
     Vec2f InsetSize( (BottomRight-TopLeft) - (InsetsBottomRight-InsetsTopLeft) );
-    setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
 
-    //Sneakily set my size
+    //Update the scroll panel layout
+
+    _MenuPanel->setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
+
+    Real32 ScrollWidth(20.0f);
+    setPreferredSize(Vec2f(MaxWidth+InsetSize.x()+ScrollWidth,
+                           osgClamp(getMinSize().y(), TotalHeight+InsetSize.y(), getMaxSize().y())));
+
+    //getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
+    _ScrollPanel->setPosition(InsetsTopLeft);
+    _ScrollPanel->setSize(getPreferredSize() - InsetSize);
+    //_ScrollPanel->setSize(InsetsBottomRight - InsetsTopLeft);
+    //_ScrollPanel->setPosition(Pnt2f(0.0f,0.0f));
+    //_ScrollPanel->setSize(getPreferredSize());
+
+    //Sneakily set my size without invoking a ChangeList addition
     _sfSize.setValue(getPreferredSize());
 
-    getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
-
     //Now position and size the Items
-    Real32 TopOffset(InsetsTopLeft.y());
+    //Real32 TopOffset(InsetsTopLeft.y());
+    Real32 TopOffset(0.0f);
     Vec2f Size;
     Pnt2f Pos;
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        Size.setValues(MaxWidth, getChildren(i)->getRequestedSize().y());
-        if(getChildren(i)->getSize() != Size)
+        Size.setValues(_ScrollPanel->getSize().x(), _MenuPanel->getChildren(i)->getRequestedSize().y());
+        if(_MenuPanel->getChildren(i)->getSize() != Size)
         {
-            getChildren(i)->setSize(Size);
+            _MenuPanel->getChildren(i)->setSize(Size);
         }
         Pos.setValues(InsetsTopLeft.x(), TopOffset);
-        if(getChildren(i)->getPosition() != Pos)
+        if(_MenuPanel->getChildren(i)->getPosition() != Pos)
         {
-            getChildren(i)->setPosition(Pos);
+            _MenuPanel->getChildren(i)->setPosition(Pos);
         }
 
-        TopOffset += getChildren(i)->getRequestedSize().y() +1;
+        TopOffset += _MenuPanel->getChildren(i)->getRequestedSize().y() +1;
     }
 }
 
@@ -147,10 +161,17 @@ void PopupMenu::updateClipBounds(void)
     //Treat myself as having no Parent
 	getBounds(TopLeft, BottomRight);
 
-	//The Clip Bounds calculated are in my Parent Containers coordinate space
-	//Translate these bounds into my own coordinate space
-		setClipTopLeft(TopLeft);
-		setClipBottomRight(BottomRight);
+    //The Clip Bounds calculated are in my Parent Containers coordinate space
+    //Translate these bounds into my own coordinate space
+    setClipTopLeft(TopLeft);
+    setClipBottomRight(BottomRight);
+}
+
+void PopupMenu::mouseWheelMoved(MouseWheelEventDetails* const e)
+{
+    _ScrollPanel->mouseWheelMoved(e);
+
+    Component::mouseWheelMoved(e);
 }
 
 ComponentContainer* PopupMenu::getParentContainer(void) const
@@ -160,7 +181,7 @@ ComponentContainer* PopupMenu::getParentContainer(void) const
 
 void PopupMenu::addItem(MenuItem* const Item)
 {
-    pushToChildren(Item);
+    _MenuPanel->pushToChildren(Item);
 	producePopupMenuContentsChanged();
 }
 
@@ -168,9 +189,9 @@ void PopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
 {
     UInt32 ItemCount(0);
     UInt32 i(0);
-    for( ; i<getMFChildren()->size() ; ++i)
+    for( ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        if(getChildren(i)->getType() != Separator::getClassType())
+        if(_MenuPanel->getChildren(i)->getType() != Separator::getClassType())
         {
             ++ItemCount;
         }
@@ -180,28 +201,28 @@ void PopupMenu::addItem(MenuItem* const Item, const UInt32& Index)
         }
     }
 
-    if(i < getMFChildren()->size())
+    if(i < _MenuPanel->getMFChildren()->size())
     {
-        insertIntoChildren(i, Item);
+        _MenuPanel->insertIntoChildren(i, Item);
         producePopupMenuContentsChanged();
     }
 }
 
 void PopupMenu::removeItem(MenuItem* const Item)
 {
-    removeObjFromChildren(Item);
+    _MenuPanel->removeObjFromChildren(Item);
     producePopupMenuContentsChanged();
 }
 
 void PopupMenu::removeItem(const UInt32& Index)
 {
-    if(Index < getMFChildren()->size())
+    if(Index < _MenuPanel->getMFChildren()->size())
     {
         UInt32 ItemCount(0);
         UInt32 i(0);
-        for( ; i<getMFChildren()->size() ; ++i)
+        for( ; i<_MenuPanel->getMFChildren()->size() ; ++i)
         {
-            if(getChildren(i)->getType() != Separator::getClassType())
+            if(_MenuPanel->getChildren(i)->getType() != Separator::getClassType())
             {
                 ++ItemCount;
             }
@@ -210,9 +231,9 @@ void PopupMenu::removeItem(const UInt32& Index)
                 //break;
             //}
         }
-        if(i<getMFChildren()->size())
+        if(i<_MenuPanel->getMFChildren()->size())
         {
-            removeFromChildren(i);
+            _MenuPanel->removeFromChildren(i);
 	        producePopupMenuContentsChanged();
         }
     }
@@ -221,9 +242,9 @@ void PopupMenu::removeItem(const UInt32& Index)
 void PopupMenu::removeAllItems(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        if(getChildren(i)->getType() != Separator::getClassType())
+        if(_MenuPanel->getChildren(i)->getType() != Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -249,14 +270,14 @@ void PopupMenu::addSeparator(void)
     }
     TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
 
-    pushToChildren(TheSeparator);
+    _MenuPanel->pushToChildren(TheSeparator);
 }
 
 void PopupMenu::addSeparator(Separator* const TheSeparator)
 {
     TheSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
 
-    pushToChildren(TheSeparator);
+    _MenuPanel->pushToChildren(TheSeparator);
 }
 
 void PopupMenu::removeSeparator(const UInt32&  Index)
@@ -265,9 +286,9 @@ void PopupMenu::removeSeparator(const UInt32&  Index)
     {
         UInt32 SeparatorCount(0);
         UInt32 i(0);
-        for( ; i<getMFChildren()->size() ; ++i)
+        for( ; i<_MenuPanel->getMFChildren()->size() ; ++i)
         {
-            if(getChildren(i)->getType() == Separator::getClassType())
+            if(_MenuPanel->getChildren(i)->getType() == Separator::getClassType())
             {
                 ++SeparatorCount;
             }
@@ -277,21 +298,21 @@ void PopupMenu::removeSeparator(const UInt32&  Index)
             }
         }
 
-        removeFromChildren(i);
+        _MenuPanel->removeFromChildren(i);
     }
 }
 
 void PopupMenu::removeSeparator(Separator* const TheSeparator)
 {
-    removeObjFromChildren(TheSeparator);
+    _MenuPanel->removeObjFromChildren(TheSeparator);
 }
 
 void PopupMenu::removeAllSeparators(void)
 {
     std::deque<UInt32> RemoveIndecies;
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        if(getChildren(i)->getType() == Separator::getClassType())
+        if(_MenuPanel->getChildren(i)->getType() == Separator::getClassType())
         {
             RemoveIndecies.push_front(i);
         }
@@ -305,9 +326,9 @@ void PopupMenu::removeAllSeparators(void)
 UInt32 PopupMenu::getNumSeparators(void) const
 {
     UInt32 NumSeparators(0);
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        if(getChildren(i)->getType() == Separator::getClassType())
+        if(_MenuPanel->getChildren(i)->getType() == Separator::getClassType())
         {
             ++NumSeparators;
         }
@@ -321,25 +342,26 @@ void PopupMenu::updateSeparatorSizes(void)
     getInsideInsetsBounds(InsideInsetsTopLeft, InsideInsetsBottomRight);
     Vec2f InsideInsetsSize(InsideInsetsBottomRight - InsideInsetsTopLeft);
 
-    for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+    for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
     {
-        Vec2f NewSize(Vec2f(InsideInsetsSize.x(), getChildren(i)->getRequestedSize().y()));
-        if(getChildren(i)->getType() == Separator::getClassType() &&
-           dynamic_cast<Separator*>(getChildren(i))->getPreferredSize() != NewSize)
+        Vec2f NewSize(Vec2f(InsideInsetsSize.x(), _MenuPanel->getChildren(i)->getRequestedSize().y()));
+        if(_MenuPanel->getChildren(i)->getType() == Separator::getClassType() &&
+           dynamic_cast<Separator*>(_MenuPanel->getChildren(i))->getPreferredSize() != NewSize)
         {
-            dynamic_cast<Separator*>(getChildren(i))->setPreferredSize(NewSize);
+            dynamic_cast<Separator*>(_MenuPanel->getChildren(i))->setPreferredSize(NewSize);
         }
     }
 }
+
 void PopupMenu::mouseMoved(MouseEventDetails* const e)
 {
     UInt32 i(0);
-    while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
+    while (i<_MenuPanel->getMFChildren()->size() && !_MenuPanel->getChildren(i)->isContained(e->getLocation(), true))
     {
         ++i;
     }
 	
-	if(i<getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
+	if(i<_MenuPanel->getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
 	{
         if(getSelectionModel()->getSelectedIndex() != i)
         {
@@ -353,12 +375,12 @@ void PopupMenu::mouseMoved(MouseEventDetails* const e)
 void PopupMenu::mouseDragged(MouseEventDetails* const e)
 {
     UInt32 i(0);
-    while (i<getMFChildren()->size() && !getChildren(i)->isContained(e->getLocation(), true))
+    while (i<_MenuPanel->getMFChildren()->size() && !_MenuPanel->getChildren(i)->isContained(e->getLocation(), true))
     {
         ++i;
     }
 	
-	if(i<getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
+	if(i<_MenuPanel->getMFChildren()->size() && getSelectionModel()->getSelectedIndex() != i)
 	{
 		getSelectionModel()->setSelectedIndex(i);
 	}
@@ -401,12 +423,12 @@ void PopupMenu::setSelection(const Int32& Index)
 
 MenuItem* PopupMenu::getItem(const UInt32& Index)
 {
-    if(Index < getMFChildren()->size())
+    if(Index < _MenuPanel->getMFChildren()->size())
     {
         UInt32 ItemCount(0);
-        for(UInt32 i(0) ; i<getMFChildren()->size() ; ++i)
+        for(UInt32 i(0) ; i<_MenuPanel->getMFChildren()->size() ; ++i)
         {
-            if(getChildren(i)->getType() != Separator::getClassType())
+            if(_MenuPanel->getChildren(i)->getType() != Separator::getClassType())
             {
                 if(ItemCount == Index)
                 {
@@ -415,9 +437,9 @@ MenuItem* PopupMenu::getItem(const UInt32& Index)
                 ++ItemCount;
             }
         }
-        if(ItemCount < getMFChildren()->size())
+        if(ItemCount < _MenuPanel->getMFChildren()->size())
         {
-            return dynamic_cast<MenuItem*>(getChildren(ItemCount));
+            return dynamic_cast<MenuItem*>(_MenuPanel->getChildren(ItemCount));
         }
     }
     return NULL;
@@ -425,7 +447,7 @@ MenuItem* PopupMenu::getItem(const UInt32& Index)
 
 UInt32 PopupMenu::getNumItems(void) const
 {
-    return getMFChildren()->size() - getNumSeparators();
+    return _MenuPanel->getMFChildren()->size() - getNumSeparators();
 }
 
 /*-------------------------------------------------------------------------*\
@@ -464,15 +486,40 @@ void PopupMenu::onCreate(const PopupMenu * Id)
 {
 	Inherited::onCreate(Id);
 
-    if(Id != NULL)
+    if(GlobalSystemState != Startup)
     {
+        //Create Default Selection model
         DefaultSingleSelectionModelUnrecPtr TheModel(DefaultSingleSelectionModel::create());
         setSelectionModel(TheModel);
+
+        //Create the MenuPanel
+        _MenuPanel = Panel::createEmpty();
+        _MenuPanel->setScrollTrackingCharacteristics(SCROLLABLE_TRACKS_VIEWPORT_WIDTH);
+
+        //Create the scrollPanel
+        _ScrollPanel = ScrollPanel::create();
+        _ScrollPanel->setVerticalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_RIGHT);
+        _ScrollPanel->setHorizontalScrollBarAlignment(ScrollPanel::SCROLLBAR_ALIGN_BOTTOM);
+
+        _ScrollPanel->setHorizontalResizePolicy(ScrollPanel::NO_RESIZE);
+        _ScrollPanel->setVerticalResizePolicy(ScrollPanel::NO_RESIZE);
+
+        _ScrollPanel->setViewComponent(_MenuPanel);
+
+        pushToChildren(_ScrollPanel);
     }
 }
 
 void PopupMenu::onDestroy()
 {
+}
+
+void PopupMenu::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _MenuPanel   = NULL;
+    _ScrollPanel = NULL;
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -541,19 +588,19 @@ void PopupMenu::selectionChanged(SelectionEventDetails* const e)
 {
     for(UInt32 i(0) ; i<e->getMFPreviouslySelected()->size() ; ++i)
     {
-        if(getChildren(e->getPreviouslySelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->getSelected())
+        if(_MenuPanel->getChildren(e->getPreviouslySelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           dynamic_cast<MenuItem*>(_MenuPanel->getChildren(e->getPreviouslySelected(i)))->getSelected())
         {
-            dynamic_cast<MenuItem*>(getChildren(e->getPreviouslySelected(i)))->setSelected(false);
+            dynamic_cast<MenuItem*>(_MenuPanel->getChildren(e->getPreviouslySelected(i)))->setSelected(false);
         }
     }
 
     for(UInt32 i(0) ; i<e->getMFSelected()->size() ; ++i)
     {
-        if(getChildren(e->getSelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
-           !dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->getSelected())
+        if(_MenuPanel->getChildren(e->getSelected(i))->getType().isDerivedFrom(MenuItem::getClassType()) &&
+           !dynamic_cast<MenuItem*>(_MenuPanel->getChildren(e->getSelected(i)))->getSelected())
         {
-            dynamic_cast<MenuItem*>(getChildren(e->getSelected(i)))->setSelected(true);
+            dynamic_cast<MenuItem*>(_MenuPanel->getChildren(e->getSelected(i)))->setSelected(true);
         }
     }
 }
