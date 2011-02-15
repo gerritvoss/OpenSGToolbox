@@ -1,19 +1,66 @@
 #!/bin/sh
+#Parameters
+# 
 
 #Setup the environment
 . /etc/profile
 . ~/.profile
 
-AUTOBUILD_DIR=~/Work/ScheduledBuilds/OSGToolboxDoc
+#SHELL_SCRIPT_DIR=`dirname $0`
+ABS_PATH=$(cd ${0%/*} && echo $PWD/${0##*/})
+SHELL_SCRIPT_DIR=`dirname $ABS_PATH`
 
-TOOLBOX_REPO_DIR=$AUTOBUILD_DIR/OpenSGToolbox
-OSG_REPO_DIR=$AUTOBUILD_DIR/OpenSGDevMaster
+GIT_EXE_PATH=git
+CMAKE_EXE_PATH=cmake
+INSTALL_PREFIX=$SHELL_SCRIPT_DIR/LocalInstall
+BUILD_DIR="$SHELL_SCRIPT_DIR/LocalBuild"
+
+AUTOBUILD_DIR=$SHELL_SCRIPT_DIR
+ARTIFACT_FILE_BASE_NAME="OSGToolboxUserDoc"
+
 TOOLBOX_REPO_URL=git://github.com/djkabala/OpenSGToolbox.git
 OSG_REPO_URL=git://github.com/djkabala/OpenSGDevMaster_Toolbox.git
 
-CMAKE_INSTALL_PREFIX=~/public_html/OpenSGToolbox/V2
+while getopts 'kno:c:g:p:t:a:w:u:' OPTION
+do
+    case $OPTION in
+        t) TOOLBOX_REPO_URL_FLAG=1
+           TOOLBOX_REPO_URL="$OPTARG"
+            ;;
+        o) OSG_REPO_URL_FLAG=1
+           OSG_REPO_URL="$OPTARG"
+            ;;
+        c) CMAKE_EXE_PATH_FLAG=1
+           CMAKE_EXE_PATH="$OPTARG"
+            ;;
+        g) GIT_EXE_PATH_FLAG=1
+           GIT_EXE_PATH="$OPTARG"
+            ;;
+        p) INSTALL_PREFIX_FLAG=1
+           INSTALL_PREFIX="$OPTARG"
+            ;;
+        n) NO_BUILD_FLAG=1
+            ;;
+        k) PACKAGE_FLAG=1
+            ;;
+        w) PUBLISH_URL_FLAG=1
+           PUBLISH_URL="$OPTARG"
+            ;;
+        u) PUBLISH_DIR_FLAG=1
+           PUBLISH_DIR="$OPTARG"
+            ;;
+        a) ARTIFACT_FILE_FLAG=1
+           ARTIFACT_FILE_BASE_NAME="$OPTARG"
+            ;;
+        ?) printf "Usage: "
+           exit 2
+            ;;
+    esac
+done
+shift $((OPTIND -1))
 
-BUILD_DIR=$OSG_REPO_DIR/DocBuild
+TOOLBOX_REPO_DIR=$AUTOBUILD_DIR/OpenSGToolbox
+OSG_REPO_DIR=$AUTOBUILD_DIR/OpenSGDevMaster
 
 pushd .
 
@@ -21,11 +68,13 @@ pushd .
 cd $AUTOBUILD_DIR
 
 #remove old log files
-rm OpenSGDocBuild-*.log
+rm $AUTOBUILD_DIR/OpenSGDocBuild-*.log
 
 #Log to to a log file
 DATE_TIME=`date "+%Y-%m-%dT%H:%M:%S"`
-exec &> $AUTOBUILD_DIR/OpenSGDocBuild-$DATE_TIME.log
+
+LOG_FILE=$AUTOBUILD_DIR/OpenSGDocBuild-$DATE_TIME.log
+exec &> $LOG_FILE
 
 #pring to stdout too
 #tail -f capture.txt >/dev/tty7 &
@@ -37,8 +86,8 @@ rm -rf $OSG_REPO_DIR
 rm -rf $TOOLBOX_REPO_DIR
 
 #Clone the repositories
-git clone ${OSG_REPO_URL} ${OSG_REPO_DIR}
-git clone ${TOOLBOX_REPO_URL} ${TOOLBOX_REPO_DIR}
+$GIT_EXE_PATH clone ${OSG_REPO_URL} ${OSG_REPO_DIR}
+$GIT_EXE_PATH clone ${TOOLBOX_REPO_URL} ${TOOLBOX_REPO_DIR}
 
 pushd .
     cd ${OSG_REPO_DIR}
@@ -116,18 +165,36 @@ pushd .
         -DOSG_GENERATE_SEPARATE_LIB_DOC=ON \
         -DOSG_EXTRA_EXTERNAL_MODULES="OSGTBAnimation;OSGTBFileIO;OSGContribFieldContainerEditor;OSGContribLua;OSGContribLuaToolbox;OSGContribParticleSystem;OSGContribPhysics;OSGContribSound;OSGContribTextDom;OSGContribUserInterface;OSGContribVideo" \
         -DOSG_LUA_BUILD_WITH_DEBUGGER=ON \
-        ..
+        $OSG_REPO_DIR
+
     #Make the documentation
-    make Doc
+    if [ "$NO_BUILD_FLAG" != 1 ]; then
+        make Doc
+    fi
+
 
     #Package the Doc
-    cd Doc
-    tar -czf OSGToolboxDoc.tgz html
-    mv OSGToolboxDoc.tgz $AUTOBUILD_DIR/OSGToolboxDoc.tgz
+    if [ "$PACKAGE_FLAG" = 1 ]; then
+        cd Doc
+
+        ARTIFACT_FILE="$ARTIFACT_FILE_BASE_NAME.tgz"
+
+        tar -czf $ARTIFACT_FILE html
+
+        #Publish the doc
+        if [ "$PUBLISH_URL_FLAG" = 1 ]; then
+            #Push the package to the URL
+            scp $ARTIFACT_FILE $PUBLISH_URL:$PUBLISH_DIR
+
+            #End time
+            date
+            scp $LOG_FILE $PUBLISH_URL:$PUBLISH_DIR
+
+            #ssh $ARTIFACT_FILE.tgz $PUBLISH_URL
+        fi
+    fi
 
 popd 
-
-#Publish the doc
 
 #End time
 date
