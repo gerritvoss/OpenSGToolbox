@@ -77,33 +77,33 @@ struct FieldTraits<Int32ToStringMap> : public FieldTraitsTemplateBase<Int32ToStr
     // String conversion
 
     // Output inVal into outVal
-    static void putToStream(const Int32ToStringMap   &inVal,
+    static OSG_BASE_DLLMAPPING void putToStream(const Int32ToStringMap   &inVal,
             OutStream &outVal);
     
     // Setup outVal from the contents of inVal
-    static bool getFromCString(      Int32ToStringMap  &outVal,
+    static OSG_BASE_DLLMAPPING bool getFromCString(      Int32ToStringMap  &outVal,
             const Char8     *&inVal);
     
     // Binary conversion
     
     // Return the size of the binary version in byte   
-    static UInt32 getBinSize(const Int32ToStringMap & obj);
+    static OSG_BASE_DLLMAPPING UInt32 getBinSize(const Int32ToStringMap & obj);
 
-    static UInt32 getBinSize (const Int32ToStringMap *obj, UInt32 num);
+    static OSG_BASE_DLLMAPPING UInt32 getBinSize (const Int32ToStringMap *obj, UInt32 num);
 
     // Copy the object into the BinaryDataHandler
-    static void copyToBin(      BinaryDataHandler &bdh, 
+    static OSG_BASE_DLLMAPPING void copyToBin(      BinaryDataHandler &bdh, 
                           const Int32ToStringMap         &obj);
 
-    static void copyToBin(      BinaryDataHandler &bdh,
+    static OSG_BASE_DLLMAPPING void copyToBin(      BinaryDataHandler &bdh,
                           const Int32ToStringMap         *objs,
                                 UInt32             num);
     
 
     // Copy the object from the BinaryDataHandler
-    static void copyFromBin(BinaryDataHandler &bdh, 
+    static OSG_BASE_DLLMAPPING void copyFromBin(BinaryDataHandler &bdh, 
                             Int32ToStringMap         &obj);
-    static void copyFromBin(BinaryDataHandler &bdh,
+    static OSG_BASE_DLLMAPPING void copyFromBin(BinaryDataHandler &bdh,
                             Int32ToStringMap         *objs,
                             UInt32             num);
 };

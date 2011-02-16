@@ -83,33 +83,33 @@ struct FieldTraits<BoostPath> : public FieldTraitsTemplateBase<BoostPath>
     // String conversion
 
     // Output inVal into outVal
-    static void putToStream(const BoostPath   &inVal,
+    static OSG_BASE_DLLMAPPING void putToStream(const BoostPath   &inVal,
             OutStream &outVal);
     
     // Setup outVal from the contents of inVal
-    static bool getFromCString(      BoostPath  &outVal,
+    static OSG_BASE_DLLMAPPING bool getFromCString(      BoostPath  &outVal,
                               const Char8     *&inVal);
     
     // Binary conversion
     
     // Return the size of the binary version in byte   
-    static UInt32 getBinSize(const BoostPath & obj);
+    static OSG_BASE_DLLMAPPING UInt32 getBinSize(const BoostPath & obj);
 
-    static UInt32 getBinSize (const BoostPath *obj, UInt32 num);
+    static OSG_BASE_DLLMAPPING UInt32 getBinSize (const BoostPath *obj, UInt32 num);
 
     // Copy the object into the BinaryDataHandler
-    static void copyToBin(      BinaryDataHandler &bdh, 
+    static OSG_BASE_DLLMAPPING void copyToBin(      BinaryDataHandler &bdh, 
                           const BoostPath         &obj);
 
-    static void copyToBin(      BinaryDataHandler &bdh,
+    static OSG_BASE_DLLMAPPING void copyToBin(      BinaryDataHandler &bdh,
                           const BoostPath         *objs,
                                 UInt32             num);
     
 
     // Copy the object from the BinaryDataHandler
-    static void copyFromBin(BinaryDataHandler &bdh, 
+    static OSG_BASE_DLLMAPPING void copyFromBin(BinaryDataHandler &bdh, 
                             BoostPath         &obj);
-    static void copyFromBin(BinaryDataHandler &bdh,
+    static OSG_BASE_DLLMAPPING void copyFromBin(BinaryDataHandler &bdh,
                             BoostPath         *objs,
                             UInt32             num);
 };
