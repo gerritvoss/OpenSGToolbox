@@ -211,6 +211,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING InternalWindow : public InternalWindow
 	void popupMenuKeyPressed(KeyEventDetails* const e);
 	void popupMenuMouseMoved(MouseEventDetails* const e);
     void popupMenuMouseDragged(MouseEventDetails* const e);
+    void popupMenuMouseWheelMoved(MouseWheelEventDetails* const e);
+
 
     std::map<PopupMenu* const, std::vector<boost::shared_ptr<boost::signals2::scoped_connection> > > _PopupConnections;
 

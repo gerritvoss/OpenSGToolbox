@@ -1001,6 +1001,7 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectKeyPressed(boost::bind(&InternalWindow::popupMenuKeyPressed, this, _1)))));
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseMoved(boost::bind(&InternalWindow::popupMenuMouseMoved, this, _1)))));
             _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&InternalWindow::popupMenuMouseDragged, this, _1)))));
+            _PopupConnections[getActivePopupMenus(i)].push_back(boost::shared_ptr<boost::signals2::scoped_connection>(new boost::signals2::scoped_connection(getParentDrawingSurface()->getEventProducer()->connectMouseWheelMoved(boost::bind(&InternalWindow::popupMenuMouseWheelMoved, this, _1)))));
         }
         setLockInput(true);
     }
@@ -1187,6 +1188,20 @@ void InternalWindow::popupMenuMouseMoved(MouseEventDetails* const e)
     }
 }
 
+void InternalWindow::popupMenuMouseWheelMoved(MouseWheelEventDetails* const e)
+{
+    for(Int32 i(getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
+    {
+        bool isContained = getActivePopupMenus(i)->isContained(e->getLocation(), true);
+        checkMouseEnterExit(e,e->getLocation(),getActivePopupMenus(i),isContained,e->getViewport());
+        if(isContained)
+        {
+            getActivePopupMenus(i)->mouseWheelMoved(e);
+            return;
+        }
+    }
+}
+
 void InternalWindow::popupMenuMouseDragged(MouseEventDetails* const e)
 {
     for(Int32 i(getMFActivePopupMenus()->size()-1) ; i>=0 ; --i)
@@ -1261,11 +1276,11 @@ void InternalWindow::titlebarDragKeyPressed(KeyEventDetails* const e)
 
 void InternalWindow::borderDragMouseReleased(MouseEventDetails* const e)
 {
-        _BorderDragMouseDraggedConnection.disconnect();
-        _BorderDragMouseReleasedConnection.disconnect();
-        _BorderDragKeyPressedConnection.disconnect();
+    _BorderDragMouseDraggedConnection.disconnect();
+    _BorderDragMouseReleasedConnection.disconnect();
+    _BorderDragKeyPressedConnection.disconnect();
 
-        setLockInput(false);
+    setLockInput(false);
 }
 
 void InternalWindow::borderDragMouseDragged(MouseEventDetails* const e)
