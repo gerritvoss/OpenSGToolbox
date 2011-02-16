@@ -408,16 +408,16 @@ void FCPtrFieldEditor::openFindContainerHandler(void)
 
     std::vector<std::string> inputValues;
     _FindFCStore->setTypeToStore(ThePtrType);
-    std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
+    FCPtrEditorStore::FieldContianerVector fcStore(_FindFCStore->getList());
 
     std::string value;
     for(UInt32 i(0) ; i<fcStore.size(); ++i)
     {
         value.clear();
         if(fcStore[i]->getType().isDerivedFrom(AttachmentContainer::getClassType()) &&
-           getName(dynamic_cast<AttachmentContainer*>(fcStore[i])))
+           getName(dynamic_pointer_cast<AttachmentContainer>(fcStore[i])))
         {
-            value += std::string(getName(dynamic_cast<AttachmentContainer*>(fcStore[i]))) + " ";
+            value += std::string(getName(dynamic_pointer_cast<AttachmentContainer>(fcStore[i]))) + " ";
         }
         value += "[" + fcStore[i]->getType().getName() + "] " + boost::lexical_cast<std::string>(fcStore[i]->getId());
         inputValues.push_back(value);
@@ -505,7 +505,7 @@ void FCPtrFieldEditor::handleFindContainerDialogClosed(DialogWindowEventDetails*
 {
     if(details->getOption() != DialogWindowEventDetails::DIALOG_OPTION_CANCEL)
     {
-        std::vector<FieldContainer*> fcStore(_FindFCStore->getList());
+        FCPtrEditorStore::FieldContianerVector fcStore(_FindFCStore->getList());
         //Set the value of the field
         SetFieldValueCommandPtr SetCommand =
             SetFieldValueCommand::create(getEditingFC(),

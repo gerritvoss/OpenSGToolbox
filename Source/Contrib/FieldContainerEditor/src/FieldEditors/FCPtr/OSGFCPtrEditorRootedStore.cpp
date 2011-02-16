@@ -86,13 +86,13 @@ void FCPtrEditorRootedStore::updateList(void)
     }
 
     FCFileType::FCPtrStore SearchRoots;
-    for(std::vector<FieldContainer*>::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
+    for(FCPtrEditorStore::FieldContianerVector::const_iterator Itor(_Roots.begin()) ; Itor!=_Roots.end() ; ++Itor)
     {
         SearchRoots.insert(*Itor);
     }
 
     FCFileType::FCPtrStore Exclude;
-    for(std::vector<FieldContainer*>::const_iterator Itor(_ExcludedPtrs.begin()) ; Itor!=_ExcludedPtrs.end() ; ++Itor)
+    for(FCPtrEditorStore::FieldContianerVector::const_iterator Itor(_ExcludedPtrs.begin()) ; Itor!=_ExcludedPtrs.end() ; ++Itor)
     {
         Exclude.insert(*Itor);
     }

@@ -56,7 +56,7 @@ typedef boost::shared_ptr<FCPtrEditorStore> FCPtrEditorStorePtr;
 class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING FCPtrEditorStore
 {
   public:
-    typedef std::vector<FieldContainer*> FieldContianerVector;
+    typedef std::vector<FieldContainerUnrecPtr> FieldContianerVector;
     typedef std::vector<const FieldContainerType*> FieldContianerTypeVector;
 
     virtual ~FCPtrEditorStore(void);
