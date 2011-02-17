@@ -116,10 +116,16 @@ void PopupMenu::updateLayout(void)
 
     //Update the scroll panel layout
 
-    _MenuPanel->setPreferredSize(Vec2f(MaxWidth+InsetSize.x(), TotalHeight+InsetSize.y()));
+    //if(_ScrollPanel->isVerticalBarVisible())
+    //{
+    _MenuPanel->setPreferredSize(Vec2f(MaxWidth, TotalHeight));
+    //}
+    //else
+    //{
+        //_MenuPanel->setPreferredSize(Vec2f(MaxWidth, TotalHeight));
+    //}
 
-    Real32 ScrollWidth(20.0f);
-    setPreferredSize(Vec2f(MaxWidth+InsetSize.x()+ScrollWidth,
+    setPreferredSize(Vec2f(MaxWidth+InsetSize.x()+_ScrollPanel->getVerticalBarWidth(),
                            osgClamp(getMinSize().y(), TotalHeight+InsetSize.y(), getMaxSize().y())));
 
     //getInsideInsetsBounds(InsetsTopLeft, InsetsBottomRight);
@@ -172,6 +178,22 @@ void PopupMenu::mouseWheelMoved(MouseWheelEventDetails* const e)
     _ScrollPanel->mouseWheelMoved(e);
 
     Component::mouseWheelMoved(e);
+
+    UInt32 i(0);
+    while (i<_MenuPanel->getMFChildren()->size() &&
+           !_MenuPanel->getChildren(i)->isContained(e->getLocation(), true))
+    {
+        ++i;
+    }
+	
+	if(i<_MenuPanel->getMFChildren()->size() &&
+       getSelectionModel()->getSelectedIndex() != i)
+	{
+        if(getSelectionModel()->getSelectedIndex() != i)
+        {
+		    getSelectionModel()->setSelectedIndex(i);
+        }
+	}
 }
 
 ComponentContainer* PopupMenu::getParentContainer(void) const

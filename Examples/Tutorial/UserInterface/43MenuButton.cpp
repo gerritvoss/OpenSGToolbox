@@ -124,6 +124,36 @@ int main(int argc, char **argv)
         ExampleListModel->pushBack(boost::any(std::string("Violet")));
         ExampleListModel->pushBack(boost::any(std::string("Mauve")));
         ExampleListModel->pushBack(boost::any(std::string("Peach")));
+        ExampleListModel->pushBack(boost::any(std::string("Red")));
+        ExampleListModel->pushBack(boost::any(std::string("Green")));
+        ExampleListModel->pushBack(boost::any(std::string("Blue")));
+        ExampleListModel->pushBack(boost::any(std::string("Orange")));
+        ExampleListModel->pushBack(boost::any(std::string("Purple")));
+        ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+        ExampleListModel->pushBack(boost::any(std::string("White")));
+        ExampleListModel->pushBack(boost::any(std::string("Black")));
+        ExampleListModel->pushBack(boost::any(std::string("Gray")));
+        ExampleListModel->pushBack(boost::any(std::string("Brown")));
+        ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+        ExampleListModel->pushBack(boost::any(std::string("Pink")));
+        ExampleListModel->pushBack(boost::any(std::string("Violet")));
+        ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+        ExampleListModel->pushBack(boost::any(std::string("Peach")));
+        ExampleListModel->pushBack(boost::any(std::string("Red")));
+        ExampleListModel->pushBack(boost::any(std::string("Green")));
+        ExampleListModel->pushBack(boost::any(std::string("Blue")));
+        ExampleListModel->pushBack(boost::any(std::string("Orange")));
+        ExampleListModel->pushBack(boost::any(std::string("Purple")));
+        ExampleListModel->pushBack(boost::any(std::string("Yellow")));
+        ExampleListModel->pushBack(boost::any(std::string("White")));
+        ExampleListModel->pushBack(boost::any(std::string("Black")));
+        ExampleListModel->pushBack(boost::any(std::string("Gray")));
+        ExampleListModel->pushBack(boost::any(std::string("Brown")));
+        ExampleListModel->pushBack(boost::any(std::string("Indigo")));
+        ExampleListModel->pushBack(boost::any(std::string("Pink")));
+        ExampleListModel->pushBack(boost::any(std::string("Violet")));
+        ExampleListModel->pushBack(boost::any(std::string("Mauve")));
+        ExampleListModel->pushBack(boost::any(std::string("Peach")));
 
         //Create the MenuButton
         MenuButtonRecPtr ExampleMenuButton = MenuButton::create();
@@ -136,8 +166,7 @@ int main(int argc, char **argv)
         // Create MainFramelayout
         FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
         MainInternalWindowLayout->setOrientation(FlowLayout::HORIZONTAL_ORIENTATION);
-        MainInternalWindowLayout->setMajorAxisAlignment(0.5f);
-        MainInternalWindowLayout->setMinorAxisAlignment(0.5f);
+        MainInternalWindowLayout->setMinorAxisAlignment(0.2f);
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
@@ -149,7 +178,7 @@ int main(int argc, char **argv)
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.7f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.8f,0.8f));
         MainInternalWindow->setDrawTitlebar(false);
         MainInternalWindow->setResizable(false);
 

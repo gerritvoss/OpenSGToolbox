@@ -171,7 +171,7 @@ int main(int argc, char **argv)
          ******************************************************/
         PopupMenuRecPtr ExamplePopupMenu = PopupMenu::create();
         ExamplePopupMenu->setMinSize(Vec2f(100.0f, 20.0f));
-        ExamplePopupMenu->setMaxSize(Vec2f(100.0f, 50.0f));
+        ExamplePopupMenu->setMaxSize(Vec2f(100.0f, 80.0f));
         ExamplePopupMenu->addItem(MenuItem1);
         ExamplePopupMenu->addItem(MenuItem2);
         ExamplePopupMenu->addItem(MenuItem3);

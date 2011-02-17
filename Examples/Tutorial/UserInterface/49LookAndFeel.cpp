@@ -735,13 +735,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
 
         // Make Torus Node
-        NodeRecPtr SceneGeometryNode(NULL);
-
-        SceneGeometryNode = SceneFileHandler::the()->read(".//MesophyllCell.osb");
-        if(SceneGeometryNode == NULL)
-        {
-            SceneGeometryNode = makeTorus(150, 600, 32, 32);
-        }
+        NodeRecPtr SceneGeometryNode = makeTorus(150, 600, 32, 32);
 
         // Make Main Scene Node and add the Torus
         NodeRecPtr scene = Node::create();

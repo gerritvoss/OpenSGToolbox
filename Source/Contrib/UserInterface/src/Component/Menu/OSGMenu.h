@@ -101,6 +101,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Menu : public MenuBase
     //virtual void mouseExited(MouseEventDetails* const e);
     virtual void mouseReleased(MouseEventDetails* const e);
 
+    Vec2f getContentRequestedSize(void) const;
     virtual void activate(void);
 
     virtual void detachFromEventProducer(void);

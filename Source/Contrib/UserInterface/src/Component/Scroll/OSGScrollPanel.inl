@@ -77,4 +77,28 @@ void ScrollPanel::scrollVerticalBlock(Int32 Blocks)
     getVerticalScrollBar()->scrollBlock(Blocks);
 }
 
+inline
+bool ScrollPanel::isVerticalBarVisible(void) const
+{
+    return getVerticalScrollBar()->getVisible();
+}
+
+inline
+bool ScrollPanel::isHorizontalBarVisible(void) const
+{
+    return getHorizontalScrollBar()->getVisible();
+}
+
+inline
+Real32 ScrollPanel::getVerticalBarWidth(void) const
+{
+    return getVerticalScrollBar()->getSize().x();
+}
+
+inline
+Real32 ScrollPanel::getHorizontalBarHeight(void) const
+{
+    return getHorizontalScrollBar()->getSize().y();
+}
+
 OSG_END_NAMESPACE

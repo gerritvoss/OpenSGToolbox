@@ -118,6 +118,12 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
     void scrollHorizontalBlock(Int32 Blocks);
     void scrollVerticalUnit(Int32 Units);
     void scrollVerticalBlock(Int32 Blocks);
+
+    bool isVerticalBarVisible(void) const;
+    bool isHorizontalBarVisible(void) const;
+
+    Real32 getVerticalBarWidth(void) const;
+    Real32 getHorizontalBarHeight(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -165,9 +171,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ScrollPanel : public ScrollPanelBase
 
     void updateRangeModels(void);
 
-    ScrollBar* getVerticalScrollBar(void);
+    ScrollBar* getVerticalScrollBar(void) const;
 
-    ScrollBar* getHorizontalScrollBar(void);
+    ScrollBar* getHorizontalScrollBar(void) const;
     /*==========================  PRIVATE  ================================*/
 
   private:

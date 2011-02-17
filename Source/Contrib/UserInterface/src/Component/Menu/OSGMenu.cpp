@@ -97,6 +97,19 @@ void Menu::mouseReleased(MouseEventDetails* const e)
     Component::mouseReleased(e);
 }
 
+Vec2f Menu::getContentRequestedSize(void) const
+{
+	Vec2f RequestedSize(Inherited::getContentRequestedSize());
+
+    if(getExpandDrawObject() != NULL && 
+       !getTopLevelMenu())
+	{
+		RequestedSize[0] += getExpandDrawObject()->getSize().x();
+	}
+
+	return RequestedSize;
+}
+
 void Menu::setPopupVisible(bool Visible)
 {
     getInternalPopupMenu()->setVisible(Visible);

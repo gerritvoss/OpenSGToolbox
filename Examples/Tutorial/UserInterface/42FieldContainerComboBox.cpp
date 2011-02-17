@@ -120,20 +120,22 @@ int main(int argc, char **argv)
         ExampleUneditableComboBox->setEditable(false);
         ExampleUneditableComboBox->setModel(ExampleComboBoxModel);
         ExampleUneditableComboBox->setSelectedIndex(0);
+        ExampleUneditableComboBox->setPreferredSize(Vec2f(160.0f,ExampleUneditableComboBox->getPreferredSize().y()));
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
         ColorLayerRecPtr MainInternalWindowBackground = ColorLayer::create();
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
 
-        LayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        FlowLayoutRecPtr MainInternalWindowLayout = FlowLayout::create();
+        MainInternalWindowLayout->setMinorAxisAlignment(0.2f);
 
         InternalWindowRecPtr MainInternalWindow = InternalWindow::create();
         MainInternalWindow->pushToChildren(ExampleUneditableComboBox);
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.5f,0.5f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.8f,0.8f));
         MainInternalWindow->setDrawTitlebar(false);
         MainInternalWindow->setResizable(false);
 

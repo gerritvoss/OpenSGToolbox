@@ -243,17 +243,17 @@ void ListGeneratedPopupMenu::dump(      UInt32    ,
 
 void ListGeneratedPopupMenu::handleListContentsChanged(ListDataEventDetails* const e)
 {
-	updateMenuItems();
+	//updateMenuItems();
 }
 
 void ListGeneratedPopupMenu::handleListIntervalAdded(ListDataEventDetails* const e)
 {
-	updateMenuItems();
+	//updateMenuItems();
 }
 
 void ListGeneratedPopupMenu::handleListIntervalRemoved(ListDataEventDetails* const e)
 {
-	updateMenuItems();
+	//updateMenuItems();
 }
 
 OSG_END_NAMESPACE
