@@ -2,6 +2,7 @@
 #include <OSGConfig.h>
 
 #include <OSGPlainDocument.h>
+#include <OSGElement.h>
 
 #include <OSGTextFileHandler.h>
 
@@ -20,7 +21,8 @@ int main(int argc, char **argv)
     {
         //Load Document
 	    PlainDocumentRefPtr TheDocument;
-	    TheDocument = dynamic_pointer_cast<PlainDocument>(TextFileHandler::the()->read(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText2.txt")));
+	    TheDocument =
+            dynamic_pointer_cast<PlainDocument>(TextFileHandler::the()->read(BoostPath("./Data/SampleText2.txt")));
 
 	    UInt32 documentLength = TheDocument->getLength();
 	    std::cout<<"documentLength:"<<documentLength<<std::endl;
@@ -28,7 +30,7 @@ int main(int argc, char **argv)
     	
 	    UInt32 choice,offset,length;
 	    std::string stringToInsert;
-	    std::map<std::string,UInt32> temp;
+	    DocumentElementAttribute temp;
 	    std::string result;
 	    std::string path;
 

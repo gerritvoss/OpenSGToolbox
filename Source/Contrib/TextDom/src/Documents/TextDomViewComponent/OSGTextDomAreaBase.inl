@@ -247,6 +247,47 @@ void TextDomAreaBase::setLayoutManager(TextDomLayoutManager * const value)
 
     _sfLayoutManager.setValue(value);
 }
+//! Get the value of the TextDomArea::_sfEditable field.
+
+inline
+bool &TextDomAreaBase::editEditable(void)
+{
+    editSField(EditableFieldMask);
+
+    return _sfEditable.getValue();
+}
+
+//! Get the value of the TextDomArea::_sfEditable field.
+inline
+      bool  TextDomAreaBase::getEditable(void) const
+{
+    return _sfEditable.getValue();
+}
+
+//! Set the value of the TextDomArea::_sfEditable field.
+inline
+void TextDomAreaBase::setEditable(const bool value)
+{
+    editSField(EditableFieldMask);
+
+    _sfEditable.setValue(value);
+}
+
+//! Get the value of the \a index element the TextDomArea::_mfBookmarkedLines field.
+inline
+      UInt32  TextDomAreaBase::getBookmarkedLines(const UInt32 index) const
+{
+    return _mfBookmarkedLines[index];
+}
+
+inline
+UInt32 &TextDomAreaBase::editBookmarkedLines(const UInt32 index)
+{
+    editMField(BookmarkedLinesFieldMask, _mfBookmarkedLines);
+
+    return _mfBookmarkedLines[index];
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -265,6 +306,12 @@ void TextDomAreaBase::execSync (      TextDomAreaBase *pFrom,
     if(FieldBits::NoField != (FontFieldMask & whichField))
         _sfFont.syncWith(pFrom->_sfFont);
 
+    if(FieldBits::NoField != (BookmarkedLinesFieldMask & whichField))
+        _mfBookmarkedLines.syncWith(pFrom->_mfBookmarkedLines,
+                                syncMode,
+                                uiSyncInfo,
+                                oOffsets);
+
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
         _sfCaretPosition.syncWith(pFrom->_sfCaretPosition);
 
@@ -282,6 +329,9 @@ void TextDomAreaBase::execSync (      TextDomAreaBase *pFrom,
 
     if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
         _sfLayoutManager.syncWith(pFrom->_sfLayoutManager);
+
+    if(FieldBits::NoField != (EditableFieldMask & whichField))
+        _sfEditable.syncWith(pFrom->_sfEditable);
 }
 #endif
 

@@ -45,6 +45,7 @@
 #include "OSGTextDomLayoutManagerBase.h"
 #include "OSGElementFields.h"
 #include "OSGTextDomAreaFields.h"
+#include "OSGVector.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -89,9 +90,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManager : public TextDomLayoutM
 	virtual bool isLastCharacterOfDocument(void) const = 0;
 	virtual void calculateLineHeight(void) = 0;
 	virtual UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging) = 0;
-	virtual void checkCaretVisibility(UInt32 dir) = 0;
+	virtual void checkCaretVisibility(void) = 0;
 	virtual bool isCaretVisible(void) = 0;
-	virtual void makeCaretVisible(UInt32 dir) = 0;
+	virtual void makeCaretVisible(void) = 0;
 	virtual bool isSomethingSelected(void) = 0;
 	virtual bool isStartLocationBeforeEndLocation(void) const = 0;
 	virtual void moveCaretEnd(bool isControlPressed) = 0;
@@ -103,19 +104,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManager : public TextDomLayoutM
 	virtual void moveTheCaret(UInt32 dir,bool isShiftPressed,bool isControlPressed) = 0;
 	virtual void moveAndHighlightWord(UInt32 dir) = 0;
 	virtual void recalculateCaretPositions(void) = 0;
-	virtual void DoIfLineLongerThanPreferredSize(void) const = 0;
+	virtual void DoIfLineLongerThanPreferredSize(void) = 0;
 	virtual UInt32 getCaretIndex(void) const = 0;
 	virtual UInt32 getCaretLine(void) const = 0;
+	virtual void setCaretIndex(UInt32) = 0;
+	virtual void setCaretLine(UInt32) = 0;
 	virtual void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex) = 0;
 	virtual Real32 getHeightOfLine(void) = 0;
 	virtual void doubleClickHandler(void) = 0;
 	virtual void selectAll(void) = 0;
 	virtual bool isLastCharacter(void) = 0;
 	virtual void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight) = 0;
-	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine) = 0;
+	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine,bool isNewCharacter) = 0;
 	virtual void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine) = 0;
 	virtual char oppositeBrace(char val) = 0;
-	virtual void findBrace(char theChar,UInt32 direction) = 0;
+	virtual void findBrace(char theChar,UInt32 direction,bool isNewCharacter) = 0;
 	virtual void removeBracesHighlightIndices(void) = 0;
 	virtual bool isStartingBraces(char value) = 0;
 	virtual bool isEndingBraces(char value) = 0;
@@ -146,7 +149,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomLayoutManager : public TextDomLayoutM
 	virtual void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine) = 0;
 	virtual char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine) = 0;
 	virtual bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine) = 0;
-
+	virtual void highlightString(UInt32 _theOriginalCaretLine,UInt32 _theOriginalCaretIndex,std::string _StringToBeInserted) = 0;
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */

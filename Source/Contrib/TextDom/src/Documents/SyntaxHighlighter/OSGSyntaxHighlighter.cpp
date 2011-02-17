@@ -46,7 +46,6 @@
 
 #include "OSGSyntaxHighlighter.h"
 
-
 #include "OSGSingletonHolder.ins"
 
 OSG_BEGIN_NAMESPACE
@@ -80,7 +79,7 @@ std::vector<UInt32> SyntaxHighlighterBase::processInput(std::string inputString)
 	std::string theString;
 	while(iss>>theString)
 	{
-		if(dictionary[theString])
+		if(theKeywordsList.isKeyword(theString))
 		{
 			UInt32 loc = inputString.find( theString, index );
 			indices.push_back(loc);
@@ -91,34 +90,36 @@ std::vector<UInt32> SyntaxHighlighterBase::processInput(std::string inputString)
 	return indices;
 }
 
-void SyntaxHighlighterBase::loadDictionary(void)
+void SyntaxHighlighterBase::loadFromFile(BoostPath& FilePath)
 {
-	std::ifstream input("dictionary.txt");
-	if(!input)
+	if(!boost::filesystem::exists(FilePath))
 	{
-		SWARNING << "void SyntaxHighlighterBase::loadDictionary(void) : error loading dictionary" <<std::endl;
+		SWARNING << "SyntaxHighlighterBase::loadFromFile(): " << FilePath.string() << " does not exists." << std::endl;
 		return;
 	}
+	std::ifstream input(FilePath.string().c_str());
 	std::string keyword;
-	while(input>>keyword)dictionary[keyword] = 1;
-
-	//displayDictionary();
+	while(input>>keyword)
+	{
+		theKeywordsList.addKeyword(keyword);
+	}
 }
 
-void SyntaxHighlighterBase::displayDictionary(void)
+void SyntaxHighlighterBase::initializeKeywordsList(void)
 {
-	std::cout<<"Displaying dictionary..."<<std::endl;
+	theKeywordsList.initialize();
+	//displayKeywordsList();
+}
 
-	for(dictionary_it=dictionary.begin();dictionary_it!=dictionary.end();dictionary_it++)
-		std::cout<<dictionary_it->first<<std::endl;
+void SyntaxHighlighterBase::displayKeywordsList(void)
+{
+	theKeywordsList.displayAll();
 }
 /*----------------------- constructors & destructors ----------------------*/
 
-SyntaxHighlighterBase::SyntaxHighlighterBase(void) :
-inputFile(NULL),
-outputFile(NULL)
+SyntaxHighlighterBase::SyntaxHighlighterBase(void)
 {
-	loadDictionary();
+	initializeKeywordsList();
 }
 
 SyntaxHighlighterBase::SyntaxHighlighterBase(const SyntaxHighlighterBase &obj)

@@ -36,6 +36,17 @@ A UI TextDomArea
 	>
 	</Field>
 	<Field
+		name="BookmarkedLines"
+		type="UInt32"
+		category="data"
+		cardinality="multi"
+		visibility="external"
+		defaultValue="0"
+		access="public"
+	>
+	</Field>
+
+	<Field
 		name="CaretPosition"
 		type="UInt32"
 		category="data"
@@ -97,5 +108,15 @@ A UI TextDomArea
         ptrFieldAccess = "nullCheck"
         linkParentField="ParentTextDomArea"
 	>
+	</Field>
+	<Field
+		name="Editable"
+		type="bool"
+		cardinality="single"
+        category="data"
+        visibility="external"
+		access="public"
+		defaultValue="true"
+    >
 	</Field>
 </FieldContainer>

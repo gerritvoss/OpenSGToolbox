@@ -44,14 +44,14 @@
 
 #include "OSGConfig.h"
 
-#include "OSGDeleteSelectedCommand.h"
+#include "OSGInsertStringCommand.h"
 
-#include "OSGElement.h"
-#include "OSGGlyphView.h"
-#include "OSGTextDomArea.h"
 #include "OSGTextDomLayoutManager.h"
 #include "OSGPlainDocument.h"
-
+#include "OSGDocumentElementAttributes.h"
+#include "OSGGlyphView.h"
+#include "OSGElement.h"
+#include "OSGDocumentElementAttributes.h"
 
 OSG_USING_NAMESPACE
 
@@ -59,98 +59,85 @@ OSG_USING_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::DeleteSelectedCommand
-A DeleteSelectedCommand. 
+/*! \class OSG::InsertStringCommand
+A InsertStringCommand. 
 */
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType DeleteSelectedCommand::_Type("DeleteSelectedCommand", "UndoableCommand");
+CommandType InsertStringCommand::_Type("InsertStringCommand", "UndoableCommand");
 
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-DeleteSelectedCommandPtr DeleteSelectedCommand::create(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea)
+InsertStringCommandPtr InsertStringCommand::create(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,UInt32 theCaretPosition,std::string theString)
 {
-	return RefPtr(new DeleteSelectedCommand(Manager,TheTextDomArea));
+	return RefPtr(new InsertStringCommand(Manager,DocumentModel,theCaretPosition,theString));
 }
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DeleteSelectedCommand::execute(void)
+void InsertStringCommand::execute(void)
 {
-	if(Manager->isStartLocationBeforeEndLocation())
-	{
-		old_HSI = Manager->getHSI();
-		old_HSL = Manager->getHSL();
-		old_HEI = Manager->getHEI();
-		old_HEL = Manager->getHEL();
-	}
-	else 
-	{
-		old_HEI = Manager->getHSI();
-		old_HEL = Manager->getHSL();
-		old_HSI = Manager->getHEI();
-		old_HSL = Manager->getHEL();
-	}
+	_OriginalHSL = _Manager->getHSL();
+	_OriginalHSI = _Manager->getHSI();
+	_OriginalHEL = _Manager->getHEL();
+	_OriginalHEI = _Manager->getHEI();
+	_theOriginalCaretLine= _Manager->getCaretLine();
+	_theOriginalCaretIndex = _Manager->getCaretIndex();
 
-	
-	_theOriginalCaretLine = Manager->getCaretLine();
-	_theOriginalCaretIndex = Manager->getCaretIndex();
-	
+	DocumentElementAttribute temp;
+	_TheDocumentModel->insertString(_TheOriginalCaretPosition,_StringToBeInserted,temp);
 
-	deletedString = _TextDomArea->getHighlightedString();
-	Manager->deleteSelected();
+	_Manager->highlightString(_theOriginalCaretLine,_theOriginalCaretIndex,_StringToBeInserted);
 
 	_HasBeenDone = true;
 }
 
-std::string DeleteSelectedCommand::getCommandDescription(void) const
+std::string InsertStringCommand::getCommandDescription(void) const
 {
-	return std::string("Insert Character ");
+	return std::string("Insert String ");
 }
 
-std::string DeleteSelectedCommand::getPresentationName(void) const
+std::string InsertStringCommand::getPresentationName(void) const
 {
 	return getCommandDescription();
 }
 
-void DeleteSelectedCommand::redo(void)
+void InsertStringCommand::redo(void)
 {
-	Manager->setHSI(old_HSI);
-	Manager->setHSL(old_HSL);
-	Manager->setHEI(old_HEI);
-	Manager->setHEL(old_HEL);
+	DocumentElementAttribute temp;
+	_TheDocumentModel->insertString(_TheOriginalCaretPosition,_StringToBeInserted,temp);
 
-	Manager->deleteSelected();
+	_Manager->highlightString(_theOriginalCaretLine,_theOriginalCaretIndex,_StringToBeInserted);
+
 	Inherited::redo();
 }
 
-void DeleteSelectedCommand::undo(void)
+void InsertStringCommand::undo(void)
 {
-	DocumentElementAttribute temp;
+	_Manager->highlightString(_theOriginalCaretLine,_theOriginalCaretIndex,_StringToBeInserted);
+	_Manager->deleteSelected();
 
-	_TextDomArea->getDocumentModel()->insertString(Manager->CaretLineAndIndexToCaretOffsetInDOM(old_HSL,old_HSI),deletedString,temp);
-
-	Manager->setHSI(old_HSI);
-	Manager->setHSL(old_HSL);
-	Manager->setHEI(old_HEI);
-	Manager->setHEL(old_HEL);
-	
-	Manager->setCaretLine(_theOriginalCaretLine);
-	Manager->setCaretIndex(_theOriginalCaretIndex);
-	Manager->recalculateCaretPositions();
-	Manager->checkCaretVisibility();
+	// restoring highlighted text and caret position
+	_Manager->setHSL(_OriginalHSL);
+	_Manager->setHSI(_OriginalHSI);
+	_Manager->setHEL(_OriginalHEL);
+	_Manager->setHEI(_OriginalHEI);
+	_Manager->setCaretLine(_theOriginalCaretLine);
+	_Manager->setCaretIndex(_theOriginalCaretIndex);
+	_Manager->recalculateCaretPositions();
+	_Manager->checkCaretVisibility();
 
 	Inherited::undo();
 }
 
-const CommandType &DeleteSelectedCommand::getType(void) const
+const CommandType &InsertStringCommand::getType(void) const
 {
 	return _Type;
 }
@@ -160,13 +147,13 @@ const CommandType &DeleteSelectedCommand::getType(void) const
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DeleteSelectedCommand::~DeleteSelectedCommand(void)
+InsertStringCommand::~InsertStringCommand(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DeleteSelectedCommand::operator =(const DeleteSelectedCommand& source)
+void InsertStringCommand::operator =(const InsertStringCommand& source)
 {
     if(this != &source)
     {

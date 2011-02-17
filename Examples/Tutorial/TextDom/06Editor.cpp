@@ -93,7 +93,8 @@ void handleLoadButtonAction(ActionEventDetails* const details,
 }
 
 void handleSaveButtonAction(ActionEventDetails* const details,
-                            WindowEventProducer* const TutorialWindow)
+                            WindowEventProducer* const TutorialWindow,
+                            TextEditor* const theTextEditor)
 {
 	std::vector<WindowEventProducer::FileDialogFilter> Filters;
 	Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
@@ -104,6 +105,11 @@ void handleSaveButtonAction(ActionEventDetails* const details,
 														std::string("newFile.lua"),
 														BoostPath(".."),
 														true);
+	if(SavePath.string() != "")
+    {
+	    theTextEditor->saveFile(SavePath);
+    }
+
 }
 
 int main(int argc, char **argv)
@@ -171,7 +177,7 @@ int main(int argc, char **argv)
         SaveButton->setToolTipText("Click to save the currently opened file");
         SaveButton->setText("Save File");
 
-        SaveButton->connectActionPerformed(boost::bind(handleSaveButtonAction, _1, TutorialWindow.get()));
+        SaveButton->connectActionPerformed(boost::bind(handleSaveButtonAction, _1, TutorialWindow.get(),theTextEditor.get()));
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow

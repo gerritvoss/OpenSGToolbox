@@ -206,6 +206,24 @@ bool FixedHeightLayoutManager::isLastCharacterOfDocument() const
 	return  false;
 }
 
+void FixedHeightLayoutManager::highlightString(UInt32 _theOriginalCaretLine,UInt32 _theOriginalCaretIndex,std::string _StringToBeInserted)
+{
+	HSL = HEL = _theOriginalCaretLine;
+	HSI = HEI = _theOriginalCaretIndex;
+	for(UInt32 i=0;i<_StringToBeInserted.size();i++)
+	{
+		HEI++;
+		if(_StringToBeInserted[i] == '\n' || _StringToBeInserted[i] == '\r')
+		{
+			if(i+1<_StringToBeInserted.size() && (_StringToBeInserted[i+1] == '\n' || _StringToBeInserted[i+1] == '\r'))
+			{
+				i++;
+			}
+			HEI = 0;
+			HEL++;
+		}
+	}
+}
 
 UInt32 FixedHeightLayoutManager::getTopmostVisibleLineNumber() const
 {
@@ -237,10 +255,13 @@ void FixedHeightLayoutManager::updateSize()
 
 void FixedHeightLayoutManager::initializeRootElement() 
 {
-	if(getParentTextDomArea()->getDocumentModel())
+	if(getParentTextDomArea())
 	{
-		defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
-		rootElement = dynamic_cast<PlainDocumentBranchElement*>(defaultRoot);
+		if(getParentTextDomArea()->getDocumentModel())
+		{
+			defaultRoot=getParentTextDomArea()->getDocumentModel()->getDefaultRootElement();
+			rootElement = dynamic_cast<PlainDocumentBranchElement*>(defaultRoot);
+		}
 	}
 }
 
@@ -523,19 +544,24 @@ UInt32 FixedHeightLayoutManager::calculateCaretPosition(Pnt2f PointOnComponent,b
 }
 
 
-void FixedHeightLayoutManager::DoIfLineLongerThanPreferredSize() const
+void FixedHeightLayoutManager::DoIfLineLongerThanPreferredSize()
 {
 	PlainDocumentLeafElementRefPtr temp = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(_CaretLine));
 
-	Pnt2f topLeft,bottomRight;
-	getParentTextDomArea()->getFont()->getBounds(temp->getText(),topLeft,bottomRight);
-	
-	Vec2f preferredSize = getParentTextDomArea()->getPreferredSize(); 
+	if(temp)
+	{
+		Pnt2f topLeft,bottomRight;
+		getParentTextDomArea()->getFont()->getBounds(temp->getText(),topLeft,bottomRight);
+		
+		Vec2f preferredSize = getParentTextDomArea()->getPreferredSize(); 
 
-	if(bottomRight.x() > preferredSize.x())preferredSize.setValues(bottomRight.x(),preferredSize.y());
-	
-	getParentTextDomArea()->setPreferredSize(preferredSize);
+		if(bottomRight.x() > preferredSize.x())preferredSize.setValues(bottomRight.x(),preferredSize.y());
+		
+		getParentTextDomArea()->setPreferredSize(preferredSize);
 
+		_preferredWidth = preferredSize.x();
+		_preferredHeight = preferredSize.y();
+	}
 }
 
 
@@ -1011,7 +1037,7 @@ void FixedHeightLayoutManager::moveTheCaret(UInt32 dir,bool isShiftPressed,bool 
 
 		break;
 	}
-	checkCaretVisibility(dir);
+	checkCaretVisibility();
 }
 
 UInt32 FixedHeightLayoutManager::getNumberOfLeadingSpaces(UInt32 line)
@@ -1026,9 +1052,9 @@ UInt32 FixedHeightLayoutManager::getNumberOfLeadingSpaces(UInt32 line)
 	return count;
 }
 
-void FixedHeightLayoutManager::checkCaretVisibility(UInt32 dir)
+void FixedHeightLayoutManager::checkCaretVisibility(void)
 {
-	if(!isCaretVisible())makeCaretVisible(dir);
+	if(!isCaretVisible())makeCaretVisible();
 }
 
 bool FixedHeightLayoutManager::isCaretInWidthRange()
@@ -1092,7 +1118,7 @@ void FixedHeightLayoutManager::doubleClickHandler(void)
 
 
 
-void FixedHeightLayoutManager::makeCaretVisible(UInt32 dir)
+void FixedHeightLayoutManager::makeCaretVisible(void)
 {
 	Pnt2f TempTopLeft, TempBottomRight;
 	
@@ -1174,14 +1200,14 @@ Pnt2f FixedHeightLayoutManager::getEndXYPosition(UInt32 lineNumber) const
 }
 
 
-void FixedHeightLayoutManager::setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine)
+void FixedHeightLayoutManager::setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine,bool isNewCharacter)
 {
 	_BracesHighlightFlag = true;
 	_StartingBraceIndex = CaretIndex;
 	_StartingBraceLine = CaretLine;
 	_EndingBraceIndex = CaretIndex;
 	_EndingBraceLine = CaretLine;
-	findBrace(theChar,AFTER);
+	findBrace(theChar,AFTER,isNewCharacter);
 }
 
 void FixedHeightLayoutManager::setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine)
@@ -1191,7 +1217,7 @@ void FixedHeightLayoutManager::setEndingBraces(char theChar,UInt32 CaretIndex,UI
 	_StartingBraceLine = CaretLine;
 	_EndingBraceIndex = CaretIndex;
 	_EndingBraceLine = CaretLine;
-	findBrace(theChar,BEFORE);
+	findBrace(theChar,BEFORE,true);
 }
 
 char FixedHeightLayoutManager::oppositeBrace(char val)
@@ -1209,7 +1235,7 @@ char FixedHeightLayoutManager::oppositeBrace(char val)
 	}
 }
 
-void FixedHeightLayoutManager::findBrace(char theChar,UInt32 direction)
+void FixedHeightLayoutManager::findBrace(char theChar,UInt32 direction,bool isNewCharacter)
 {
 	bool found = false;
 	Int32 currentLine;
@@ -1226,7 +1252,10 @@ void FixedHeightLayoutManager::findBrace(char theChar,UInt32 direction)
 				std::string theString = temp->getText();
 				if(currentLine == _StartingBraceLine)
 				{
-					theString = theString.substr(_StartingBraceIndex);
+					if(isNewCharacter)
+						theString = theString.substr(_StartingBraceIndex);
+					else
+						theString = theString.substr(_StartingBraceIndex+1);
 				}
 				if(find(theString.begin(),theString.end(),theChar) == theString.end() && find(theString.begin(),theString.end(),oppositeBrace(theChar)) == theString.end())
 				{

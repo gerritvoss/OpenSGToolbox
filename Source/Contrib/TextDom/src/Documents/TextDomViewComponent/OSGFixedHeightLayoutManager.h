@@ -125,9 +125,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual Vec2f getContentRequestedSize(void) const;
 	virtual void calculateLineHeight(void);
 	virtual UInt32 calculateCaretPosition(Pnt2f PointOnComponent,bool isDragging);
-	virtual void checkCaretVisibility(UInt32 dir);
+	virtual void checkCaretVisibility(void);
 	virtual bool isCaretVisible(void);
-	virtual void makeCaretVisible(UInt32 dir);
+	virtual void makeCaretVisible(void);
 	virtual bool isSomethingSelected(void);
 	virtual bool isStartLocationBeforeEndLocation(void) const;
 	virtual void moveCaretEnd(bool isControlPressed);
@@ -139,19 +139,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual void moveTheCaret(UInt32 dir,bool isShiftPressed,bool isControlPressed);
 	virtual void moveAndHighlightWord(UInt32 dir);
 	virtual void recalculateCaretPositions(void);
-	virtual void DoIfLineLongerThanPreferredSize(void) const;
+	virtual void DoIfLineLongerThanPreferredSize(void);
 	virtual UInt32 getCaretIndex(void) const;
 	virtual UInt32 getCaretLine(void) const;
+	virtual void setCaretIndex(UInt32);
+	virtual void setCaretLine(UInt32);
 	virtual void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex);
 	virtual Real32 getHeightOfLine(void);
 	virtual void doubleClickHandler(void);
 	virtual void selectAll(void);
 	virtual bool isLastCharacter(void);
 	virtual void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
-	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
+	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine,bool isNewCharacter);
 	virtual void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
 	virtual char oppositeBrace(char val);
-	virtual void findBrace(char theChar,UInt32 direction);
+	virtual void findBrace(char theChar,UInt32 direction,bool isNewCharacter);
 	virtual void removeBracesHighlightIndices(void);
 	virtual bool isStartingBraces(char value);
 	virtual bool isEndingBraces(char value);
@@ -182,6 +184,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
 	virtual char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
 	virtual bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	virtual void highlightString(UInt32 _theOriginalCaretLine,UInt32 _theOriginalCaretIndex,std::string _StringToBeInserted);
 
 	/*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

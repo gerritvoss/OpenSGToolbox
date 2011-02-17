@@ -47,6 +47,18 @@
 OSG_BEGIN_NAMESPACE
 
 
+inline	
+void FixedHeightLayoutManager::setCaretIndex(UInt32 value)
+{
+	_CaretIndex = value;
+}
+
+inline	
+void FixedHeightLayoutManager::setCaretLine(UInt32 value)
+{
+	_CaretLine = value;
+}
+
 inline	UInt32 FixedHeightLayoutManager::getCaretIndex(void) const
 {
 	return _CaretIndex;

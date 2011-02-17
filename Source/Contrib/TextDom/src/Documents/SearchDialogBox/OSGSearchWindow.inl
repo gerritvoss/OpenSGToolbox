@@ -38,6 +38,52 @@
 //  Includes
 //---------------------------------------------------------------------------
 
+#include "OSGTextField.h"
+#include "OSGComboBox.h"
+#include "OSGCheckboxButton.h"
+
 OSG_BEGIN_NAMESPACE
+
+inline
+std::string SearchWindow::getSearchText(void)
+{
+	return (dynamic_cast<TextField*>(this->_SearchComboBox->getEditor()->getEditorComponent())->getDrawnText());
+}
+
+inline
+std::string SearchWindow::getReplaceText(void)
+{
+	return (dynamic_cast<TextField*>(this->_ReplaceComboBox->getEditor()->getEditorComponent())->getDrawnText());
+}
+
+inline
+bool SearchWindow::isCaseChecked(void)
+{
+	return _MatchCaseCheckboxButton->getSelected();
+}
+
+inline
+bool SearchWindow::isWholeWordChecked(void)
+{
+	return _MatchWholeWordCheckboxButton->getSelected();
+}
+
+inline
+bool SearchWindow::isUseRegExChecked(void)
+{
+	return _MatchUseRegExCheckboxButton->getSelected();
+}
+
+inline
+bool SearchWindow::isSearchUpChecked(void)
+{
+	return _SearchUpCheckboxButton->getSelected();
+}
+
+inline
+bool SearchWindow::isWrapAroundChecked(void)
+{
+	return _WrapAroundCheckboxButton->getSelected();
+}
 
 OSG_END_NAMESPACE

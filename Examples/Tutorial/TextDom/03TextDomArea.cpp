@@ -145,7 +145,6 @@ int main(int argc, char **argv)
         ColorLayerRefPtr TextDomBg = ColorLayer::create();
         TextDomBg->setColor(Color4f(0.95f,0.95f,0.95f,1.0f));
         ExampleTextDomArea->setBackgrounds(TextDomBg);
-	    //ExampleTextDomArea->loadFile(BoostPath("D:\\Work_Office_RA\\OpenSGToolBox\\Examples\\Tutorial\\TextDom\\Data\\SampleText3.txt"));
 
 
 	    ButtonRefPtr LoadButton = Button::create();

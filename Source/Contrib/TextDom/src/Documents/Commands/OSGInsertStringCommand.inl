@@ -4,7 +4,9 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -24,40 +26,38 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-#include "OSGTextDomArea.h"
-
+#include "OSGConfig.h"
+#include "OSGTextDomLayoutManager.h"
+#include "OSGPlainDocument.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
-void AdvancedTextDomArea::setText(std::string txt)
+InsertStringCommand::InsertStringCommand(TextDomLayoutManagerRefPtr Manager,PlainDocumentRefPtr DocumentModel,UInt32 theCaretPosition,std::string theString) : Inherited(),
+_Manager(Manager),
+_TheDocumentModel(DocumentModel),
+_TheOriginalCaretPosition(theCaretPosition),
+_StringToBeInserted(theString),
+_theOriginalCaretLine(0),
+_theOriginalCaretIndex(0)
 {
-	if(_TheTextDomArea != NULL)
-	{	
-		_TheTextDomArea->setText(txt);
-	}
 }
 
 inline
-void AdvancedTextDomArea::setEditable(bool val)
+InsertStringCommand::InsertStringCommand(const InsertStringCommand& source) : Inherited(source),
+_Manager(source._Manager),
+_TheDocumentModel(source._TheDocumentModel),
+_TheOriginalCaretPosition(source._TheOriginalCaretPosition),
+_StringToBeInserted(source._StringToBeInserted),
+_theOriginalCaretLine(source._theOriginalCaretLine),
+_theOriginalCaretIndex(source._theOriginalCaretIndex)
 {
-	if(_TheTextDomArea != NULL)
-	{	
-		_TheTextDomArea->setEditable(val);
-	}
+}
+
+inline 
+const CommandType &InsertStringCommand::getClassType(void)
+{
+	return _Type;
 }
 
 OSG_END_NAMESPACE

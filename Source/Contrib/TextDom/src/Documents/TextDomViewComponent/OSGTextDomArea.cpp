@@ -66,7 +66,10 @@
 #include "OSGDeleteSelectedCommand.h"
 #include "OSGDeleteCharacterCommand.h"
 #include "OSGSetTextCommand.h"
+#include "OSGInsertStringCommand.h"
 #include "OSGPlainDocument.h"
+#include <boost/xpressive/xpressive.hpp>
+#include "cctype" 
 
 
 OSG_BEGIN_NAMESPACE
@@ -123,11 +126,28 @@ Real32 TextDomArea::getHeightOfLine(void)
 	return getLayoutManager()->getHeightOfLine();
 }
 
+std::string TextDomArea::getText(void)
+{
+	return getDocumentModel()->getText(0,-1);
+}
+
+void TextDomArea::clear(void) 
+{
+	getLayoutManager()->selectAll();
+	deleteSelectedUsingCommandManager();
+}
+
+void TextDomArea::write(std::string txt) 
+{
+	insertStringUsingCommandManager(getDocumentModel()->getEndPosition(),txt);
+}
+
 void TextDomArea::drawInternal(Graphics * const TheGraphics, Real32 Opacity) const
 {
 	if(getLayoutManager())
 	{
 		drawHighlightBG(TheGraphics,Opacity);
+		drawBookmarkHighlight(TheGraphics,Opacity);
 		drawLineHighlight(TheGraphics,Opacity);
 		drawBraceHighlight(TheGraphics,Opacity);
 	}
@@ -200,6 +220,13 @@ void TextDomArea::drawLineHighlight(Graphics * const TheGraphics, Real32 Opacity
 	TheGraphics->drawRect(Pnt2f(0,getLayoutManager()->getCaretYPosition()),Pnt2f(getLayoutManager()->getPreferredWidth(),getLayoutManager()->getCaretYPosition()+getLayoutManager()->getHeightOfLine()),Color4f(0.7,0.7,0.7,0.5),Opacity);
 }
 
+void TextDomArea::drawBookmarkHighlight(Graphics * const TheGraphics, Real32 Opacity) const
+{
+	for(UInt32 i=0;i<getMFBookmarkedLines()->size();i++)
+		TheGraphics->drawRect(Pnt2f(0,getLayoutManager()->getHeightOfLine()*getBookmarkedLines(i)),Pnt2f(getLayoutManager()->getPreferredWidth(),getLayoutManager()->getHeightOfLine()*(getBookmarkedLines(i)+1)),Color4f(0.7,0.7,1.0,0.5),Opacity);
+}
+
+
 void TextDomArea::drawBraceHighlight(Graphics * const TheGraphics, Real32 Opacity) const
 {
 	if(getLayoutManager()->getBracesHighlightFlag())
@@ -230,8 +257,190 @@ void TextDomArea::drawTheCaret(Graphics * const TheGraphics, Real32 Opacity) con
 	TheGraphics->drawRect(Pnt2f(getLayoutManager()->getCaretXPosition(),getLayoutManager()->getCaretYPosition()),Pnt2f(getLayoutManager()->getCaretXPosition()+2,getLayoutManager()->getCaretYPosition()+getLayoutManager()->getHeightOfLine()),Color4f(0,0,0,1),Opacity);
 }
 
+
+void TextDomArea::initialSearchStringModification(std::string& stringToBeLookedFor,const bool& isUseRegExChecked)
+{
+	std::string specialcharacters = ".|*?+(){}[]^$\\";
+	std::string temp="";
+	if(!isUseRegExChecked)
+	{
+		for(UInt32 i=0;i<stringToBeLookedFor.length();i++)
+		{
+			size_t found;
+			found=specialcharacters.find(stringToBeLookedFor[i]);
+			if (found!=std::string::npos)
+			{
+				temp+="\\"+stringToBeLookedFor[i];
+			}
+			else
+			{
+				temp+=stringToBeLookedFor[i];
+			}
+		}
+		stringToBeLookedFor=temp;
+	}
+}
+
+void TextDomArea::regexCompiling(const std::string& stringToBeLookedFor,boost::xpressive::sregex& rex,const bool& isCaseChecked,const bool& isWholeWordChecked)
+{
+	if(isCaseChecked)
+		if(isWholeWordChecked)
+			rex = boost::xpressive::sregex::compile("\\b"+stringToBeLookedFor+"\\b");
+		else
+			rex = boost::xpressive::sregex::compile(stringToBeLookedFor);
+	else
+		if(isWholeWordChecked)
+			rex = boost::xpressive::sregex::compile("\\b"+stringToBeLookedFor+"\\b", boost::xpressive::regex_constants::icase);
+		else
+			rex = boost::xpressive::sregex::compile(stringToBeLookedFor, boost::xpressive::regex_constants::icase);
+}
+
+void TextDomArea::bookmarkAllUsingRegEx(std::string& stringToBeLookedFor,const bool& isCaseChecked,const bool& isWholeWordChecked,const bool& isUseRegExChecked)
+{
+	boost::xpressive::sregex rex;
+	
+	initialSearchStringModification(stringToBeLookedFor,isUseRegExChecked);
+
+	regexCompiling(stringToBeLookedFor,rex,isCaseChecked,isWholeWordChecked);
+
+	for(UInt32 i=0;i<getLayoutManager()->getRootElement()->getElementCount();i++)
+	{
+		PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(i));
+		std::string stringToBeSearchedIn = theElement->getText();
+
+		boost::xpressive::smatch what;
+ 
+		if( boost::xpressive::regex_search( stringToBeSearchedIn, what, rex ) )
+		{
+			editMFBookmarkedLines()->push_back(i);   
+		}
+	}
+}
+
+void TextDomArea::replaceAllUsingRegEx(std::string& stringToBeLookedFor,const std::string& theReplaceText,const bool& isCaseChecked,const bool &isWholeWordChecked,const bool &isUseRegExChecked)
+{
+	if(getEditable() && getEnabled())
+	{
+		boost::xpressive::sregex rex;
+
+		initialSearchStringModification(stringToBeLookedFor,isUseRegExChecked);
+
+		regexCompiling(stringToBeLookedFor,rex,isCaseChecked,isWholeWordChecked);
+
+		for(UInt32 i=0;i<getLayoutManager()->getRootElement()->getElementCount();i++)
+		{
+			PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(i));
+			std::string stringToBeSearchedIn = theElement->getText();
+
+			boost::xpressive::smatch what;
+
+			if( boost::xpressive::regex_search( stringToBeSearchedIn, what, rex ) )
+			{
+				std::string str = regex_replace( stringToBeSearchedIn, rex, theReplaceText );
+				setTextUsingCommandManager(theElement,str);
+			}
+		}
+	}
+}
+
+void TextDomArea::setText(std::string txt)
+{
+	getLayoutManager()->selectAll();
+	deleteSelectedUsingCommandManager();
+	handlePastingAString(txt);
+}
+
+bool TextDomArea::searchForStringInDocumentUsingRegEx(std::string& stringToBeLookedFor,const bool &isCaseChecked,const bool &isWholeWordChecked,const bool &searchUp,const bool &wrapAround,const bool &isUseRegExChecked)
+{
+	
+	boost::xpressive::sregex rex;
+
+	initialSearchStringModification(stringToBeLookedFor,isUseRegExChecked);
+
+	regexCompiling(stringToBeLookedFor,rex,isCaseChecked,isWholeWordChecked);
+
+	Int32 i=getLayoutManager()->getCaretLine();
+	UInt32 count=0;
+	UInt32 totalElements = getLayoutManager()->getRootElement()->getElementCount();
+
+	for(;;count++)
+	{
+		// conditions to exit on...
+		if(!wrapAround)
+		{
+			if(!searchUp)
+			{
+				if(i>=totalElements)break;
+			}
+			else
+			{
+				if(i<0)break;
+			}
+		}
+		else
+		{
+			if(count>=totalElements)break;
+		}
+
+		PlainDocumentLeafElementRefPtr theElement = dynamic_cast<PlainDocumentLeafElement*>(getLayoutManager()->getRootElement()->getElement(i));
+		std::string stringToBeSearchedIn = theElement->getText();
+
+		if(i==getLayoutManager()->getCaretLine()) stringToBeSearchedIn = stringToBeSearchedIn.substr(getLayoutManager()->getCaretIndex());
+
+		boost::xpressive::smatch what;
+ 
+		if( boost::xpressive::regex_search( stringToBeSearchedIn, what, rex ) )
+		{
+			UInt32 temphsi = what.position();
+			if(i==getLayoutManager()->getCaretLine())temphsi+=getLayoutManager()->getCaretIndex();
+			getLayoutManager()->setHSI(temphsi);
+			getLayoutManager()->setHSL(i);
+			getLayoutManager()->setHEL(i);
+			getLayoutManager()->setHEI(temphsi+ what.length());
+			getLayoutManager()->setCaretLine(i);
+			getLayoutManager()->setCaretIndex(temphsi+ what.length() );
+			getLayoutManager()->recalculateCaretPositions();
+			getLayoutManager()->checkCaretVisibility();
+
+			return true;
+		}
+
+		// incrementing values 
+		if(!wrapAround)
+		{
+			if(!searchUp)
+			{
+				++i;
+			}
+			else
+			{
+				--i;
+			}
+		}
+		else
+		{
+			if(!searchUp)
+			{
+				i=(i+1)%totalElements;
+			}
+			else
+			{
+				--i;
+				if(i<0)
+				{
+					i=totalElements-1;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void TextDomArea::handleDocumentChanged(DocumentEventDetails* const details)
 {
+	getLayoutManager()->updateViews();
+	getLayoutManager()->updateSize();
+	getLayoutManager()->calculatePreferredSize();
 	updatePreferredSize();
 }
 
@@ -261,69 +470,96 @@ void TextDomArea::mouseDragged(MouseEventDetails* const details)
 
 void TextDomArea::keyTyped(KeyEventDetails* const details)
 {
+	
 	DocumentElementAttribute temp;
 	_CurrentCaretBlinkElps=0;
 	_DrawCaret = true;
+
+	getLayoutManager()->removeBracesHighlightIndices();
 
     switch(details->getKey())
     {
     case KeyEventDetails::KEY_UP:
         getLayoutManager()->moveTheCaret(UP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_DOWN:
         getLayoutManager()->moveTheCaret(DOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_LEFT:
 	    getLayoutManager()->moveTheCaret(LEFT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_RIGHT:
         getLayoutManager()->moveTheCaret(RIGHT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_PAGE_UP:
         getLayoutManager()->moveTheCaret(PAGEUP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_PAGE_DOWN:
         getLayoutManager()->moveTheCaret(PAGEDOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_BACK_SPACE:
-	    if(getLayoutManager()->isSomethingSelected())
-	    {
-		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-	    }
-	    else
-	    {
-		    if(getLayoutManager()->getCaretLine()!=0 || getLayoutManager()->getCaretIndex()!=0)
-		    {
-			    getLayoutManager()->moveTheCaret(LEFT,false,false);
-			    deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
-		    }
-	    }
+		if(getEditable() && getEnabled())
+		{
+			if(getLayoutManager()->isSomethingSelected())
+			{
+				deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+			}
+			else
+			{
+				if(getLayoutManager()->getCaretLine()!=0 || getLayoutManager()->getCaretIndex()!=0)
+				{
+					getLayoutManager()->moveTheCaret(LEFT,false,false);
+					deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
+				}
+			}
+			highlightIfNextCharacterIsABrace();
+		}
         break;
 	case KeyEventDetails::KEY_DELETE:
-	    if(getLayoutManager()->isSomethingSelected())
-	    {
-		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-	    }
-	    else
-	    {
-		    deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
-	    }
+		if(getEditable() && getEnabled())
+		{
+			if(getLayoutManager()->isSomethingSelected())
+			{
+				deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+			}
+			else
+			{
+				deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
+			}
+			highlightIfNextCharacterIsABrace();
+		}
         break;
 	case KeyEventDetails::KEY_ENTER:
-	    if(getLayoutManager()->isSomethingSelected())
-	    {
-		    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-	    }
-	    insertCharacterUsingCommandManager('\n',-1,-1);
+		if(getEditable() && getEnabled())
+		{
+			if(getLayoutManager()->isSomethingSelected())
+			{
+				deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+			}
+			insertCharacterUsingCommandManager('\n',-1,-1);
+			highlightIfNextCharacterIsABrace();
+		}
         break;
 	case KeyEventDetails::KEY_HOME:
 	    getLayoutManager()->moveTheCaret(HOME,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_END:
 	    getLayoutManager()->moveTheCaret(END,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
+		highlightIfNextCharacterIsABrace();
         break;
 	case KeyEventDetails::KEY_TAB:
-	    tabHandler(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT);
+	    if(getEditable() && getEnabled())
+		{
+			tabHandler(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT);
+			highlightIfNextCharacterIsABrace();
+		}
         break;
     default:
 	    if(isPrintableChar(details->getKeyChar()) || details->getKey() == KeyEventDetails::KEY_SPACE)
@@ -344,49 +580,80 @@ void TextDomArea::keyTyped(KeyEventDetails* const details)
 			        }
 			    case KeyEventDetails::KEY_V:
 			        {
-				        std::string theClipboard = getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard();
-				        handlePastingAString(theClipboard);
+						if(getEditable() && getEnabled())
+						{
+							std::string theClipboard = getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard();
+							handlePastingAString(theClipboard);
+						}
                         break;
 			        }
 			    case KeyEventDetails::KEY_Z:
-				    if(_TheUndoManager->canUndo())
-				    {
-					    _TheUndoManager->undo();
-				    }
+					if(getEditable() && getEnabled())
+					{
+						if(_TheUndoManager->canUndo())
+						{
+							_TheUndoManager->undo();
+						}
+					}
                     break;
 			    case KeyEventDetails::KEY_Y:
-				    if(_TheUndoManager->canRedo())
-				    {
-					    _TheUndoManager->redo();
-				    }
+					if(getEditable() && getEnabled())
+					{
+					    if(_TheUndoManager->canRedo())
+						{
+							_TheUndoManager->redo();
+						}
+					}
                     break;
 			    }
 		    }
 		    else
 		    {
-			    if(getLayoutManager()->isSomethingSelected())
-			    {
-				    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-			    }
-			    if(getLayoutManager()->isStartingBraces(details->getKeyChar()))
-			    {
-				    getLayoutManager()->removeBracesHighlightIndices();
-				    getLayoutManager()->setStartingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
-			    }
-			    else if(getLayoutManager()->isEndingBraces(details->getKeyChar()))
-			    {
-				    getLayoutManager()->removeBracesHighlightIndices();
-				    getLayoutManager()->setEndingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
-			    }
-			    insertCharacterUsingCommandManager(details->getKeyChar(),-1,-1);
+				if(getEditable() && getEnabled())
+				{
+					if(getLayoutManager()->isSomethingSelected())
+					{
+						deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+					}
+						
+					if(getLayoutManager()->isStartingBraces(details->getKeyChar()))
+					{
+						getLayoutManager()->setStartingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),true);
+					}
+					else if(getLayoutManager()->isEndingBraces(details->getKeyChar()))
+					{
+						getLayoutManager()->setEndingBraces(details->getKeyChar(),getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
+					}
+					
+					insertCharacterUsingCommandManager(details->getKeyChar(),-1,-1);
 
-			    /*getDocumentModel()->insertCharacter(getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),details->getKeyChar(),temp);
-			    getLayoutManager()->moveTheCaret(RIGHT,false,false);
-			    getLayoutManager()->DoIfLineLongerThanPreferredSize();*/
+					/*getDocumentModel()->insertCharacter(getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),details->getKeyChar(),temp);
+					getLayoutManager()->moveTheCaret(RIGHT,false,false);
+					getLayoutManager()->DoIfLineLongerThanPreferredSize();*/
+				}
 		    }
 	    }
-        break;
+		break;
     }
+	getLayoutManager()->DoIfLineLongerThanPreferredSize();
+}
+
+void TextDomArea::highlightIfNextCharacterIsABrace(void)
+{
+	
+	std::string nextCharacterInString = getDocumentModel()->getText(getLayoutManager()->CaretLineAndIndexToCaretOffsetInDOM(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex()),1);
+
+	char nextCharacter = nextCharacterInString[0];
+
+	if(getLayoutManager()->isStartingBraces(nextCharacter))
+	{
+		getLayoutManager()->setStartingBraces(nextCharacter,getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine(),false);
+	}
+	else if(getLayoutManager()->isEndingBraces(nextCharacter))
+	{
+		getLayoutManager()->setEndingBraces(nextCharacter,getLayoutManager()->getCaretIndex(),getLayoutManager()->getCaretLine());
+	}
+				
 }
 
 void TextDomArea::tabHandler(bool isShiftPressed)
@@ -492,7 +759,9 @@ void TextDomArea::handlePastingAString(const std::string& theClipboard)
 		deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
 	}
 	
-	getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);/// need to deal with this......
+	//getDocumentModel()->insertString(getCaretPosition(),theClipboard,temp);/// need to deal with this......
+	insertStringUsingCommandManager(getLayoutManager()->CaretLineAndIndexToCaretOffsetInDOM(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex()),theClipboard);
+	
 	getLayoutManager()->updateViews();
 	getLayoutManager()->updateSize();
 	updatePreferredSize();
@@ -501,6 +770,12 @@ void TextDomArea::handlePastingAString(const std::string& theClipboard)
 void TextDomArea::insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index)
 {
 	CommandPtr theCommand = InsertCharacterCommand::create(getLayoutManager(),dynamic_cast<PlainDocument*>(getDocumentModel()),theCharacter,line,index);
+	_TheCommandManager->executeCommand(theCommand);
+}
+
+void TextDomArea::insertStringUsingCommandManager(UInt32 caretPosition,std::string theString)
+{
+	CommandPtr theCommand = InsertStringCommand::create(getLayoutManager(),dynamic_cast<PlainDocument*>(getDocumentModel()),caretPosition,theString);
 	_TheCommandManager->executeCommand(theCommand);
 }
 
@@ -531,6 +806,8 @@ TextDomAreaTransitPtr TextDomArea::createDuplicate(void)
 	newPtr->setFont(this->getFont());
 	newPtr->setDocumentModel(this->getDocumentModel());
 	newPtr->handleDocumentModelChanged();
+	newPtr->setEditable(this->getEditable());
+	newPtr->setEnabled(this->getEnabled());
 	return TextDomAreaTransitPtr(newPtr);
 }
 
@@ -583,6 +860,7 @@ std::string TextDomArea::getHighlightedStringInternal(UInt32 lesserLine,UInt32 l
 
 	return firstLine + intermediateLines + lastLine;
 }
+
 
 void TextDomArea::setupCursor(void)
 {
@@ -682,8 +960,15 @@ void TextDomArea::createDefaultFont(void)
 void TextDomArea::createDefaultLayer(void)
 {
 	tempBackground = ColorLayer::create();
-    setBackgrounds(tempBackground);
-    tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	setBackgrounds(tempBackground);
+	if(getEditable() && getEnabled())
+	{
+		tempBackground->setColor(Color4f(1.0, 1.0, 1.0, 1.0));
+	}
+	else
+	{
+		tempBackground->setColor(Color4f(0.5, 0.5, 0.5, 1.0));
+	}
 }
 
 
@@ -695,6 +980,27 @@ void TextDomArea::updatePreferredSize(void)
 Int32 TextDomArea::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
 {
 	return 1;
+}
+
+bool TextDomArea::getScrollableTracksViewportHeight(void)
+{
+    return false;
+}
+
+bool TextDomArea::getScrollableTracksViewportWidth(void)
+{
+    return true;
+}
+
+
+bool TextDomArea::getScrollableHeightMinTracksViewport(void)
+{
+    return true;
+}
+
+bool TextDomArea::getScrollableWidthMinTracksViewport(void)
+{
+    return false;
 }
 
 Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
@@ -723,6 +1029,8 @@ Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, c
 
 Vec2f TextDomArea::getContentRequestedSize(void) const
 {
+	//getTheManager()->calculatePreferredSize();
+
 	if(getLayoutManager())
 	{
 		return getLayoutManager()->getContentRequestedSize();
@@ -742,9 +1050,11 @@ void TextDomArea::handleDocumentModelChanged(void)
     _DocumentChangedConnection.disconnect();
     _DocumentInsertConnection.disconnect();
     _DocumentRemoveConnection.disconnect();
+	
     _DocumentChangedConnection = getDocumentModel()->connectChanged(boost::bind(&TextDomArea::handleDocumentChanged, this, _1));
     _DocumentInsertConnection = getDocumentModel()->connectInsert(boost::bind(&TextDomArea::handleDocumentInsert, this, _1));
     _DocumentRemoveConnection = getDocumentModel()->connectRemove(boost::bind(&TextDomArea::handleDocumentRemove, this, _1));
+	
 
     getLayoutManager()->setHighlight(0,0,0,0);
 	getLayoutManager()->populateCache();
@@ -758,10 +1068,21 @@ void TextDomArea::handleDocumentModelChanged(void)
 void TextDomArea::onCreate(const TextDomArea *source)
 {
 	if(source == NULL) return;
-		
-    FixedHeightLayoutManagerRefPtr Manager= FixedHeightLayoutManager::create();
+
+	FixedHeightLayoutManagerRefPtr Manager= FixedHeightLayoutManager::create();
 	setLayoutManager(Manager);
 	getLayoutManager()->calculateLineHeight();
+	createDefaultDocument();
+		
+}
+
+void TextDomArea::createDefaultDocument(void)
+{
+	DocumentElementAttribute Props;
+	PlainDocumentRefPtr temp=PlainDocument::create();
+	temp->addTextAsNewElementToDocument(" \r\n",Props,true);
+	setDocumentModel(temp);
+	handleDocumentModelChanged();
 }
 
 void TextDomArea::resolveLinks(void)
@@ -829,6 +1150,10 @@ void TextDomArea::changed(ConstFieldMaskArg whichField,
 			getLayoutManager()->updateViews();
 			updatePreferredSize();
 		}
+	}
+	else if(whichField & TextDomArea::EditableFieldMask)
+	{
+		tempBackground->setColor(Color4f(0.5, 0.5, 0.5, 1.0));
 	}
 }
 

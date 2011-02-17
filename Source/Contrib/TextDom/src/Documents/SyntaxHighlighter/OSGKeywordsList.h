@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -36,71 +36,41 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGDELETESELECTED_COMMAND_H_
-#define _OSGDELETESELECTED_COMMAND_H_
+#ifndef _OSGKEYWORDSLIST_H_
+#define _OSGKEYWORDSLIST_H_
 #ifdef __sgi
 #pragma once
 #endif
 
 #include "OSGConfig.h"
 #include "OSGContribTextDomDef.h"
-
-
-#include "OSGUndoableCommand.h"
-
-#include "OSGTextDomLayoutManagerFields.h"
-#include "OSGPlainDocumentFields.h"
-#include "OSGTextDomAreaFields.h"
+#include "OSGBaseTypes.h"
+#include <set>
 
 OSG_BEGIN_NAMESPACE
 
-class DeleteSelectedCommand;
-typedef boost::shared_ptr<DeleteSelectedCommand> DeleteSelectedCommandPtr;
-
-class OSG_CONTRIBTEXTDOM_DLLMAPPING DeleteSelectedCommand: public UndoableCommand
+class OSG_CONTRIBTEXTDOM_DLLMAPPING KeywordsList
 {
-protected:
-	typedef UndoableCommand Inherited;
-	typedef DeleteSelectedCommand Self;
-	typedef DeleteSelectedCommandPtr RefPtr;
+private:
 
-    DeleteSelectedCommand(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
-	DeleteSelectedCommand(const DeleteSelectedCommand& source);
-
-	void operator =(const DeleteSelectedCommand& source);
-
-	static CommandType _Type;
-	
-	virtual void execute(void);
-	virtual std::string getPresentationName(void) const;
-	virtual void redo(void);
-	virtual void undo(void);
-
-	TextDomLayoutManagerRefPtr Manager;
-	UInt32 old_HSI;
-	UInt32 old_HSL;
-	UInt32 old_HEI;
-	UInt32 old_HEL;
-	TextDomAreaRefPtr _TextDomArea;
-	std::string deletedString;
-	UInt32 _theOriginalCaretLine;
-	UInt32 _theOriginalCaretIndex;
+	std::set<std::string> theKeywords;
+	std::set<std::string>::const_iterator theKeywords_itr;
 
 public:
 
-	virtual std::string getCommandDescription(void) const;
+	void addKeyword(std::string);
+	void removeKeyword(std::string);
+	bool isKeyword(const std::string&);
+	void initialize();
+	void displayAll(void);
 
-    virtual const CommandType &getType(void) const;
-	
-    static const CommandType &getClassType(void);
+	KeywordsList();
 
-	virtual ~DeleteSelectedCommand(void);
-	
-    static DeleteSelectedCommandPtr create(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea);// here
+    KeywordsList(const KeywordsList &source);
+    
+    ~KeywordsList(void);
 };
 
 OSG_END_NAMESPACE
 
-#include "OSGDeleteSelectedCommand.inl"
-
-#endif /* _OSGINSERTCHARACTER_COMMAND_H_ */
+#endif //_OSGKEYWORDSLIST_H_

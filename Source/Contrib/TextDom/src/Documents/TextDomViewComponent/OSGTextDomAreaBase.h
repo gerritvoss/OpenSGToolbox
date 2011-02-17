@@ -67,7 +67,7 @@
 
 #include "OSGDocumentFields.h"          // DocumentModel type
 #include "OSGUIFontFields.h"            // Font type
-#include "OSGSysFields.h"               // CaretPosition type
+#include "OSGSysFields.h"               // BookmarkedLines type
 #include "OSGTextDomLayoutManagerFields.h" // LayoutManager type
 
 #include "OSGTextDomAreaFields.h"
@@ -100,19 +100,23 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     {
         DocumentModelFieldId = Inherited::NextFieldId,
         FontFieldId = DocumentModelFieldId + 1,
-        CaretPositionFieldId = FontFieldId + 1,
+        BookmarkedLinesFieldId = FontFieldId + 1,
+        CaretPositionFieldId = BookmarkedLinesFieldId + 1,
         LineWrapFieldId = CaretPositionFieldId + 1,
         WrapStyleWordFieldId = LineWrapFieldId + 1,
         TabSizeFieldId = WrapStyleWordFieldId + 1,
         LineSpacingFieldId = TabSizeFieldId + 1,
         LayoutManagerFieldId = LineSpacingFieldId + 1,
-        NextFieldId = LayoutManagerFieldId + 1
+        EditableFieldId = LayoutManagerFieldId + 1,
+        NextFieldId = EditableFieldId + 1
     };
 
     static const OSG::BitVector DocumentModelFieldMask =
         (TypeTraits<BitVector>::One << DocumentModelFieldId);
     static const OSG::BitVector FontFieldMask =
         (TypeTraits<BitVector>::One << FontFieldId);
+    static const OSG::BitVector BookmarkedLinesFieldMask =
+        (TypeTraits<BitVector>::One << BookmarkedLinesFieldId);
     static const OSG::BitVector CaretPositionFieldMask =
         (TypeTraits<BitVector>::One << CaretPositionFieldId);
     static const OSG::BitVector LineWrapFieldMask =
@@ -125,17 +129,21 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
         (TypeTraits<BitVector>::One << LineSpacingFieldId);
     static const OSG::BitVector LayoutManagerFieldMask =
         (TypeTraits<BitVector>::One << LayoutManagerFieldId);
+    static const OSG::BitVector EditableFieldMask =
+        (TypeTraits<BitVector>::One << EditableFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecDocumentPtr SFDocumentModelType;
     typedef SFUnrecUIFontPtr  SFFontType;
+    typedef MFUInt32          MFBookmarkedLinesType;
     typedef SFUInt32          SFCaretPositionType;
     typedef SFBool            SFLineWrapType;
     typedef SFBool            SFWrapStyleWordType;
     typedef SFUInt32          SFTabSizeType;
     typedef SFInt32           SFLineSpacingType;
     typedef SFUnrecChildTextDomLayoutManagerPtr SFLayoutManagerType;
+    typedef SFBool            SFEditableType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -165,6 +173,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
             const SFUnrecUIFontPtr    *getSFFont           (void) const;
                   SFUnrecUIFontPtr    *editSFFont           (void);
 
+                  MFUInt32            *editMFBookmarkedLines(void);
+            const MFUInt32            *getMFBookmarkedLines (void) const;
+
                   SFUInt32            *editSFCaretPosition  (void);
             const SFUInt32            *getSFCaretPosition   (void) const;
 
@@ -182,10 +193,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
             const SFUnrecChildTextDomLayoutManagerPtr *getSFLayoutManager  (void) const;
                   SFUnrecChildTextDomLayoutManagerPtr *editSFLayoutManager  (void);
 
+                  SFBool              *editSFEditable       (void);
+            const SFBool              *getSFEditable        (void) const;
+
 
                   Document * getDocumentModel  (void) const;
 
                   UIFont * getFont           (void) const;
+
+                  UInt32              &editBookmarkedLines(const UInt32 index);
+                  UInt32               getBookmarkedLines (const UInt32 index) const;
 
                   UInt32              &editCaretPosition  (void);
                   UInt32               getCaretPosition   (void) const;
@@ -204,6 +221,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
 
                   TextDomLayoutManager * getLayoutManager  (void) const;
 
+                  bool                &editEditable       (void);
+                  bool                 getEditable        (void) const;
+
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
@@ -217,6 +237,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
             void setTabSize        (const UInt32 value);
             void setLineSpacing    (const Int32 value);
             void setLayoutManager  (TextDomLayoutManager * const value);
+            void setEditable       (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -283,12 +304,14 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
 
     SFUnrecDocumentPtr _sfDocumentModel;
     SFUnrecUIFontPtr  _sfFont;
+    MFUInt32          _mfBookmarkedLines;
     SFUInt32          _sfCaretPosition;
     SFBool            _sfLineWrap;
     SFBool            _sfWrapStyleWord;
     SFUInt32          _sfTabSize;
     SFInt32           _sfLineSpacing;
     SFUnrecChildTextDomLayoutManagerPtr _sfLayoutManager;
+    SFBool            _sfEditable;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -329,6 +352,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     EditFieldHandlePtr editHandleDocumentModel  (void);
     GetFieldHandlePtr  getHandleFont            (void) const;
     EditFieldHandlePtr editHandleFont           (void);
+    GetFieldHandlePtr  getHandleBookmarkedLines (void) const;
+    EditFieldHandlePtr editHandleBookmarkedLines(void);
     GetFieldHandlePtr  getHandleCaretPosition   (void) const;
     EditFieldHandlePtr editHandleCaretPosition  (void);
     GetFieldHandlePtr  getHandleLineWrap        (void) const;
@@ -341,6 +366,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomAreaBase : public Component
     EditFieldHandlePtr editHandleLineSpacing    (void);
     GetFieldHandlePtr  getHandleLayoutManager   (void) const;
     EditFieldHandlePtr editHandleLayoutManager  (void);
+    GetFieldHandlePtr  getHandleEditable        (void) const;
+    EditFieldHandlePtr editHandleEditable       (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

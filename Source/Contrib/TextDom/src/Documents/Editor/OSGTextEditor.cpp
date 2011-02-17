@@ -178,31 +178,70 @@ void TextEditor::mouseClicked(MouseEventDetails* const details)
 
 void TextEditor::handleSearchButtonClicked(SearchWindowEventDetails* const details)
 {
-	SearchWindowRefPtr theSearchWindow = dynamic_cast<SearchWindow*>(details->getSource());
+	searchWindowButtonClicked(details,SEARCH);
 }
 
 void TextEditor::handleReplaceButtonClicked(SearchWindowEventDetails* const details)
 {
+	searchWindowButtonClicked(details,REPLACE);
 }
 
 void TextEditor::handleReplaceAllButtonClicked(SearchWindowEventDetails* const details)
 {
+	searchWindowButtonClicked(details,REPLACE_ALL);
 }
 
 void TextEditor::handleBookmarkAllButtonClicked(SearchWindowEventDetails* const details)
 {
+	searchWindowButtonClicked(details,BOOKMARK_ALL);
 }
+
+
+void TextEditor::searchWindowButtonClicked(SearchWindowEventDetails* const details,UInt32 button)
+{
+	SearchWindowRefPtr theSearchWindow = dynamic_cast<SearchWindow*>(details->getSource());
+
+	if(theSearchWindow)
+	{
+		TextDomAreaRefPtr theFocussedDomArea = getFocusedDomArea();
+
+		if(theFocussedDomArea)
+		{
+			switch(button)
+			{
+			case SEARCH: 
+				//theFocussedDomArea->searchForStringInDocumentUsingRegEx(theSearchWindow->getSearchText(),theSearchWindow->isCaseChecked(),theSearchWindow->isWholeWordChecked(),theSearchWindow->isSearchUpChecked(),theSearchWindow->isWrapAroundChecked(),theSearchWindow->isUseRegExChecked());
+				break;
+			case REPLACE:
+				//theFocussedDomArea->handlePastingAString(theSearchWindow->getReplaceText());
+				break;
+			case REPLACE_ALL:
+				//theFocussedDomArea->replaceAllUsingRegEx(theSearchWindow->getSearchText(),theSearchWindow->getReplaceText(),theSearchWindow->isCaseChecked(),theSearchWindow->isWholeWordChecked(),theSearchWindow->isUseRegExChecked());
+				break;
+			case BOOKMARK_ALL:
+				//theFocussedDomArea->editMFBookmarkedLines()->clear();
+				//theFocussedDomArea->bookmarkAllUsingRegEx(theSearchWindow->getSearchText(),theSearchWindow->isCaseChecked(),theSearchWindow->isWholeWordChecked(),theSearchWindow->isUseRegExChecked());
+				break;
+			}
+		}
+	}
+}
+
 
 void TextEditor::saveFile(const BoostPath& file)
 {
+	TextDomAreaRefPtr theFocussedDomArea = getFocusedDomArea();
+	theFocussedDomArea->saveFile(file);
 }
 
 void TextEditor::handleCloseButtonAction(ActionEventDetails* const details)
 {
-	ButtonRefPtr _TempCloseButton = dynamic_cast<Button*>(details->getSource());
-	PanelRefPtr _TempPanel = dynamic_cast<Panel*>(_TempCloseButton->getParentContainer());
-	TabPanelRefPtr _TempTabPanel = dynamic_cast<TabPanel*>(_TempPanel->getParentContainer());
+	Button* _TempCloseButton = dynamic_cast<Button*>(details->getSource());
+	Panel* _TempPanel = dynamic_cast<Panel*>(_TempCloseButton->getParentContainer());
+	TabPanel* _TempTabPanel = dynamic_cast<TabPanel*>(_TempPanel->getParentContainer());
 	UInt32 _ChildIndex = (_TempTabPanel->getChildIndex(_TempPanel))/2;
+
+	std::cout<<"childindex:"<<_ChildIndex;
 
 	_LeftTabPanel->removeTab(_ChildIndex);
 
@@ -243,16 +282,17 @@ void TextEditor::createDefaultTabs()
 
     // set the fields of the labels
     _LeftTabPanelLabel->setPreferredSize(Vec2f(120,20));
-    _LeftTabPanelLabel->setText("Welcome!");
+    _LeftTabPanelLabel->setText("Untitled");
     _LeftTabPanelLabel->setBorders(NULL);
     _LeftTabPanelLabel->setBackgrounds(NULL);
 
     // Create a _StackTraceTextArea
-    _LeftTabPanelTextArea = TextArea::create();
-    _LeftTabPanelTextArea->setEditable(false);
-
+    _LeftTabPanelTextArea = AdvancedTextDomArea::create();
+	setFocusedDomArea(_LeftTabPanelTextArea->getTheTextDomArea());
+	//_LeftTabPanelTextArea->setText("____");
+	//_LeftTabPanelTextArea->setPreferredSize(Vec2f(200.0,500.0));
     _LeftTabPanelContent = ScrollPanel::create();
-    _LeftTabPanelContent->setPreferredSize(Vec2f(200,1200));
+    //_LeftTabPanelContent->setPreferredSize(getPreferredSize());
     _LeftTabPanelContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     // Add the _LeftTabPanelTextArea to the ScrollPanel so it is displayed
     _LeftTabPanelContent->setViewComponent(_LeftTabPanelTextArea);
@@ -261,20 +301,23 @@ void TextEditor::createDefaultTabs()
     _RightTabPanelLabel = Label::create();
 
     // set the fields of the labels
-    _RightTabPanelLabel->setText("Screen2");
+    _RightTabPanelLabel->setText("Untitled");
     _RightTabPanelLabel->setBorders(NULL);
     _RightTabPanelLabel->setBackgrounds(NULL);
 
     // Create a _StackTraceTextArea
-    _RightTabPanelTextArea = TextArea::create();
-    _RightTabPanelTextArea->setEditable(false);
+    _RightTabPanelTextArea = createDuplicate(_LeftTabPanelTextArea);
+	//_LeftTabPanelTextArea->setPreferredSize(Vec2f(200.0,500.0));
+    //_RightTabPanelTextArea->setEditable(false);
 
     _RightTabPanelContent = ScrollPanel::create();
-    _RightTabPanelContent->setPreferredSize(Vec2f(200,400));
+    //_RightTabPanelContent->setPreferredSize(_LeftTabPanelTextArea->getPreferredSize());
     _RightTabPanelContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
     // Add the _RightTabPanelTextArea to the ScrollPanel so it is displayed
     _RightTabPanelContent->setViewComponent(_RightTabPanelTextArea);
 
+	_LeftTabPanelTextArea->setText(" \r\n");
+	
 }
 
 void TextEditor::updateDomLayout(bool isSplit)
@@ -368,7 +411,7 @@ void TextEditor::loadFile(const BoostPath& file)
 		AdvancedTextDomAreaRefPtr ExampleTextDomArea = AdvancedTextDomArea::create();
 		ExampleTextDomArea->setPreferredSize(Vec2f(400,400));
 		ExampleTextDomArea->loadFile(file);
-		
+		setFocusedDomArea(ExampleTextDomArea->getTheTextDomArea());//***************************************
 		/*ExampleTextDomArea->setWrapStyleWord(false);
 		ExampleTextDomArea->setFont(_Font);*/
 
@@ -428,6 +471,44 @@ void TextEditor::loadFile(const BoostPath& file)
 		_RightTabPanel->setSelectedIndex((_RightTabPanel->getMFTabs()->size())-1);
 	
 	}
+}
+
+void TextEditor::setText(std::string txt)
+{
+	if(getFocusedDomArea() != NULL)
+		getFocusedDomArea()->setText(txt);
+}
+
+void TextEditor::clear(void) 
+{
+	if(getFocusedDomArea() != NULL)
+		getFocusedDomArea()->clear();
+}
+
+void TextEditor::write(std::string txt) 
+{
+	if(getFocusedDomArea() != NULL)
+		getFocusedDomArea()->write(txt);
+}
+
+std::string TextEditor::getText(void)
+{
+	if(getFocusedDomArea() != NULL)
+		return getFocusedDomArea()->getText();
+	else 
+		return "";
+}
+
+void TextEditor::setEditable(bool val)
+{
+	if(getFocusedDomArea() != NULL)
+		getFocusedDomArea()->setEditable(val);
+}
+
+void TextEditor::setEnabled(bool val)
+{
+	if(getFocusedDomArea() != NULL)
+		getFocusedDomArea()->setEnabled(val);
 }
 
 void TextEditor::createDomArea(void)
@@ -592,7 +673,7 @@ void TextEditor::changed(ConstFieldMaskArg whichField,
 	{
 		updateLayout(getClipboardVisible());
 	}
-	else if(whichField & TextEditor::IsSplitFieldMask)
+	if(whichField & TextEditor::IsSplitFieldMask)
 	{
 		updateDomLayout(getIsSplit());
 	}

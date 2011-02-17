@@ -63,6 +63,10 @@
 #include "OSGAdvancedTextDomAreaBase.h"
 #include "OSGAdvancedTextDomArea.h"
 
+#include "OSGTextDomLayoutManager.h"
+#include "OSGGlyphView.h"
+#include "OSGDocument.h"
+
 #include <boost/bind.hpp>
 
 #ifdef WIN32 // turn off 'this' : used in base member initializer list warning

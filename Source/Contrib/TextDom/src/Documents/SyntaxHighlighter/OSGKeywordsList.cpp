@@ -40,137 +40,115 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#define OSG_COMPILETEXTDOMLIB
+#include <cstdlib>
+#include <cstdio>
 
-#include "OSGConfig.h"
+#include <OSGConfig.h>
 
-#include "OSGDeleteSelectedCommand.h"
+#include "OSGKeywordsList.h");
+#include <set>
+OSG_BEGIN_NAMESPACE
 
-#include "OSGElement.h"
-#include "OSGGlyphView.h"
-#include "OSGTextDomArea.h"
-#include "OSGTextDomLayoutManager.h"
-#include "OSGPlainDocument.h"
-
-
-OSG_USING_NAMESPACE
-
-/***************************************************************************\
- *                            Description                                  *
-\***************************************************************************/
-
-/*! \class OSG::DeleteSelectedCommand
-A DeleteSelectedCommand. 
-*/
 
 /***************************************************************************\
  *                           Class variables                               *
 \***************************************************************************/
 
-CommandType DeleteSelectedCommand::_Type("DeleteSelectedCommand", "UndoableCommand");
-
 /***************************************************************************\
  *                           Class methods                                 *
 \***************************************************************************/
 
-DeleteSelectedCommandPtr DeleteSelectedCommand::create(TextDomLayoutManagerRefPtr Manager,TextDomAreaRefPtr TheTextDomArea)
-{
-	return RefPtr(new DeleteSelectedCommand(Manager,TheTextDomArea));
-}
 
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
 
-void DeleteSelectedCommand::execute(void)
+void KeywordsList::initialize(void)
 {
-	if(Manager->isStartLocationBeforeEndLocation())
-	{
-		old_HSI = Manager->getHSI();
-		old_HSL = Manager->getHSL();
-		old_HEI = Manager->getHEI();
-		old_HEL = Manager->getHEL();
-	}
-	else 
-	{
-		old_HEI = Manager->getHSI();
-		old_HEL = Manager->getHSL();
-		old_HSI = Manager->getHEI();
-		old_HSL = Manager->getHEL();
-	}
+	//addKeyword("int");
+	//addKeyword("void");
+	////addKeyword("main");
+	//addKeyword("while");
+	//addKeyword("for");
+	//addKeyword("next");
+	//addKeyword("do");
+	//addKeyword("if");
+	//addKeyword("then");
+	//addKeyword("else");
+	//addKeyword("endif");
+	//addKeyword("elif");
+	//addKeyword("end");
 
-	
-	_theOriginalCaretLine = Manager->getCaretLine();
-	_theOriginalCaretIndex = Manager->getCaretIndex();
-	
-
-	deletedString = _TextDomArea->getHighlightedString();
-	Manager->deleteSelected();
-
-	_HasBeenDone = true;
+    //Lua keywords
+	addKeyword("and");
+	addKeyword("break");
+	addKeyword("do");
+	addKeyword("else");
+	addKeyword("elseif");
+	addKeyword("end");
+	addKeyword("false");
+	addKeyword("for");
+	addKeyword("in");
+	addKeyword("repeat");
+	addKeyword("function");
+	addKeyword("if");
+	addKeyword("local");
+	addKeyword("nil");
+	addKeyword("return");
+	addKeyword("then");
+	addKeyword("not");
+	addKeyword("true");
+	addKeyword("or");
+	addKeyword("until");
+	addKeyword("while");
 }
 
-std::string DeleteSelectedCommand::getCommandDescription(void) const
+void KeywordsList::addKeyword(std::string keyword)
 {
-	return std::string("Insert Character ");
+	theKeywords.insert(keyword);
 }
 
-std::string DeleteSelectedCommand::getPresentationName(void) const
+void KeywordsList::removeKeyword(std::string keyword)
 {
-	return getCommandDescription();
+	theKeywords.erase(keyword);
 }
 
-void DeleteSelectedCommand::redo(void)
+bool KeywordsList::isKeyword(const std::string& keyword)
 {
-	Manager->setHSI(old_HSI);
-	Manager->setHSL(old_HSL);
-	Manager->setHEI(old_HEI);
-	Manager->setHEL(old_HEL);
-
-	Manager->deleteSelected();
-	Inherited::redo();
+	return (theKeywords.find(keyword) != theKeywords.end());
 }
 
-void DeleteSelectedCommand::undo(void)
+void KeywordsList::displayAll(void)
 {
-	DocumentElementAttribute temp;
-
-	_TextDomArea->getDocumentModel()->insertString(Manager->CaretLineAndIndexToCaretOffsetInDOM(old_HSL,old_HSI),deletedString,temp);
-
-	Manager->setHSI(old_HSI);
-	Manager->setHSL(old_HSL);
-	Manager->setHEI(old_HEI);
-	Manager->setHEL(old_HEL);
-	
-	Manager->setCaretLine(_theOriginalCaretLine);
-	Manager->setCaretIndex(_theOriginalCaretIndex);
-	Manager->recalculateCaretPositions();
-	Manager->checkCaretVisibility();
-
-	Inherited::undo();
+		std::cout<<"Displaying dictionary..."<<std::endl;
+		for(theKeywords_itr = theKeywords.begin();theKeywords_itr!=theKeywords.end();theKeywords_itr++)
+		{
+			std::cout<<*theKeywords_itr<<std::endl;
+		}
+		std::cout<<std::endl;
 }
 
-const CommandType &DeleteSelectedCommand::getType(void) const
-{
-	return _Type;
-}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
 /*----------------------- constructors & destructors ----------------------*/
 
-DeleteSelectedCommand::~DeleteSelectedCommand(void)
+KeywordsList::KeywordsList()
+{
+}
+
+KeywordsList::KeywordsList(const KeywordsList &source)
+{
+	theKeywords = source.theKeywords;
+}
+
+KeywordsList::~KeywordsList(void)
 {
 }
 
 /*----------------------------- class specific ----------------------------*/
 
-void DeleteSelectedCommand::operator =(const DeleteSelectedCommand& source)
-{
-    if(this != &source)
-    {
-	    Inherited::operator=(source);
-    }
-}
 
+OSG_END_NAMESPACE

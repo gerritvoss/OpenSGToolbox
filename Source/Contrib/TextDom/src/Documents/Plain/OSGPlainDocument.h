@@ -110,6 +110,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocument : public PlainDocumentBase
     //Fetches the text contained within the given portion of the document.
     void getText(Int32 offset, Int32 length, std::string& txt) const;
 
+
 	void deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild);
 
 	void addTextAsNewElementToDocument(const std::string& str, DocumentElementAttribute& properties,bool createFreshDocument);

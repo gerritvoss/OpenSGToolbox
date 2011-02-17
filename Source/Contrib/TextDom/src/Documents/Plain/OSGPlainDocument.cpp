@@ -341,6 +341,7 @@ void PlainDocument::remove(Int32 offset, Int32 len)
     //TODO: SEND THE CORRECT DETAILS
     DocumentEventDetailsUnrecPtr DocEventDetails(DocumentEventDetails::create(this, getTimeStamp(), this, 0 , 0));
 	produceRemove(DocEventDetails);
+	
 }
 
 void PlainDocument::tokenize(std::string sentence,std::vector<std::string> & setOfWords)
@@ -495,6 +496,9 @@ void PlainDocument::deleteCharacter(UInt32 elementIndex,UInt32 offsetInChild)
 	PlainDocumentLeafElementRefPtr leafElement = dynamic_cast<PlainDocumentLeafElement*>(rootElement->getElement(elementIndex));
 	PlainDocumentLeafElementRefPtr leafElement2;
 	std::string charactersBefore = "";
+
+	if(offsetInChild > leafElement->getTextLength()-2) return;
+
 	charactersBefore += leafElement->getText().substr(0,offsetInChild);
 	std::string charactersAfter = "";
 	charactersAfter += leafElement->getText().substr(offsetInChild,std::string::npos);
