@@ -70,83 +70,9 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 {
-  protected:
-
-	    enum searchWindowButtons{SEARCH,REPLACE,REPLACE_ALL,BOOKMARK_ALL};
-
-		SplitPanelRefPtr _DomAreaAndClipboard;
-		SplitPanelRefPtr _InsideDomArea;
-
-	    // Clipboard related
-		ListRefPtr _TheClipboardList;
-		DefaultListModelRefPtr _TheClipboardListModel;
-		ScrollPanelRefPtr _TheClipboardScrollPanel;
-		LabelRefPtr _TheClipboardLabel;
-		PanelRefPtr _TheClipboardPanel;
-		SpringLayoutRefPtr _TheClipboardPanelLayout;
-		ButtonRefPtr _TheClipboardButton;
-
-		void clipboardInitialization(void);
-		void createDomArea(void);
-		AdvancedTextDomAreaTransitPtr createDuplicate(AdvancedTextDomArea* const TheAdvancedTextDomArea);
-	
-		
-
-		void updateLayout(bool isClipboardVisible);	// to update the layout of the editor(to show/hide the copy clipboard)
-		void updateDomLayout(bool isSplit);	// to update the layout of the Document Area (to show/hide the second view)
-
-		void searchWindowButtonClicked(SearchWindowEventDetails* const details,UInt32 button);
-
-		// Dom related
-		TabPanelRefPtr    _LeftTabPanel;
-		LabelRefPtr       _LeftTabPanelLabel;
-		ScrollPanelRefPtr _LeftTabPanelContent;
-		AdvancedTextDomAreaRefPtr	_LeftTabPanelTextArea;
-		TabPanelRefPtr    _RightTabPanel;
-		LabelRefPtr       _RightTabPanelLabel;
-		ScrollPanelRefPtr _RightTabPanelContent;
-		AdvancedTextDomAreaRefPtr	_RightTabPanelTextArea;
-		void createLeftTabPanel(void);
-		void createRightTabPanel(void);
-		void createDefaultTabs(void);
-
-		void actionPerformed(ActionEventDetails* const details);
-
-		SearchWindowRefPtr _SearchDialog;
-
-		void handleSearchButtonClicked(SearchWindowEventDetails* const details);
-		void handleReplaceButtonClicked(SearchWindowEventDetails* const details);
-		void handleReplaceAllButtonClicked(SearchWindowEventDetails* const details);
-		void handleBookmarkAllButtonClicked(SearchWindowEventDetails* const details);
-
-        boost::signals2::connection _SearchButtonClickedConnection,
-                                    _ReplaceButtonClickedConnection,
-                                    _ReplaceAllButtonClickedConnection,
-                                    _BookmarkAllButtonClickedConnection;
-
-	    void handleClipboardButtonAction(ActionEventDetails* const details);
-        boost::signals2::connection _ClipboardButtonActionConnection;
-
-		void handleCloseButtonAction(ActionEventDetails* const details);
-        boost::signals2::connection _CloseButtonActionConnection;
-
-        virtual void keyTyped(KeyEventDetails* const details);
-
-		virtual void mouseClicked(MouseEventDetails* const details);
-
 	/*==========================  PUBLIC  =================================*/
 
   public:
-
-	void loadFile(const BoostPath& file);
-	void saveFile(const BoostPath& file);
-	void setText(std::string txt);
-	std::string getText(void);
-	void setEditable(bool val);
-	void setEnabled(bool val);
-	void clear(void);
-	void write(std::string txt);
-
 
     typedef TextEditorBase Inherited;
     typedef TextEditor     Self;
@@ -168,12 +94,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
                       const BitVector  bvFlags  = 0) const;
 
     /*! \}                                                                 */
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
 
-    virtual void resolveLinks(void);
+	void loadFile(const BoostPath& file);
+	void saveFile(const BoostPath& file) const;
+	void setText(const std::string& txt);
+	std::string getText(void) const;
+	void setEditable(bool val);
+	void setEnabled(bool val);
+	void clear(void);
+	void write(const std::string& txt);
 
-    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -212,6 +142,80 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 
 
     /*! \}                                                                 */
+    /*! \name                       Sync                                   */
+    /*! \{                                                                 */
+
+    virtual void resolveLinks(void);
+
+    /*! \}                                                                 */
+
+    enum searchWindowButtons
+    {
+        SEARCH       = 0,
+        REPLACE      = 1,
+        REPLACE_ALL  = 2,
+        BOOKMARK_ALL = 3
+    };
+
+    SplitPanelRefPtr _DomAreaAndClipboard;
+    SplitPanelRefPtr _InsideDomArea;
+
+    // Clipboard related
+    ListRefPtr _TheClipboardList;
+    DefaultListModelRefPtr _TheClipboardListModel;
+    ScrollPanelRefPtr _TheClipboardScrollPanel;
+    LabelRefPtr _TheClipboardLabel;
+    PanelRefPtr _TheClipboardPanel;
+    SpringLayoutRefPtr _TheClipboardPanelLayout;
+    ButtonRefPtr _TheClipboardButton;
+
+    void clipboardInitialization(void);
+    void createDomArea(void);
+    AdvancedTextDomAreaTransitPtr createDuplicate(AdvancedTextDomArea* const TheAdvancedTextDomArea);
+
+
+
+    void updateLayout(bool isClipboardVisible);	// to update the layout of the editor(to show/hide the copy clipboard)
+    void updateDomLayout(bool isSplit);	// to update the layout of the Document Area (to show/hide the second view)
+
+    void searchWindowButtonClicked(SearchWindowEventDetails* const details,UInt32 button);
+
+    // Dom related
+    TabPanelRefPtr    _LeftTabPanel;
+    LabelRefPtr       _LeftTabPanelLabel;
+    ScrollPanelRefPtr _LeftTabPanelContent;
+    AdvancedTextDomAreaRefPtr	_LeftTabPanelTextArea;
+    TabPanelRefPtr    _RightTabPanel;
+    LabelRefPtr       _RightTabPanelLabel;
+    ScrollPanelRefPtr _RightTabPanelContent;
+    AdvancedTextDomAreaRefPtr	_RightTabPanelTextArea;
+    void createLeftTabPanel(void);
+    void createRightTabPanel(void);
+    void createDefaultTabs(void);
+
+    void actionPerformed(ActionEventDetails* const details);
+
+    SearchWindowRefPtr _SearchDialog;
+
+    void handleSearchButtonClicked(SearchWindowEventDetails* const details);
+    void handleReplaceButtonClicked(SearchWindowEventDetails* const details);
+    void handleReplaceAllButtonClicked(SearchWindowEventDetails* const details);
+    void handleBookmarkAllButtonClicked(SearchWindowEventDetails* const details);
+
+    boost::signals2::connection _SearchButtonClickedConnection,
+        _ReplaceButtonClickedConnection,
+        _ReplaceAllButtonClickedConnection,
+        _BookmarkAllButtonClickedConnection;
+
+    void handleClipboardButtonAction(ActionEventDetails* const details);
+    boost::signals2::connection _ClipboardButtonActionConnection;
+
+    void handleCloseButtonAction(ActionEventDetails* const details);
+    boost::signals2::connection _CloseButtonActionConnection;
+
+    virtual void keyTyped(KeyEventDetails* const details);
+
+    virtual void mouseClicked(MouseEventDetails* const details);
     /*==========================  PRIVATE  ================================*/
 
   private:

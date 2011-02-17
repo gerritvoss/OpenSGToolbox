@@ -78,7 +78,6 @@ void  StyledDocument::displayDebugInfo(void)
 {
 	StyledDocumentBranchElementRefPtr rootElement = dynamic_cast<StyledDocumentBranchElement*>(getDefaultRootElement());
 	if(rootElement==NULL) {
-		std::cout<<"displayDebugInfo(void):rootElement is NullFC";
 		return;
 	}
 	for(UInt32 i=0;i<rootElement->getElementCount();i++)
@@ -87,7 +86,6 @@ void  StyledDocument::displayDebugInfo(void)
 		if(leafElement!=NULL)
 		{
 			DocumentElementAttribute temp = leafElement->getProperties();
-			std::cout<<"LE "<<i<<":"<<temp.text<<"::"<<" b:"<<temp.bold<<" i:"<<temp.italics<<" u:"<<temp.underlined<<" ends:"<<temp.ends<<" fsize:"<<temp.fontsize<<std::endl;
 		}
 
 	}
@@ -220,16 +218,6 @@ std::string StyledDocument::getText(Int32 offset, Int32 length) const
 		UInt32	theLeafElementIndex; // theLeafElement is the leaf element that holds the beginning offset value
 
 
-		//UInt32 elementCount = rootElement->getElementCount();
-//		std::vector<std::string> names;
-//
-//		for(UInt32 i=0;i<elementCount;i++)
-//		{
-//			names.push_back(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i))->getText());	
-///*			std::cout<<"----------------"<<std::endl;
-//			std::cout<<"Element:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getText()<<"Length:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getTextLength()<<std::endl;
-//			std::cout<<"----------------"<<std::endl;
-//*/		}
 
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
@@ -309,17 +297,6 @@ std::vector<DocumentElementAttribute> StyledDocument::getDocumentElementAttribut
 		UInt32 locationToReadFrom; 
 		UInt32 theLeafElementIndex; // theLeafElement is the leaf element that holds the beginning offset value
 	
-//		UInt32 elementCount = rootElement->getElementCount();
-//		std::vector<std::string> names;
-//
-//		for(UInt32 i=0;i<elementCount;i++)
-//		{
-//			names.push_back(dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i))->getText());	
-///*			std::cout<<"----------------"<<std::endl;
-//			std::cout<<"Element:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getText()<<"Length:"<<StyledDocumentLeafElementPtr::dcast(rootElement->getElement(i))->getTextLength()<<std::endl;
-//			std::cout<<"----------------"<<std::endl;
-//*/		}
-
 		for(UInt32 i=0;i<rootElement->getElementCount();i++)
 		{
 			StyledDocumentLeafElementRefPtr	leafElement = dynamic_cast<StyledDocumentLeafElement*>(rootElement->getElement(i));

@@ -43,7 +43,6 @@
 #endif
 
 #include "OSGFixedHeightLayoutManagerBase.h"
-#include "OSGUIFont.h"
 
 #include "OSGDocumentFields.h"
 #include "OSGElementFields.h"
@@ -61,9 +60,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 {
   protected:
 
-
-	enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
-	enum directionOfBraceSearch{BEFORE,AFTER};
 	bool _BracesHighlightFlag;
 	UInt32 _StartingBraceIndex;
 	UInt32 _StartingBraceLine;
@@ -72,9 +68,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 
 	// would be used for word wrapped data
 	std::vector<UInt32> linesToElements;
-	UInt32 getFirstLineOfElement(UInt32 lineNumber);
+	UInt32 getFirstLineOfElement(UInt32 lineNumber) const;
 	UInt32 totalNumberOfLines(void);
-	UInt32 getNumberOfLines(UInt32 lineNumber);
+	UInt32 getNumberOfLines(UInt32 lineNumber) const;
 	////
 
 	Element* defaultRoot;
@@ -111,7 +107,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual void populateCache(void);
 
 	//used - related to DOM
-	virtual void initializeRootElement();
+	virtual void initializeRootElement(void);
 	virtual void deleteSelected(void);
 	virtual void deleteCharacters(UInt32 HSL,UInt32 HSI,UInt32 HEL,UInt32 HEI);
 
@@ -145,45 +141,42 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 	virtual void setCaretIndex(UInt32);
 	virtual void setCaretLine(UInt32);
 	virtual void setHighlight(UInt32 startline,UInt32 startindex,UInt32 endline,UInt32 endindex);
-	virtual Real32 getHeightOfLine(void);
+	virtual Real32 getHeightOfLine(void) const;
 	virtual void doubleClickHandler(void);
 	virtual void selectAll(void);
 	virtual bool isLastCharacter(void);
 	virtual void setTheClipBounds(Pnt2f topLeft,Pnt2f bottomRight);
 	virtual void setStartingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine,bool isNewCharacter);
 	virtual void setEndingBraces(char theChar,UInt32 CaretIndex,UInt32 CaretLine);
-	virtual char oppositeBrace(char val);
 	virtual void findBrace(char theChar,UInt32 direction,bool isNewCharacter);
 	virtual void removeBracesHighlightIndices(void);
-	virtual bool isStartingBraces(char value);
-	virtual bool isEndingBraces(char value);
-	virtual UInt32 getNumberOfLeadingSpaces(UInt32 line);
-	virtual Real32 getCaretXPosition(void);
-	virtual Real32 getCaretYPosition(void);
-	virtual Element* getRootElement(void);
-	virtual UInt32 getHEI(void);
-	virtual UInt32 getHEL(void);
-	virtual UInt32 getHSI(void);
-	virtual UInt32 getHSL(void);
+	virtual UInt32 getNumberOfLeadingSpaces(UInt32 line) const;
+	virtual Real32 getCaretXPosition(void) const;
+	virtual Real32 getCaretYPosition(void) const;
+	virtual Element* getRootElement(void) const;
+	virtual UInt32 getHEI(void) const;
+	virtual UInt32 getHEL(void) const;
+	virtual UInt32 getHSI(void) const;
+	virtual UInt32 getHSL(void) const;
 	virtual void setHEI(UInt32);
 	virtual void setHEL(UInt32);
 	virtual void setHSI(UInt32);
 	virtual void setHSL(UInt32);
-	virtual Real32 getPreferredWidth(void);
-	virtual bool getBracesHighlightFlag(void);
-	virtual UInt32 getStartingBraceLine(void);
-	virtual UInt32 getStartingBraceIndex(void);
-	virtual UInt32 getEndingBraceLine(void);
-	virtual UInt32 getEndingBraceIndex(void);
+	virtual Real32 getPreferredWidth(void) const;
+	virtual bool getBracesHighlightFlag(void) const;
+	virtual UInt32 getStartingBraceLine(void) const;
+	virtual UInt32 getStartingBraceIndex(void) const;
+	virtual UInt32 getEndingBraceLine(void) const;
+	virtual UInt32 getEndingBraceIndex(void) const;
 	virtual Pnt2f getEndXYPosition(UInt32 lineNumber) const;
 	virtual Pnt2f getStartXYPosition(UInt32 lineNumber) const;
 	virtual Pnt2f getXYPosition(UInt32 lineNumber,UInt32 index,bool isBeginning) const;
-	virtual Real32 getGutterSpace(void);
-	virtual Real32 getGutterSeparation(void);
+	virtual Real32 getGutterSpace(void) const;
+	virtual Real32 getGutterSeparation(void) const;
 	virtual UInt32 CaretLineAndIndexToCaretOffsetInDOM(UInt32 CaretLine,UInt32 CaretIndex);
 	virtual void setCaretIndexAndLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
-	virtual char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
-	virtual bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine);
+	virtual char getNextCharacter(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine) const;
+	virtual bool isLastCharacterOfLine(UInt32 _theOriginalCaretIndex,UInt32 _theOriginalCaretLine) const;
 	virtual void highlightString(UInt32 _theOriginalCaretLine,UInt32 _theOriginalCaretIndex,std::string _StringToBeInserted);
 
 	/*---------------------------------------------------------------------*/

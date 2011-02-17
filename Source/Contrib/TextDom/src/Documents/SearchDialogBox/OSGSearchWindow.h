@@ -56,8 +56,6 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindow : public SearchWindowBase
 {
-  protected:
-
     /*==========================  PUBLIC  =================================*/
 
   public:
@@ -84,13 +82,13 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SearchWindow : public SearchWindowBase
     /*! \}                                                                 */
     static SearchWindowTransitPtr create(const std::string& WindowTitle);
 	
-	std::string getSearchText(void);
-	std::string getReplaceText(void);
-	bool isCaseChecked(void);
-	bool isWholeWordChecked(void);
-	bool isUseRegExChecked(void);
-	bool isSearchUpChecked(void);
-	bool isWrapAroundChecked(void);
+	std::string getSearchText(void) const;
+	std::string getReplaceText(void) const;
+	bool isCaseChecked(void) const;
+	bool isWholeWordChecked(void) const;
+	bool isUseRegExChecked(void) const;
+	bool isSearchUpChecked(void) const;
+	bool isWrapAroundChecked(void) const;
 	
     /*=========================  PROTECTED  ===============================*/
 

@@ -44,9 +44,11 @@
 #include <cstdio>
 
 #include <OSGConfig.h>
+#include "OSGKeywordsList.h";
 
-#include "OSGKeywordsList.h");
 #include <set>
+#include <OSGLog.h>
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -63,69 +65,32 @@ OSG_BEGIN_NAMESPACE
  *                           Instance methods                              *
 \***************************************************************************/
 
-void KeywordsList::initialize(void)
+void KeywordsList::addKeyword(const std::string& keyword)
 {
-	//addKeyword("int");
-	//addKeyword("void");
-	////addKeyword("main");
-	//addKeyword("while");
-	//addKeyword("for");
-	//addKeyword("next");
-	//addKeyword("do");
-	//addKeyword("if");
-	//addKeyword("then");
-	//addKeyword("else");
-	//addKeyword("endif");
-	//addKeyword("elif");
-	//addKeyword("end");
-
-    //Lua keywords
-	addKeyword("and");
-	addKeyword("break");
-	addKeyword("do");
-	addKeyword("else");
-	addKeyword("elseif");
-	addKeyword("end");
-	addKeyword("false");
-	addKeyword("for");
-	addKeyword("in");
-	addKeyword("repeat");
-	addKeyword("function");
-	addKeyword("if");
-	addKeyword("local");
-	addKeyword("nil");
-	addKeyword("return");
-	addKeyword("then");
-	addKeyword("not");
-	addKeyword("true");
-	addKeyword("or");
-	addKeyword("until");
-	addKeyword("while");
+    theKeywords.insert(keyword);
 }
 
-void KeywordsList::addKeyword(std::string keyword)
+void KeywordsList::removeKeyword(const std::string& keyword)
 {
-	theKeywords.insert(keyword);
+    theKeywords.erase(keyword);
 }
 
-void KeywordsList::removeKeyword(std::string keyword)
+bool KeywordsList::isKeyword(const std::string& keyword) const
 {
-	theKeywords.erase(keyword);
+    return (theKeywords.find(keyword) != theKeywords.end());
 }
 
-bool KeywordsList::isKeyword(const std::string& keyword)
+void KeywordsList::displayAll(void) const
 {
-	return (theKeywords.find(keyword) != theKeywords.end());
-}
+    SLOG << "Displaying dictionary..." << std::endl;
 
-void KeywordsList::displayAll(void)
-{
-		std::cout<<"Displaying dictionary..."<<std::endl;
-		for(theKeywords_itr = theKeywords.begin();theKeywords_itr!=theKeywords.end();theKeywords_itr++)
-		{
-			std::cout<<*theKeywords_itr<<std::endl;
-		}
-		std::cout<<std::endl;
+    for(std::set<std::string>::const_iterator theKeywords_itr(theKeywords.begin());
+        theKeywords_itr!=theKeywords.end();
+        ++theKeywords_itr)
+    {
+        SLOG << *theKeywords_itr << std::endl;
+    }
+    SLOG << std::endl;
 }
 
 
@@ -133,15 +98,56 @@ void KeywordsList::displayAll(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
-/*----------------------- constructors & destructors ----------------------*/
-
-KeywordsList::KeywordsList()
+void KeywordsList::initialize(void)
 {
+    //addKeyword("int");
+    //addKeyword("void");
+    ////addKeyword("main");
+    //addKeyword("while");
+    //addKeyword("for");
+    //addKeyword("next");
+    //addKeyword("do");
+    //addKeyword("if");
+    //addKeyword("then");
+    //addKeyword("else");
+    //addKeyword("endif");
+    //addKeyword("elif");
+    //addKeyword("end");
+
+    //Lua keywords
+    addKeyword("and");
+    addKeyword("break");
+    addKeyword("do");
+    addKeyword("else");
+    addKeyword("elseif");
+    addKeyword("end");
+    addKeyword("false");
+    addKeyword("for");
+    addKeyword("in");
+    addKeyword("repeat");
+    addKeyword("function");
+    addKeyword("if");
+    addKeyword("local");
+    addKeyword("nil");
+    addKeyword("return");
+    addKeyword("then");
+    addKeyword("not");
+    addKeyword("true");
+    addKeyword("or");
+    addKeyword("until");
+    addKeyword("while");
 }
 
-KeywordsList::KeywordsList(const KeywordsList &source)
+/*----------------------- constructors & destructors ----------------------*/
+
+KeywordsList::KeywordsList(void)
 {
-	theKeywords = source.theKeywords;
+    initialize();
+}
+
+KeywordsList::KeywordsList(const KeywordsList &source) :
+    theKeywords(source.theKeywords)
+{
 }
 
 KeywordsList::~KeywordsList(void)

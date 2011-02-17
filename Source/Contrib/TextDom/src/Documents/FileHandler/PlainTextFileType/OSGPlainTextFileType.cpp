@@ -119,8 +119,6 @@ DocumentTransitPtr PlainTextFileType::read(std::istream &InputStream,
 	//GetSystemTime(&now);
 	//unsigned int t2 = now.wSecond * 1000 + now.wMilliseconds;
 
-//	std::cout<<"\nduration for reading:"<<t2-t1<<std::endl;		// end time in milliseconds
-
 	return DocumentTransitPtr(Result);
 }
 

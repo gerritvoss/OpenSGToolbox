@@ -48,6 +48,10 @@
 
 #include "OSGSingletonHolder.ins"
 
+#include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/convenience.hpp>
+#include <boost/algorithm/string.hpp>
+
 OSG_BEGIN_NAMESPACE
 
 /***************************************************************************\
@@ -73,58 +77,52 @@ template class SingletonHolder<SyntaxHighlighterBase>;
 
 std::vector<UInt32> SyntaxHighlighterBase::processInput(std::string inputString)
 {
-	std::vector<UInt32> indices;
-	UInt32 index = 0;
-	std::istringstream iss(inputString);
-	std::string theString;
-	while(iss>>theString)
-	{
-		if(theKeywordsList.isKeyword(theString))
-		{
-			UInt32 loc = inputString.find( theString, index );
-			indices.push_back(loc);
-			index = loc + theString.size();
-			indices.push_back(index);
-		}
-	};
-	return indices;
+    std::vector<UInt32> indices;
+    UInt32 index = 0;
+    std::istringstream iss(inputString);
+    std::string theString;
+    while(iss>>theString)
+    {
+        if(theKeywordsList.isKeyword(theString))
+        {
+            UInt32 loc = inputString.find( theString, index );
+            indices.push_back(loc);
+            index = loc + theString.size();
+            indices.push_back(index);
+        }
+    };
+    return indices;
 }
 
 void SyntaxHighlighterBase::loadFromFile(BoostPath& FilePath)
 {
-	if(!boost::filesystem::exists(FilePath))
-	{
-		SWARNING << "SyntaxHighlighterBase::loadFromFile(): " << FilePath.string() << " does not exists." << std::endl;
-		return;
-	}
-	std::ifstream input(FilePath.string().c_str());
-	std::string keyword;
-	while(input>>keyword)
-	{
-		theKeywordsList.addKeyword(keyword);
-	}
+    if(!boost::filesystem::exists(FilePath))
+    {
+        SWARNING << "SyntaxHighlighterBase::loadFromFile(): " << FilePath.string() << " does not exists." << std::endl;
+        return;
+    }
+    std::ifstream input(FilePath.string().c_str());
+        std::string keyword;
+        while(input>>keyword)
+        {
+            theKeywordsList.addKeyword(keyword);
+        }
 }
 
-void SyntaxHighlighterBase::initializeKeywordsList(void)
+void SyntaxHighlighterBase::displayKeywordsList(void) const
 {
-	theKeywordsList.initialize();
-	//displayKeywordsList();
+    theKeywordsList.displayAll();
 }
 
-void SyntaxHighlighterBase::displayKeywordsList(void)
-{
-	theKeywordsList.displayAll();
-}
 /*----------------------- constructors & destructors ----------------------*/
 
 SyntaxHighlighterBase::SyntaxHighlighterBase(void)
 {
-	initializeKeywordsList();
 }
 
 SyntaxHighlighterBase::SyntaxHighlighterBase(const SyntaxHighlighterBase &obj)
 {
-	SWARNING << "In SyntaxHighlighterBase copy constructor" << std::endl;
+    SWARNING << "In SyntaxHighlighterBase copy constructor" << std::endl;
 }
 
 SyntaxHighlighterBase::~SyntaxHighlighterBase(void)
@@ -132,21 +130,6 @@ SyntaxHighlighterBase::~SyntaxHighlighterBase(void)
 }
 
 /*----------------------------- class specific ----------------------------*/
-
-/*------------------------------------------------------------------------*/
-/*                              cvs id's                                  */
-
-#ifdef OSG_SGI_CC
-#pragma set woff 1174
-#endif
-
-#ifdef OSG_LINUX_ICC
-#pragma warning( disable : 177 )
-#endif
-
-#ifdef __sgi
-#pragma reset woff 1174
-#endif
 
 OSG_END_NAMESPACE
 

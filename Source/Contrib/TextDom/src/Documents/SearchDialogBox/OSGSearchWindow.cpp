@@ -97,7 +97,6 @@ SearchWindowTransitPtr SearchWindow::create(const std::string& WindowTitle)
     SearchButton->setMinSize(SearchButton->getPreferredSize());
     SearchButton->setPreferredSize(SearchButton->getRequestedSize());
 	CreatedWindow->_SearchButtonActionConnection = SearchButton->connectActionPerformed(boost::bind(&SearchWindow::handleSearchButtonAction, CreatedWindow, _1));
-    //SearchButton->addActionListener(&CreatedWindow->_SearchButtonListener);
 
 	//Replace Button
     ButtonRefPtr ReplaceButton = Button::create();
@@ -105,21 +104,18 @@ SearchWindowTransitPtr SearchWindow::create(const std::string& WindowTitle)
     ReplaceButton->setMinSize(ReplaceButton->getPreferredSize());
     ReplaceButton->setPreferredSize(ReplaceButton->getRequestedSize());
 	CreatedWindow->_ReplaceButtonActionConnection = ReplaceButton->connectActionPerformed(boost::bind(&SearchWindow::handleReplaceButtonAction, CreatedWindow, _1));
-    //ReplaceButton->addActionListener(&CreatedWindow->_ReplaceButtonListener);
     
 	ButtonRefPtr ReplaceAllButton = Button::create();
     ReplaceAllButton->setText("Replace All");
     ReplaceAllButton->setMinSize(ReplaceAllButton->getPreferredSize());
     ReplaceAllButton->setPreferredSize(ReplaceAllButton->getRequestedSize());
 	CreatedWindow->_ReplaceAllButtonActionConnection = ReplaceAllButton->connectActionPerformed(boost::bind(&SearchWindow::handleReplaceAllButtonAction, CreatedWindow, _1));
-    //ReplaceAllButton->addActionListener(&CreatedWindow->_ReplaceAllButtonListener);
     
 	ButtonRefPtr BookmarkAllButton = Button::create();
     BookmarkAllButton->setText("Bookmark All");
     BookmarkAllButton->setMinSize(BookmarkAllButton->getPreferredSize());
     BookmarkAllButton->setPreferredSize(BookmarkAllButton->getRequestedSize());
 	CreatedWindow->_BookmarkAllButtonActionConnection = BookmarkAllButton->connectActionPerformed(boost::bind(&SearchWindow::handleBookmarkAllButtonAction, CreatedWindow, _1));
-    //BookmarkAllButton->addActionListener(&CreatedWindow->_BookmarkAllButtonListener);
 
     // Create Panel for bottom half of SplitPanel
     PanelRefPtr MessageButtonPanel;
@@ -290,34 +286,6 @@ SearchWindowTransitPtr SearchWindow::create(const std::string& WindowTitle)
 
     return SearchWindowTransitPtr(CreatedWindow);
 }
-
-void SearchWindow::handleSearchButtonAction(ActionEventDetails* const details)
-{
-	std::cout<<"search";
-	SearchWindowEventDetailsUnrecPtr SearchEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
-	produceSearchButtonClicked(SearchEventDetails);
-}
-
-void SearchWindow::handleReplaceButtonAction(ActionEventDetails* const details)
-{
-	std::cout<<"replace";
-	SearchWindowEventDetailsUnrecPtr ReplaceEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
-	produceReplaceButtonClicked(ReplaceEventDetails);
-}
-
-void SearchWindow::handleReplaceAllButtonAction(ActionEventDetails* const details)
-{
-	std::cout<<"replaceall";
-	SearchWindowEventDetailsUnrecPtr ReplaceAllEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
-	produceReplaceAllButtonClicked(ReplaceAllEventDetails);
-}
-
-void SearchWindow::handleBookmarkAllButtonAction(ActionEventDetails* const details)
-{
-	std::cout<<"bookmarkall";
-	SearchWindowEventDetailsUnrecPtr BookmarkAllEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
-	produceBookmarkAllButtonClicked(BookmarkAllEventDetails);
-}
 	
 /***************************************************************************\
  *                           Instance methods                              *
@@ -326,6 +294,30 @@ void SearchWindow::handleBookmarkAllButtonAction(ActionEventDetails* const detai
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void SearchWindow::handleSearchButtonAction(ActionEventDetails* const details)
+{
+	SearchWindowEventDetailsUnrecPtr SearchEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
+	produceSearchButtonClicked(SearchEventDetails);
+}
+
+void SearchWindow::handleReplaceButtonAction(ActionEventDetails* const details)
+{
+	SearchWindowEventDetailsUnrecPtr ReplaceEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
+	produceReplaceButtonClicked(ReplaceEventDetails);
+}
+
+void SearchWindow::handleReplaceAllButtonAction(ActionEventDetails* const details)
+{
+	SearchWindowEventDetailsUnrecPtr ReplaceAllEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
+	produceReplaceAllButtonClicked(ReplaceAllEventDetails);
+}
+
+void SearchWindow::handleBookmarkAllButtonAction(ActionEventDetails* const details)
+{
+	SearchWindowEventDetailsUnrecPtr BookmarkAllEventDetails(SearchWindowEventDetails::create(this, getTimeStamp()));
+	produceBookmarkAllButtonClicked(BookmarkAllEventDetails);
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 

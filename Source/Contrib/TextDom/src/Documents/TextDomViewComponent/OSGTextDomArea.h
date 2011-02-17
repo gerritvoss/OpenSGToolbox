@@ -63,115 +63,29 @@ OSG_BEGIN_NAMESPACE
 
 class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 {
-  protected:
-
-	  enum {LEFT,RIGHT,UP,DOWN,HOME,END,HOMEOFNEXTLINE,PAGEUP,PAGEDOWN};
-
-	  UIFontRefPtr _Font;
-	  ColorLayerRefPtr tempBackground;
-	  void createDefaultLayer(void);
-	  bool _IsMousePressed;
-	  void drawHighlightBG(Graphics * const TheGraphics, Real32 Opacity) const;
-	  void drawLineHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
-	  void drawBookmarkHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
-	  void drawBraceHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
-	  void drawTheCaret(Graphics * const TheGraphics, Real32 Opacity) const;
-
-	  void drawHighlightBGInternal(Graphics * const TheGraphics,
-                                   Real32 Opacity,
-                                   UInt32 lesserLine,
-                                   UInt32 lesserIndex,
-                                   UInt32 greaterLine,
-                                   UInt32 greaterIndex) const;
-
-	  std::string getHighlightedStringInternal(UInt32 lesserLine,
-                                               UInt32 lesserIndex,
-                                               UInt32 greaterLine,
-                                               UInt32 greaterIndex);
-
-	  void insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index);
-	  void deleteSelectedUsingCommandManager(void);
-	  void deleteCharacterUsingCommandManager(void);
-	  void setTextUsingCommandManager(PlainDocumentLeafElement* const theElement,std::string theString);
-	  void insertStringUsingCommandManager(UInt32 caretPosition,std::string theString);
-	  void highlightIfNextCharacterIsABrace(void);
-	  void createDefaultDocument(void);
-	  //void stringToUpper(std::string& strToConvert);
-
-
-
-	  CommandManagerPtr	_TheCommandManager;
-	  UndoManagerPtr	_TheUndoManager;
-
   public:
 
-	typedef TextDomAreaBase Inherited;
+    enum
+    {
+        LEFT           = 0,
+        RIGHT          = 1,
+        UP             = 2,
+        DOWN           = 3,
+        HOME           = 4,
+        END            = 5,
+        HOMEOFNEXTLINE = 6,
+        PAGEUP         = 7,
+        PAGEDOWN       = 8
+    };
+
+    enum directionOfBraceSearch
+    {
+        BEFORE = 0,
+        AFTER  = 1
+    };
+
+    typedef TextDomAreaBase Inherited;
     typedef TextDomArea     Self;
-	
-	TextDomAreaTransitPtr createDuplicate(void);
-	void setText(std::string txt);
-	std::string getText(void);
-	std::string getHighlightedString(void);
-	TextDomLayoutManager* getTheManager(void);
-	void setupCursor(void);
-
-	void  createDefaultFont(void);
-
-	virtual void mouseReleased(MouseEventDetails* const details);
-    void mouseDragged(MouseEventDetails* const details);
-	void mouseDraggedAfterArming(MouseEventDetails* const details);
-	void keyTyped(KeyEventDetails* const details);
-	virtual void mouseClicked(MouseEventDetails* const details);
-	virtual void mousePressed(MouseEventDetails* const details);
-
-	virtual void focusGained(FocusEventDetails* const details);
-	virtual void focusLost(FocusEventDetails* const details);
-
-	void loadFile(const BoostPath& pathOfFile);
-	void saveFile(const BoostPath& pathOfFile);
-	virtual void drawInternal(Graphics * const TheGraphics, Real32 Opacity = 1.0f) const;
-
-	void updatePreferredSize(void);
-	virtual Vec2f getContentRequestedSize(void) const;
-
-	virtual Vec2f getPreferredScrollableViewportSize(void);
-    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
-                                             const Pnt2f& VisibleRectBottomRight, 
-                                             const UInt32& orientation, 
-                                             const Int32& direction);
-
-  	virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, 
-                                              const Pnt2f& VisibleRectBottomRight, 
-                                              const UInt32& orientation, 
-                                              const Int32& direction);
-    //Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
-    virtual bool getScrollableTracksViewportHeight(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
-    virtual bool getScrollableTracksViewportWidth(void);
-
-    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
-    virtual bool getScrollableHeightMinTracksViewport(void);
-
-    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
-    virtual bool getScrollableWidthMinTracksViewport(void);
-
-	void handleDocumentModelChanged();
-	void handlePastingAString(const std::string& theClipboard);
-
-	UInt32 getTopmostVisibleLineNumber(void);
-	UInt32 getLinesToBeDisplayed(void);
-	Real32 getHeightOfLine(void);
-	void tabHandler(bool isShiftPressed);
-	bool searchForStringInDocumentUsingRegEx(std::string& stringToBeLookedFor,const bool& isCaseChecked,const bool& isWholeWordChecked,const bool &searchUp,const bool &wrapAround,const bool &isUseRegExChecked);
-	void replaceAllUsingRegEx(std::string& theSearchText,const std::string& theReplaceText,const bool& isCaseChecked,const bool &isWholeWordChecked,const bool &isUseRegExChecked);
-	void bookmarkAllUsingRegEx(std::string& stringToBeLookedFor,const bool& isCaseChecked,const bool& isWholeWordChecked,const bool &isUseRegExChecked);
-
-	void initialSearchStringModification(std::string& stringToBeLookedFor,const bool& isUseRegExChecked);
-	void regexCompiling(const std::string& stringToBeLookedFor,boost::xpressive::sregex& rex,const bool& isCaseChecked,const bool& isWholeWordChecked);
-
-	void write(std::string txt);
-	void clear(void);
 	/*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
     /*! \{                                                                 */
@@ -195,9 +109,133 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
     virtual void resolveLinks(void);
 
     /*! \}                                                                 */
+
+    TextDomAreaTransitPtr createDuplicate(void);
+    void setText(const std::string& txt);
+    std::string getText(void) const;
+    std::string getHighlightedString(void) const;
+    TextDomLayoutManager* getTheManager(void) const;
+    void setupCursor(void);
+
+    virtual void mouseReleased(MouseEventDetails* const details);
+    void mouseDragged(MouseEventDetails* const details);
+    void mouseDraggedAfterArming(MouseEventDetails* const details);
+    void keyTyped(KeyEventDetails* const details);
+    virtual void mouseClicked(MouseEventDetails* const details);
+    virtual void mousePressed(MouseEventDetails* const details);
+
+    virtual void focusGained(FocusEventDetails* const details);
+    virtual void focusLost(FocusEventDetails* const details);
+
+    void loadFile(const BoostPath& pathOfFile);
+    void saveFile(const BoostPath& pathOfFile);
+    virtual void drawInternal(Graphics * const TheGraphics, Real32 Opacity = 1.0f) const;
+
+    void updatePreferredSize(void);
+    virtual Vec2f getContentRequestedSize(void) const;
+
+    virtual Vec2f getPreferredScrollableViewportSize(void);
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
+                                             const Pnt2f& VisibleRectBottomRight, 
+                                             const UInt32& orientation, 
+                                             const Int32& direction);
+
+    virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, 
+                                              const Pnt2f& VisibleRectBottomRight, 
+                                              const UInt32& orientation, 
+                                              const Int32& direction);
+    //Return true if a viewport should always force the height of this
+    //Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
+        
+    //Return true if a viewport should always force the width of this
+    //Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Return true if a viewport should always force the height of this
+    //Scrollable to be at at least the height of the viewport.
+    virtual bool getScrollableHeightMinTracksViewport(void);
+
+    //Return true if a viewport should always force the width of this
+    //Scrollable to be at at least the width of the viewport.
+    virtual bool getScrollableWidthMinTracksViewport(void);
+
+    void handleDocumentModelChanged(void);
+    void handlePastingAString(const std::string& theClipboard);
+
+    UInt32 getTopmostVisibleLineNumber(void) const;
+    UInt32 getLinesToBeDisplayed(void) const;
+    Real32 getHeightOfLine(void) const;
+    void tabHandler(bool isShiftPressed);
+
+    bool searchForStringInDocumentUsingRegEx(const std::string& stringToBeLookedFor,
+                                             bool isCaseChecked,
+                                             bool isWholeWordChecked,
+                                             bool searchUp,
+                                             bool wrapAround,
+                                             bool isUseRegExChecked);
+
+    void replaceAllUsingRegEx(const std::string& theSearchText,
+                              const std::string& theReplaceText,
+                              bool isCaseChecked,
+                              bool isWholeWordChecked,
+                              bool isUseRegExChecked);
+
+    void bookmarkAllUsingRegEx(const std::string& stringToBeLookedFor,
+                               bool isCaseChecked,
+                               bool isWholeWordChecked,
+                               bool isUseRegExChecked);
+
+    static std::string initialSearchStringModification(const std::string& stringToBeLookedFor,
+                                                       bool isUseRegExChecked);
+
+    void regexCompiling(const std::string& stringToBeLookedFor,
+                        boost::xpressive::sregex& rex,
+                        bool isCaseChecked,
+                        bool isWholeWordChecked);
+
+    void write(const std::string& txt);
+    void clear(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
+    virtual Layer*  getDrawnBackground(void) const;
+    virtual Layer*  getDrawnForeground(void) const;
+    virtual Border* getDrawnBorder    (void) const;
+
+    void createDefaultLayer(void);
+    bool _IsMousePressed;
+    void drawHighlightBG(Graphics * const TheGraphics, Real32 Opacity) const;
+    void drawLineHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
+    void drawBookmarkHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
+    void drawBraceHighlight(Graphics * const TheGraphics, Real32 Opacity) const;
+    void drawTheCaret(Graphics * const TheGraphics, Real32 Opacity) const;
+
+    void drawHighlightBGInternal(Graphics * const TheGraphics,
+                                 Real32 Opacity,
+                                 UInt32 lesserLine,
+                                 UInt32 lesserIndex,
+                                 UInt32 greaterLine,
+                                 UInt32 greaterIndex) const;
+
+    std::string getHighlightedStringInternal(UInt32 lesserLine,
+                                             UInt32 lesserIndex,
+                                             UInt32 greaterLine,
+                                             UInt32 greaterIndex) const;
+
+    void insertCharacterUsingCommandManager(char theCharacter,UInt32 line,UInt32 index);
+    void deleteSelectedUsingCommandManager(void);
+    void deleteCharacterUsingCommandManager(void);
+    void setTextUsingCommandManager(PlainDocumentLeafElement* const theElement,std::string theString);
+    void insertStringUsingCommandManager(UInt32 caretPosition,std::string theString);
+    void highlightIfNextCharacterIsABrace(void);
+    void createDefaultDocument(void);
+    //void stringToUpper(std::string& strToConvert);
+
+
+
+    CommandManagerPtr	_TheCommandManager;
+    UndoManagerPtr	_TheUndoManager;
 
 	mutable Time _CurrentCaretBlinkElps;
 

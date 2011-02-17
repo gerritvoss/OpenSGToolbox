@@ -36,19 +36,9 @@
 #include "OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-#include <vector>
-#include <set>
-#include <string>
-#include <iostream>
-#include <fstream>
-
 #include "OSGSingletonHolder.h"
 #include "OSGPathType.h"
-#include <boost/filesystem/operations.hpp>
-#include <boost/filesystem/convenience.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include "OSGDocument.h"
 #include "OSGKeywordsList.h"
 
 OSG_BEGIN_NAMESPACE
@@ -67,8 +57,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING SyntaxHighlighterBase
    protected:
 
 
-	 void initializeKeywordsList(void);
-	 void displayKeywordsList(void);
+	 void displayKeywordsList(void) const;
 	 KeywordsList theKeywordsList;
 
      //Keywords

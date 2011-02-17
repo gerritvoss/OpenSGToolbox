@@ -43,7 +43,7 @@
 OSG_BEGIN_NAMESPACE
 
 inline
-void AdvancedTextDomArea::setText(std::string txt)
+void AdvancedTextDomArea::setText(const std::string& txt)
 {
 	if(_TheTextDomArea != NULL)
 	{	

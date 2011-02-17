@@ -69,6 +69,7 @@ OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/SearchDialogBox")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Styled")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/SyntaxHighlighter")
 OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/TextDomViewComponent")
+OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Documents/Utils")
 
 
 #Library def source

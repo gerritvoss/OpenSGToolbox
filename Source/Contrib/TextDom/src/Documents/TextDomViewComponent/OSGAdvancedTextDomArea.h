@@ -68,36 +68,45 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
   public:
 
 	
-	std::string getText(void);
+	std::string getText(void) const;
 	void clear(void);
-	void write(std::string txt);
+	void write(const std::string& txt);
 
   	virtual Vec2f getPreferredScrollableViewportSize(void);
-    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
+
+    virtual Int32 getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
+                                             const Pnt2f& VisibleRectBottomRight,
+                                             const UInt32& orientation,
+                                             const Int32& direction);
+
 	virtual Vec2f getContentRequestedSize(void) const;
 	
-	//Return true if a viewport should always force the height of this Scrollable to match the height of the viewport.
+	//Return true if a viewport should always force the height of this
+    //Scrollable to match the height of the viewport.
     virtual bool getScrollableTracksViewportHeight(void);
 
-    //Return true if a viewport should always force the width of this Scrollable to match the width of the viewport.
+    //Return true if a viewport should always force the width of this
+    //Scrollable to match the width of the viewport.
     virtual bool getScrollableTracksViewportWidth(void);
 
-    //Return true if a viewport should always force the height of this Scrollable to be at at least the height of the viewport.
+    //Return true if a viewport should always force the height of this
+    //Scrollable to be at at least the height of the viewport.
     virtual bool getScrollableHeightMinTracksViewport(void);
 
-    //Return true if a viewport should always force the width of this Scrollable to be at at least the width of the viewport.
+    //Return true if a viewport should always force the width of this
+    //Scrollable to be at at least the width of the viewport.
     virtual bool getScrollableWidthMinTracksViewport(void);
 
 
 	void setTheTextDomArea(TextDomArea* const duplicatedTextDom);
-	TextDomArea* getTheTextDomArea(void);
+	TextDomArea* getTheTextDomArea(void) const;
 
-	std::string getHighlightedString(void);
+	std::string getHighlightedString(void) const;
 	virtual void updateLayout(void);
     void loadFile(const BoostPath& path);
 	void drawInternal(Graphics * const TheGraphics, Real32 Opacity) const;
-	AdvancedTextDomAreaTransitPtr createDuplicate(void);
-	void setText(std::string txt);
+	AdvancedTextDomAreaTransitPtr createDuplicate(void) const;
+	void setText(const std::string& txt);
 	void setEditable(bool val);
 
     typedef AdvancedTextDomAreaBase Inherited;

@@ -85,7 +85,11 @@ void AdvancedTextDomArea::initMethod(InitPhase ePhase)
     }
 }
 
-std::string AdvancedTextDomArea::getText(void)
+/***************************************************************************\
+ *                           Instance methods                              *
+\***************************************************************************/
+
+std::string AdvancedTextDomArea::getText(void) const
 {
 	if(getTheTextDomArea())
 	{
@@ -102,7 +106,7 @@ void AdvancedTextDomArea::clear(void)
 	}
 }
 
-void AdvancedTextDomArea::write(std::string txt) 
+void AdvancedTextDomArea::write(const std::string& txt) 
 {
 	if(getTheTextDomArea())
 	{
@@ -125,32 +129,7 @@ void AdvancedTextDomArea::loadFile(const BoostPath& path)
 }
 
 
-void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
-{
-	//Create and add the TextDomArea
-	if(source == NULL) return;
-		
-	_Font = UIFont::create();
-	_Font->setFamily("SANS");
-	_Font->setGap(3);
-	_Font->setGlyphPixelSize(46);
-	_Font->setSize(15);
-	_Font->setTextureWidth(0);
-	_Font->setStyle(TextFace::STYLE_PLAIN);
-
-	// Create a TextDomArea component
-	_TheTextDomArea = OSG::TextDomArea::create();
-	_TheTextDomArea->setWrapStyleWord(false);
-    //_TheTextDomArea->setPreferredSize(Vec2f(600, 400));
-    //_TheTextDomArea->setMinSize(Vec2f(600,400));
-	_TheTextDomArea->setFont(_Font);
-
-	setPreferredSize(_TheTextDomArea->getRequestedSize());
-
-	pushToChildren(_TheTextDomArea);
-}
-
-std::string AdvancedTextDomArea::getHighlightedString(void)
+std::string AdvancedTextDomArea::getHighlightedString(void) const
 {
 	if(getMFChildren()->size() > 0)
 	{
@@ -247,7 +226,10 @@ Vec2f AdvancedTextDomArea::getPreferredScrollableViewportSize(void)
 	return getPreferredSize();
 }
 
-Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
+                                                      const Pnt2f& VisibleRectBottomRight,
+                                                      const UInt32& orientation,
+                                                      const Int32& direction)
 {
 	if(getMFChildren()->size() > 0)
 	{
@@ -304,13 +286,13 @@ void AdvancedTextDomArea::setTheTextDomArea(TextDomArea* const duplicatedTextDom
 	_TheTextDomArea = duplicatedTextDom;
 }
 
-TextDomArea* AdvancedTextDomArea::getTheTextDomArea(void)
+TextDomArea* AdvancedTextDomArea::getTheTextDomArea(void) const
 {
 	return _TheTextDomArea;
 }
 
 
-AdvancedTextDomAreaTransitPtr AdvancedTextDomArea::createDuplicate()
+AdvancedTextDomAreaTransitPtr AdvancedTextDomArea::createDuplicate(void) const
 {
 	AdvancedTextDomAreaRefPtr newPtr = AdvancedTextDomArea::create();
 	newPtr->setPreferredSize(Vec2f(400,400));
@@ -322,21 +304,34 @@ AdvancedTextDomAreaTransitPtr AdvancedTextDomArea::createDuplicate()
 	return AdvancedTextDomAreaTransitPtr(newPtr);
 }
 
-//void AdvancedTextDomArea::changedUpdate(const DocumentModelChangedEventUnrecPtr e)
-//{
-//	if(getMFChildren()->size()>0)
-//		setPreferredSize(dynamic_cast<TextDomArea*>(getChildren(0))->getPreferredSize());
-//}
-
-
-
-/***************************************************************************\
- *                           Instance methods                              *
-\***************************************************************************/
-
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
+{
+	//Create and add the TextDomArea
+	if(source == NULL) return;
+		
+	_Font = UIFont::create();
+	_Font->setFamily("SANS");
+	_Font->setGap(3);
+	_Font->setGlyphPixelSize(46);
+	_Font->setSize(15);
+	_Font->setTextureWidth(0);
+	_Font->setStyle(TextFace::STYLE_PLAIN);
+
+	// Create a TextDomArea component
+	_TheTextDomArea = OSG::TextDomArea::create();
+	_TheTextDomArea->setWrapStyleWord(false);
+    //_TheTextDomArea->setPreferredSize(Vec2f(600, 400));
+    //_TheTextDomArea->setMinSize(Vec2f(600,400));
+	_TheTextDomArea->setFont(_Font);
+
+	setPreferredSize(_TheTextDomArea->getRequestedSize());
+
+	pushToChildren(_TheTextDomArea);
+}
 
 void AdvancedTextDomArea::resolveLinks(void)
 {
@@ -368,10 +363,7 @@ void AdvancedTextDomArea::changed(ConstFieldMaskArg whichField,
                             UInt32            origin,
                             BitVector         details)
 {
-
-	
     Inherited::changed(whichField, origin, details);
-	
 }
 
 void AdvancedTextDomArea::dump(      UInt32    ,

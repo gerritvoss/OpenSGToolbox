@@ -79,42 +79,42 @@ inline void FixedHeightLayoutManager::setHighlight(UInt32 startline,UInt32 start
 	HEL= endline;
 	HEI= endindex;
 }
-inline Real32 FixedHeightLayoutManager::getHeightOfLine(void)
+inline Real32 FixedHeightLayoutManager::getHeightOfLine(void) const
 {
 	return heightOfLine;
 }
 
-inline Real32 FixedHeightLayoutManager::getCaretXPosition(void)
+inline Real32 FixedHeightLayoutManager::getCaretXPosition(void) const
 {
 	return _CaretXPosition;
 }
 
-inline Real32 FixedHeightLayoutManager::getCaretYPosition(void)
+inline Real32 FixedHeightLayoutManager::getCaretYPosition(void) const
 {
 	return _CaretYPosition;
 }
 
-inline Element* FixedHeightLayoutManager::getRootElement(void)
+inline Element* FixedHeightLayoutManager::getRootElement(void) const
 {
 	return rootElement;
 }
 
-inline UInt32 FixedHeightLayoutManager::getHEI(void)
+inline UInt32 FixedHeightLayoutManager::getHEI(void) const
 {
 	return HEI;
 }
 
-inline UInt32 FixedHeightLayoutManager::getHEL(void)
+inline UInt32 FixedHeightLayoutManager::getHEL(void) const
 {
 	return HEL;
 }
 
-inline UInt32 FixedHeightLayoutManager::getHSI(void)
+inline UInt32 FixedHeightLayoutManager::getHSI(void) const
 {
 	return HSI;
 }
 
-inline UInt32 FixedHeightLayoutManager::getHSL(void)
+inline UInt32 FixedHeightLayoutManager::getHSL(void) const
 {
 	return HSL;
 }
@@ -139,42 +139,42 @@ inline void FixedHeightLayoutManager::setHEI(UInt32 val)
 	HEI = val;
 }
 
-inline Real32 FixedHeightLayoutManager::getPreferredWidth(void)
+inline Real32 FixedHeightLayoutManager::getPreferredWidth(void) const
 {
 	return _preferredWidth;
 }
 
-inline bool FixedHeightLayoutManager::getBracesHighlightFlag(void)
+inline bool FixedHeightLayoutManager::getBracesHighlightFlag(void) const
 {
 	return _BracesHighlightFlag;
 }
 
-inline UInt32 FixedHeightLayoutManager::getStartingBraceLine(void)
+inline UInt32 FixedHeightLayoutManager::getStartingBraceLine(void) const
 {
 	return _StartingBraceLine;
 }
 
-inline UInt32 FixedHeightLayoutManager::getStartingBraceIndex(void)
+inline UInt32 FixedHeightLayoutManager::getStartingBraceIndex(void) const
 {
 	return _StartingBraceIndex;
 }
 
-inline UInt32 FixedHeightLayoutManager::getEndingBraceLine(void)
+inline UInt32 FixedHeightLayoutManager::getEndingBraceLine(void) const
 {
 	return _EndingBraceLine;
 }
 
-inline UInt32 FixedHeightLayoutManager::getEndingBraceIndex(void)
+inline UInt32 FixedHeightLayoutManager::getEndingBraceIndex(void) const
 {
 	return _EndingBraceIndex;
 }
 
-inline Real32 FixedHeightLayoutManager::getGutterSpace(void)
+inline Real32 FixedHeightLayoutManager::getGutterSpace(void) const
 {
 	return _GutterSpace;
 }
 
-inline Real32 FixedHeightLayoutManager::getGutterSeparation(void)
+inline Real32 FixedHeightLayoutManager::getGutterSeparation(void) const
 {
 	return _GutterSeparation;
 }

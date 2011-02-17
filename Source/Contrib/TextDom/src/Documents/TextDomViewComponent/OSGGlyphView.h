@@ -85,7 +85,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING GlyphView : public GlyphViewBase
 	void setLineNumber(UInt32 lineNumber);
 
 
-	virtual void drawView(Graphics * const TheGraphics, Real32 Opacity);
+	virtual void drawView(Graphics * const TheGraphics, Real32 Opacity) const;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */

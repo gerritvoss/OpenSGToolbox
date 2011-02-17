@@ -76,7 +76,7 @@ void GlyphView::initMethod(InitPhase ePhase)
     }
 }
 
-void GlyphView::drawView(Graphics * const TheGraphics, Real32 Opacity)
+void GlyphView::drawView(Graphics * const TheGraphics, Real32 Opacity) const
 {
 	if(!_IsWordWrapEnabled)
 	{
