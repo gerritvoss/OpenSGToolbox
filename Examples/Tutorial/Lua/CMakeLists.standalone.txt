@@ -30,6 +30,7 @@ SET(OSG_COMPONENTS OSGBase
                    OSGContribLua 
                    OSGContribLuaToolbox 
                    OSGContribUserInterface 
+                   OSGContribTextDom 
                    )
 
 IF(UNIX)
