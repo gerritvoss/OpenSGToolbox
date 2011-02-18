@@ -60,4 +60,10 @@ void AdvancedTextDomArea::setEditable(bool val)
 	}
 }
 
+inline
+Vec2f AdvancedTextDomArea::getGutterSize(void) const
+{
+    return Vec2f(getGutterWidth(), getSize().y());
+}
+
 OSG_END_NAMESPACE

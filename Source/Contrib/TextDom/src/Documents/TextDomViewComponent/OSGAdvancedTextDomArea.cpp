@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -53,7 +53,7 @@
 #include "OSGFlowLayout.h"
 #include "OSGTextDomArea.h"
 #include "OSGSpringLayout.h"
-#include "OSGSpringLayoutConstraints.h";
+#include "OSGSpringLayoutConstraints.h"
 #include "OSGSplitPanel.h"
 #include "OSGUIFont.h"
 #include "OSGDocument.h"
@@ -117,15 +117,13 @@ void AdvancedTextDomArea::write(const std::string& txt)
 void AdvancedTextDomArea::loadFile(const BoostPath& path)
 {
 	// Create a TextDomArea component
-	_TheTextDomArea = OSG::TextDomArea::create();
+	_TheTextDomArea = TextDomArea::create();
 	_TheTextDomArea->setWrapStyleWord(false);
-    _TheTextDomArea->setPreferredSize(Vec2f(600, 400));
-    _TheTextDomArea->setMinSize(Vec2f(600,400));
 	_TheTextDomArea->setFont(_Font);
 	_TheTextDomArea->loadFile(path);
 	clearChildren();
 	pushToChildren(_TheTextDomArea);
-	setPreferredSize(_TheTextDomArea->getContentRequestedSize());
+	setPreferredSize(getRequestedSize());
 }
 
 
@@ -150,7 +148,8 @@ void AdvancedTextDomArea::updateLayout(void)
 	{
 		Vec2f GutterSize(getGutterWidth(), 0.0f);
 		getChildren(0)->setPosition(TopLeft + GutterSize);
-		getChildren(0)->setSize(getChildren(0)->getRequestedSize());
+
+		getChildren(0)->setSize(BottomRight - TopLeft - GutterSize);
 		if(getSize() != getRequestedSize()) /////// isnt it getPreferredSize
 		{
 			setPreferredSize(getRequestedSize());
@@ -221,9 +220,13 @@ Vec2f AdvancedTextDomArea::getPreferredScrollableViewportSize(void)
 {
 	if(getMFChildren()->size() > 0)
 	{
-		return getChildren(0)->getPreferredScrollableViewportSize();
+		return getChildren(0)->getPreferredScrollableViewportSize() 
+               + Vec2f(getGutterWidth(),0.0f);
 	}
-	return getPreferredSize();
+    else
+    {
+        return getPreferredSize();
+    }
 }
 
 Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
@@ -233,7 +236,10 @@ Int32 AdvancedTextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTo
 {
 	if(getMFChildren()->size() > 0)
 	{
-		return getChildren(0)->getScrollableUnitIncrement(VisibleRectTopLeft,VisibleRectBottomRight,orientation,direction);
+		return getChildren(0)->getScrollableUnitIncrement(VisibleRectTopLeft,
+                                                          VisibleRectBottomRight,
+                                                          orientation,
+                                                          direction);
 	}
 	else 
 	{
@@ -245,7 +251,7 @@ Vec2f AdvancedTextDomArea::getContentRequestedSize(void) const
 {
 	if(getMFChildren()->size()>0)
 	{
-		getChildren(0)->getRequestedSize();
+		getChildren(0)->getRequestedSize() + Vec2f(getGutterWidth(),0.0f);
 	}
 	else
 	{ 
@@ -261,7 +267,7 @@ bool AdvancedTextDomArea::getScrollableTracksViewportHeight(void)
 
 bool AdvancedTextDomArea::getScrollableTracksViewportWidth(void)
 {
-    return false;
+    return true;
 }
 
 
@@ -272,7 +278,7 @@ bool AdvancedTextDomArea::getScrollableHeightMinTracksViewport(void)
 
 bool AdvancedTextDomArea::getScrollableWidthMinTracksViewport(void)
 {
-    return true;
+    return false;
 }
 
 void AdvancedTextDomArea::drawInternal(Graphics * const TheGraphics, Real32 Opacity) const
@@ -295,12 +301,10 @@ TextDomArea* AdvancedTextDomArea::getTheTextDomArea(void) const
 AdvancedTextDomAreaTransitPtr AdvancedTextDomArea::createDuplicate(void) const
 {
 	AdvancedTextDomAreaRefPtr newPtr = AdvancedTextDomArea::create();
-	newPtr->setPreferredSize(Vec2f(400,400));
 	TextDomAreaRefPtr duplicatedTextDom = dynamic_cast<TextDomArea*>(getChildren(0))->createDuplicate();
 	newPtr->setTheTextDomArea(duplicatedTextDom);
 	newPtr->clearChildren();
 	newPtr->pushToChildren(duplicatedTextDom);
-	newPtr->setPreferredSize(duplicatedTextDom->getRequestedSize());
 	return AdvancedTextDomAreaTransitPtr(newPtr);
 }
 
@@ -322,10 +326,8 @@ void AdvancedTextDomArea::onCreate(const AdvancedTextDomArea *source)
 	_Font->setStyle(TextFace::STYLE_PLAIN);
 
 	// Create a TextDomArea component
-	_TheTextDomArea = OSG::TextDomArea::create();
+	_TheTextDomArea = TextDomArea::create();
 	_TheTextDomArea->setWrapStyleWord(false);
-    //_TheTextDomArea->setPreferredSize(Vec2f(600, 400));
-    //_TheTextDomArea->setMinSize(Vec2f(600,400));
 	_TheTextDomArea->setFont(_Font);
 
 	setPreferredSize(_TheTextDomArea->getRequestedSize());

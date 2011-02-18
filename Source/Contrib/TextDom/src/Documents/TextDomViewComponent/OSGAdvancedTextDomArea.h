@@ -108,6 +108,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
 	AdvancedTextDomAreaTransitPtr createDuplicate(void) const;
 	void setText(const std::string& txt);
 	void setEditable(bool val);
+    Vec2f getGutterSize(void) const;
 
     typedef AdvancedTextDomAreaBase Inherited;
     typedef AdvancedTextDomArea     Self;
