@@ -4,7 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\

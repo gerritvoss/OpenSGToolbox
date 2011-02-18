@@ -12,7 +12,7 @@
 	useLocalIncludes="true"
     isNodeCore="false"
 	parentProducer="Component"
-	authors="David Kabala (djkabala@gmail.com)"
+    authors="Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)"
 >
 An AdvancedTextDomArea
 

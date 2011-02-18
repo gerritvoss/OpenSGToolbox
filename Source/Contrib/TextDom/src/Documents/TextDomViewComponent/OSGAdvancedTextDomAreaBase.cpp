@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -62,10 +63,6 @@
 
 #include "OSGAdvancedTextDomAreaBase.h"
 #include "OSGAdvancedTextDomArea.h"
-
-#include "OSGTextDomLayoutManager.h"
-#include "OSGGlyphView.h"
-#include "OSGDocument.h"
 
 #include <boost/bind.hpp>
 
@@ -226,7 +223,7 @@ AdvancedTextDomAreaBase::TypeObject AdvancedTextDomAreaBase::_type(
     "\tuseLocalIncludes=\"true\"\n"
     "    isNodeCore=\"false\"\n"
     "\tparentProducer=\"Component\"\n"
-    "\tauthors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "An AdvancedTextDomArea\n"
     "\n"
@@ -285,8 +282,6 @@ AdvancedTextDomAreaBase::TypeObject AdvancedTextDomAreaBase::_type(
     "\t\taccess=\"public\"\n"
     "\t>\n"
     "\t</Field>\n"
-    "\t\n"
-    "\n"
     "</FieldContainer>\n",
     "An AdvancedTextDomArea\n"
     "\n"
@@ -448,22 +443,27 @@ void AdvancedTextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (GutterVisibleFieldMask & whichField))
     {
+        editSField(GutterVisibleFieldMask);
         _sfGutterVisible.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (GutterWidthFieldMask & whichField))
     {
+        editSField(GutterWidthFieldMask);
         _sfGutterWidth.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (GutterColorFieldMask & whichField))
     {
+        editSField(GutterColorFieldMask);
         _sfGutterColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (GutterTextColorFieldMask & whichField))
     {
+        editSField(GutterTextColorFieldMask);
         _sfGutterTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (GutterFontFieldMask & whichField))
     {
+        editSField(GutterFontFieldMask);
         _sfGutterFont.copyFromBin(pMem);
     }
 }

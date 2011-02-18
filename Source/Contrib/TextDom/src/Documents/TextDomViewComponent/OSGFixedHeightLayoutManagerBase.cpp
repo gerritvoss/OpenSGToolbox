@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,16 +55,13 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 
 
 
 
-#include "OSGGlyphView.h"
-#include "OSGDocument.h"
 #include "OSGFixedHeightLayoutManagerBase.h"
 #include "OSGFixedHeightLayoutManager.h"
-#include "OSGTextDomArea.h"
 
 #include <boost/bind.hpp>
 
@@ -137,7 +135,7 @@ FixedHeightLayoutManagerBase::TypeObject FixedHeightLayoutManagerBase::_type(
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"
-    "    \tauthors=\"David Kabala\"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "\n"
     "A UI FixedHeightLayoutManager\n"
@@ -267,7 +265,6 @@ FixedHeightLayoutManager *FixedHeightLayoutManagerBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr FixedHeightLayoutManagerBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -313,7 +310,6 @@ FieldContainerTransitPtr FixedHeightLayoutManagerBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 FixedHeightLayoutManagerBase::FixedHeightLayoutManagerBase(void) :
@@ -332,6 +328,7 @@ FixedHeightLayoutManagerBase::FixedHeightLayoutManagerBase(const FixedHeightLayo
 FixedHeightLayoutManagerBase::~FixedHeightLayoutManagerBase(void)
 {
 }
+
 
 
 

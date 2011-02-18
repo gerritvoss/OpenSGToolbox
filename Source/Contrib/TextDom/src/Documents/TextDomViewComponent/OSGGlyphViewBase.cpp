@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,7 +55,7 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 
 
 
@@ -134,7 +135,7 @@ GlyphViewBase::TypeObject GlyphViewBase::_type(
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore = \"false\"\n"
-    "\tauthors = \"David Kabala (djkabala@gmail.com)\"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "A UI GlyphView\n"
     "\t\n"
@@ -262,7 +263,6 @@ GlyphView *GlyphViewBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr GlyphViewBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -308,7 +308,6 @@ FieldContainerTransitPtr GlyphViewBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 GlyphViewBase::GlyphViewBase(void) :
@@ -327,6 +326,7 @@ GlyphViewBase::GlyphViewBase(const GlyphViewBase &source) :
 GlyphViewBase::~GlyphViewBase(void)
 {
 }
+
 
 
 

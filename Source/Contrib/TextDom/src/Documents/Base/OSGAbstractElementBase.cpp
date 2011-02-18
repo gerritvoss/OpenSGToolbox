@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -93,7 +94,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<AbstractElement *>::_type("AbstractElementPtr", "ElementRefPtr");
+DataType FieldTraits<AbstractElement *>::_type("AbstractElementPtr", "ElementPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(AbstractElement *)
@@ -153,7 +154,7 @@ AbstractElementBase::TypeObject AbstractElementBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "Document AbstractElement\n"
     "\t<Field\n"
@@ -239,10 +240,10 @@ void AbstractElementBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ParentDocumentFieldMask & whichField))
     {
+        editSField(ParentDocumentFieldMask);
         _sfParentDocument.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -306,6 +307,7 @@ EditFieldHandlePtr AbstractElementBase::editHandleParentDocument (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

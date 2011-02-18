@@ -49,32 +49,32 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTDOMVIEWFIELDS_H_
-#define _OSGTEXTDOMVIEWFIELDS_H_
+#ifndef _OSGDEFAULTSTYLEDDOCUMENTFIELDS_H_
+#define _OSGDEFAULTSTYLEDDOCUMENTFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-#include "OpenSG/OSGFieldContainerFields.h"
-#include "OpenSG/OSGPointerSField.h"
-#include "OpenSG/OSGPointerMField.h"
+#include "OSGFieldContainerFields.h"
+#include "OSGPointerSField.h"
+#include "OSGPointerMField.h"
 
 
 OSG_BEGIN_NAMESPACE
 
-class TextDomView;
+class DefaultStyledDocument;
 
-OSG_GEN_CONTAINERPTR(TextDomView);
+OSG_GEN_CONTAINERPTR(DefaultStyledDocument);
 
 /*! \ingroup GrpContribTextDomFieldTraits
     \ingroup GrpLibOSGContribTextDom
  */
 template <>
-struct FieldTraits<TextDomView *> :
-    public FieldTraitsFCPtrBase<TextDomView *>
+struct FieldTraits<DefaultStyledDocument *> :
+    public FieldTraitsFCPtrBase<DefaultStyledDocument *>
 {
   private:
 
@@ -82,7 +82,7 @@ struct FieldTraits<TextDomView *> :
 
   public:
 
-    typedef FieldTraits<TextDomView *>  Self;
+    typedef FieldTraits<DefaultStyledDocument *>  Self;
 
     enum                        { Convertible = NotConvertible };
 
@@ -91,89 +91,89 @@ struct FieldTraits<TextDomView *> :
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFTextDomViewPtr"; }
+//    static const char *getSName(void) { return "SFDefaultStyledDocumentPtr"; }
     template<typename RefCountPolicy> inline
     static const Char8    *getMName     (void);
 
-//    static const char *getMName(void) { return "MFTextDomViewPtr"; }
+//    static const char *getMName(void) { return "MFDefaultStyledDocumentPtr"; }
 };
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getSName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
-    return "SFRecTextDomViewPtr"; 
+    return "SFRecDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
-    return "SFUnrecTextDomViewPtr"; 
+    return "SFUnrecDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getSName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getSName<WeakRefCountPolicy>(void)
 {
-    return "SFWeakTextDomViewPtr"; 
+    return "SFWeakDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getSName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getSName<NoRefCountPolicy>(void)
 {
-    return "SFUnrefdTextDomViewPtr"; 
+    return "SFUnrefdDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getMName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getMName<RecordedRefCountPolicy>(void)
 {
-    return "MFRecTextDomViewPtr"; 
+    return "MFRecDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getMName<UnrecordedRefCountPolicy>(void)
 {
-    return "MFUnrecTextDomViewPtr"; 
+    return "MFUnrecDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getMName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getMName<WeakRefCountPolicy>(void)
 {
-    return "MFWeakTextDomViewPtr"; 
+    return "MFWeakDefaultStyledDocumentPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextDomView *, 0>::getMName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<DefaultStyledDocument *, 0>::getMName<NoRefCountPolicy>(void)
 {
-    return "MFUnrefdTextDomViewPtr"; 
+    return "MFUnrefdDefaultStyledDocumentPtr"; 
 }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextDomView *,
-                      RecordedRefCountPolicy  > SFRecTextDomViewPtr;
+typedef PointerSField<DefaultStyledDocument *,
+                      RecordedRefCountPolicy  > SFRecDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextDomView *,
-                      UnrecordedRefCountPolicy> SFUnrecTextDomViewPtr;
+typedef PointerSField<DefaultStyledDocument *,
+                      UnrecordedRefCountPolicy> SFUnrecDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextDomView *,
-                      WeakRefCountPolicy      > SFWeakTextDomViewPtr;
+typedef PointerSField<DefaultStyledDocument *,
+                      WeakRefCountPolicy      > SFWeakDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextDomView *,
-                      NoRefCountPolicy        > SFUncountedTextDomViewPtr;
+typedef PointerSField<DefaultStyledDocument *,
+                      NoRefCountPolicy        > SFUncountedDefaultStyledDocumentPtr;
 
 
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextDomView *,
-                      RecordedRefCountPolicy  > MFRecTextDomViewPtr;
+typedef PointerMField<DefaultStyledDocument *,
+                      RecordedRefCountPolicy  > MFRecDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextDomView *,
-                      UnrecordedRefCountPolicy> MFUnrecTextDomViewPtr;
+typedef PointerMField<DefaultStyledDocument *,
+                      UnrecordedRefCountPolicy> MFUnrecDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextDomView *,
-                      WeakRefCountPolicy      > MFWeakTextDomViewPtr;
+typedef PointerMField<DefaultStyledDocument *,
+                      WeakRefCountPolicy      > MFWeakDefaultStyledDocumentPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextDomView *,
-                      NoRefCountPolicy        > MFUncountedTextDomViewPtr;
+typedef PointerMField<DefaultStyledDocument *,
+                      NoRefCountPolicy        > MFUncountedDefaultStyledDocumentPtr;
 
 
 
@@ -181,38 +181,38 @@ typedef PointerMField<TextDomView *,
 #else // these are the doxygen hacks
 
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFRecTextDomViewPtr : 
-    public PointerSField<TextDomView *,
+struct SFRecDefaultStyledDocumentPtr : 
+    public PointerSField<DefaultStyledDocument *,
                          RecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUnrecTextDomViewPtr : 
-    public PointerSField<TextDomView *,
+struct SFUnrecDefaultStyledDocumentPtr : 
+    public PointerSField<DefaultStyledDocument *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFWeakTextDomViewPtr :
-    public PointerSField<TextDomView *,
+struct SFWeakDefaultStyledDocumentPtr :
+    public PointerSField<DefaultStyledDocument *,
                          WeakRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUncountedTextDomViewPtr :
-    public PointerSField<TextDomView *,
+struct SFUncountedDefaultStyledDocumentPtr :
+    public PointerSField<DefaultStyledDocument *,
                          NoRefCountPolicy> {};
 
 
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFRecTextDomViewPtr :
-    public PointerMField<TextDomView *,
+struct MFRecDefaultStyledDocumentPtr :
+    public PointerMField<DefaultStyledDocument *,
                          RecordedRefCountPolicy  > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUnrecTextDomViewPtr :
-    public PointerMField<TextDomView *,
+struct MFUnrecDefaultStyledDocumentPtr :
+    public PointerMField<DefaultStyledDocument *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFWeakTextDomViewPtr :
-    public PointerMField<TextDomView *,
+struct MFWeakDefaultStyledDocumentPtr :
+    public PointerMField<DefaultStyledDocument *,
                          WeakRefCountPolicy      > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUncountedTextDomViewPtr :
-    public PointerMField<TextDomView *,
+struct MFUncountedDefaultStyledDocumentPtr :
+    public PointerMField<DefaultStyledDocument *,
                          NoRefCountPolicy        > {};
 
 
@@ -221,4 +221,4 @@ struct MFUncountedTextDomViewPtr :
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTEXTDOMVIEWFIELDS_H_ */
+#endif /* _OSGDEFAULTSTYLEDDOCUMENTFIELDS_H_ */

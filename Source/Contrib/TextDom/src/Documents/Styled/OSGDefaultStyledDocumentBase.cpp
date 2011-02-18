@@ -46,7 +46,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PlainDocumentBranchElement!
+ **     class DefaultStyledDocument!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -60,8 +60,8 @@
 
 
 
-#include "OSGPlainDocumentBranchElementBase.h"
-#include "OSGPlainDocumentBranchElement.h"
+#include "OSGDefaultStyledDocumentBase.h"
+#include "OSGDefaultStyledDocument.h"
 
 #include <boost/bind.hpp>
 
@@ -75,8 +75,8 @@ OSG_BEGIN_NAMESPACE
  *                            Description                                  *
 \***************************************************************************/
 
-/*! \class OSG::PlainDocumentBranchElement
-    Plain Document Branch Element
+/*! \class OSG::DefaultStyledDocument
+    UI Document.
  */
 
 /***************************************************************************\
@@ -89,44 +89,44 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<PlainDocumentBranchElement *>::_type("PlainDocumentBranchElementPtr", "AbstractBranchElementPtr");
+DataType FieldTraits<DefaultStyledDocument *>::_type("DefaultStyledDocumentPtr", "StyledDocumentPtr");
 #endif
 
-OSG_FIELDTRAITS_GETTYPE(PlainDocumentBranchElement *)
+OSG_FIELDTRAITS_GETTYPE(DefaultStyledDocument *)
 
 OSG_EXPORT_PTR_SFIELD_FULL(PointerSField,
-                           PlainDocumentBranchElement *,
+                           DefaultStyledDocument *,
                            0);
 
 OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
-                           PlainDocumentBranchElement *,
+                           DefaultStyledDocument *,
                            0);
 
 /***************************************************************************\
  *                         Field Description                               *
 \***************************************************************************/
 
-void PlainDocumentBranchElementBase::classDescInserter(TypeObject &oType)
+void DefaultStyledDocumentBase::classDescInserter(TypeObject &oType)
 {
 }
 
 
-PlainDocumentBranchElementBase::TypeObject PlainDocumentBranchElementBase::_type(
-    PlainDocumentBranchElementBase::getClassname(),
+DefaultStyledDocumentBase::TypeObject DefaultStyledDocumentBase::_type(
+    DefaultStyledDocumentBase::getClassname(),
     Inherited::getClassname(),
     "NULL",
     0,
-    reinterpret_cast<PrototypeCreateF>(&PlainDocumentBranchElementBase::createEmptyLocal),
-    PlainDocumentBranchElement::initMethod,
-    PlainDocumentBranchElement::exitMethod,
-    reinterpret_cast<InitalInsertDescFunc>(&PlainDocumentBranchElement::classDescInserter),
+    reinterpret_cast<PrototypeCreateF>(&DefaultStyledDocumentBase::createEmptyLocal),
+    DefaultStyledDocument::initMethod,
+    DefaultStyledDocument::exitMethod,
+    reinterpret_cast<InitalInsertDescFunc>(&DefaultStyledDocument::classDescInserter),
     false,
     0,
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"PlainDocumentBranchElement\"\n"
-    "\tparent=\"AbstractBranchElement\"\n"
+    "\tname=\"DefaultStyledDocument\"\n"
+    "\tparent=\"StyledDocument\"\n"
     "    library=\"ContribTextDom\"\n"
     "    pointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
@@ -137,27 +137,26 @@ PlainDocumentBranchElementBase::TypeObject PlainDocumentBranchElementBase::_type
     "    isNodeCore=\"false\"\n"
     "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
-    "Plain Document Branch Element\n"
-    "</FieldContainer>\n"
-    "\n",
-    "Plain Document Branch Element\n"
+    "UI Document.\n"
+    "</FieldContainer>\n",
+    "UI Document.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
 
-FieldContainerType &PlainDocumentBranchElementBase::getType(void)
+FieldContainerType &DefaultStyledDocumentBase::getType(void)
 {
     return _type;
 }
 
-const FieldContainerType &PlainDocumentBranchElementBase::getType(void) const
+const FieldContainerType &DefaultStyledDocumentBase::getType(void) const
 {
     return _type;
 }
 
-UInt32 PlainDocumentBranchElementBase::getContainerSize(void) const
+UInt32 DefaultStyledDocumentBase::getContainerSize(void) const
 {
-    return sizeof(PlainDocumentBranchElement);
+    return sizeof(DefaultStyledDocument);
 }
 
 /*------------------------- decorator get ------------------------------*/
@@ -169,7 +168,7 @@ UInt32 PlainDocumentBranchElementBase::getContainerSize(void) const
 
 /*------------------------------ access -----------------------------------*/
 
-UInt32 PlainDocumentBranchElementBase::getBinSize(ConstFieldMaskArg whichField)
+UInt32 DefaultStyledDocumentBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
@@ -177,14 +176,14 @@ UInt32 PlainDocumentBranchElementBase::getBinSize(ConstFieldMaskArg whichField)
     return returnValue;
 }
 
-void PlainDocumentBranchElementBase::copyToBin(BinaryDataHandler &pMem,
+void DefaultStyledDocumentBase::copyToBin(BinaryDataHandler &pMem,
                                   ConstFieldMaskArg  whichField)
 {
     Inherited::copyToBin(pMem, whichField);
 
 }
 
-void PlainDocumentBranchElementBase::copyFromBin(BinaryDataHandler &pMem,
+void DefaultStyledDocumentBase::copyFromBin(BinaryDataHandler &pMem,
                                     ConstFieldMaskArg  whichField)
 {
     Inherited::copyFromBin(pMem, whichField);
@@ -192,58 +191,58 @@ void PlainDocumentBranchElementBase::copyFromBin(BinaryDataHandler &pMem,
 }
 
 //! create a new instance of the class
-PlainDocumentBranchElementTransitPtr PlainDocumentBranchElementBase::createLocal(BitVector bFlags)
+DefaultStyledDocumentTransitPtr DefaultStyledDocumentBase::createLocal(BitVector bFlags)
 {
-    PlainDocumentBranchElementTransitPtr fc;
+    DefaultStyledDocumentTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyLocal(bFlags);
 
-        fc = dynamic_pointer_cast<PlainDocumentBranchElement>(tmpPtr);
+        fc = dynamic_pointer_cast<DefaultStyledDocument>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class, copy the container flags
-PlainDocumentBranchElementTransitPtr PlainDocumentBranchElementBase::createDependent(BitVector bFlags)
+DefaultStyledDocumentTransitPtr DefaultStyledDocumentBase::createDependent(BitVector bFlags)
 {
-    PlainDocumentBranchElementTransitPtr fc;
+    DefaultStyledDocumentTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopyDependent(bFlags);
 
-        fc = dynamic_pointer_cast<PlainDocumentBranchElement>(tmpPtr);
+        fc = dynamic_pointer_cast<DefaultStyledDocument>(tmpPtr);
     }
 
     return fc;
 }
 
 //! create a new instance of the class
-PlainDocumentBranchElementTransitPtr PlainDocumentBranchElementBase::create(void)
+DefaultStyledDocumentTransitPtr DefaultStyledDocumentBase::create(void)
 {
-    PlainDocumentBranchElementTransitPtr fc;
+    DefaultStyledDocumentTransitPtr fc;
 
     if(getClassType().getPrototype() != NULL)
     {
         FieldContainerTransitPtr tmpPtr =
             getClassType().getPrototype()-> shallowCopy();
 
-        fc = dynamic_pointer_cast<PlainDocumentBranchElement>(tmpPtr);
+        fc = dynamic_pointer_cast<DefaultStyledDocument>(tmpPtr);
     }
 
     return fc;
 }
 
-PlainDocumentBranchElement *PlainDocumentBranchElementBase::createEmptyLocal(BitVector bFlags)
+DefaultStyledDocument *DefaultStyledDocumentBase::createEmptyLocal(BitVector bFlags)
 {
-    PlainDocumentBranchElement *returnValue;
+    DefaultStyledDocument *returnValue;
 
-    newPtr<PlainDocumentBranchElement>(returnValue, bFlags);
+    newPtr<DefaultStyledDocument>(returnValue, bFlags);
 
     returnValue->_pFieldFlags->_bNamespaceMask &= ~bFlags;
 
@@ -251,11 +250,11 @@ PlainDocumentBranchElement *PlainDocumentBranchElementBase::createEmptyLocal(Bit
 }
 
 //! create an empty new instance of the class, do not copy the prototype
-PlainDocumentBranchElement *PlainDocumentBranchElementBase::createEmpty(void)
+DefaultStyledDocument *DefaultStyledDocumentBase::createEmpty(void)
 {
-    PlainDocumentBranchElement *returnValue;
+    DefaultStyledDocument *returnValue;
 
-    newPtr<PlainDocumentBranchElement>(returnValue, Thread::getCurrentLocalFlags());
+    newPtr<DefaultStyledDocument>(returnValue, Thread::getCurrentLocalFlags());
 
     returnValue->_pFieldFlags->_bNamespaceMask &=
         ~Thread::getCurrentLocalFlags();
@@ -263,12 +262,12 @@ PlainDocumentBranchElement *PlainDocumentBranchElementBase::createEmpty(void)
     return returnValue;
 }
 
-FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopyLocal(
+FieldContainerTransitPtr DefaultStyledDocumentBase::shallowCopyLocal(
     BitVector bFlags) const
 {
-    PlainDocumentBranchElement *tmpPtr;
+    DefaultStyledDocument *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const PlainDocumentBranchElement *>(this), bFlags);
+    newPtr(tmpPtr, dynamic_cast<const DefaultStyledDocument *>(this), bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -277,12 +276,12 @@ FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopyLocal(
     return returnValue;
 }
 
-FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopyDependent(
+FieldContainerTransitPtr DefaultStyledDocumentBase::shallowCopyDependent(
     BitVector bFlags) const
 {
-    PlainDocumentBranchElement *tmpPtr;
+    DefaultStyledDocument *tmpPtr;
 
-    newPtr(tmpPtr, dynamic_cast<const PlainDocumentBranchElement *>(this), ~bFlags);
+    newPtr(tmpPtr, dynamic_cast<const DefaultStyledDocument *>(this), ~bFlags);
 
     FieldContainerTransitPtr returnValue(tmpPtr);
 
@@ -291,12 +290,12 @@ FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopyDependent(
     return returnValue;
 }
 
-FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopy(void) const
+FieldContainerTransitPtr DefaultStyledDocumentBase::shallowCopy(void) const
 {
-    PlainDocumentBranchElement *tmpPtr;
+    DefaultStyledDocument *tmpPtr;
 
     newPtr(tmpPtr,
-           dynamic_cast<const PlainDocumentBranchElement *>(this),
+           dynamic_cast<const DefaultStyledDocument *>(this),
            Thread::getCurrentLocalFlags());
 
     tmpPtr->_pFieldFlags->_bNamespaceMask &= ~Thread::getCurrentLocalFlags();
@@ -310,12 +309,12 @@ FieldContainerTransitPtr PlainDocumentBranchElementBase::shallowCopy(void) const
 
 /*------------------------- constructors ----------------------------------*/
 
-PlainDocumentBranchElementBase::PlainDocumentBranchElementBase(void) :
+DefaultStyledDocumentBase::DefaultStyledDocumentBase(void) :
     Inherited()
 {
 }
 
-PlainDocumentBranchElementBase::PlainDocumentBranchElementBase(const PlainDocumentBranchElementBase &source) :
+DefaultStyledDocumentBase::DefaultStyledDocumentBase(const DefaultStyledDocumentBase &source) :
     Inherited(source)
 {
 }
@@ -323,7 +322,7 @@ PlainDocumentBranchElementBase::PlainDocumentBranchElementBase(const PlainDocume
 
 /*-------------------------- destructors ----------------------------------*/
 
-PlainDocumentBranchElementBase::~PlainDocumentBranchElementBase(void)
+DefaultStyledDocumentBase::~DefaultStyledDocumentBase(void)
 {
 }
 
@@ -331,15 +330,15 @@ PlainDocumentBranchElementBase::~PlainDocumentBranchElementBase(void)
 
 
 #ifdef OSG_MT_CPTR_ASPECT
-void PlainDocumentBranchElementBase::execSyncV(      FieldContainer    &oFrom,
+void DefaultStyledDocumentBase::execSyncV(      FieldContainer    &oFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
                                   const UInt32             uiSyncInfo)
 {
-    PlainDocumentBranchElement *pThis = static_cast<PlainDocumentBranchElement *>(this);
+    DefaultStyledDocument *pThis = static_cast<DefaultStyledDocument *>(this);
 
-    pThis->execSync(static_cast<PlainDocumentBranchElement *>(&oFrom),
+    pThis->execSync(static_cast<DefaultStyledDocument *>(&oFrom),
                     whichField,
                     oOffsets,
                     syncMode,
@@ -349,20 +348,20 @@ void PlainDocumentBranchElementBase::execSyncV(      FieldContainer    &oFrom,
 
 
 #ifdef OSG_MT_CPTR_ASPECT
-FieldContainer *PlainDocumentBranchElementBase::createAspectCopy(
+FieldContainer *DefaultStyledDocumentBase::createAspectCopy(
     const FieldContainer *pRefAspect) const
 {
-    PlainDocumentBranchElement *returnValue;
+    DefaultStyledDocument *returnValue;
 
     newAspectCopy(returnValue,
-                  dynamic_cast<const PlainDocumentBranchElement *>(pRefAspect),
-                  dynamic_cast<const PlainDocumentBranchElement *>(this));
+                  dynamic_cast<const DefaultStyledDocument *>(pRefAspect),
+                  dynamic_cast<const DefaultStyledDocument *>(this));
 
     return returnValue;
 }
 #endif
 
-void PlainDocumentBranchElementBase::resolveLinks(void)
+void DefaultStyledDocumentBase::resolveLinks(void)
 {
     Inherited::resolveLinks();
 

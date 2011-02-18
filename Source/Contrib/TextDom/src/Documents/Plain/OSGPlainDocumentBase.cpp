@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -59,7 +60,6 @@
 
 
 
-#include "OSGElement.h"
 #include "OSGPlainDocumentBase.h"
 #include "OSGPlainDocument.h"
 
@@ -135,7 +135,7 @@ PlainDocumentBase::TypeObject PlainDocumentBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "UI PlainDocument.\n"
     "</FieldContainer>\n",
@@ -262,7 +262,6 @@ PlainDocument *PlainDocumentBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr PlainDocumentBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -308,7 +307,6 @@ FieldContainerTransitPtr PlainDocumentBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 PlainDocumentBase::PlainDocumentBase(void) :
@@ -327,6 +325,7 @@ PlainDocumentBase::PlainDocumentBase(const PlainDocumentBase &source) :
 PlainDocumentBase::~PlainDocumentBase(void)
 {
 }
+
 
 
 

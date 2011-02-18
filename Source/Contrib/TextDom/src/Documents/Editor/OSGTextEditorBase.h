@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,16 +59,16 @@
 #endif
 
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-//#include "OSGBaseTypes.h"
+//#include "OpenSG/OSGBaseTypes.h"
 
 #include "OSGComponentContainer.h" // Parent
 
-#include "OSGAdvancedTextDomAreaFields.h" // AdvancedTextDomAreas type
-#include "OSGSysFields.h"        // ClipboardVisible type
-#include "OSGTextDomAreaFields.h" // FocusedDomArea type
+#include "OpenSG/OSGAdvancedTextDomAreaFields.h" // AdvancedTextDomAreas type
+#include "OpenSG/OSGSysFields.h"        // ClipboardVisible type
+#include "OpenSG/OSGTextDomAreaFields.h" // FocusedDomArea type
 
 #include "OSGTextEditorFields.h"
 
@@ -88,6 +89,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TextEditor);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

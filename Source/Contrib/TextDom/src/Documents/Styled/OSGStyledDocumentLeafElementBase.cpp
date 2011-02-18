@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -134,7 +135,7 @@ StyledDocumentLeafElementBase::TypeObject StyledDocumentLeafElementBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "Plain Document Leaf Element\n"
     "</FieldContainer>\n"
@@ -263,7 +264,6 @@ StyledDocumentLeafElement *StyledDocumentLeafElementBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr StyledDocumentLeafElementBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -309,7 +309,6 @@ FieldContainerTransitPtr StyledDocumentLeafElementBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 StyledDocumentLeafElementBase::StyledDocumentLeafElementBase(void) :
@@ -328,6 +327,7 @@ StyledDocumentLeafElementBase::StyledDocumentLeafElementBase(const StyledDocumen
 StyledDocumentLeafElementBase::~StyledDocumentLeafElementBase(void)
 {
 }
+
 
 
 

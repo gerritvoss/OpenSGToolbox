@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,18 +55,15 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 
 
 
-#include "OSGDocument.h"
-#include "OSGAdvancedTextDomArea.h" // AdvancedTextDomAreas Class
-#include "OSGTextDomArea.h"      // FocusedDomArea Class
+#include "OpenSG/OSGAdvancedTextDomArea.h" // AdvancedTextDomAreas Class
+#include "OpenSG/OSGTextDomArea.h"      // FocusedDomArea Class
 
 #include "OSGTextEditorBase.h"
 #include "OSGTextEditor.h"
-#include "OSGTextDomLayoutManager.h"
-#include "OSGGlyphView.h"
 
 #include <boost/bind.hpp>
 
@@ -213,9 +211,9 @@ TextEditorBase::TypeObject TextEditorBase::_type(
     "\tparentsystemcomponent=\"false\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
-    "     \tisNodeCore=\"false\"\n"
+    "    isNodeCore=\"false\"\n"
     "\tparentProducer=\"Component\"\n"
-    "\tauthors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "A TextDom Editor\n"
     "\n"
@@ -263,15 +261,15 @@ TextEditorBase::TypeObject TextEditorBase::_type(
     "\t</Field>\n"
     "\t\n"
     "\t<Field\n"
-    "           \tname=\"FocusedDomArea\"\n"
-    "            \ttype=\"TextDomArea\"\n"
-    "    \t\tcategory=\"pointer\"\n"
-    " \t\tcardinality=\"single\"\n"
-    "    \t\tvisibility=\"external\"\n"
-    "    \t\taccess=\"protected\"\n"
-    "    \t\tdefaultValue=\"NULL\"\n"
-    "\t>\n"
-    "    \t</Field>\n"
+    "        name=\"FocusedDomArea\"\n"
+    "        type=\"TextDomArea\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"protected\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "    >\n"
+    "    </Field>\n"
     "\n"
     "\n"
     "</FieldContainer>\n",
@@ -472,18 +470,22 @@ void TextEditorBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (AdvancedTextDomAreasFieldMask & whichField))
     {
+        editMField(AdvancedTextDomAreasFieldMask, _mfAdvancedTextDomAreas);
         _mfAdvancedTextDomAreas.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ClipboardVisibleFieldMask & whichField))
     {
+        editSField(ClipboardVisibleFieldMask);
         _sfClipboardVisible.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (IsSplitFieldMask & whichField))
     {
+        editSField(IsSplitFieldMask);
         _sfIsSplit.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedDomAreaFieldMask & whichField))
     {
+        editSField(FocusedDomAreaFieldMask);
         _sfFocusedDomArea.copyFromBin(pMem);
     }
 }
@@ -560,7 +562,6 @@ TextEditor *TextEditorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr TextEditorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -603,7 +604,6 @@ FieldContainerTransitPtr TextEditorBase::shallowCopy(void) const
 
     return returnValue;
 }
-
 
 
 
@@ -772,6 +772,7 @@ EditFieldHandlePtr TextEditorBase::editHandleFocusedDomArea (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

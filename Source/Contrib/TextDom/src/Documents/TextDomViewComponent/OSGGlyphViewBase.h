@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,10 +59,10 @@
 #endif
 
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-//#include "OSGBaseTypes.h"
+//#include "OpenSG/OSGBaseTypes.h"
 
 #include "OSGTextDomView.h" // Parent
 
@@ -85,6 +86,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING GlyphViewBase : public TextDomView
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(GlyphView);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

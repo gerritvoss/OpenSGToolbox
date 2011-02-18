@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -187,7 +188,7 @@ DocumentEventDetailsBase::TypeObject DocumentEventDetailsBase::_type(
     "    isNodeCore=\"false\"\n"
     "    isBundle=\"true\"\n"
     "\tsupportUnregisteredCreate=\"true\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Document\"\n"
@@ -337,14 +338,17 @@ void DocumentEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (DocumentFieldMask & whichField))
     {
+        editSField(DocumentFieldMask);
         _sfDocument.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (OffsetFieldMask & whichField))
     {
+        editSField(OffsetFieldMask);
         _sfOffset.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LengthFieldMask & whichField))
     {
+        editSField(LengthFieldMask);
         _sfLength.copyFromBin(pMem);
     }
 }

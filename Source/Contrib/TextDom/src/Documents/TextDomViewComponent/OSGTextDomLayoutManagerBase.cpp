@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -183,7 +184,7 @@ TextDomLayoutManagerBase::TypeObject TextDomLayoutManagerBase::_type(
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"
     "    childFields=\"single\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "\n"
     "A UI TextDomLayoutManager\n"
@@ -346,10 +347,12 @@ void TextDomLayoutManagerBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (VisibleViewsFieldMask & whichField))
     {
+        editMField(VisibleViewsFieldMask, _mfVisibleViews);
         _mfVisibleViews.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ParentTextDomAreaFieldMask & whichField))
     {
+        editSField(ParentTextDomAreaFieldMask);
         _sfParentTextDomArea.copyFromBin(pMem);
     }
 }
@@ -428,7 +431,7 @@ bool TextDomLayoutManagerBase::unlinkParent(
 
         if(pTypedParent != NULL)
         {
-            if(_sfParentTextDomArea.getValue() == pParent)
+            if(_sfParentTextDomArea.getValue() == pTypedParent)
             {
                 editSField(ParentTextDomAreaFieldMask);
 
@@ -437,8 +440,15 @@ bool TextDomLayoutManagerBase::unlinkParent(
                 return true;
             }
 
-            FWARNING(("TextDomLayoutManagerBase::unlinkParent: "
-                      "Child <-> Parent link inconsistent.\n"));
+            SWARNING << "Child (["          << this
+                     << "] id ["            << this->getId()
+                     << "] type ["          << this->getType().getCName()
+                     << "] parentFieldId [" << parentFieldId
+                     << "]) - Parent (["    << pParent
+                     << "] id ["            << pParent->getId()
+                     << "] type ["          << pParent->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }

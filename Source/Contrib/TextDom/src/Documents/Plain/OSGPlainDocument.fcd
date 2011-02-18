@@ -11,7 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)"
 >
 UI PlainDocument.
 </FieldContainer>

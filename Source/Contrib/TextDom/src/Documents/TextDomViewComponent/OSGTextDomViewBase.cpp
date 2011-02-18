@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,12 +55,12 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 
 
 
-#include "OSGElement.h"          // Element Class
-#include "OSGUIFont.h"           // Font Class
+#include "OpenSG/OSGElement.h"          // Element Class
+#include "OpenSG/OSGUIFont.h"           // Font Class
 
 #include "OSGTextDomViewBase.h"
 #include "OSGTextDomView.h"
@@ -298,7 +299,7 @@ TextDomViewBase::TypeObject TextDomViewBase::_type(
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"
-    "    \tauthors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "A UI TextDomView\n"
     "\t<Field\n"
@@ -661,46 +662,55 @@ void TextDomViewBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (ElementFieldMask & whichField))
     {
+        editSField(ElementFieldMask);
         _sfElement.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (StartingPositionFieldMask & whichField))
     {
+        editSField(StartingPositionFieldMask);
         _sfStartingPosition.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
+        editSField(FontFieldMask);
         _sfFont.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SelectionBoxColorFieldMask & whichField))
     {
+        editSField(SelectionBoxColorFieldMask);
         _sfSelectionBoxColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SelectionTextColorFieldMask & whichField))
     {
+        editSField(SelectionTextColorFieldMask);
         _sfSelectionTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ActiveTextColorFieldMask & whichField))
     {
+        editSField(ActiveTextColorFieldMask);
         _sfActiveTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedTextColorFieldMask & whichField))
     {
+        editSField(FocusedTextColorFieldMask);
         _sfFocusedTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (RolloverTextColorFieldMask & whichField))
     {
+        editSField(RolloverTextColorFieldMask);
         _sfRolloverTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (DisabledTextColorFieldMask & whichField))
     {
+        editSField(DisabledTextColorFieldMask);
         _sfDisabledTextColor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (TextColorFieldMask & whichField))
     {
+        editSField(TextColorFieldMask);
         _sfTextColor.copyFromBin(pMem);
     }
 }
-
 
 
 
@@ -1012,6 +1022,7 @@ EditFieldHandlePtr TextDomViewBase::editHandleTextColor      (void)
 
     return returnValue;
 }
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

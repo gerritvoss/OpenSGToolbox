@@ -13,7 +13,7 @@
     isNodeCore="false"
     isBundle="true"
 	supportUnregisteredCreate="true"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)"
 >
 	<Field
 		name="Option"

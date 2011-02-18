@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -88,7 +89,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 #if !defined(OSG_DO_DOC) || defined(OSG_DOC_DEV)
-DataType FieldTraits<Element *>::_type("ElementRefPtr", "FieldContainerPtr");
+DataType FieldTraits<Element *>::_type("ElementPtr", "FieldContainerPtr");
 #endif
 
 OSG_FIELDTRAITS_GETTYPE(Element *)
@@ -134,7 +135,7 @@ ElementBase::TypeObject ElementBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "Document Element\n"
     "</FieldContainer>\n",
@@ -191,7 +192,6 @@ void ElementBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 ElementBase::ElementBase(void) :
@@ -210,6 +210,7 @@ ElementBase::ElementBase(const ElementBase &source) :
 ElementBase::~ElementBase(void)
 {
 }
+
 
 
 

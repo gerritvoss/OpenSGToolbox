@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -134,7 +135,7 @@ StyledDocumentBranchElementBase::TypeObject StyledDocumentBranchElementBase::_ty
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "Plain Document Branch Element\n"
     "</FieldContainer>\n"
@@ -262,7 +263,6 @@ StyledDocumentBranchElement *StyledDocumentBranchElementBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr StyledDocumentBranchElementBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -308,7 +308,6 @@ FieldContainerTransitPtr StyledDocumentBranchElementBase::shallowCopy(void) cons
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 StyledDocumentBranchElementBase::StyledDocumentBranchElementBase(void) :
@@ -327,6 +326,7 @@ StyledDocumentBranchElementBase::StyledDocumentBranchElementBase(const StyledDoc
 StyledDocumentBranchElementBase::~StyledDocumentBranchElementBase(void)
 {
 }
+
 
 
 

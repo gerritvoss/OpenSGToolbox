@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -54,12 +55,12 @@
 #pragma once
 #endif
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-#include "OSGFieldContainerFields.h"
-#include "OSGPointerSField.h"
-#include "OSGPointerMField.h"
+#include "OpenSG/OSGFieldContainerFields.h"
+#include "OpenSG/OSGPointerSField.h"
+#include "OpenSG/OSGPointerMField.h"
 
 
 OSG_BEGIN_NAMESPACE

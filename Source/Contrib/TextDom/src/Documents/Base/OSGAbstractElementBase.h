@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -86,6 +87,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AbstractElementBase : public Element
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(AbstractElement);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

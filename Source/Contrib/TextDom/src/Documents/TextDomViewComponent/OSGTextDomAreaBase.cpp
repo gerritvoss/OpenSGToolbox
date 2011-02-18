@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -61,7 +62,7 @@
 #include "OSGDocument.h"                // DocumentModel Class
 #include "OSGUIFont.h"                  // Font Class
 #include "OSGTextDomLayoutManager.h"    // LayoutManager Class
-#include "OSGGlyphView.h"
+
 #include "OSGTextDomAreaBase.h"
 #include "OSGTextDomArea.h"
 
@@ -300,7 +301,7 @@ TextDomAreaBase::TypeObject TextDomAreaBase::_type(
     "\tuseLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
     "\tparentProducer=\"Component\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "A UI TextDomArea\n"
     "\t<Field\n"
@@ -669,42 +670,52 @@ void TextDomAreaBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (DocumentModelFieldMask & whichField))
     {
+        editSField(DocumentModelFieldMask);
         _sfDocumentModel.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FontFieldMask & whichField))
     {
+        editSField(FontFieldMask);
         _sfFont.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (BookmarkedLinesFieldMask & whichField))
     {
+        editMField(BookmarkedLinesFieldMask, _mfBookmarkedLines);
         _mfBookmarkedLines.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (CaretPositionFieldMask & whichField))
     {
+        editSField(CaretPositionFieldMask);
         _sfCaretPosition.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LineWrapFieldMask & whichField))
     {
+        editSField(LineWrapFieldMask);
         _sfLineWrap.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (WrapStyleWordFieldMask & whichField))
     {
+        editSField(WrapStyleWordFieldMask);
         _sfWrapStyleWord.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (TabSizeFieldMask & whichField))
     {
+        editSField(TabSizeFieldMask);
         _sfTabSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LineSpacingFieldMask & whichField))
     {
+        editSField(LineSpacingFieldMask);
         _sfLineSpacing.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LayoutManagerFieldMask & whichField))
     {
+        editSField(LayoutManagerFieldMask);
         _sfLayoutManager.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (EditableFieldMask & whichField))
     {
+        editSField(EditableFieldMask);
         _sfEditable.copyFromBin(pMem);
     }
 }
@@ -883,7 +894,7 @@ bool TextDomAreaBase::unlinkChild(
 
         if(pTypedChild != NULL)
         {
-            if(pTypedChild == _sfLayoutManager.getValue())
+            if(_sfLayoutManager.getValue() == pTypedChild)
             {
                 editSField(LayoutManagerFieldMask);
 
@@ -892,8 +903,15 @@ bool TextDomAreaBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("TextDomAreaBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }

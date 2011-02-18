@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -153,7 +154,7 @@ AbstractDocumentBase::TypeObject AbstractDocumentBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "UI AbstractDocument.\n"
     "\t<Field\n"
@@ -291,6 +292,7 @@ void AbstractDocumentBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (RootElementsFieldMask & whichField))
     {
+        editMField(RootElementsFieldMask, _mfRootElements);
         _mfRootElements.copyFromBin(pMem);
     }
 }

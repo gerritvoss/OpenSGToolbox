@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -134,7 +135,7 @@ AbstractLeafElementBase::TypeObject AbstractLeafElementBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "Document Element\n"
     "</FieldContainer>\n",
@@ -191,7 +192,6 @@ void AbstractLeafElementBase::copyFromBin(BinaryDataHandler &pMem,
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 AbstractLeafElementBase::AbstractLeafElementBase(void) :
@@ -210,6 +210,7 @@ AbstractLeafElementBase::AbstractLeafElementBase(const AbstractLeafElementBase &
 AbstractLeafElementBase::~AbstractLeafElementBase(void)
 {
 }
+
 
 
 

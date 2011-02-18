@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -59,7 +60,6 @@
 
 
 
-#include "OSGElement.h"
 #include "OSGStyledDocumentBase.h"
 #include "OSGStyledDocument.h"
 
@@ -135,7 +135,7 @@ StyledDocumentBase::TypeObject StyledDocumentBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "UI Document.\n"
     "</FieldContainer>\n",
@@ -262,7 +262,6 @@ StyledDocument *StyledDocumentBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr StyledDocumentBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -308,7 +307,6 @@ FieldContainerTransitPtr StyledDocumentBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 StyledDocumentBase::StyledDocumentBase(void) :
@@ -327,6 +325,7 @@ StyledDocumentBase::StyledDocumentBase(const StyledDocumentBase &source) :
 StyledDocumentBase::~StyledDocumentBase(void)
 {
 }
+
 
 
 

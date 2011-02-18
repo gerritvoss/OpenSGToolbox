@@ -46,14 +46,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class PlainDocumentBranchElement
+ **     class DefaultStyledDocument
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGPLAINDOCUMENTBRANCHELEMENTBASE_H_
-#define _OSGPLAINDOCUMENTBRANCHELEMENTBASE_H_
+#ifndef _OSGDEFAULTSTYLEDDOCUMENTBASE_H_
+#define _OSGDEFAULTSTYLEDDOCUMENTBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -64,28 +64,28 @@
 
 //#include "OSGBaseTypes.h"
 
-#include "OSGAbstractBranchElement.h" // Parent
+#include "OSGStyledDocument.h" // Parent
 
 
-#include "OSGPlainDocumentBranchElementFields.h"
+#include "OSGDefaultStyledDocumentFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class PlainDocumentBranchElement;
+class DefaultStyledDocument;
 
-//! \brief PlainDocumentBranchElement Base Class.
+//! \brief DefaultStyledDocument Base Class.
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentBranchElementBase : public AbstractBranchElement
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DefaultStyledDocumentBase : public StyledDocument
 {
   public:
 
-    typedef AbstractBranchElement Inherited;
-    typedef AbstractBranchElement ParentContainer;
+    typedef StyledDocument Inherited;
+    typedef StyledDocument ParentContainer;
 
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(PlainDocumentBranchElement);
+    OSG_GEN_INTERNALPTR(DefaultStyledDocument);
     
     
 
@@ -129,16 +129,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentBranchElementBase : public Abst
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  PlainDocumentBranchElementTransitPtr  create          (void);
-    static  PlainDocumentBranchElement           *createEmpty     (void);
+    static  DefaultStyledDocumentTransitPtr  create          (void);
+    static  DefaultStyledDocument           *createEmpty     (void);
 
-    static  PlainDocumentBranchElementTransitPtr  createLocal     (
+    static  DefaultStyledDocumentTransitPtr  createLocal     (
                                                BitVector bFlags = FCLocal::All);
 
-    static  PlainDocumentBranchElement            *createEmptyLocal(
+    static  DefaultStyledDocument            *createEmptyLocal(
                                               BitVector bFlags = FCLocal::All);
 
-    static  PlainDocumentBranchElementTransitPtr  createDependent  (BitVector bFlags);
+    static  DefaultStyledDocumentTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -165,15 +165,15 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentBranchElementBase : public Abst
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    PlainDocumentBranchElementBase(void);
-    PlainDocumentBranchElementBase(const PlainDocumentBranchElementBase &source);
+    DefaultStyledDocumentBase(void);
+    DefaultStyledDocumentBase(const DefaultStyledDocumentBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~PlainDocumentBranchElementBase(void);
+    virtual ~DefaultStyledDocumentBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -199,7 +199,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentBranchElementBase : public Abst
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      PlainDocumentBranchElementBase *pFrom,
+            void execSync (      DefaultStyledDocumentBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -239,11 +239,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING PlainDocumentBranchElementBase : public Abst
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const PlainDocumentBranchElementBase &source);
+    void operator =(const DefaultStyledDocumentBase &source);
 };
 
-typedef PlainDocumentBranchElementBase *PlainDocumentBranchElementBaseP;
+typedef DefaultStyledDocumentBase *DefaultStyledDocumentBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGPLAINDOCUMENTBRANCHELEMENTBASE_H_ */
+#endif /* _OSGDEFAULTSTYLEDDOCUMENTBASE_H_ */

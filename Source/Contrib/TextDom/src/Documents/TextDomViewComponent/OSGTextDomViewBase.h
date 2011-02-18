@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)*
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -58,17 +59,17 @@
 #endif
 
 
-#include "OSGConfig.h"
+#include "OpenSG/OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-//#include "OSGBaseTypes.h"
+//#include "OpenSG/OSGBaseTypes.h"
 
 #include "OSGFieldContainer.h" // Parent
 
-#include "OSGElementFields.h"    // Element type
-#include "OSGVecFields.h"        // StartingPosition type
-#include "OSGUIFontFields.h"     // Font type
-#include "OSGBaseFields.h"       // SelectionBoxColor type
+#include "OpenSG/OSGElementFields.h"    // Element type
+#include "OpenSG/OSGVecFields.h"        // StartingPosition type
+#include "OpenSG/OSGUIFontFields.h"     // Font type
+#include "OpenSG/OSGBaseFields.h"       // SelectionBoxColor type
 
 #include "OSGTextDomViewFields.h"
 
@@ -89,6 +90,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomViewBase : public FieldContainer
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(TextDomView);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 

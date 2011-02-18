@@ -6,7 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
+ *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -183,7 +184,7 @@ SearchWindowEventDetailsBase::TypeObject SearchWindowEventDetailsBase::_type(
     "    isNodeCore=\"false\"\n"
     "    isBundle=\"true\"\n"
     "\tsupportUnregisteredCreate=\"true\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
     "\t<Field\n"
     "\t\tname=\"Option\"\n"
@@ -334,14 +335,17 @@ void SearchWindowEventDetailsBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (OptionFieldMask & whichField))
     {
+        editSField(OptionFieldMask);
         _sfOption.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SearchTextFieldMask & whichField))
     {
+        editSField(SearchTextFieldMask);
         _sfSearchText.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ReplaceTextFieldMask & whichField))
     {
+        editSField(ReplaceTextFieldMask);
         _sfReplaceText.copyFromBin(pMem);
     }
 }
@@ -458,7 +462,7 @@ FieldContainerTransitPtr SearchWindowEventDetailsBase::shallowCopy(void) const
 
 SearchWindowEventDetailsBase::SearchWindowEventDetailsBase(void) :
     Inherited(),
-    _sfOption                 (),
+    _sfOption                 (UInt8(SearchWindowEvent::DIALOG_OPTION_SEARCH)),
     _sfSearchText             (),
     _sfReplaceText            ()
 {
