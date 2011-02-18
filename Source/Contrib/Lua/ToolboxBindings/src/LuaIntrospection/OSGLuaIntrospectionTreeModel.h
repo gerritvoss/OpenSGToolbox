@@ -101,7 +101,7 @@ class OSG_CONTRIBLUATOOLBOX_DLLMAPPING LuaIntrospectionTreeModel : public LuaInt
     void setRoot(const std::string& root);
 
     //Get the NodeUnrecPtr to the Root Node
-    const std::string& getRootLuaPath(void) const;
+    const std::string getRootLuaPath(void) const;
 
     //Returns true if these objects represent the same node in the tree
     virtual bool isEqual(const boost::any& left, const boost::any& right) const;

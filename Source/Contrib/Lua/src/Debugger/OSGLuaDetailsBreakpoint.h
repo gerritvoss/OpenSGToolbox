@@ -2,9 +2,11 @@
  *                                OpenSG                                     *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2002 by the OpenSG Forum                 *
+ *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact: dirk@opensg.org, gerrit.voss@vossg.org, jbehr@zgdv.de          *
+ *                            www.opensg.org                                 *
+ *                                                                           *
+ *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -34,30 +36,51 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
+#ifndef _OSGLUADETAILSBREAKPOINT_H_
+#define _OSGLUADETAILSBREAKPOINT_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-
 #include "OSGConfig.h"
+#include "OSGContribLuaDef.h"
+
+#ifdef OSG_WITH_LUA_DEBUGGER
+
+#include "OSGBaseTypes.h"
+#include <map>
 
 OSG_BEGIN_NAMESPACE
 
-inline
-lua_details::Value::Value(void) : type(None), type_name(0)
+namespace lua_details
 {
-}
 
-inline
-lua_details::LuaLocker::LuaLocker(lua_State* L) : L_(L)
-{
-    //lua_lock(L_);
-}
+    enum Breakpoint
+    {
+        BPT_NONE	= 0x00,		// nie ma przerwania
+        BPT_EXECUTE	= 0x01,		// przerwanie przy wykonaniu
+        BPT_READ	= 0x02,		// przerwanie przy odczycie
+        BPT_WRITE	= 0x04,		// przerwanie przy zapisie
+        BPT_MASK	= 0x07,
+        BPT_NO_CODE	= 0x08,		// wiersz nie zawiera kodu - przerwanie nie mo¿e byæ ustawione
+        BPT_TEMP_EXEC=0x10,		// przerwanie tymczasowe do zatrzymania programu
+        BPT_DISABLED= 0x80		// przerwanie wy³¹czone
+    };
 
-inline
-lua_details::LuaLocker::~LuaLocker()
-{
-    //lua_unlock(L_);
+    typedef std::map<UInt32, Breakpoint> BreakpointMap;
+    typedef std::map<std::string, BreakpointMap> FileBreakpointMap;
+
 }
 
 OSG_END_NAMESPACE
+
+#include "OSGLuaDetailsBreakpoint.inl"
+
+#endif /* OSG_WITH_LUA_DEBUGGER */
+
+#endif /* _OSGLUADETAILSBREAKPOINT_H_ */
 

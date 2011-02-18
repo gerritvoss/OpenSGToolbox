@@ -22,7 +22,19 @@ SET(${PROJECT_NAME}_REVISION ${RevisionFile})
 ##############################################################################
 
 # dependencies - OpenSG
-SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup OSGTBFileIO OSGFileIO OSGDrawable OSGBase OSGSystem OSGDynamics OSGState OSGText OSGUtil OSGWindow OSGImageFileIO)
+SET(${PROJECT_NAME}_DEP_OSG_LIB OSGGroup
+                                OSGTBFileIO
+                                OSGFileIO
+                                OSGDrawable
+                                OSGBase
+                                OSGSystem
+                                OSGDynamics
+                                OSGState
+                                OSGText
+                                OSGUtil
+                                OSGWindow
+                                OSGImageFileIO)
+
 SET(${PROJECT_NAME}_DEP_TEST_OSG_LIB)
 
 # dependencies - External
@@ -64,6 +76,9 @@ IF(OSG_WITH_LUA)
     OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Manager")
     OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Bindings")
     OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Activities")
+    IF(OSG_WITH_LUA_DEBUGGER)
+        OSG_ADD_DIRECTORY("${CMAKE_CURRENT_SOURCE_DIR}/Debugger")
+    ENDIF(OSG_WITH_LUA_DEBUGGER)
 ENDIF(OSG_WITH_LUA)
 
 #Library def source

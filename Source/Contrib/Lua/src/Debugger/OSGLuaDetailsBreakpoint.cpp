@@ -40,21 +40,20 @@
 //  Includes
 //---------------------------------------------------------------------------
 
-#include <cstdlib>
-#include <cstdio>
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
 
-#include <OSGConfig.h>
+#include "OSGConfig.h"
+#include "OSGLuaDetailsBreakpoint.h"
 
-#include "OSGLuaIntrospectionComponentGenerator.h"
-#include "OSGTree.h"
-#include "OSGLuaUtils.h"
+#ifdef OSG_WITH_LUA_DEBUGGER
 
 OSG_BEGIN_NAMESPACE
 
-// Documentation for this class is emitted in the
-// OSGLuaIntrospectionComponentGeneratorBase.cpp file.
-// To modify it, please change the .fcd file (OSGLuaIntrospectionComponentGenerator.fcd) and
-// regenerate the base file.
+/***************************************************************************\
+ *                            Description                                  *
+\***************************************************************************/
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -64,47 +63,10 @@ OSG_BEGIN_NAMESPACE
  *                           Class methods                                 *
 \***************************************************************************/
 
-void LuaIntrospectionComponentGenerator::initMethod(InitPhase ePhase)
-{
-    Inherited::initMethod(ePhase);
-
-    if(ePhase == TypeObject::SystemPost)
-    {
-    }
-}
-
-
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-ComponentTransitPtr LuaIntrospectionComponentGenerator::getTreeComponent(Tree* const Parent, 
-                                                                         const boost::any& Value, 
-                                                                         bool IsSelected, 
-                                                                         bool Expanded, 
-                                                                         bool Leaf, 
-                                                                         UInt32 Row, 
-                                                                         bool HasFocus)
-{
-    std::string LabelText;
-    try
-    {
-        const lua_details::FieldStack& vecPath(boost::any_cast<lua_details::FieldStack >(Value));
-        if(vecPath.size() > 0)
-        {
-            //Get the text for the label
-            LabelText = vecPath.back().getKey().getValue() +  "   " +
-                vecPath.back().getValue().getValue() + "   [" +
-                vecPath.back().getValue().getTypeName() + "]";
-        }
-    }
-    catch (boost::bad_any_cast &)
-    {
-        //Could not convert to string
-        return ComponentTransitPtr(NULL);
-    }
 
-    return getTreeComponentText(Parent, LabelText, IsSelected, Expanded, Leaf, Row, HasFocus);
-}
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
@@ -112,33 +74,7 @@ ComponentTransitPtr LuaIntrospectionComponentGenerator::getTreeComponent(Tree* c
 
 /*----------------------- constructors & destructors ----------------------*/
 
-LuaIntrospectionComponentGenerator::LuaIntrospectionComponentGenerator(void) :
-    Inherited()
-{
-}
-
-LuaIntrospectionComponentGenerator::LuaIntrospectionComponentGenerator(const LuaIntrospectionComponentGenerator &source) :
-    Inherited(source)
-{
-}
-
-LuaIntrospectionComponentGenerator::~LuaIntrospectionComponentGenerator(void)
-{
-}
-
-/*----------------------------- class specific ----------------------------*/
-
-void LuaIntrospectionComponentGenerator::changed(ConstFieldMaskArg whichField, 
-                            UInt32            origin,
-                            BitVector         details)
-{
-    Inherited::changed(whichField, origin, details);
-}
-
-void LuaIntrospectionComponentGenerator::dump(      UInt32    ,
-                         const BitVector ) const
-{
-    SLOG << "Dump LuaIntrospectionComponentGenerator NI" << std::endl;
-}
-
 OSG_END_NAMESPACE
+
+#endif /* OSG_WITH_LUA_DEBUGGER */
+

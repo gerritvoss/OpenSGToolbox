@@ -136,7 +136,7 @@ void TextField::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
             TheGraphics->drawText(Alignment + Vec2f(TextBottomRight.x(), 0), 
                                   getDrawnText().substr(_TextSelectionStart, _TextSelectionEnd-_TextSelectionStart), getFont(), getSelectionTextColor(), getOpacity()*Opacity);
 
-            //Eraw Text After selection
+            //Draw Text After selection
             getFont()->getBounds(getDrawnText().substr(0, _TextSelectionEnd), TextTopLeft, TextBottomRight);
             TheGraphics->drawText(Alignment + Vec2f(TextBottomRight.x(), 0),
                                   getDrawnText().substr(_TextSelectionEnd, getDrawnText().size()-_TextSelectionEnd), getFont(), TextColor, getOpacity()*Opacity);

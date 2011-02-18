@@ -94,7 +94,7 @@ boost::any LuaIntrospectionTreeModel::getChild(const boost::any& parent, const U
             {
                 lua_details::TableInfo TableData;
                 //Fill 
-                lua_details::list_table(LuaState, -1, TableData);
+                lua_details::listTable(LuaState, -1, TableData);
 
                 lua_pop(LuaState, 1);
 
@@ -139,7 +139,7 @@ UInt32 LuaIntrospectionTreeModel::getChildCount(const boost::any& parent) const
             //Check if the the value is a table
             if(lua_istable(LuaState, -1))
             {
-                UInt32 count(lua_details::get_num_fields(LuaState, -1));
+                UInt32 count(lua_details::getNumFields(LuaState, -1));
 
                 //Pop the table off the stack
                 lua_pop(LuaState, 1);
@@ -176,14 +176,14 @@ UInt32 LuaIntrospectionTreeModel::getIndexOfChild(const boost::any& parent, cons
             {
                 lua_details::TableInfo TableData;
                 //Fill 
-                lua_details::list_table(LuaState, -1, TableData);
+                lua_details::listTable(LuaState, -1, TableData);
 
                 lua_pop(LuaState, 1);
 
                 UInt32 i(0);
                 while(i < TableData.size())
                 {
-                    if(TableData[i].key.value == ChildPath.back().key.value)
+                    if(TableData[i].getKey().getValue() == ChildPath.back().getKey().getValue())
                     {
                         return i;
                     }
@@ -251,7 +251,7 @@ bool LuaIntrospectionTreeModel::isEqual(const boost::any& left, const boost::any
     }
 }
 
-const std::string& LuaIntrospectionTreeModel::getRootLuaPath(void) const
+const std::string LuaIntrospectionTreeModel::getRootLuaPath(void) const
 {
     std::string Path("");
     for(UInt32 i(0) ; i<getMFInternalRoot()->size() ; ++i)
