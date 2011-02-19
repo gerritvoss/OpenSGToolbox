@@ -487,7 +487,7 @@ void TextArea::mousePressed(MouseEventDetails* const e)
 Int32 TextArea::findTextPosition(OSG::Pnt2f Input) const
 {
 	//find row it belongs in
-	Int32 row(0);
+	Int32 row(-1);
 	for(Int32 i = 0; i < _LineContents.size(); ++i)
 	{
 		if(Input.y() >= _LineContents[i]._VerticalOffset)
@@ -495,6 +495,11 @@ Int32 TextArea::findTextPosition(OSG::Pnt2f Input) const
 			row = i;
 		}
 	}
+    if(row < 0)
+    {
+        return 0;
+    }
+
 	//find column it belongs in
 	Int32 column(0);
 	Pnt2f TempTopLeft,  TempBottomRight, TempTopLeft1,  TempBottomRight1;
