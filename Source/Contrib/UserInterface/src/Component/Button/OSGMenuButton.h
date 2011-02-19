@@ -88,6 +88,9 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING MenuButton : public MenuButtonBase
     
     Int32 getSelectionIndex(void) const;
     boost::any getSelectionValue(void) const;
+
+    void setSelectionIndex(Int32 Index);
+    UInt32 getNumItems(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

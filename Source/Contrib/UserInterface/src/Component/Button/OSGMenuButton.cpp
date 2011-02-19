@@ -135,6 +135,22 @@ boost::any MenuButton::getSelectionValue(void) const
     }
 }
 
+void MenuButton::setSelectionIndex(Int32 Index)
+{
+    if(getMenuButtonPopupMenu() != NULL)
+    {
+        getMenuButtonPopupMenu()->setSelection(Index);
+    }
+}
+
+UInt32 MenuButton::getNumItems(void) const
+{
+    if(getMenuButtonPopupMenu() != NULL)
+    {
+        return getMenuButtonPopupMenu()->getNumItems();
+    }
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
