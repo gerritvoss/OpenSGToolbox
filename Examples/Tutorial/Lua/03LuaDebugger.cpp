@@ -29,10 +29,13 @@
 #include "OSGUIDrawingSurface.h"
 #include "OSGGraphics2D.h"
 #include "OSGLookAndFeelManager.h"
+#include "OSGTextEditor.h"
+#include "OSGTextDomArea.h"
 #include "OSGAdvancedTextDomArea.h"
 
 #include "OSGLayers.h"
 #include "OSGButton.h"
+#include "OSGMenuButton.h"
 #include "OSGPanel.h"
 #include "OSGLineBorder.h"
 #include "OSGFlowLayout.h"
@@ -46,10 +49,11 @@
 #include "OSGLabel.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
-#include "OSGAdvancedTextDomArea.h"
 #include "OSGDocument.h"
 #include "OSGTextDomLayoutManager.h"
 #include "OSGGlyphView.h"
+#include "OSGFunctorListComponentGenerator.h"
+#include "OSGDefaultListModel.h"
 
 #include <boost/filesystem.hpp>
 #include <boost/lexical_cast.hpp>
@@ -82,21 +86,6 @@ LuaManager* TheLuaManager(LuaManager::the());
 void display(SimpleSceneManager *mgr);
 void reshape(Vec2f Size, SimpleSceneManager *mgr);
 
-//Ctrl+q handler
-void keyTyped(KeyEventDetails* const details)
-{
-    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() &
-       KeyEventDetails::KEY_MODIFIER_COMMAND)
-    {
-        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
-    }
-    //if(details->getKey() == KeyEventDetails::KEY_E && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
-    //{
-        //clearError();
-        //TheLuaManager->runScript(CodeTextArea->getText());
-    //}
-}
-
 class LuaDebuggerInterface
 {
   public:
@@ -105,6 +94,14 @@ class LuaDebuggerInterface
     Panel* getButtonPanel(void) const;
     SplitPanel* getMainSplitPanel(void) const;
     Panel* getCodeAreaInfoPanel(void) const;
+
+    void clearError(void);
+    void executeScriptButtonAction(void);
+    void clearScriptButtonAction(void);
+    void saveScriptButtonAction(void);
+    void openScriptButtonAction(void);
+    void toggleEditorSplit(void);
+    void handleSplitMenuAction(ActionEventDetails* const details);
 
   private:
     PanelRefPtr _Toolbars;
@@ -123,7 +120,9 @@ class LuaDebuggerInterface
     ButtonRecPtr _StepOverButton;
     Vec2f        _ToolButtonSize;
 
-    AdvancedTextDomAreaRefPtr _CodeTextArea;
+    MenuButtonRefPtr _SplitButton;
+
+    TextEditorRefPtr _CodeTextArea;
     TextAreaRefPtr _ErrorTextArea;
     TextAreaRefPtr _MessageTextArea;
     TextAreaRefPtr _StackTraceTextArea;
@@ -145,21 +144,18 @@ class LuaDebuggerInterface
 
     void createCodeEditor(void);
 
-    void clearError(void);
-
-    void executeScriptButtonAction(ActionEventDetails* const details);
-
-    void clearScriptButtonAction(ActionEventDetails* const details);
-
-    void saveScriptButtonAction(ActionEventDetails* const details);
-
-    void openScriptButtonAction(ActionEventDetails* const details);
-
     void handlLuaError(LuaErrorEventDetails* const details);
 
     void codeAreaCaretChanged(CaretEventDetails* const details);
 
     void handleCodeAreaMouseClicked(MouseEventDetails* const details);
+
+    ComponentTransitPtr generateSplitOptionListComponent(List* const Parent,
+                                                         const boost::any& Value,
+                                                         UInt32 Index,
+                                                         bool IsSelected,
+                                                         bool HasFocus);
+
 
 #ifdef OSG_WITH_LUA_DEBUGGER
 
@@ -173,6 +169,10 @@ class LuaDebuggerInterface
 
 #endif
 };
+
+//Ctrl+q handler
+void keyTyped(KeyEventDetails* const details,
+              LuaDebuggerInterface* const TheLuaDebuggerInterface);
 
 int main(int argc, char **argv)
 {
@@ -193,8 +193,6 @@ int main(int argc, char **argv)
 
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
-
-        TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1));
 
         //Setup the Lua Manager
 
@@ -320,6 +318,10 @@ int main(int argc, char **argv)
         TutorialViewport->addForeground(TutorialUIForeground);
         TutorialViewport->setBackground(SceneBackground);
 
+        TutorialWindow->connectKeyTyped(boost::bind(keyTyped,
+                                                    _1,
+                                                    &TheLuaDebuggerInterface));
+
         // Show the whole Scene
         sceneManager.showAll();
 
@@ -346,7 +348,6 @@ int main(int argc, char **argv)
 }
 
 // Callback functions
-
 
 // Redraw the window
 void display(SimpleSceneManager *mgr)
@@ -503,7 +504,7 @@ void LuaDebuggerInterface::createExecutionToolbar(void)
     _ExecuteButton->setDisabledImage(ExecuteDisabledIconPath.string());
     _ExecuteButton->setAlignment(Vec2f(0.5f,0.5f));
     _ExecuteButton->setToolTipText("Execute");
-    _ExecuteButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::executeScriptButtonAction,this, _1));
+    _ExecuteButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::executeScriptButtonAction,this));
 
     //Step Into Button
     BoostPath StepInIconPath(_BaseIconDir / BoostPath("basicstepinto.png"));
@@ -611,30 +612,18 @@ void LuaDebuggerInterface::createCodeEditor(void)
     _CodeFont->setAntiAliasing(false);
 
     // Create a TextArea component
-    _CodeTextArea = AdvancedTextDomArea::create();
-    //_CodeTextArea->setWrapStyleWord(false);
-    //_CodeTextArea->setPreferredSize(Vec2f(600, 400));
-    _CodeTextArea->getTheTextDomArea()->setFont(_CodeFont);
-    _CodeTextArea->setGutterWidth(50.0f);
-    ColorLayerRefPtr TextDomBg = ColorLayer::create();
-    TextDomBg->setColor(Color4f(0.95f,0.95f,0.95f,1.0f));
-    _CodeTextArea->setBackgrounds(TextDomBg);
-    //_CodeTextArea->clear();
+    _CodeTextArea = TextEditor::create();
+    _CodeTextArea->setIsSplit(false);
+    _CodeTextArea->setClipboardVisible(false);
+    //_CodeTextArea->getTextDomArea()->setFont(_CodeFont);
+    //_CodeTextArea->setGutterWidth(50.0f);
     _CodeTextArea->setText(createDefaultCodeText());
 
     //_CodeTextArea->connectCaretChanged(boost::bind(&LuaDebuggerInterface::codeAreaCaretChanged,this, _1));
     //_CodeTextArea->connectMouseClicked(boost::bind(&LuaDebuggerInterface::handleCodeAreaMouseClicked,this, _1));
 
-    // Create a ScrollPanel
-    ScrollPanelRefPtr TextAreaScrollPanel = ScrollPanel::create();
-    TextAreaScrollPanel->setPreferredSize(Vec2f(200,600));
-    TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    // Add the TextArea to the ScrollPanel so it is displayed
-    TextAreaScrollPanel->setViewComponent(_CodeTextArea);
-
-
     _MainSplitPanel = SplitPanel::create();
-    _MainSplitPanel->setMinComponent(TextAreaScrollPanel);
+    _MainSplitPanel->setMinComponent(_CodeTextArea);
     _MainSplitPanel->setMaxComponent(_InfoTabPanel);
     _MainSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
     _MainSplitPanel->setDividerPosition(0.7);
@@ -704,7 +693,7 @@ void LuaDebuggerInterface::createEditorToolbar(void)
     OpenButton->setPreferredSize(_ToolButtonSize);
     OpenButton->setImages(OpenIconPath.string());
     setName(OpenButton,"Open Button");
-    OpenButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::openScriptButtonAction,this, _1));
+    OpenButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::openScriptButtonAction,this));
 
     BoostPath SaveIconPath(_BaseIconDir / BoostPath("Save.png"));
     ButtonRefPtr SaveButton = Button::create();
@@ -712,7 +701,7 @@ void LuaDebuggerInterface::createEditorToolbar(void)
     SaveButton->setToolTipText("Save");
     setName(SaveButton,"Save Button");
     SaveButton->setImages(SaveIconPath.string());
-    SaveButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::saveScriptButtonAction,this, _1));
+    SaveButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::saveScriptButtonAction,this));
 
     BoostPath ClearIconPath(_BaseIconDir / BoostPath("clear.png"));
     ButtonRefPtr ClearButton = Button::create();
@@ -720,7 +709,38 @@ void LuaDebuggerInterface::createEditorToolbar(void)
     ClearButton->setToolTipText("Clear");
     setName(ClearButton,"Clear Button");
     ClearButton->setImages(ClearIconPath.string());
-    ClearButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::clearScriptButtonAction,this, _1));
+    ClearButton->connectActionPerformed(boost::bind(&LuaDebuggerInterface::clearScriptButtonAction,this));
+
+
+
+    BoostPath SplitHorzIconPath(_BaseIconDir / BoostPath("view-split-left-right.png"));
+    BoostPath SplitVertIconPath(_BaseIconDir / BoostPath("view-split-top-bottom.png"));
+    BoostPath SplitNoneIconPath(_BaseIconDir / BoostPath("view-split-none.png"));
+
+    //Split Options Component Generator
+    FunctorListComponentGeneratorRecPtr SplitOptionsCompGenerator =
+        FunctorListComponentGenerator::create();
+
+    SplitOptionsCompGenerator->setGenerateFunction(boost::bind(&LuaDebuggerInterface::generateSplitOptionListComponent,
+                                                               this,
+                                                               _1, _2, _3, _4, _5));
+
+    //Split Options List Model
+    DefaultListModelRecPtr SplitOptionsListModel = DefaultListModel::create();
+    SplitOptionsListModel->pushBack(boost::any(std::string("None")));
+    SplitOptionsListModel->pushBack(boost::any(std::string("Horizontal")));
+    SplitOptionsListModel->pushBack(boost::any(std::string("Vertical")));
+
+    _SplitButton = MenuButton::create();
+    _SplitButton->setToolTipText("Split Options");
+    _SplitButton->setPreferredSize(_ToolButtonSize);
+    _SplitButton->setImages(SplitNoneIconPath.string());
+    _SplitButton->setModel(SplitOptionsListModel);
+    _SplitButton->setCellGenerator(SplitOptionsCompGenerator);
+    setName(_SplitButton,"Split Button");
+    _SplitButton->connectMenuActionPerformed(boost::bind(&LuaDebuggerInterface::handleSplitMenuAction,
+                                                         this,
+                                                         _1));
 
     //Make the Button Panel
     FlowLayoutRefPtr ButtonPanelLayout = FlowLayout::create();
@@ -734,6 +754,7 @@ void LuaDebuggerInterface::createEditorToolbar(void)
     _EditorButtonPanel->pushToChildren(OpenButton);
     _EditorButtonPanel->pushToChildren(SaveButton);
     _EditorButtonPanel->pushToChildren(ClearButton);
+    _EditorButtonPanel->pushToChildren(_SplitButton);
     _EditorButtonPanel->setLayout(ButtonPanelLayout);
     setName(_EditorButtonPanel,"Button Panel");
 }
@@ -744,27 +765,27 @@ void LuaDebuggerInterface::clearError(void)
     _StackTraceTextArea->setText("");
 }
 
-void LuaDebuggerInterface::executeScriptButtonAction(ActionEventDetails* const details)
+void LuaDebuggerInterface::executeScriptButtonAction(void)
 {
     clearError();
     TheLuaManager->runScript(_CodeTextArea->getText());
 }
 
 
-void LuaDebuggerInterface::clearScriptButtonAction(ActionEventDetails* const details)
+void LuaDebuggerInterface::clearScriptButtonAction(void)
 {
     _CodeTextArea->clear();
     clearError();
 }
 
 
-void LuaDebuggerInterface::saveScriptButtonAction(ActionEventDetails* const details)
+void LuaDebuggerInterface::saveScriptButtonAction(void)
 {
     std::vector<WindowEventProducer::FileDialogFilter> Filters;
     Filters.push_back(WindowEventProducer::FileDialogFilter("Lua File Type","lua"));
     Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
-    BoostPath SavePath = dynamic_cast<Component*>(details->getSource())->
+    BoostPath SavePath = _CodeTextArea->
         getParentWindow()->
         getParentDrawingSurface()->
         getEventProducer()->
@@ -784,7 +805,7 @@ void LuaDebuggerInterface::saveScriptButtonAction(ActionEventDetails* const deta
 }
 
 
-void LuaDebuggerInterface::openScriptButtonAction(ActionEventDetails* const details)
+void LuaDebuggerInterface::openScriptButtonAction(void)
 {
     //Get a file using the open file dialog
     std::vector<WindowEventProducer::FileDialogFilter> Filters;
@@ -792,30 +813,24 @@ void LuaDebuggerInterface::openScriptButtonAction(ActionEventDetails* const deta
     Filters.push_back(WindowEventProducer::FileDialogFilter("All","*"));
 
     std::vector<BoostPath> FilesToOpen;
-    FilesToOpen = dynamic_cast<Component*>(details->getSource())->
+    FilesToOpen = _CodeTextArea->
         getParentWindow()->
         getParentDrawingSurface()->
         getEventProducer()->
         openFileDialog("Open Lua Script File.",
                        Filters,
                        BoostPath("Data"),
-                       false);
+                       true);
 
-    //Try to open the file
-    if(FilesToOpen.size() > 0 &&
-       boost::filesystem::exists(FilesToOpen.front()))
+    //Try to open the files
+    for(UInt32 i = 0; i < FilesToOpen.size(); ++i)
     {
-        std::ifstream InFile(FilesToOpen.front().string().c_str());
-        if(InFile)
+        if(boost::filesystem::exists(FilesToOpen[i]))
         {
-            std::ostringstream InStrStream;
-            InStrStream << InFile.rdbuf();
-            InFile.close();
-            //Set the Text of the TextArea to the text of the file
-            _CodeTextArea->setText(InStrStream.str());
-            clearError();
+            _CodeTextArea->loadFile(FilesToOpen[i]);
         }
     }
+    clearError();
 }
 
 void LuaDebuggerInterface::handlLuaError(LuaErrorEventDetails* const details)
@@ -987,5 +1002,131 @@ SplitPanel* LuaDebuggerInterface::getMainSplitPanel(void) const
 Panel* LuaDebuggerInterface::getCodeAreaInfoPanel(void) const
 {
     return _CodeAreaInfoPanel;
+}
+
+void LuaDebuggerInterface::handleSplitMenuAction(ActionEventDetails* const details)
+{
+    try
+    {
+        std::string ValueString = boost::any_cast<std::string>(_SplitButton->getSelectionValue());
+
+        BoostPath IconPath;
+        if(ValueString.compare("Horizontal") == 0)
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-left-right.png"));
+            _CodeTextArea->setIsSplit(true);
+            _CodeTextArea->setSplitOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
+        }
+        else if(ValueString.compare("Vertical") == 0)
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-top-bottom.png"));
+            _CodeTextArea->setIsSplit(true);
+            _CodeTextArea->setSplitOrientation(SplitPanel::VERTICAL_ORIENTATION);
+        }
+        else
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-none.png"));
+            _CodeTextArea->setIsSplit(false);
+        }
+
+        _SplitButton->setImages(IconPath.string());
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
+}
+
+void LuaDebuggerInterface::toggleEditorSplit(void)
+{
+    Int32 SelectedIndex(_SplitButton->getSelectionIndex());
+    if(SelectedIndex < 0)
+    {
+        SelectedIndex = 0;
+    }
+    else
+    {
+        SelectedIndex = (SelectedIndex + 1) % _SplitButton->getNumItems();
+    }
+    _SplitButton->setSelectionIndex(SelectedIndex);
+}
+
+void keyTyped(KeyEventDetails* const details,
+              LuaDebuggerInterface* const TheLuaDebuggerInterface)
+{
+    if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        switch(details->getKey())
+        {
+            case KeyEventDetails::KEY_T:
+                TheLuaDebuggerInterface->toggleEditorSplit();
+                break;
+            case KeyEventDetails::KEY_S:
+                TheLuaDebuggerInterface->saveScriptButtonAction();
+                break;
+            case KeyEventDetails::KEY_O:
+                TheLuaDebuggerInterface->openScriptButtonAction();
+                break;
+            case KeyEventDetails::KEY_E:
+                TheLuaDebuggerInterface->executeScriptButtonAction();
+                break;
+            case KeyEventDetails::KEY_Q:
+                dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
+                break;
+        }
+    }
+}
+
+ComponentTransitPtr LuaDebuggerInterface::generateSplitOptionListComponent(List* const Parent,
+                                                     const boost::any& Value,
+                                                     UInt32 Index,
+                                                     bool IsSelected,
+                                                     bool HasFocus)
+{
+    ButtonRecPtr TheComponent = Button::create();
+    TheComponent->setBackgrounds(NULL);
+    TheComponent->setAlignment(Vec2f(0.0f,0.5f));
+
+    std::string ValueString;
+    try
+    {
+        ValueString = boost::any_cast<std::string>(Value);
+
+        BoostPath IconPath;
+        if(ValueString.compare("Horizontal") == 0)
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-left-right.png"));
+        }
+        else if(ValueString.compare("Vertical") == 0)
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-top-bottom.png"));
+        }
+        else
+        {
+            IconPath = BoostPath(_BaseIconDir / BoostPath("view-split-none.png"));
+        }
+
+        TheComponent->setImages(IconPath.string());
+    }
+    catch (boost::bad_lexical_cast &)
+    {
+        //Could not convert to string
+    }
+
+    TheComponent->setText(ValueString);
+
+    if(IsSelected)
+    {
+        LineBorderRecPtr LabelBorder = LineBorder::create();
+        LabelBorder->setWidth(1.0f);
+        LabelBorder->setColor(Color4f(0.0f,0.0f,0.0f,1.0f));
+        TheComponent->setBorders(LabelBorder);
+    }
+    else
+    {
+        TheComponent->setBorders(NULL);
+    }
+
+    return ComponentTransitPtr(TheComponent);
 }
 

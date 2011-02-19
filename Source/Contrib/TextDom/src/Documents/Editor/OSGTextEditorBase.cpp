@@ -55,12 +55,12 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 
 
 
-#include "OpenSG/OSGAdvancedTextDomArea.h" // AdvancedTextDomAreas Class
-#include "OpenSG/OSGTextDomArea.h"      // FocusedDomArea Class
+#include "OSGAdvancedTextDomArea.h"     // AdvancedTextDomAreas Class
+#include "OSGTextDomArea.h"             // FocusedDomArea Class
 
 #include "OSGTextEditorBase.h"
 #include "OSGTextEditor.h"
@@ -207,8 +207,8 @@ TextEditorBase::TypeObject TextEditorBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "    isNodeCore=\"false\"\n"

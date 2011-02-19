@@ -4,8 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
- *          David Kabala (djkabala@gmail.com)                                *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -38,21 +38,7 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-#include "OSGSplitPanel.h"
-#include "OSGUIDrawObjectCanvas.h"
 
 OSG_BEGIN_NAMESPACE
-
-inline
-void TextEditor::setSplitOrientation(UInt32 Orientation)
-{
-    _InsideDomArea->setOrientation(Orientation);
-}
-
-inline
-UInt32 TextEditor::getSplitOrientation(void) const
-{
-    return _InsideDomArea->getOrientation();
-}
 
 OSG_END_NAMESPACE

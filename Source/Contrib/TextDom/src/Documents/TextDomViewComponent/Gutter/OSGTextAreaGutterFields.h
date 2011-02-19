@@ -6,8 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
- *          David Kabala (djkabala@gmail.com)                                *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -49,8 +49,8 @@
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTEDITORFIELDS_H_
-#define _OSGTEXTEDITORFIELDS_H_
+#ifndef _OSGTEXTAREAGUTTERFIELDS_H_
+#define _OSGTEXTAREAGUTTERFIELDS_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -65,16 +65,16 @@
 
 OSG_BEGIN_NAMESPACE
 
-class TextEditor;
+class TextAreaGutter;
 
-OSG_GEN_CONTAINERPTR(TextEditor);
+OSG_GEN_CONTAINERPTR(TextAreaGutter);
 
 /*! \ingroup GrpContribTextDomFieldTraits
     \ingroup GrpLibOSGContribTextDom
  */
 template <>
-struct FieldTraits<TextEditor *> :
-    public FieldTraitsFCPtrBase<TextEditor *>
+struct FieldTraits<TextAreaGutter *> :
+    public FieldTraitsFCPtrBase<TextAreaGutter *>
 {
   private:
 
@@ -82,7 +82,7 @@ struct FieldTraits<TextEditor *> :
 
   public:
 
-    typedef FieldTraits<TextEditor *>  Self;
+    typedef FieldTraits<TextAreaGutter *>  Self;
 
     enum                        { Convertible = NotConvertible };
 
@@ -91,89 +91,89 @@ struct FieldTraits<TextEditor *> :
     template<typename RefCountPolicy> inline
     static const Char8    *getSName     (void);
 
-//    static const char *getSName(void) { return "SFTextEditorPtr"; }
+//    static const char *getSName(void) { return "SFTextAreaGutterPtr"; }
     template<typename RefCountPolicy> inline
     static const Char8    *getMName     (void);
 
-//    static const char *getMName(void) { return "MFTextEditorPtr"; }
+//    static const char *getMName(void) { return "MFTextAreaGutterPtr"; }
 };
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getSName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getSName<RecordedRefCountPolicy>(void)
 {
-    return "SFRecTextEditorPtr"; 
+    return "SFRecTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getSName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getSName<UnrecordedRefCountPolicy>(void)
 {
-    return "SFUnrecTextEditorPtr"; 
+    return "SFUnrecTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getSName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getSName<WeakRefCountPolicy>(void)
 {
-    return "SFWeakTextEditorPtr"; 
+    return "SFWeakTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getSName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getSName<NoRefCountPolicy>(void)
 {
-    return "SFUnrefdTextEditorPtr"; 
+    return "SFUnrefdTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getMName<RecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getMName<RecordedRefCountPolicy>(void)
 {
-    return "MFRecTextEditorPtr"; 
+    return "MFRecTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getMName<UnrecordedRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getMName<UnrecordedRefCountPolicy>(void)
 {
-    return "MFUnrecTextEditorPtr"; 
+    return "MFUnrecTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getMName<WeakRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getMName<WeakRefCountPolicy>(void)
 {
-    return "MFWeakTextEditorPtr"; 
+    return "MFWeakTextAreaGutterPtr"; 
 }
 
 template<> inline
-const Char8 *FieldTraits<TextEditor *, 0>::getMName<NoRefCountPolicy>(void)
+const Char8 *FieldTraits<TextAreaGutter *, 0>::getMName<NoRefCountPolicy>(void)
 {
-    return "MFUnrefdTextEditorPtr"; 
+    return "MFUnrefdTextAreaGutterPtr"; 
 }
 
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextEditor *,
-                      RecordedRefCountPolicy  > SFRecTextEditorPtr;
+typedef PointerSField<TextAreaGutter *,
+                      RecordedRefCountPolicy  > SFRecTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextEditor *,
-                      UnrecordedRefCountPolicy> SFUnrecTextEditorPtr;
+typedef PointerSField<TextAreaGutter *,
+                      UnrecordedRefCountPolicy> SFUnrecTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextEditor *,
-                      WeakRefCountPolicy      > SFWeakTextEditorPtr;
+typedef PointerSField<TextAreaGutter *,
+                      WeakRefCountPolicy      > SFWeakTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldSFields */
-typedef PointerSField<TextEditor *,
-                      NoRefCountPolicy        > SFUncountedTextEditorPtr;
+typedef PointerSField<TextAreaGutter *,
+                      NoRefCountPolicy        > SFUncountedTextAreaGutterPtr;
 
 
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextEditor *,
-                      RecordedRefCountPolicy  > MFRecTextEditorPtr;
+typedef PointerMField<TextAreaGutter *,
+                      RecordedRefCountPolicy  > MFRecTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextEditor *,
-                      UnrecordedRefCountPolicy> MFUnrecTextEditorPtr;
+typedef PointerMField<TextAreaGutter *,
+                      UnrecordedRefCountPolicy> MFUnrecTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextEditor *,
-                      WeakRefCountPolicy      > MFWeakTextEditorPtr;
+typedef PointerMField<TextAreaGutter *,
+                      WeakRefCountPolicy      > MFWeakTextAreaGutterPtr;
 /*! \ingroup GrpContribTextDomFieldMFields */
-typedef PointerMField<TextEditor *,
-                      NoRefCountPolicy        > MFUncountedTextEditorPtr;
+typedef PointerMField<TextAreaGutter *,
+                      NoRefCountPolicy        > MFUncountedTextAreaGutterPtr;
 
 
 
@@ -181,38 +181,38 @@ typedef PointerMField<TextEditor *,
 #else // these are the doxygen hacks
 
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFRecTextEditorPtr : 
-    public PointerSField<TextEditor *,
+struct SFRecTextAreaGutterPtr : 
+    public PointerSField<TextAreaGutter *,
                          RecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUnrecTextEditorPtr : 
-    public PointerSField<TextEditor *,
+struct SFUnrecTextAreaGutterPtr : 
+    public PointerSField<TextAreaGutter *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFWeakTextEditorPtr :
-    public PointerSField<TextEditor *,
+struct SFWeakTextAreaGutterPtr :
+    public PointerSField<TextAreaGutter *,
                          WeakRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldSFields \ingroup GrpLibOSGContribTextDom */
-struct SFUncountedTextEditorPtr :
-    public PointerSField<TextEditor *,
+struct SFUncountedTextAreaGutterPtr :
+    public PointerSField<TextAreaGutter *,
                          NoRefCountPolicy> {};
 
 
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFRecTextEditorPtr :
-    public PointerMField<TextEditor *,
+struct MFRecTextAreaGutterPtr :
+    public PointerMField<TextAreaGutter *,
                          RecordedRefCountPolicy  > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUnrecTextEditorPtr :
-    public PointerMField<TextEditor *,
+struct MFUnrecTextAreaGutterPtr :
+    public PointerMField<TextAreaGutter *,
                          UnrecordedRefCountPolicy> {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFWeakTextEditorPtr :
-    public PointerMField<TextEditor *,
+struct MFWeakTextAreaGutterPtr :
+    public PointerMField<TextAreaGutter *,
                          WeakRefCountPolicy      > {};
 /*! \ingroup GrpContribTextDomFieldMFields \ingroup GrpLibOSGContribTextDom */
-struct MFUncountedTextEditorPtr :
-    public PointerMField<TextEditor *,
+struct MFUncountedTextAreaGutterPtr :
+    public PointerMField<TextAreaGutter *,
                          NoRefCountPolicy        > {};
 
 
@@ -221,4 +221,4 @@ struct MFUncountedTextEditorPtr :
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTEXTEDITORFIELDS_H_ */
+#endif /* _OSGTEXTAREAGUTTERFIELDS_H_ */

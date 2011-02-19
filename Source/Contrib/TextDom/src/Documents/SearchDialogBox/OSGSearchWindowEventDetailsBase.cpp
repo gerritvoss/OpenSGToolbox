@@ -193,7 +193,7 @@ SearchWindowEventDetailsBase::TypeObject SearchWindowEventDetailsBase::_type(
     "\t\tcardinality=\"single\"\n"
     "\t\tvisibility=\"external\"\n"
     "\t\taccess=\"protected\"\n"
-    "\t\tdefaultValue=\"SearchWindowEvent::DIALOG_OPTION_SEARCH\"\n"
+    "\t\tdefaultValue=\"SearchWindowEventDetails::DIALOG_OPTION_SEARCH\"\n"
     "        publicRead=\"true\"\n"
     "\t>\n"
     "\t</Field>\n"
@@ -462,7 +462,7 @@ FieldContainerTransitPtr SearchWindowEventDetailsBase::shallowCopy(void) const
 
 SearchWindowEventDetailsBase::SearchWindowEventDetailsBase(void) :
     Inherited(),
-    _sfOption                 (UInt8(SearchWindowEvent::DIALOG_OPTION_SEARCH)),
+    _sfOption                 (UInt8(SearchWindowEventDetails::DIALOG_OPTION_SEARCH)),
     _sfSearchText             (),
     _sfReplaceText            ()
 {

@@ -4,6 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
  * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
@@ -35,24 +37,25 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-#include "OSGSplitPanel.h"
-#include "OSGUIDrawObjectCanvas.h"
+#ifndef _OSGTEXTDOMUTILS_COMMAND_H_
+#define _OSGTEXTDOMUTILS_COMMAND_H_
+#ifdef __sgi
+#pragma once
+#endif
+
+#include "OSGConfig.h"
+#include "OSGContribTextDomDef.h"
+#include "OSGBaseTypes.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void TextEditor::setSplitOrientation(UInt32 Orientation)
-{
-    _InsideDomArea->setOrientation(Orientation);
-}
+UChar8 OSG_CONTRIBTEXTDOM_DLLMAPPING getOppositeBraceForEncoding(UChar8 val);
 
-inline
-UInt32 TextEditor::getSplitOrientation(void) const
-{
-    return _InsideDomArea->getOrientation();
-}
+bool OSG_CONTRIBTEXTDOM_DLLMAPPING isStartingBraceForEncoding(UChar8 value);
+bool OSG_CONTRIBTEXTDOM_DLLMAPPING isEndingBraceForEncoding(UChar8 value);
 
 OSG_END_NAMESPACE
+
+#include "OSGTextDomUtils.inl"
+
+#endif /* _OSGTEXTDOMUTILS_COMMAND_H_ */

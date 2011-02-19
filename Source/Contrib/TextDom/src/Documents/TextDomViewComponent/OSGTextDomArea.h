@@ -164,9 +164,71 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
     void handleDocumentModelChanged(void);
     void handlePastingAString(const std::string& theClipboard);
 
-    UInt32 getTopmostVisibleLineNumber(void) const;
-    UInt32 getLinesToBeDisplayed(void) const;
-    Real32 getHeightOfLine(void) const;
+    /*!
+     * \brief Get the line number of the lowest index line that is currently
+     * visible.
+     *
+     * The lines that are visible are determined by the clipping bounds of this
+     * component
+     */
+    UInt32 getMinVisibleLineNumber(void) const;
+
+    /*!
+     * \brief Get the line number of the highest index line that is currently
+     * visible.
+     *
+     * The lines that are visible are determined by the clipping bounds of this
+     * component
+     */
+    UInt32 getMaxVisibleLineNumber(void) const;
+
+    /*!
+     * \brief Get the number of lines in the OSG::Document.  This does not includes
+     * lines that are a result of line wrapping.
+     */
+    UInt32 getNumDocumentLines(void) const;
+
+    /*!
+     * \brief Get the number of lines.  This includes lines that are a result of
+     * line wrapping.
+     */
+    UInt32 getNumLines(void) const;
+
+    /*!
+     * \brief Get the document line number that corresponds to the given line
+     * number in this TextDomArea
+     *
+     * \param[in] LineNum The line number
+     */
+    UInt32 getDocumentLineNum(UInt32 LineNum) const;
+
+    /*!
+     * \brief Get the height of the line.
+     *
+     * \param[in] LineNum The line number to get the height of
+     *
+     * \returns The height of the line
+     */
+    Real32 getLineHeight(UInt32 LineNum) const;
+
+    /*!
+     * \brief Get the vertical position of a line
+     *
+     * \param[in] LineNum The line number
+     */
+    Real32 getLineVerticalPosition(UInt32 LineNum) const;
+
+    /*!
+     * \brief Is the given line the result of line wrapping.
+     *
+     * If a line of text is not wrapped, then the result will be false. If the
+     * line of text is wrapped, then the first wrapped line will be false and
+     * all subsequent lines will be true
+     *
+     * \param[in] LineNum The line number
+     */
+    bool isWrappedLine(UInt32 LineNum) const;
+
     void tabHandler(bool isShiftPressed);
 
     bool searchForStringInDocumentUsingRegEx(const std::string& stringToBeLookedFor,
@@ -305,6 +367,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextDomArea : public TextDomAreaBase
 typedef TextDomArea *TextDomAreaP;
 
 OSG_END_NAMESPACE
+
+#include "OSGGlyphView.h"
 
 #include "OSGTextDomAreaBase.inl"
 #include "OSGTextDomArea.inl"

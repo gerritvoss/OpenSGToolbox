@@ -224,6 +224,8 @@ typedef PlainDocument *PlainDocumentP;
 
 OSG_END_NAMESPACE
 
+#include "OSGElement.h"
+
 #include "OSGPlainDocumentBase.inl"
 #include "OSGPlainDocument.inl"
 

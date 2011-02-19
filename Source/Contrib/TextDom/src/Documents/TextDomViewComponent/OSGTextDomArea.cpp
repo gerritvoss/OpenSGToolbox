@@ -108,31 +108,6 @@ void TextDomArea::loadFile(const BoostPath& pathOfFile)
     }
 }
 
-void TextDomArea::saveFile(const BoostPath& pathOfFile)
-{
-    TextFileHandler::the()->forceWrite(getDocumentModel(),pathOfFile);
-}
-
-UInt32 TextDomArea::getTopmostVisibleLineNumber(void) const
-{
-    return getLayoutManager()->getTopmostVisibleLineNumber();
-}
-
-UInt32 TextDomArea::getLinesToBeDisplayed(void) const
-{
-    return getLayoutManager()->getLinesToBeDisplayed();
-}
-
-Real32 TextDomArea::getHeightOfLine(void) const
-{
-    return getLayoutManager()->getHeightOfLine();
-}
-
-std::string TextDomArea::getText(void) const
-{
-    return getDocumentModel()->getText(0,-1);
-}
-
 void TextDomArea::clear(void) 
 {
     getLayoutManager()->selectAll();
@@ -490,142 +465,103 @@ bool TextDomArea::searchForStringInDocumentUsingRegEx(const std::string& stringT
 void TextDomArea::keyTyped(KeyEventDetails* const details)
 {
 
-    DocumentElementAttribute temp;
-    _CurrentCaretBlinkElps=0.0f;
-
-    getLayoutManager()->removeBracesHighlightIndices();
-
-    switch(details->getKey())
+    if(!(details->getModifiers() &
+         ( KeyEventDetails::KEY_MODIFIER_ALT |
+           KeyEventDetails::KEY_MODIFIER_CONTROL |
+           KeyEventDetails::KEY_MODIFIER_META )))
     {
-        case KeyEventDetails::KEY_UP:
-            getLayoutManager()->moveTheCaret(UP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_DOWN:
-            getLayoutManager()->moveTheCaret(DOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_LEFT:
-            getLayoutManager()->moveTheCaret(LEFT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_RIGHT:
-            getLayoutManager()->moveTheCaret(RIGHT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_PAGE_UP:
-            getLayoutManager()->moveTheCaret(PAGEUP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_PAGE_DOWN:
-            getLayoutManager()->moveTheCaret(PAGEDOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_BACK_SPACE:
-            if(getEditable() && getEnabled())
-            {
-                if(getLayoutManager()->isSomethingSelected())
+        DocumentElementAttribute temp;
+        _CurrentCaretBlinkElps=0.0f;
+
+        getLayoutManager()->removeBracesHighlightIndices();
+
+        switch(details->getKey())
+        {
+            case KeyEventDetails::KEY_UP:
+                getLayoutManager()->moveTheCaret(UP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_DOWN:
+                getLayoutManager()->moveTheCaret(DOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_LEFT:
+                getLayoutManager()->moveTheCaret(LEFT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_RIGHT:
+                getLayoutManager()->moveTheCaret(RIGHT,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_PAGE_UP:
+                getLayoutManager()->moveTheCaret(PAGEUP,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_PAGE_DOWN:
+                getLayoutManager()->moveTheCaret(PAGEDOWN,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_BACK_SPACE:
+                if(getEditable() && getEnabled())
                 {
-                    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-                }
-                else
-                {
-                    if(getLayoutManager()->getCaretLine()!=0 || getLayoutManager()->getCaretIndex()!=0)
+                    if(getLayoutManager()->isSomethingSelected())
                     {
-                        getLayoutManager()->moveTheCaret(LEFT,false,false);
+                        deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+                    }
+                    else
+                    {
+                        if(getLayoutManager()->getCaretLine()!=0 || getLayoutManager()->getCaretIndex()!=0)
+                        {
+                            getLayoutManager()->moveTheCaret(LEFT,false,false);
+                            deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
+                        }
+                    }
+                    highlightIfNextCharacterIsABrace();
+                }
+                break;
+            case KeyEventDetails::KEY_DELETE:
+                if(getEditable() && getEnabled())
+                {
+                    if(getLayoutManager()->isSomethingSelected())
+                    {
+                        deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
+                    }
+                    else
+                    {
                         deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
                     }
+                    highlightIfNextCharacterIsABrace();
                 }
-                highlightIfNextCharacterIsABrace();
-            }
-            break;
-        case KeyEventDetails::KEY_DELETE:
-            if(getEditable() && getEnabled())
-            {
-                if(getLayoutManager()->isSomethingSelected())
+                break;
+            case KeyEventDetails::KEY_ENTER:
+                if(getEditable() && getEnabled())
                 {
-                    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-                }
-                else
-                {
-                    deleteCharacterUsingCommandManager();//getDocumentModel()->deleteCharacter(getLayoutManager()->getCaretLine(),getLayoutManager()->getCaretIndex());
-                }
-                highlightIfNextCharacterIsABrace();
-            }
-            break;
-        case KeyEventDetails::KEY_ENTER:
-            if(getEditable() && getEnabled())
-            {
-                if(getLayoutManager()->isSomethingSelected())
-                {
-                    deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
-                }
-                insertCharacterUsingCommandManager('\n',-1,-1);
-                highlightIfNextCharacterIsABrace();
-            }
-            break;
-        case KeyEventDetails::KEY_HOME:
-            getLayoutManager()->moveTheCaret(HOME,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_END:
-            getLayoutManager()->moveTheCaret(END,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL));
-            highlightIfNextCharacterIsABrace();
-            break;
-        case KeyEventDetails::KEY_TAB:
-            if(getEditable() && getEnabled())
-            {
-                tabHandler(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT);
-                highlightIfNextCharacterIsABrace();
-            }
-            break;
-        default:
-            if(isPrintableChar(details->getKeyChar()) || details->getKey() == KeyEventDetails::KEY_SPACE)
-            {
-                if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL)
-                {
-                    switch(details->getKey())
+                    if(getLayoutManager()->isSomethingSelected())
                     {
-
-                        case KeyEventDetails::KEY_A:
-                            getLayoutManager()->selectAll();
-                            break;
-                        case KeyEventDetails::KEY_C:
-                            {
-                                std::string stringToTheClipboard = getHighlightedString();
-                                getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(stringToTheClipboard);
-                                break;
-                            }
-                        case KeyEventDetails::KEY_V:
-                            {
-                                if(getEditable() && getEnabled())
-                                {
-                                    std::string theClipboard = getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard();
-                                    handlePastingAString(theClipboard);
-                                }
-                                break;
-                            }
-                        case KeyEventDetails::KEY_Z:
-                            if(getEditable() && getEnabled())
-                            {
-                                if(_TheUndoManager->canUndo())
-                                {
-                                    _TheUndoManager->undo();
-                                }
-                            }
-                            break;
-                        case KeyEventDetails::KEY_Y:
-                            if(getEditable() && getEnabled())
-                            {
-                                if(_TheUndoManager->canRedo())
-                                {
-                                    _TheUndoManager->redo();
-                                }
-                            }
-                            break;
+                        deleteSelectedUsingCommandManager();//getLayoutManager()->deleteSelected();
                     }
+                    insertCharacterUsingCommandManager('\n',-1,-1);
+                    highlightIfNextCharacterIsABrace();
                 }
-                else
+                break;
+            case KeyEventDetails::KEY_HOME:
+                getLayoutManager()->moveTheCaret(HOME,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_END:
+                getLayoutManager()->moveTheCaret(END,(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT),(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND));
+                highlightIfNextCharacterIsABrace();
+                break;
+            case KeyEventDetails::KEY_TAB:
+                if(getEditable() && getEnabled())
+                {
+                    tabHandler(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_SHIFT);
+                    highlightIfNextCharacterIsABrace();
+                }
+                break;
+            default:
+                if(isPrintableChar(details->getKeyChar()) ||
+                   details->getKey() == KeyEventDetails::KEY_SPACE)
                 {
                     if(getEditable() && getEnabled())
                     {
@@ -650,10 +586,53 @@ void TextDomArea::keyTyped(KeyEventDetails* const details)
                           getLayoutManager()->DoIfLineLongerThanPreferredSize();*/
                     }
                 }
-            }
-            break;
+                break;
+        }
+        getLayoutManager()->DoIfLineLongerThanPreferredSize();
     }
-    getLayoutManager()->DoIfLineLongerThanPreferredSize();
+    else if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    {
+        switch(details->getKey())
+        {
+
+            case KeyEventDetails::KEY_A:
+                getLayoutManager()->selectAll();
+                break;
+            case KeyEventDetails::KEY_C:
+                {
+                    std::string stringToTheClipboard = getHighlightedString();
+                    getParentWindow()->getParentDrawingSurface()->getEventProducer()->putClipboard(stringToTheClipboard);
+                    break;
+                }
+            case KeyEventDetails::KEY_V:
+                {
+                    if(getEditable() && getEnabled())
+                    {
+                        std::string theClipboard = getParentWindow()->getParentDrawingSurface()->getEventProducer()->getClipboard();
+                        handlePastingAString(theClipboard);
+                    }
+                    break;
+                }
+            case KeyEventDetails::KEY_Z:
+                if(getEditable() && getEnabled())
+                {
+                    if(_TheUndoManager->canUndo())
+                    {
+                        _TheUndoManager->undo();
+                    }
+                }
+                break;
+            case KeyEventDetails::KEY_Y:
+                if(getEditable() && getEnabled())
+                {
+                    if(_TheUndoManager->canRedo())
+                    {
+                        _TheUndoManager->redo();
+                    }
+                }
+                break;
+        }
+    }
 }
 
 void TextDomArea::highlightIfNextCharacterIsABrace(void)
@@ -1084,9 +1063,15 @@ void TextDomArea::updatePreferredSize(void)
     setPreferredSize(getRequestedSize());
 }
 
-Int32 TextDomArea::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 TextDomArea::getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft,
+                                               const Pnt2f& VisibleRectBottomRight,
+                                               const UInt32& orientation,
+                                               const Int32& direction)
 {
-    return 1;
+    return Inherited::getScrollableBlockIncrement(VisibleRectTopLeft,
+                                                  VisibleRectBottomRight,
+                                                  orientation,
+                                                  direction);
 }
 
 bool TextDomArea::getScrollableTracksViewportHeight(void)
@@ -1096,7 +1081,7 @@ bool TextDomArea::getScrollableTracksViewportHeight(void)
 
 bool TextDomArea::getScrollableTracksViewportWidth(void)
 {
-    return true;
+    return false;
 }
 
 bool TextDomArea::getScrollableHeightMinTracksViewport(void)
@@ -1106,31 +1091,15 @@ bool TextDomArea::getScrollableHeightMinTracksViewport(void)
 
 bool TextDomArea::getScrollableWidthMinTracksViewport(void)
 {
-    return false;
+    return true;
 }
 
-Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction)
+Int32 TextDomArea::getScrollableUnitIncrement(const Pnt2f& VisibleRectTopLeft,
+                                              const Pnt2f& VisibleRectBottomRight,
+                                              const UInt32& orientation,
+                                              const Int32& direction)
 {
-    if(getFont() != NULL)
-    {
-        UInt16 MajorAxis;
-        if(orientation == ScrollBar::VERTICAL_ORIENTATION)
-        {
-            MajorAxis = 1;
-        }
-        else
-        {
-            MajorAxis = 0;
-        }
-        Pnt2f TopLeft, BottomRight;
-        getFont()->getBounds("A", TopLeft, BottomRight);
-        return BottomRight[MajorAxis] - TopLeft[MajorAxis] + (MajorAxis==1?getLineSpacing():0);
-    }
-    else
-    {
-        return Inherited::getScrollableUnitIncrement(VisibleRectTopLeft, VisibleRectBottomRight, orientation, direction);
-    }
-
+    return getLineHeight(0);
 }
 
 Vec2f TextDomArea::getContentRequestedSize(void) const

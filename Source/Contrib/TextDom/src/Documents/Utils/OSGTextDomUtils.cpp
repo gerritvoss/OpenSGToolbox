@@ -4,6 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
  * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
@@ -38,21 +40,46 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
-#include "OSGSplitPanel.h"
-#include "OSGUIDrawObjectCanvas.h"
+
+#define OSG_COMPILETEXTDOMLIB
+
+#include "OSGConfig.h"
+
+#include "OSGTextDomUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
-inline
-void TextEditor::setSplitOrientation(UInt32 Orientation)
+UChar8 getOppositeBraceForEncoding(UChar8 val)
 {
-    _InsideDomArea->setOrientation(Orientation);
+    switch(val)
+    {
+        case '{': return '}';
+        case '}': return '{';
+        case '[': return ']';
+        case ']': return '[';
+        case '(': return ')';
+        case ')': return '(';
+        case '<': return '>';
+        case '>': return '<';
+        default : return '\0';
+    }
 }
 
-inline
-UInt32 TextEditor::getSplitOrientation(void) const
+bool isStartingBraceForEncoding(UChar8 value)
 {
-    return _InsideDomArea->getOrientation();
+    return (value == '{' ||
+            value == '[' ||
+            value == '(' ||
+            value == '<');
+}
+
+bool isEndingBraceForEncoding(UChar8 value)
+{
+    return (value == '}' ||
+            value == ']' ||
+            value == ')' ||
+            value == '>');
 }
 
 OSG_END_NAMESPACE
+

@@ -238,6 +238,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING FixedHeightLayoutManager : public FixedHeigh
 typedef FixedHeightLayoutManager *FixedHeightLayoutManagerP;
 
 OSG_END_NAMESPACE
+
 #include "OSGTextDomArea.h"
 
 #include "OSGFixedHeightLayoutManagerBase.inl"

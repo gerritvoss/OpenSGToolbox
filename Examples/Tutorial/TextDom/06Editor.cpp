@@ -61,11 +61,13 @@ void keyTyped(KeyEventDetails* const details,
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
-    else if(details->getKey() == KeyEventDetails::KEY_1 && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    else if(details->getKey() == KeyEventDetails::KEY_1 &&
+            details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
        theTextEditor->setClipboardVisible(!theTextEditor->getClipboardVisible());
     }
-    else if(details->getKey() == KeyEventDetails::KEY_2 && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
+    else if(details->getKey() == KeyEventDetails::KEY_2 &&
+            details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
        theTextEditor->setIsSplit(!theTextEditor->getIsSplit());
     }
@@ -112,6 +114,30 @@ void handleSaveButtonAction(ActionEventDetails* const details,
 
 }
 
+void handleClipboardSelected(ButtonSelectedEventDetails* const details,
+                             TextEditor* const theTextEditor)
+{
+    theTextEditor->setClipboardVisible(true);
+}
+
+void handleClipboardDeselected(ButtonSelectedEventDetails* const details,
+                             TextEditor* const theTextEditor)
+{
+    theTextEditor->setClipboardVisible(false);
+}
+
+void handleSplitSelected(ButtonSelectedEventDetails* const details,
+                             TextEditor* const theTextEditor)
+{
+    theTextEditor->setIsSplit(true);
+}
+
+void handleSplitDeselected(ButtonSelectedEventDetails* const details,
+                             TextEditor* const theTextEditor)
+{
+    theTextEditor->setIsSplit(false);
+}
+
 int main(int argc, char **argv)
 {
     // OSG init
@@ -144,25 +170,38 @@ int main(int argc, char **argv)
         // Initialize the LookAndFeelManager to enable default settings
         LookAndFeelManager::the()->getLookAndFeel()->init();
 
-
-
-	    ColorLayerRefPtr ExamplePanelBackground1 = ColorLayer::create();
-        ExamplePanelBackground1->setColor(Color4f(0.0,0.0,0.0,1.0));
-
-	    LineBorderRefPtr ExamplePanelBorder1 = LineBorder::create();
-        ExamplePanelBorder1->setColor(Color4f(0.9, 0.9, 0.9, 1.0));
-        ExamplePanelBorder1->setWidth(3);
-
 	    TextEditorRefPtr theTextEditor = TextEditor::create();
-	    theTextEditor->setPreferredSize(Vec2f(600,400));
-        theTextEditor->setBackgrounds(ExamplePanelBackground1);
-        theTextEditor->setBorders(ExamplePanelBorder1);
+	    theTextEditor->setPreferredSize(Vec2f(1000,700));
+        theTextEditor->setIsSplit(false);
+        theTextEditor->setClipboardVisible(false);
+
+        //Toggle Button for clipboard
+        ToggleButtonRefPtr ClipboardButton = ToggleButton::create();
+        ClipboardButton->setPreferredSize(Vec2f(80, 40));
+        ClipboardButton->setText("Clipboard");
+        ClipboardButton->connectButtonSelected(boost::bind(handleClipboardSelected,
+                                                           _1,
+                                                           theTextEditor.get()));
+        ClipboardButton->connectButtonDeselected(boost::bind(handleClipboardDeselected,
+                                                           _1,
+                                                           theTextEditor.get()));
+        
+        //Toggle Button for split panel
+        ToggleButtonRefPtr SplitButton = ToggleButton::create();
+        SplitButton->setPreferredSize(Vec2f(80, 40));
+        SplitButton->setText("Split");
+        SplitButton->connectButtonSelected(boost::bind(handleSplitSelected,
+                                                           _1,
+                                                           theTextEditor.get()));
+        SplitButton->connectButtonDeselected(boost::bind(handleSplitDeselected,
+                                                           _1,
+                                                           theTextEditor.get()));
         
         ButtonRefPtr LoadButton = Button::create();
 
 	    LoadButton->setMinSize(Vec2f(50, 25));
         LoadButton->setMaxSize(Vec2f(200, 100));
-        LoadButton->setPreferredSize(Vec2f(100, 50));
+        LoadButton->setPreferredSize(Vec2f(80, 40));
         LoadButton->setToolTipText("Click to open a file browser window");
         LoadButton->setText("Load File");
 
@@ -173,11 +212,22 @@ int main(int argc, char **argv)
 
 	    SaveButton->setMinSize(Vec2f(50, 25));
         SaveButton->setMaxSize(Vec2f(200, 100));
-        SaveButton->setPreferredSize(Vec2f(100, 50));
+        SaveButton->setPreferredSize(Vec2f(80, 40));
         SaveButton->setToolTipText("Click to save the currently opened file");
         SaveButton->setText("Save File");
 
         SaveButton->connectActionPerformed(boost::bind(handleSaveButtonAction, _1, TutorialWindow.get(),theTextEditor.get()));
+
+        //Button Panel
+        LayoutRefPtr ButtonPanelLayout = FlowLayout::create();
+
+        PanelRecPtr ButtonPanel = Panel::createEmpty();
+        ButtonPanel->setPreferredSize(Vec2f(300, 300));
+        ButtonPanel->setLayout(ButtonPanelLayout);
+        ButtonPanel->pushToChildren(LoadButton);
+        ButtonPanel->pushToChildren(SaveButton);
+        ButtonPanel->pushToChildren(SplitButton);
+        ButtonPanel->pushToChildren(ClipboardButton);
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
@@ -189,12 +239,11 @@ int main(int argc, char **argv)
         InternalWindowRefPtr MainInternalWindow = InternalWindow::create();
         //MainInternalWindow->pushToChildren(TextAreaScrollPanel);
         MainInternalWindow->pushToChildren(theTextEditor);
-        MainInternalWindow->pushToChildren(LoadButton);
-        MainInternalWindow->pushToChildren(SaveButton);
+        MainInternalWindow->pushToChildren(ButtonPanel);
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
-        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.85f,0.85f));
+        MainInternalWindow->setScalingInDrawingSurface(Vec2f(0.95f,0.95f));
         //MainInternalWindow->setDrawTitlebar(true);
         //MainInternalWindow->setResizable(true);
 
@@ -223,7 +272,7 @@ int main(int argc, char **argv)
 
     	
         //Open Window
-        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
+        Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.95f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
                                    WinSize,

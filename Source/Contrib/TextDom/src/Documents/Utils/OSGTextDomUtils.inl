@@ -4,6 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
+ *                            www.opensg.org                                 *
+ *                                                                           *
  * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *          David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
@@ -25,34 +27,7 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
-/*---------------------------------------------------------------------------*\
- *                                Changes                                    *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
- *                                                                           *
-\*---------------------------------------------------------------------------*/
-
-//---------------------------------------------------------------------------
-//  Includes
-//---------------------------------------------------------------------------
-#include "OSGSplitPanel.h"
-#include "OSGUIDrawObjectCanvas.h"
 
 OSG_BEGIN_NAMESPACE
-
-inline
-void TextEditor::setSplitOrientation(UInt32 Orientation)
-{
-    _InsideDomArea->setOrientation(Orientation);
-}
-
-inline
-UInt32 TextEditor::getSplitOrientation(void) const
-{
-    return _InsideDomArea->getOrientation();
-}
 
 OSG_END_NAMESPACE

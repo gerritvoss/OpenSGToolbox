@@ -43,7 +43,6 @@
 #include "OSGLineBorder.h"
 #include "OSGFlowLayout.h"
 #include "OSGUIFont.h"
-#include "OSGScrollPanel.h"
 #include "OSGTextDomArea.h"
 #include "OSGAdvancedTextDomArea.h"
 #include "OSGTextDomLayoutManager.h"
@@ -140,8 +139,7 @@ int main(int argc, char **argv)
 	    // Create a TextDomArea component
 	    AdvancedTextDomAreaRefPtr ExampleTextDomArea = AdvancedTextDomArea::create();
         //ExampleTextDomArea->setWrapStyleWord(false);
-        //ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
-        ExampleTextDomArea->setMinSize(Vec2f(600,400));
+        ExampleTextDomArea->setPreferredSize(Vec2f(600, 400));
         ColorLayerRefPtr TextDomBg = ColorLayer::create();
         TextDomBg->setColor(Color4f(0.95f,0.95f,0.95f,1.0f));
         ExampleTextDomArea->setBackgrounds(TextDomBg);
@@ -166,13 +164,6 @@ int main(int argc, char **argv)
         SaveButton->setText("Save File");
         SaveButton->connectActionPerformed(boost::bind(handleSaveButtonAction, _1, TutorialWindow.get()));
 
-        ScrollPanelRefPtr TextAreaScrollPanel = ScrollPanel::create();
-        TextAreaScrollPanel->setPreferredSize(Vec2f(600,400));
-	    TextAreaScrollPanel->setMinSize(Vec2f(600,400));
-        //TextAreaScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        // Add the TextArea to the ScrollPanel so it is displayed
-	    TextAreaScrollPanel->setViewComponent(ExampleTextDomArea);
-
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
@@ -182,7 +173,7 @@ int main(int argc, char **argv)
         LayoutRefPtr MainInternalWindowLayout = FlowLayout::create();
 
         InternalWindowRefPtr MainInternalWindow = InternalWindow::create();
-        MainInternalWindow->pushToChildren(TextAreaScrollPanel);
+        MainInternalWindow->pushToChildren(ExampleTextDomArea);
 	    MainInternalWindow->pushToChildren(LoadButton);
 	    MainInternalWindow->pushToChildren(SaveButton);
         MainInternalWindow->setLayout(MainInternalWindowLayout);

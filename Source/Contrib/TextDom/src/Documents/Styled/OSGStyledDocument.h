@@ -213,6 +213,8 @@ typedef StyledDocument *StyledDocumentP;
 
 OSG_END_NAMESPACE
 
+#include "OSGElement.h"
+
 #include "OSGStyledDocumentBase.inl"
 #include "OSGStyledDocument.inl"
 

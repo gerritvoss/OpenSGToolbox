@@ -55,7 +55,7 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 
 
 
@@ -130,8 +130,8 @@ FixedHeightLayoutManagerBase::TypeObject FixedHeightLayoutManagerBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"concrete\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"

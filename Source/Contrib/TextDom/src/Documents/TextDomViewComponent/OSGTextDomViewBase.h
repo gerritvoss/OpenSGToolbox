@@ -59,17 +59,17 @@
 #endif
 
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-//#include "OpenSG/OSGBaseTypes.h"
+//#include "OSGBaseTypes.h"
 
 #include "OSGFieldContainer.h" // Parent
 
-#include "OpenSG/OSGElementFields.h"    // Element type
-#include "OpenSG/OSGVecFields.h"        // StartingPosition type
-#include "OpenSG/OSGUIFontFields.h"     // Font type
-#include "OpenSG/OSGBaseFields.h"       // SelectionBoxColor type
+#include "OSGElementFields.h"           // Element type
+#include "OSGVecFields.h"               // StartingPosition type
+#include "OSGUIFontFields.h"            // Font type
+#include "OSGBaseFields.h"              // SelectionBoxColor type
 
 #include "OSGTextDomViewFields.h"
 

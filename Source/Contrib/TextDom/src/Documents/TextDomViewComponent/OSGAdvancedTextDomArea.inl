@@ -39,32 +39,94 @@
 //  Includes
 //---------------------------------------------------------------------------
 #include "OSGTextDomArea.h"
-
+#include "OSGTextAreaGutter.h"
 
 OSG_BEGIN_NAMESPACE
 
 inline
+void AdvancedTextDomArea::setTextDomArea(TextDomArea* const duplicatedTextDom)
+{
+	return setTextArea(duplicatedTextDom);
+}
+
+inline
+TextDomArea* AdvancedTextDomArea::getTextDomArea(void) const
+{
+	return getTextArea();
+}
+
+inline
 void AdvancedTextDomArea::setText(const std::string& txt)
 {
-	if(_TheTextDomArea != NULL)
+	if(getTextArea() != NULL)
 	{	
-		_TheTextDomArea->setText(txt);
+		getTextArea()->setText(txt);
 	}
 }
 
 inline
 void AdvancedTextDomArea::setEditable(bool val)
 {
-	if(_TheTextDomArea != NULL)
+	if(getTextArea() != NULL)
 	{	
-		_TheTextDomArea->setEditable(val);
+		getTextArea()->setEditable(val);
 	}
 }
 
 inline
+Real32 AdvancedTextDomArea::getGutterWidth(void) const
+{
+    return getGutter()->getPreferredSize().x();
+}
+
+inline
+void AdvancedTextDomArea::setGutterWidth(Real32 Width)
+{
+    return getGutter()->setPreferredSize(Vec2f(Width,
+                                               getGutter()->getPreferredSize().y()));
+}
+
+
+inline
 Vec2f AdvancedTextDomArea::getGutterSize(void) const
 {
-    return Vec2f(getGutterWidth(), getSize().y());
+    return getGutter()->getSize();
+}
+
+inline
+const Vec2f& AdvancedTextDomArea::getGutterAlignment(void) const
+{
+    return getGutter()->getAlignment();
+}
+
+inline
+const Color4f& AdvancedTextDomArea::getGutterTextColor(void) const
+{
+    return getGutter()->getTextColor();
+}
+
+inline
+UIFont* AdvancedTextDomArea::getGutterFont (void) const
+{
+    return getGutter()->getFont();
+}
+
+inline
+void AdvancedTextDomArea::setGutterAlignment(const Vec2f& Align)
+{
+    getGutter()->setAlignment(Align);
+}
+
+inline
+void AdvancedTextDomArea::setGutterTextColor(const Color4f& Color)
+{
+    getGutter()->setTextColor(Color);
+}
+
+inline
+void AdvancedTextDomArea::setGutterFont(UIFont* const Font)
+{
+    getGutter()->setFont(Font);
 }
 
 OSG_END_NAMESPACE

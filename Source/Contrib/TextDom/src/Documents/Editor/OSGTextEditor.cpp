@@ -105,7 +105,7 @@ void TextEditor::initMethod(InitPhase ePhase)
 
 void TextEditor::keyTyped(KeyEventDetails* const details)
 {
-    if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_CONTROL)
+    if(details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
         switch(details->getKey())
         {
@@ -147,25 +147,12 @@ void TextEditor::keyTyped(KeyEventDetails* const details)
 void TextEditor::mouseClicked(MouseEventDetails* const details)
 {
 
+    //TODO Move this to a FocusEvent connection
     if(getParentWindow()->getFocusedComponent()->getType().isDerivedFrom(TextDomArea::getClassType()))
     {
         setFocusedDomArea(dynamic_cast<TextDomArea*>(this->getParentWindow()->getFocusedComponent()));
     }
 
-    //TODO: Move this into the a mouseClicked handler connected directly to the list
-    if(details->getButton() == MouseEventDetails::BUTTON1)
-    {
-        if(details->getClickCount() >= 2)
-        {
-            if(_TheClipboardList->isContained(details->getLocation(), true))
-            {
-                std::string stringToBeInserted = boost::any_cast<std::string>(_TheClipboardList->getSelectedItem());
-            }
-        }
-        if(_TheClipboardList->isContained(details->getLocation(), true))
-        {
-        }
-    }
     Inherited::mouseClicked(details);
 }
 
@@ -259,101 +246,68 @@ void TextEditor::handleClipboardButtonAction(ActionEventDetails* const details)
     tempDomArea->handlePastingAString(stringToBeInserted);
 }
 
-void TextEditor::createRightTabPanel(void)
+void TextEditor::createTabPanels(void)
 {
+    ComponentRecPtr LeftTabPanelLabel = createTabLabel("Untitled");
+
+    // Create a _StackTraceTextArea
+    AdvancedTextDomAreaRecPtr LeftTabPanelTextArea = AdvancedTextDomArea::create();
+    setFocusedDomArea(LeftTabPanelTextArea->getTextDomArea());
+
+    ComponentRecPtr RightTabPanelLabel = createTabLabel("Untitled");
+
+    // Create a _StackTraceTextArea
+    AdvancedTextDomAreaRecPtr RightTabPanelTextArea = createDuplicate(LeftTabPanelTextArea);
+
+    BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints = BorderLayoutConstraints::create();
+    ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    LeftTabPanelTextArea->setText(" \r\n");
+    _LeftTabPanel= TabPanel::create();
+    _LeftTabPanel->addTab(LeftTabPanelLabel, LeftTabPanelTextArea);
+    _LeftTabPanel->setTabAlignment(0.0f);
+    _LeftTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
+    _LeftTabPanel->setSelectedIndex(0);
+    _LeftTabPanel->setConstraints(ExampleSplitPanelConstraints);
+
     _RightTabPanel= TabPanel::create();
-    _RightTabPanel->setPreferredSize(Vec2f(600,400));
-    _RightTabPanel->addTab(_RightTabPanelLabel, _RightTabPanelContent);
-    _RightTabPanel->setTabAlignment(0.5f);
+    _RightTabPanel->addTab(RightTabPanelLabel, RightTabPanelTextArea);
+    _RightTabPanel->setTabAlignment(0.0f);
     _RightTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
     _RightTabPanel->setSelectedIndex(0);
 }
 
-void TextEditor::createLeftTabPanel(void)
+void TextEditor::updateArrangment(void)
 {
-    _LeftTabPanel= TabPanel::create();
-    _LeftTabPanel->setPreferredSize(Vec2f(600,400));
-    _LeftTabPanel->addTab(_LeftTabPanelLabel, _LeftTabPanelContent);
-    _LeftTabPanel->setTabAlignment(0.5f);
-    _LeftTabPanel->setTabPlacement(TabPanel::PLACEMENT_NORTH);
-    _LeftTabPanel->setSelectedIndex(0);
-}
+    clearChildren();
+    _DomAreaAndClipboard->setMinComponent(NULL);
+    _InsideDomArea->setMinComponent(NULL);
 
-void TextEditor::createDefaultTabs()
-{
-    _LeftTabPanelLabel = Label::create();
-
-    // set the fields of the labels
-    _LeftTabPanelLabel->setPreferredSize(Vec2f(120,20));
-    _LeftTabPanelLabel->setText("Untitled");
-    _LeftTabPanelLabel->setBorders(NULL);
-    _LeftTabPanelLabel->setBackgrounds(NULL);
-
-    // Create a _StackTraceTextArea
-    _LeftTabPanelTextArea = AdvancedTextDomArea::create();
-    setFocusedDomArea(_LeftTabPanelTextArea->getTheTextDomArea());
-    //_LeftTabPanelTextArea->setText("____");
-    //_LeftTabPanelTextArea->setPreferredSize(Vec2f(200.0,500.0));
-    _LeftTabPanelContent = ScrollPanel::create();
-    //_LeftTabPanelContent->setPreferredSize(getPreferredSize());
-    _LeftTabPanelContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    // Add the _LeftTabPanelTextArea to the ScrollPanel so it is displayed
-    _LeftTabPanelContent->setViewComponent(_LeftTabPanelTextArea);
-
-
-    _RightTabPanelLabel = Label::create();
-
-    // set the fields of the labels
-    _RightTabPanelLabel->setText("Untitled");
-    _RightTabPanelLabel->setBorders(NULL);
-    _RightTabPanelLabel->setBackgrounds(NULL);
-
-    // Create a _StackTraceTextArea
-    _RightTabPanelTextArea = createDuplicate(_LeftTabPanelTextArea);
-    //_LeftTabPanelTextArea->setPreferredSize(Vec2f(200.0,500.0));
-    //_RightTabPanelTextArea->setEditable(false);
-
-    _RightTabPanelContent = ScrollPanel::create();
-    //_RightTabPanelContent->setPreferredSize(_LeftTabPanelTextArea->getPreferredSize());
-    _RightTabPanelContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-    // Add the _RightTabPanelTextArea to the ScrollPanel so it is displayed
-    _RightTabPanelContent->setViewComponent(_RightTabPanelTextArea);
-
-    _LeftTabPanelTextArea->setText(" \r\n");
-
-}
-
-void TextEditor::updateDomLayout(bool isSplit)
-{
-    if(isSplit)
+    if(getClipboardVisible())
     {
-        _InsideDomArea->setDividerPosition(.50); 
-        _InsideDomArea->setMaxDividerPosition(.75);
-        _InsideDomArea->setMinDividerPosition(.25);
+        pushToChildren(_DomAreaAndClipboard);
+
+        if(getIsSplit())
+        {
+            _DomAreaAndClipboard->setMinComponent(_InsideDomArea);
+            _InsideDomArea->setMinComponent(_LeftTabPanel);
+        }
+        else
+        {
+            _DomAreaAndClipboard->setMinComponent(_LeftTabPanel);
+        }
     }
     else
     {
-        _InsideDomArea->setDividerPosition(1); 
-        _InsideDomArea->setMaxDividerPosition(1);
-        _InsideDomArea->setMinDividerPosition(1);
-    }
-}
-
-void TextEditor::updateLayout(bool isClipboardVisible)
-{
-    if(isClipboardVisible)
-    {
-        _DomAreaAndClipboard->setDividerSize(5);
-        _DomAreaAndClipboard->setDividerPosition(0.75);
-        _DomAreaAndClipboard->setMaxDividerPosition(.9);
-        _DomAreaAndClipboard->setMinDividerPosition(0.5);
-    }
-    else
-    {
-        _DomAreaAndClipboard->setDividerSize(0);
-        _DomAreaAndClipboard->setDividerPosition(1); 
-        _DomAreaAndClipboard->setMaxDividerPosition(1);
-        _DomAreaAndClipboard->setMinDividerPosition(1);
+        if(getIsSplit())
+        {
+            pushToChildren(_InsideDomArea);
+            _InsideDomArea->setMinComponent(_LeftTabPanel);
+        }
+        else
+        {
+            pushToChildren(_LeftTabPanel);
+        }
     }
 }
 
@@ -362,45 +316,43 @@ AdvancedTextDomAreaTransitPtr TextEditor::createDuplicate(AdvancedTextDomArea* c
     return AdvancedTextDomAreaTransitPtr(TheAdvancedTextDomArea->createDuplicate());
 }
 
+ComponentTransitPtr TextEditor::createTabLabel(const std::string& LabelText)
+{
+    PanelRefPtr NewTabLabelPanel = Panel::createEmpty();
+
+    ButtonRefPtr NewTabLabelCloseButton =
+        dynamic_pointer_cast<Button>(dynamic_cast<InternalWindow*>(InternalWindow::getClassType().getPrototype())->getTitlebar()->getCloseButton()->shallowCopy());
+
+    NewTabLabelCloseButton->connectActionPerformed(boost::bind(&TextEditor::handleCloseButtonAction, this, _1));
+
+    LabelRefPtr NewTabLabelLabel=Label::create();
+    NewTabLabelLabel->setText(LabelText);
+    NewTabLabelLabel->setBorders(NULL);
+    NewTabLabelLabel->setBackgrounds(NULL);
+
+    SpringLayoutRefPtr NewTabLabelPanelSpringLayout = SpringLayout::create();
+
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::VERTICAL_CENTER_EDGE, NewTabLabelCloseButton, 0, SpringLayoutConstraints::VERTICAL_CENTER_EDGE, NewTabLabelPanel);  
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, NewTabLabelCloseButton, -2, SpringLayoutConstraints::EAST_EDGE, NewTabLabelPanel);
+
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, NewTabLabelLabel, 2, SpringLayoutConstraints::NORTH_EDGE, NewTabLabelPanel);  
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, NewTabLabelLabel, -5, SpringLayoutConstraints::WEST_EDGE, NewTabLabelCloseButton);
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, NewTabLabelLabel, 2, SpringLayoutConstraints::WEST_EDGE, NewTabLabelPanel);
+    NewTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, NewTabLabelLabel, -2, SpringLayoutConstraints::SOUTH_EDGE, NewTabLabelPanel);
+
+    NewTabLabelPanel->setPreferredSize(Vec2f(120,20));
+    NewTabLabelPanel->pushToChildren(NewTabLabelLabel);
+    NewTabLabelPanel->pushToChildren(NewTabLabelCloseButton);
+    NewTabLabelPanel->setLayout(NewTabLabelPanelSpringLayout);
+
+    return ComponentTransitPtr(NewTabLabelPanel);
+}
+
 void TextEditor::loadFile(const BoostPath& file)
 {
     if(boost::filesystem::exists(file))
     {
-        PanelRefPtr _NewLeftTabLabelPanel = Panel::createEmpty();
-
-        ButtonRefPtr _NewLeftTabLabelCloseButtonRefPtr =
-            dynamic_pointer_cast<Button>(dynamic_cast<InternalWindow*>(InternalWindow::getClassType().getPrototype())->getTitlebar()->getCloseButton()->shallowCopy());
-
-        //ButtonRefPtr _NewLeftTabLabelCloseButtonRefPtr = Button::create();
-
-        /*_NewLeftTabLabelCloseButtonRefPtr->setPreferredSize(Vec2f(100,20));
-          _NewLeftTabLabelCloseButtonRefPtr->setText("X");*/
-
-        _NewLeftTabLabelCloseButtonRefPtr->connectActionPerformed(boost::bind(&TextEditor::handleCloseButtonAction, this, _1));
-
-        LabelRefPtr _NewLeftTabLabelLabel=Label::create();
-        _NewLeftTabLabelLabel->setText(file.leaf());
-        _NewLeftTabLabelLabel->setBorders(NULL);
-        _NewLeftTabLabelLabel->setBackgrounds(NULL);
-
-        SpringLayoutRefPtr _NewLeftTabLabelPanelSpringLayout = SpringLayout::create();
-
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _NewLeftTabLabelCloseButtonRefPtr, 2, SpringLayoutConstraints::NORTH_EDGE, _NewLeftTabLabelPanel);  
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _NewLeftTabLabelCloseButtonRefPtr, -2, SpringLayoutConstraints::EAST_EDGE, _NewLeftTabLabelPanel);
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _NewLeftTabLabelCloseButtonRefPtr, -20, SpringLayoutConstraints::EAST_EDGE, _NewLeftTabLabelPanel);
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _NewLeftTabLabelCloseButtonRefPtr, -2, SpringLayoutConstraints::SOUTH_EDGE, _NewLeftTabLabelPanel);
-
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _NewLeftTabLabelLabel, 2, SpringLayoutConstraints::NORTH_EDGE, _NewLeftTabLabelPanel);  
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _NewLeftTabLabelLabel, -5, SpringLayoutConstraints::WEST_EDGE, _NewLeftTabLabelCloseButtonRefPtr);
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _NewLeftTabLabelLabel, 2, SpringLayoutConstraints::WEST_EDGE, _NewLeftTabLabelPanel);
-        _NewLeftTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _NewLeftTabLabelLabel, -2, SpringLayoutConstraints::SOUTH_EDGE, _NewLeftTabLabelPanel);
-
-
-        _NewLeftTabLabelPanel->setPreferredSize(Vec2f(120,20));
-        _NewLeftTabLabelPanel->pushToChildren(_NewLeftTabLabelLabel);
-        _NewLeftTabLabelPanel->pushToChildren(_NewLeftTabLabelCloseButtonRefPtr);
-        _NewLeftTabLabelPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/_NewLeftTabLabelPanelSpringLayout);
-
+        ComponentRecPtr NewLeftTabLabelPanel = createTabLabel(file.leaf());
 
         // Create a TextDomArea component
         UIFontRefPtr _Font = UIFont::create();
@@ -412,67 +364,19 @@ void TextEditor::loadFile(const BoostPath& file)
         _Font->setStyle(TextFace::STYLE_PLAIN);
 
         AdvancedTextDomAreaRefPtr ExampleTextDomArea = AdvancedTextDomArea::create();
-        ExampleTextDomArea->setPreferredSize(Vec2f(400,400));
         ExampleTextDomArea->loadFile(file);
-        setFocusedDomArea(ExampleTextDomArea->getTheTextDomArea());//***************************************
+        setFocusedDomArea(ExampleTextDomArea->getTextDomArea());//***************************************
         /*ExampleTextDomArea->setWrapStyleWord(false);
           ExampleTextDomArea->setFont(_Font);*/
 
-        ScrollPanelRefPtr _NewLeftTabContent = ScrollPanel::create();
-        _NewLeftTabContent->setPreferredSize(Vec2f(200,400));
-        _NewLeftTabContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        _NewLeftTabContent->setViewComponent(ExampleTextDomArea); 
-
-        PanelRefPtr _NewRightTabLabelPanel = Panel::createEmpty();
-
-        ButtonRefPtr _RightTabLabelCloseButtonRefPtr = dynamic_pointer_cast<Button>(dynamic_cast<InternalWindow*>(InternalWindow::getClassType().getPrototype())->getTitlebar()->getCloseButton()->shallowCopy());
-
-        //_RightTabLabelCloseButtonRefPtr->setPreferredSize(Vec2f(20,10));
-        // _RightTabLabelCloseButtonRefPtr->setText("X");
-
-        _RightTabLabelCloseButtonRefPtr->connectActionPerformed(boost::bind(&TextEditor::handleCloseButtonAction, this, _1));
-
-
-        LabelRefPtr _NewRightTabLabel=Label::create();
-        _NewRightTabLabel->setText(file.leaf());
-        _NewRightTabLabel->setBorders(NULL);
-        _NewRightTabLabel->setBackgrounds(NULL);
-
-        SpringLayoutRefPtr _NewRightTabLabelPanelSpringLayout = SpringLayout::create();
-
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _RightTabLabelCloseButtonRefPtr, 2, SpringLayoutConstraints::NORTH_EDGE, _NewRightTabLabelPanel);  
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _RightTabLabelCloseButtonRefPtr, -2, SpringLayoutConstraints::EAST_EDGE, _NewRightTabLabelPanel);
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _RightTabLabelCloseButtonRefPtr, -20, SpringLayoutConstraints::EAST_EDGE, _NewRightTabLabelPanel);
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _RightTabLabelCloseButtonRefPtr, -2, SpringLayoutConstraints::SOUTH_EDGE, _NewRightTabLabelPanel);
-
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, _NewRightTabLabel, 2, SpringLayoutConstraints::NORTH_EDGE, _NewRightTabLabelPanel);  
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, _NewRightTabLabel, -5, SpringLayoutConstraints::WEST_EDGE, _RightTabLabelCloseButtonRefPtr);
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _NewRightTabLabel, 2, SpringLayoutConstraints::WEST_EDGE, _NewRightTabLabelPanel);
-        _NewRightTabLabelPanelSpringLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, _NewRightTabLabel, -2, SpringLayoutConstraints::SOUTH_EDGE, _NewRightTabLabelPanel);
-
-
-        _NewRightTabLabelPanel->setPreferredSize(Vec2f(120,20));
-        _NewRightTabLabelPanel->pushToChildren(_RightTabLabelCloseButtonRefPtr);
-        _NewRightTabLabelPanel->pushToChildren(_NewRightTabLabel);
-        _NewRightTabLabelPanel->setLayout(/*LayoutRefPtr(FlowLayout::create())*/_NewRightTabLabelPanelSpringLayout);
-
+        ComponentRecPtr NewRightTabLabelPanel = createTabLabel(file.leaf());
 
         AdvancedTextDomAreaRefPtr ExampleTextDomArea2 =  createDuplicate(ExampleTextDomArea);///*dynamic_pointer_cast<AdvancedTextDomArea>(deepClone(ExampleTextDomArea));*/AdvancedTextDomArea::create();
-        //ExampleTextDomArea2->setPreferredSize(Vec2f(400, 400));
-        //ExampleTextDomArea2->loadFile(file);
 
-
-        ScrollPanelRefPtr _NewRightTabContent = ScrollPanel::create();
-        _NewRightTabContent->setPreferredSize(Vec2f(200,400));
-        _NewRightTabContent->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
-        _NewRightTabContent->setViewComponent(ExampleTextDomArea2);
-
-
-        _LeftTabPanel->addTab(_NewLeftTabLabelPanel, _NewLeftTabContent);
+        _LeftTabPanel->addTab(NewLeftTabLabelPanel, ExampleTextDomArea);
         _LeftTabPanel->setSelectedIndex((_LeftTabPanel->getMFTabs()->size())-1);
-        _RightTabPanel->addTab(_NewRightTabLabelPanel, _NewRightTabContent);
+        _RightTabPanel->addTab(NewRightTabLabelPanel, ExampleTextDomArea2);
         _RightTabPanel->setSelectedIndex((_RightTabPanel->getMFTabs()->size())-1);
-
     }
 }
 
@@ -516,10 +420,7 @@ void TextEditor::setEnabled(bool val)
 
 void TextEditor::createDomArea(void)
 {
-
-    createDefaultTabs();
-    createRightTabPanel();
-    createLeftTabPanel();
+    createTabPanels();
 
     BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints2 = BorderLayoutConstraints::create();
     ExampleSplitPanelConstraints2->setRegion(BorderLayoutConstraints::BORDER_CENTER);
@@ -530,11 +431,10 @@ void TextEditor::createDomArea(void)
     _InsideDomArea->setExpandable(true);
     _InsideDomArea->setDividerSize(2);
     _InsideDomArea->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
-    _InsideDomArea->setMinComponent(_LeftTabPanel);
+    _InsideDomArea->setDividerPosition(.50); 
+    _InsideDomArea->setMaxDividerPosition(.85);
+    _InsideDomArea->setMinDividerPosition(.15);
     _InsideDomArea->setMaxComponent(_RightTabPanel);
-
-    updateDomLayout(getIsSplit());
-
 }
 
 void TextEditor::clipboardInitialization()
@@ -601,28 +501,25 @@ void TextEditor::onCreate(const TextEditor *source)
         return;
     }
 
+    _DomAreaAndClipboard = SplitPanel::create();
+
     createDomArea();
     clipboardInitialization();
 
-    _DomAreaAndClipboard = SplitPanel::create();
-
-    BorderLayoutRefPtr MainInternalWindowLayout = BorderLayout::create();
+    BorderLayoutRefPtr EditorLayout = BorderLayout::create();
+    setLayout(EditorLayout);
 
     BorderLayoutConstraintsRefPtr ExampleSplitPanelConstraints = BorderLayoutConstraints::create();
     ExampleSplitPanelConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
 
     _DomAreaAndClipboard->setConstraints(ExampleSplitPanelConstraints);
     _DomAreaAndClipboard->setExpandable(true);
+    _DomAreaAndClipboard->setDividerSize(2);
+    _DomAreaAndClipboard->setDividerPosition(0.75);
+    _DomAreaAndClipboard->setMaxDividerPosition(.9);
+    _DomAreaAndClipboard->setMinDividerPosition(0.5);
     _DomAreaAndClipboard->setOrientation(SplitPanel::HORIZONTAL_ORIENTATION);
     _DomAreaAndClipboard->setMaxComponent(_TheClipboardPanel);
-    _DomAreaAndClipboard->setMinComponent(_InsideDomArea);
-
-
-    updateLayout(getClipboardVisible());
-
-    pushToChildren(_DomAreaAndClipboard);
-    setLayout(MainInternalWindowLayout);
-
 }
 
 void TextEditor::resolveLinks(void)
@@ -639,13 +536,7 @@ void TextEditor::resolveLinks(void)
     _TheClipboardPanelLayout = NULL;
     _TheClipboardButton = NULL;
     _LeftTabPanel = NULL;
-    _LeftTabPanelLabel = NULL;
-    _LeftTabPanelContent = NULL;
-    _LeftTabPanelTextArea = NULL;
     _RightTabPanel = NULL;
-    _RightTabPanelLabel = NULL;
-    _RightTabPanelContent = NULL;
-    _RightTabPanelTextArea = NULL;
     _SearchDialog = NULL;
 
     _SearchButtonClickedConnection.disconnect();
@@ -678,16 +569,13 @@ void TextEditor::changed(ConstFieldMaskArg whichField,
                             UInt32            origin,
                             BitVector         details)
 {
-	if(whichField & TextEditor::ClipboardVisibleFieldMask)
-	{
-		updateLayout(getClipboardVisible());
-	}
-	if(whichField & TextEditor::IsSplitFieldMask)
-	{
-		updateDomLayout(getIsSplit());
-	}
-
     Inherited::changed(whichField, origin, details);
+
+	if(whichField & ClipboardVisibleFieldMask ||
+       whichField & IsSplitFieldMask)
+	{
+		updateArrangment();
+	}
 }
 
 void TextEditor::dump(      UInt32    ,

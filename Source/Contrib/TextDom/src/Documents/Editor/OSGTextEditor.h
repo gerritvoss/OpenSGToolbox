@@ -105,6 +105,9 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 	void clear(void);
 	void write(const std::string& txt);
 
+    void setSplitOrientation(UInt32 Orientation);
+    UInt32 getSplitOrientation(void) const;
+
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -174,25 +177,14 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
     void createDomArea(void);
     AdvancedTextDomAreaTransitPtr createDuplicate(AdvancedTextDomArea* const TheAdvancedTextDomArea);
 
-
-
-    void updateLayout(bool isClipboardVisible);	// to update the layout of the editor(to show/hide the copy clipboard)
-    void updateDomLayout(bool isSplit);	// to update the layout of the Document Area (to show/hide the second view)
+    void updateArrangment(void);	//Update the visible components of the editor
 
     void searchWindowButtonClicked(SearchWindowEventDetails* const details,UInt32 button);
 
     // Dom related
     TabPanelRefPtr    _LeftTabPanel;
-    LabelRefPtr       _LeftTabPanelLabel;
-    ScrollPanelRefPtr _LeftTabPanelContent;
-    AdvancedTextDomAreaRefPtr	_LeftTabPanelTextArea;
     TabPanelRefPtr    _RightTabPanel;
-    LabelRefPtr       _RightTabPanelLabel;
-    ScrollPanelRefPtr _RightTabPanelContent;
-    AdvancedTextDomAreaRefPtr	_RightTabPanelTextArea;
-    void createLeftTabPanel(void);
-    void createRightTabPanel(void);
-    void createDefaultTabs(void);
+    void createTabPanels(void);
 
     void actionPerformed(ActionEventDetails* const details);
 
@@ -217,6 +209,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
     virtual void keyTyped(KeyEventDetails* const details);
 
     virtual void mouseClicked(MouseEventDetails* const details);
+
+    ComponentTransitPtr createTabLabel(const std::string& LabelText);
     /*==========================  PRIVATE  ================================*/
 
   private:
@@ -231,6 +225,8 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditor : public TextEditorBase
 typedef TextEditor *TextEditorP;
 
 OSG_END_NAMESPACE
+
+#include "OSGGlyphView.h"
 
 #include "OSGTextEditorBase.inl"
 #include "OSGTextEditor.inl"

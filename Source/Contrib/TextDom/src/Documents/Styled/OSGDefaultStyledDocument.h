@@ -37,70 +37,30 @@
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 
-#ifndef _OSGADVANCEDTEXTDOMAREA_H_
-#define _OSGADVANCEDTEXTDOMAREA_H_
+#ifndef _OSGDEFAULTSTYLEDDOCUMENT_H_
+#define _OSGDEFAULTSTYLEDDOCUMENT_H_
 #ifdef __sgi
 #pragma once
 #endif
 
-#include "OSGAdvancedTextDomAreaBase.h"
-#include "OSGScrollPanelFields.h"
+#include "OSGDefaultStyledDocumentBase.h"
 
 OSG_BEGIN_NAMESPACE
 
-/*! \brief AdvancedTextDomArea class. See \ref
-           PageContribTextDomAdvancedTextDomArea for a description.
+/*! \brief DefaultStyledDocument class. See \ref
+           PageContribTextDomDefaultStyledDocument for a description.
 */
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDomAreaBase
+class OSG_CONTRIBTEXTDOM_DLLMAPPING DefaultStyledDocument : public DefaultStyledDocumentBase
 {
   protected:
 
-
-
-
-	
     /*==========================  PUBLIC  =================================*/
 
   public:
 
-	
-	std::string getText(void) const;
-	void clear(void);
-	void write(const std::string& txt);
-    
-	virtual Vec2f getContentRequestedSize(void) const;
-
-	void setTextDomArea(TextDomArea* const duplicatedTextDom);
-	TextDomArea* getTextDomArea(void) const;
-
-	std::string getHighlightedString(void) const;
-	virtual void updateLayout(void);
-    void loadFile(const BoostPath& path);
-	AdvancedTextDomAreaTransitPtr createDuplicate(void) const;
-	void setText(const std::string& txt);
-	void setEditable(bool val);
-
-
-    /*---------------------------------------------------------------------*/
-    /*! \name                      Gutter                                  */
-    /*! \{                                                                 */
-    Vec2f getGutterSize(void) const;
-    Real32 getGutterWidth(void) const;
-    void setGutterWidth(Real32 Width);
-
-    const Vec2f&   getGutterAlignment(void) const;
-    const Color4f& getGutterTextColor(void) const;
-    UIFont*        getGutterFont     (void) const;
-
-    void setGutterAlignment(const Vec2f& Align);
-    void setGutterTextColor(const Color4f& Color);
-    void setGutterFont     (UIFont* const Font);
-
-	/*! \}                                                                 */
-
-    typedef AdvancedTextDomAreaBase Inherited;
-    typedef AdvancedTextDomArea     Self;
+    typedef DefaultStyledDocumentBase Inherited;
+    typedef DefaultStyledDocument     Self;
 
     /*---------------------------------------------------------------------*/
     /*! \name                      Sync                                    */
@@ -110,12 +70,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
                          UInt32            origin,
                          BitVector         details    );
 
-	/*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                     onCreate                                */
-    /*! \{                                                                 */
-
-    void onCreate(const AdvancedTextDomArea *source = NULL);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Output                                   */
@@ -128,23 +82,22 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
     /*=========================  PROTECTED  ===============================*/
 
   protected:
-	/*! \}                                                                 */
 
-    // Variables should all be in AdvancedTextDomAreaBase.
+    // Variables should all be in DefaultStyledDocumentBase.
 
     /*---------------------------------------------------------------------*/
     /*! \name                  Constructors                                */
     /*! \{                                                                 */
 
-    AdvancedTextDomArea(void);
-    AdvancedTextDomArea(const AdvancedTextDomArea &source);
+    DefaultStyledDocument(void);
+    DefaultStyledDocument(const DefaultStyledDocument &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~AdvancedTextDomArea(void);
+    virtual ~DefaultStyledDocument(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -154,31 +107,24 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING AdvancedTextDomArea : public AdvancedTextDom
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
-    /*! \name                       Sync                                   */
-    /*! \{                                                                 */
-
-    virtual void resolveLinks(void);
-
-    /*! \}                                                                 */
-    ScrollPanelRefPtr _ScrollPanel;
     /*==========================  PRIVATE  ================================*/
 
   private:
 
     friend class FieldContainer;
-    friend class AdvancedTextDomAreaBase;
+    friend class DefaultStyledDocumentBase;
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const AdvancedTextDomArea &source);
+    void operator =(const DefaultStyledDocument &source);
 };
 
-typedef AdvancedTextDomArea *AdvancedTextDomAreaP;
+typedef DefaultStyledDocument *DefaultStyledDocumentP;
 
 OSG_END_NAMESPACE
 
-#include "OSGGlyphView.h"
+#include "OSGElement.h"
 
-#include "OSGAdvancedTextDomAreaBase.inl"
-#include "OSGAdvancedTextDomArea.inl"
+#include "OSGDefaultStyledDocumentBase.inl"
+#include "OSGDefaultStyledDocument.inl"
 
-#endif /* _OSGADVANCEDTEXTDOMAREA_H_ */
+#endif /* _OSGDEFAULTSTYLEDDOCUMENT_H_ */

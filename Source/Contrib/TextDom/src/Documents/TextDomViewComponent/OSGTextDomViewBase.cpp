@@ -55,12 +55,12 @@
 #include <cstdio>
 #include <boost/assign/list_of.hpp>
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 
 
 
-#include "OpenSG/OSGElement.h"          // Element Class
-#include "OpenSG/OSGUIFont.h"           // Font Class
+#include "OSGElement.h"                 // Element Class
+#include "OSGUIFont.h"                  // Font Class
 
 #include "OSGTextDomViewBase.h"
 #include "OSGTextDomView.h"
@@ -294,8 +294,8 @@ TextDomViewBase::TypeObject TextDomViewBase::_type(
     "\tlibrary=\"ContribTextDom\"\n"
     "\tpointerfieldtypes=\"both\"\n"
     "\tstructure=\"abstract\"\n"
-    "\tsystemcomponent=\"false\"\n"
-    "\tparentsystemcomponent=\"false\"\n"
+    "\tsystemcomponent=\"true\"\n"
+    "\tparentsystemcomponent=\"true\"\n"
     "\tdecoratable=\"false\"\n"
     "\tuseLocalIncludes=\"true\"\n"
     "\tisNodeCore=\"false\"\n"

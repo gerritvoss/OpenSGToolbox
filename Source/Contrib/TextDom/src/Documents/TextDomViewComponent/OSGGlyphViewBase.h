@@ -59,10 +59,10 @@
 #endif
 
 
-#include "OpenSG/OSGConfig.h"
+#include "OSGConfig.h"
 #include "OSGContribTextDomDef.h"
 
-//#include "OpenSG/OSGBaseTypes.h"
+//#include "OSGBaseTypes.h"
 
 #include "OSGTextDomView.h" // Parent
 

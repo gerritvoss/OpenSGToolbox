@@ -22,7 +22,7 @@
 		cardinality="single"
 		visibility="external"
 		access="protected"
-		defaultValue="SearchWindowEvent::DIALOG_OPTION_SEARCH"
+		defaultValue="SearchWindowEventDetails::DIALOG_OPTION_SEARCH"
         publicRead="true"
 	>
 	</Field>

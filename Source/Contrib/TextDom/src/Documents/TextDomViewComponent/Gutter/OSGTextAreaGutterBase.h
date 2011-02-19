@@ -6,8 +6,8 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
- *          David Kabala (djkabala@gmail.com)                                *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -46,14 +46,14 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class TextEditor
+ **     class TextAreaGutter
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
 
 
-#ifndef _OSGTEXTEDITORBASE_H_
-#define _OSGTEXTEDITORBASE_H_
+#ifndef _OSGTEXTAREAGUTTERBASE_H_
+#define _OSGTEXTAREAGUTTERBASE_H_
 #ifdef __sgi
 #pragma once
 #endif
@@ -66,19 +66,20 @@
 
 #include "OSGComponentContainer.h" // Parent
 
-#include "OSGAdvancedTextDomAreaFields.h" // AdvancedTextDomAreas type
-#include "OSGSysFields.h"               // ClipboardVisible type
-#include "OSGTextDomAreaFields.h"       // FocusedDomArea type
+#include "OSGTextDomAreaFields.h"       // TrackedArea type
+#include "OSGVecFields.h"               // Alignment type
+#include "OSGBaseFields.h"              // TextColor type
+#include "OSGUIFontFields.h"            // Font type
 
-#include "OSGTextEditorFields.h"
+#include "OSGTextAreaGutterFields.h"
 
 OSG_BEGIN_NAMESPACE
 
-class TextEditor;
+class TextAreaGutter;
 
-//! \brief TextEditor Base Class.
+//! \brief TextAreaGutter Base Class.
 
-class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
+class OSG_CONTRIBTEXTDOM_DLLMAPPING TextAreaGutterBase : public ComponentContainer
 {
   public:
 
@@ -88,7 +89,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     typedef Inherited::TypeObject TypeObject;
     typedef TypeObject::InitPhase InitPhase;
 
-    OSG_GEN_INTERNALPTR(TextEditor);
+    OSG_GEN_INTERNALPTR(TextAreaGutter);
     
     
 
@@ -98,28 +99,28 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
 
     enum
     {
-        AdvancedTextDomAreasFieldId = Inherited::NextFieldId,
-        ClipboardVisibleFieldId = AdvancedTextDomAreasFieldId + 1,
-        IsSplitFieldId = ClipboardVisibleFieldId + 1,
-        FocusedDomAreaFieldId = IsSplitFieldId + 1,
-        NextFieldId = FocusedDomAreaFieldId + 1
+        TrackedAreaFieldId = Inherited::NextFieldId,
+        AlignmentFieldId = TrackedAreaFieldId + 1,
+        TextColorFieldId = AlignmentFieldId + 1,
+        FontFieldId = TextColorFieldId + 1,
+        NextFieldId = FontFieldId + 1
     };
 
-    static const OSG::BitVector AdvancedTextDomAreasFieldMask =
-        (TypeTraits<BitVector>::One << AdvancedTextDomAreasFieldId);
-    static const OSG::BitVector ClipboardVisibleFieldMask =
-        (TypeTraits<BitVector>::One << ClipboardVisibleFieldId);
-    static const OSG::BitVector IsSplitFieldMask =
-        (TypeTraits<BitVector>::One << IsSplitFieldId);
-    static const OSG::BitVector FocusedDomAreaFieldMask =
-        (TypeTraits<BitVector>::One << FocusedDomAreaFieldId);
+    static const OSG::BitVector TrackedAreaFieldMask =
+        (TypeTraits<BitVector>::One << TrackedAreaFieldId);
+    static const OSG::BitVector AlignmentFieldMask =
+        (TypeTraits<BitVector>::One << AlignmentFieldId);
+    static const OSG::BitVector TextColorFieldMask =
+        (TypeTraits<BitVector>::One << TextColorFieldId);
+    static const OSG::BitVector FontFieldMask =
+        (TypeTraits<BitVector>::One << FontFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
-    typedef MFUnrecAdvancedTextDomAreaPtr MFAdvancedTextDomAreasType;
-    typedef SFBool            SFClipboardVisibleType;
-    typedef SFBool            SFIsSplitType;
-    typedef SFUnrecTextDomAreaPtr SFFocusedDomAreaType;
+    typedef SFUnrecTextDomAreaPtr SFTrackedAreaType;
+    typedef SFVec2f           SFAlignmentType;
+    typedef SFColor4f         SFTextColorType;
+    typedef SFUnrecUIFontPtr  SFFontType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -144,31 +145,37 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     /*! \name                    Field Get                                 */
     /*! \{                                                                 */
 
-            const MFUnrecAdvancedTextDomAreaPtr *getMFAdvancedTextDomAreas(void) const;
-                  MFUnrecAdvancedTextDomAreaPtr *editMFAdvancedTextDomAreas(void);
+            const SFUnrecTextDomAreaPtr *getSFTrackedArea    (void) const;
+                  SFUnrecTextDomAreaPtr *editSFTrackedArea    (void);
 
-                  SFBool              *editSFClipboardVisible(void);
-            const SFBool              *getSFClipboardVisible (void) const;
+                  SFVec2f             *editSFAlignment      (void);
+            const SFVec2f             *getSFAlignment       (void) const;
 
-                  SFBool              *editSFIsSplit        (void);
-            const SFBool              *getSFIsSplit         (void) const;
+                  SFColor4f           *editSFTextColor      (void);
+            const SFColor4f           *getSFTextColor       (void) const;
+            const SFUnrecUIFontPtr    *getSFFont           (void) const;
+                  SFUnrecUIFontPtr    *editSFFont           (void);
 
 
-                  AdvancedTextDomArea * getAdvancedTextDomAreas(const UInt32 index) const;
+                  TextDomArea * getTrackedArea    (void) const;
 
-                  bool                &editClipboardVisible(void);
-                  bool                 getClipboardVisible (void) const;
+                  Vec2f               &editAlignment      (void);
+            const Vec2f               &getAlignment       (void) const;
 
-                  bool                &editIsSplit        (void);
-                  bool                 getIsSplit         (void) const;
+                  Color4f             &editTextColor      (void);
+            const Color4f             &getTextColor       (void) const;
+
+                  UIFont * getFont           (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Field Set                                 */
     /*! \{                                                                 */
 
-            void setClipboardVisible(const bool value);
-            void setIsSplit        (const bool value);
+            void setTrackedArea    (TextDomArea * const value);
+            void setAlignment      (const Vec2f &value);
+            void setTextColor      (const Color4f &value);
+            void setFont           (UIFont * const value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -179,12 +186,6 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     /*---------------------------------------------------------------------*/
     /*! \name                Ptr MField Set                                */
     /*! \{                                                                 */
-
-    void pushToAdvancedTextDomAreas           (AdvancedTextDomArea * const value   );
-    void assignAdvancedTextDomAreas          (const MFUnrecAdvancedTextDomAreaPtr &value);
-    void removeFromAdvancedTextDomAreas (UInt32               uiIndex );
-    void removeObjFromAdvancedTextDomAreas(AdvancedTextDomArea * const value   );
-    void clearAdvancedTextDomAreas            (void                         );
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -203,16 +204,16 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     /*! \name                   Construction                               */
     /*! \{                                                                 */
 
-    static  TextEditorTransitPtr  create          (void);
-    static  TextEditor           *createEmpty     (void);
+    static  TextAreaGutterTransitPtr  create          (void);
+    static  TextAreaGutter           *createEmpty     (void);
 
-    static  TextEditorTransitPtr  createLocal     (
+    static  TextAreaGutterTransitPtr  createLocal     (
                                                BitVector bFlags = FCLocal::All);
 
-    static  TextEditor            *createEmptyLocal(
+    static  TextAreaGutter            *createEmptyLocal(
                                               BitVector bFlags = FCLocal::All);
 
-    static  TextEditorTransitPtr  createDependent  (BitVector bFlags);
+    static  TextAreaGutterTransitPtr  createDependent  (BitVector bFlags);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -239,69 +240,46 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     /*! \name                      Fields                                  */
     /*! \{                                                                 */
 
-    MFUnrecAdvancedTextDomAreaPtr _mfAdvancedTextDomAreas;
-    SFBool            _sfClipboardVisible;
-    SFBool            _sfIsSplit;
-    SFUnrecTextDomAreaPtr _sfFocusedDomArea;
+    SFUnrecTextDomAreaPtr _sfTrackedArea;
+    SFVec2f           _sfAlignment;
+    SFColor4f         _sfTextColor;
+    SFUnrecUIFontPtr  _sfFont;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Constructors                               */
     /*! \{                                                                 */
 
-    TextEditorBase(void);
-    TextEditorBase(const TextEditorBase &source);
+    TextAreaGutterBase(void);
+    TextAreaGutterBase(const TextAreaGutterBase &source);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                   Destructors                                */
     /*! \{                                                                 */
 
-    virtual ~TextEditorBase(void);
+    virtual ~TextAreaGutterBase(void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     onCreate                                */
     /*! \{                                                                 */
 
-    void onCreate(const TextEditor *source = NULL);
+    void onCreate(const TextAreaGutter *source = NULL);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                    Generic Field Access                      */
     /*! \{                                                                 */
 
-    GetFieldHandlePtr  getHandleAdvancedTextDomAreas (void) const;
-    EditFieldHandlePtr editHandleAdvancedTextDomAreas(void);
-    GetFieldHandlePtr  getHandleClipboardVisible (void) const;
-    EditFieldHandlePtr editHandleClipboardVisible(void);
-    GetFieldHandlePtr  getHandleIsSplit         (void) const;
-    EditFieldHandlePtr editHandleIsSplit        (void);
-    GetFieldHandlePtr  getHandleFocusedDomArea  (void) const;
-    EditFieldHandlePtr editHandleFocusedDomArea (void);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Get                                 */
-    /*! \{                                                                 */
-
-            const SFUnrecTextDomAreaPtr *getSFFocusedDomArea  (void) const;
-                  SFUnrecTextDomAreaPtr *editSFFocusedDomArea (void);
-
-
-                  TextDomArea * getFocusedDomArea (void) const;
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                    Field Set                                 */
-    /*! \{                                                                 */
-
-            void setFocusedDomArea (TextDomArea * const value);
-
-    /*! \}                                                                 */
-    /*---------------------------------------------------------------------*/
-    /*! \name                Ptr MField Set                                */
-    /*! \{                                                                 */
+    GetFieldHandlePtr  getHandleTrackedArea     (void) const;
+    EditFieldHandlePtr editHandleTrackedArea    (void);
+    GetFieldHandlePtr  getHandleAlignment       (void) const;
+    EditFieldHandlePtr editHandleAlignment      (void);
+    GetFieldHandlePtr  getHandleTextColor       (void) const;
+    EditFieldHandlePtr editHandleTextColor      (void);
+    GetFieldHandlePtr  getHandleFont            (void) const;
+    EditFieldHandlePtr editHandleFont           (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -315,7 +293,7 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
                                  ConstFieldMaskArg  syncMode  ,
                            const UInt32             uiSyncInfo);
 
-            void execSync (      TextEditorBase *pFrom,
+            void execSync (      TextAreaGutterBase *pFrom,
                                  ConstFieldMaskArg  whichField,
                                  AspectOffsetStore &oOffsets,
                                  ConstFieldMaskArg  syncMode  ,
@@ -355,11 +333,11 @@ class OSG_CONTRIBTEXTDOM_DLLMAPPING TextEditorBase : public ComponentContainer
     /*---------------------------------------------------------------------*/
 
     // prohibit default functions (move to 'public' if you need one)
-    void operator =(const TextEditorBase &source);
+    void operator =(const TextAreaGutterBase &source);
 };
 
-typedef TextEditorBase *TextEditorBaseP;
+typedef TextAreaGutterBase *TextAreaGutterBaseP;
 
 OSG_END_NAMESPACE
 
-#endif /* _OSGTEXTEDITORBASE_H_ */
+#endif /* _OSGTEXTAREAGUTTERBASE_H_ */

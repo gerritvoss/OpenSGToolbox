@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="AdvancedTextDomArea"
+	name="TextAreaGutter"
 	parent="ComponentContainer"
 	library="ContribTextDom"
 	pointerfieldtypes="both"
@@ -12,32 +12,46 @@
 	useLocalIncludes="true"
     isNodeCore="false"
 	parentProducer="Component"
-    authors="Achyuthan Vasanth (vasanth.achyuthan@gmail.com), David Kabala (djkabala@gmail.com)"
+    authors="David Kabala (djkabala@gmail.com),Achyuthan Vasanth (vasanth.achyuthan@gmail.com)"
 >
-An AdvancedTextDomArea
-
-This class supports adds features to the basic textDomArea.
-
-Features like gutter region are implemented 
-
 	<Field
-		name="TextArea"
+		name="TrackedArea"
 		type="TextDomArea"
 		category="pointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"
-		access="protected"
+		access="public"
 	>
 	</Field>
 	<Field
-		name="Gutter"
-		type="TextAreaGutter"
+		name="Alignment"
+		type="Vec2f"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="1.0f, 0.5f"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="TextColor"
+		type="Color4f"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="0.0,0.0,0.0,1.0"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="Font"
+		type="UIFont"
 		category="pointer"
 		cardinality="single"
 		visibility="external"
 		defaultValue="NULL"
-		access="protected"
+		access="public"
 	>
 	</Field>
 </FieldContainer>

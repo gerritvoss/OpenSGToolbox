@@ -4,8 +4,8 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- * contact: Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
- *          David Kabala (djkabala@gmail.com)                                *
+ * contact: David Kabala (djkabala@gmail.com)                                *
+ *          Achyuthan Vasanth (vasanth.achyuthan@gmail.com)                  *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -44,7 +44,7 @@
  **           regenerated, which can become necessary at any time.          **
  **                                                                         **
  **     Do not change this file, changes should be done in the derived      **
- **     class AdvancedTextDomArea!
+ **     class TextAreaGutter!
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
@@ -55,20 +55,20 @@ OSG_BEGIN_NAMESPACE
 
 //! access the type of the class
 inline
-OSG::FieldContainerType &AdvancedTextDomAreaBase::getClassType(void)
+OSG::FieldContainerType &TextAreaGutterBase::getClassType(void)
 {
     return _type;
 }
 
 //! access the numerical type of the class
 inline
-OSG::UInt32 AdvancedTextDomAreaBase::getClassTypeId(void)
+OSG::UInt32 TextAreaGutterBase::getClassTypeId(void)
 {
     return _type.getId();
 }
 
 inline
-OSG::UInt16 AdvancedTextDomAreaBase::getClassGroupId(void)
+OSG::UInt16 TextAreaGutterBase::getClassGroupId(void)
 {
     return _type.getGroupId();
 }
@@ -76,42 +76,92 @@ OSG::UInt16 AdvancedTextDomAreaBase::getClassGroupId(void)
 /*------------------------------ get -----------------------------------*/
 
 
-//! Get the value of the AdvancedTextDomArea::_sfTextArea field.
+//! Get the value of the TextAreaGutter::_sfTrackedArea field.
 inline
-TextDomArea * AdvancedTextDomAreaBase::getTextArea(void) const
+TextDomArea * TextAreaGutterBase::getTrackedArea(void) const
 {
-    return _sfTextArea.getValue();
+    return _sfTrackedArea.getValue();
 }
 
-//! Set the value of the AdvancedTextDomArea::_sfTextArea field.
+//! Set the value of the TextAreaGutter::_sfTrackedArea field.
 inline
-void AdvancedTextDomAreaBase::setTextArea(TextDomArea * const value)
+void TextAreaGutterBase::setTrackedArea(TextDomArea * const value)
 {
-    editSField(TextAreaFieldMask);
+    editSField(TrackedAreaFieldMask);
 
-    _sfTextArea.setValue(value);
+    _sfTrackedArea.setValue(value);
+}
+//! Get the value of the TextAreaGutter::_sfAlignment field.
+
+inline
+Vec2f &TextAreaGutterBase::editAlignment(void)
+{
+    editSField(AlignmentFieldMask);
+
+    return _sfAlignment.getValue();
 }
 
-//! Get the value of the AdvancedTextDomArea::_sfGutter field.
+//! Get the value of the TextAreaGutter::_sfAlignment field.
 inline
-TextAreaGutter * AdvancedTextDomAreaBase::getGutter(void) const
+const Vec2f &TextAreaGutterBase::getAlignment(void) const
 {
-    return _sfGutter.getValue();
+    return _sfAlignment.getValue();
 }
 
-//! Set the value of the AdvancedTextDomArea::_sfGutter field.
+//! Set the value of the TextAreaGutter::_sfAlignment field.
 inline
-void AdvancedTextDomAreaBase::setGutter(TextAreaGutter * const value)
+void TextAreaGutterBase::setAlignment(const Vec2f &value)
 {
-    editSField(GutterFieldMask);
+    editSField(AlignmentFieldMask);
 
-    _sfGutter.setValue(value);
+    _sfAlignment.setValue(value);
+}
+//! Get the value of the TextAreaGutter::_sfTextColor field.
+
+inline
+Color4f &TextAreaGutterBase::editTextColor(void)
+{
+    editSField(TextColorFieldMask);
+
+    return _sfTextColor.getValue();
+}
+
+//! Get the value of the TextAreaGutter::_sfTextColor field.
+inline
+const Color4f &TextAreaGutterBase::getTextColor(void) const
+{
+    return _sfTextColor.getValue();
+}
+
+//! Set the value of the TextAreaGutter::_sfTextColor field.
+inline
+void TextAreaGutterBase::setTextColor(const Color4f &value)
+{
+    editSField(TextColorFieldMask);
+
+    _sfTextColor.setValue(value);
+}
+
+//! Get the value of the TextAreaGutter::_sfFont field.
+inline
+UIFont * TextAreaGutterBase::getFont(void) const
+{
+    return _sfFont.getValue();
+}
+
+//! Set the value of the TextAreaGutter::_sfFont field.
+inline
+void TextAreaGutterBase::setFont(UIFont * const value)
+{
+    editSField(FontFieldMask);
+
+    _sfFont.setValue(value);
 }
 
 
 #ifdef OSG_MT_CPTR_ASPECT
 inline
-void AdvancedTextDomAreaBase::execSync (      AdvancedTextDomAreaBase *pFrom,
+void TextAreaGutterBase::execSync (      TextAreaGutterBase *pFrom,
                                         ConstFieldMaskArg  whichField,
                                         AspectOffsetStore &oOffsets,
                                         ConstFieldMaskArg  syncMode,
@@ -119,21 +169,27 @@ void AdvancedTextDomAreaBase::execSync (      AdvancedTextDomAreaBase *pFrom,
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
 
-    if(FieldBits::NoField != (TextAreaFieldMask & whichField))
-        _sfTextArea.syncWith(pFrom->_sfTextArea);
+    if(FieldBits::NoField != (TrackedAreaFieldMask & whichField))
+        _sfTrackedArea.syncWith(pFrom->_sfTrackedArea);
 
-    if(FieldBits::NoField != (GutterFieldMask & whichField))
-        _sfGutter.syncWith(pFrom->_sfGutter);
+    if(FieldBits::NoField != (AlignmentFieldMask & whichField))
+        _sfAlignment.syncWith(pFrom->_sfAlignment);
+
+    if(FieldBits::NoField != (TextColorFieldMask & whichField))
+        _sfTextColor.syncWith(pFrom->_sfTextColor);
+
+    if(FieldBits::NoField != (FontFieldMask & whichField))
+        _sfFont.syncWith(pFrom->_sfFont);
 }
 #endif
 
 
 inline
-const Char8 *AdvancedTextDomAreaBase::getClassname(void)
+const Char8 *TextAreaGutterBase::getClassname(void)
 {
-    return "AdvancedTextDomArea";
+    return "TextAreaGutter";
 }
-OSG_GEN_CONTAINERPTR(AdvancedTextDomArea);
+OSG_GEN_CONTAINERPTR(TextAreaGutter);
 
 OSG_END_NAMESPACE
 

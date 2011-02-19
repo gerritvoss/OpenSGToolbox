@@ -38,7 +38,75 @@
 //---------------------------------------------------------------------------
 //  Includes
 //---------------------------------------------------------------------------
+#include "OSGTextFileHandler.h"
+#include "OSGTextDomLayoutManager.h"
 
 OSG_BEGIN_NAMESPACE
+
+inline
+void TextDomArea::saveFile(const BoostPath& pathOfFile)
+{
+    TextFileHandler::the()->forceWrite(getDocumentModel(),pathOfFile);
+}
+
+inline
+UInt32 TextDomArea::getMinVisibleLineNumber(void) const
+{
+    return getLayoutManager()->getTopmostVisibleLineNumber();
+}
+
+inline
+UInt32 TextDomArea::getMaxVisibleLineNumber(void) const
+{
+    return getMinVisibleLineNumber() + getLayoutManager()->getLinesToBeDisplayed();
+}
+
+inline
+UInt32 TextDomArea::getNumDocumentLines(void) const
+{
+    /*! \todo Implement*/
+    return 0;
+}
+
+inline
+UInt32 TextDomArea::getNumLines(void) const
+{
+    /*! \todo Implement*/
+    return getNumDocumentLines();
+}
+
+inline
+bool TextDomArea::isWrappedLine(UInt32 LineNum) const
+{
+    /*! \todo Implement*/
+    return false;
+}
+
+inline
+Real32 TextDomArea::getLineHeight(UInt32 LineNum) const
+{
+    /*! \todo Take into account variable line height*/
+    return getLayoutManager()->getHeightOfLine();
+}
+
+inline
+std::string TextDomArea::getText(void) const
+{
+    return getDocumentModel()->getText(0,-1);
+}
+
+inline
+UInt32 TextDomArea::getDocumentLineNum(UInt32 LineNum) const
+{
+    /*! \todo Implement*/
+    return LineNum;
+}
+
+inline
+Real32 TextDomArea::getLineVerticalPosition(UInt32 LineNum) const
+{
+    /*! \todo Take into account variable line height*/
+    return static_cast<Real32>(LineNum) * getLineHeight(LineNum);
+}
 
 OSG_END_NAMESPACE
