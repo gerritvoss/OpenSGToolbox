@@ -96,6 +96,16 @@ FOREACH(SRC ${SRCFILES})
 
     ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
 
+    #Install the executable and the code
+    INSTALL(TARGETS "${EXE}"
+            DESTINATION "share/OpenSG/Examples/${TUTORIALS_PROJECT}"
+            COMPONENT examples_advanced
+            OPTIONAL)
+
+    INSTALL(FILES "${SRC}"
+            DESTINATION "share/OpenSG/Examples/${TUTORIALS_PROJECT}"
+            COMPONENT examples_advanced)
+
     ADD_DEPENDENCIES(OSGAll${TUTORIALS_PROJECT}Examples ${EXE})
 
     FOREACH(OSGDEP ${OSG_COMPONENTS})

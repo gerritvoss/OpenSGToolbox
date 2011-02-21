@@ -1,5 +1,5 @@
 
-SET(TUTORIALS_PROJECT "FieldContainerEditors")
+SET(TUTORIALS_PROJECT "FieldContainerEditor")
 
 PROJECT(OpenSGExamples${TUTORIALS_PROJECT})
 
@@ -93,6 +93,16 @@ FOREACH(SRC ${SRCFILES})
     GET_FILENAME_COMPONENT(EXE ${SRC} NAME_WE)
 
     ADD_EXECUTABLE(${EXE} ${OSGEXCLUDE_TOOLBOXTESTS} ${SRC})
+
+    #Install the executable and the code
+    INSTALL(TARGETS "${EXE}"
+            DESTINATION "share/OpenSG/Examples/${TUTORIALS_PROJECT}"
+            COMPONENT examples_advanced
+            OPTIONAL)
+
+    INSTALL(FILES "${SRC}"
+            DESTINATION "share/OpenSG/Examples/${TUTORIALS_PROJECT}"
+            COMPONENT examples_advanced)
 
     ADD_DEPENDENCIES(OSGAll${TUTORIALS_PROJECT}Examples ${EXE})
 
