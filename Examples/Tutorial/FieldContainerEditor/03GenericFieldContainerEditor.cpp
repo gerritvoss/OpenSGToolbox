@@ -193,7 +193,7 @@ int main(int argc, char **argv)
         UndoRedoListModel->pushBack(boost::any(std::string("Top")));
 
 	    ListRecPtr UndoRedoList = List::create();
-        UndoRedoList->setPreferredSize(Vec2f(200, 300));
+        UndoRedoList->setPreferredSize(Vec2f(250, 300));
         UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
 	    UndoRedoList->setModel(UndoRedoListModel);
 
@@ -219,13 +219,27 @@ int main(int argc, char **argv)
         UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
         //Background Editor Field
-        //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialBackground, TheCommandManager);
-        FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(RedoButton, TheCommandManager);
+        FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(TutorialBackground, TheCommandManager);
+        //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(RedoButton, TheCommandManager);
         //FieldContainerEditorComponentRefPtr TheEditor = FieldContainerEditorFactory::the()->createDefaultEditor(dynamic_cast<Geometry*>(TorusGeometryNode->getCore())->getMaterial(), TheCommandManager);
 
         ScrollPanelRefPtr EditorScrollPanel = ScrollPanel::create();
         EditorScrollPanel->setPreferredSize(Vec2f(300,400));
         EditorScrollPanel->setViewComponent(TheEditor);
+
+        //Undo Panel
+        LabelRecPtr UndoPanelLabel = Label::create();
+        UndoPanelLabel->setText("Undo Panel");
+        UndoPanelLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        LayoutRefPtr UndoPanelLayout = OSG::FlowLayout::create();
+        PanelRecPtr UndoPanel = Panel::create();
+        UndoPanel->setPreferredSize(Vec2f(300.0f,300.0f));
+        UndoPanel->pushToChildren(UndoPanelLabel);
+        UndoPanel->pushToChildren(UndoRedoScrollPanel);
+        UndoPanel->pushToChildren(UndoButton);
+        UndoPanel->pushToChildren(RedoButton);
+        UndoPanel->setLayout(UndoPanelLayout);
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
@@ -234,9 +248,7 @@ int main(int argc, char **argv)
         InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
         LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
         MainInternalWindow->pushToChildren(EditorScrollPanel);
-        MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
-        MainInternalWindow->pushToChildren(UndoButton);
-        MainInternalWindow->pushToChildren(RedoButton);
+        MainInternalWindow->pushToChildren(UndoPanel);
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));
@@ -263,7 +275,7 @@ int main(int argc, char **argv)
 
         // Show the whole Scene
         sceneManager.showAll();
-		sceneManager.setStatistics(true);
+		//sceneManager.setStatistics(true);
 
         TutorialWindow->connectKeyTyped(boost::bind(keyTyped, _1, TheCommandManager, TutorialViewport.get(), UndoRedoList.get()));
 
@@ -272,8 +284,8 @@ int main(int argc, char **argv)
         Vec2f WinSize(TutorialWindow->getDesktopSize() * 0.85f);
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
-                                    WinSize,
-                                    "03GenericFieldContainerEditor");
+                                   WinSize,
+                                   "03GenericFieldContainerEditor");
 
         //Enter main Loop
         TutorialWindow->mainLoop();

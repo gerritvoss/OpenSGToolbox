@@ -3,5 +3,8 @@
 using namespace OSG;
 
 /*! 
-   \example 01OctreeConstruction.cpp  Example
+   \example 01OctreeConstruction.cpp Basic #OSG::Octree Example
+   \n
+   \toolbox_video{TzwOz-DMKNg}
+   \n
  */

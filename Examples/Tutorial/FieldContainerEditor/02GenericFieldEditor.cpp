@@ -181,7 +181,7 @@ int main(int argc, char **argv)
         UndoRedoListModel->pushBack(boost::any(std::string("Top")));
 
 	    ListRecPtr UndoRedoList = List::create();
-        UndoRedoList->setPreferredSize(Vec2f(200, 300));
+        UndoRedoList->setPreferredSize(Vec2f(250, 300));
         UndoRedoList->setOrientation(List::VERTICAL_ORIENTATION);
 	    UndoRedoList->setModel(UndoRedoListModel);
 
@@ -206,10 +206,55 @@ int main(int argc, char **argv)
         UndoRedoScrollPanel->setHorizontalResizePolicy(ScrollPanel::RESIZE_TO_VIEW);
         UndoRedoScrollPanel->setViewComponent(UndoRedoList);
 
-        //Background Editor Field
-        //FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(TutorialBackground, SolidBackground::ColorFieldId, TheCommandManager);
-        FieldEditorComponentRefPtr TheEditor = FieldEditorFactory::the()->createDefaultEditor(RedoButton, Button::TextFieldId, TheCommandManager);
-        TheEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        //Edited Label
+        LabelRecPtr EditedLabel = Label::create();
+        EditedLabel->setText("Can be edited");
+        EditedLabel->setPreferredSize(Vec2f(100.0f,18.0f));
+
+        //Editor Field
+        LabelRecPtr TheTextEditorLabel = Label::create();
+        TheTextEditorLabel->setText("Text");
+        TheTextEditorLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        FieldEditorComponentRefPtr TheTextEditor = FieldEditorFactory::the()->createDefaultEditor(EditedLabel,
+                                                                                                  Label::TextFieldId,
+                                                                                                  TheCommandManager);
+        TheTextEditor->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        LabelRecPtr ThePreferredSizeEditorLabel = Label::create();
+        ThePreferredSizeEditorLabel->setText("PreferredSize");
+        ThePreferredSizeEditorLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        FieldEditorComponentRefPtr ThePreferredSizeEditor =
+            FieldEditorFactory::the()->createDefaultEditor(EditedLabel,
+                                                           Label::PreferredSizeFieldId,
+                                                           TheCommandManager);
+        ThePreferredSizeEditor->setPreferredSize(Vec2f(150.0f, 20.0f));
+
+        //Editing Panel
+        LayoutRefPtr EditorPanelLayout = OSG::FlowLayout::create();
+        PanelRecPtr EditorPanel = Panel::create();
+        EditorPanel->setPreferredSize(Vec2f(200.0f,200.0f));
+        EditorPanel->pushToChildren(TheTextEditorLabel);
+        EditorPanel->pushToChildren(TheTextEditor);
+        EditorPanel->pushToChildren(ThePreferredSizeEditorLabel);
+        EditorPanel->pushToChildren(ThePreferredSizeEditor);
+        EditorPanel->setLayout(EditorPanelLayout);
+
+        //Undo Panel
+        LabelRecPtr UndoPanelLabel = Label::create();
+        UndoPanelLabel->setText("Undo Panel");
+        UndoPanelLabel->setPreferredSize(Vec2f(100.0f, 20.0f));
+
+        LayoutRefPtr UndoPanelLayout = OSG::FlowLayout::create();
+        PanelRecPtr UndoPanel = Panel::create();
+        UndoPanel->setPreferredSize(Vec2f(300.0f,300.0f));
+        UndoPanel->pushToChildren(UndoPanelLabel);
+        UndoPanel->pushToChildren(UndoRedoScrollPanel);
+        UndoPanel->pushToChildren(UndoButton);
+        UndoPanel->pushToChildren(RedoButton);
+        UndoPanel->setLayout(UndoPanelLayout);
 
         // Create The Main InternalWindow
         // Create Background to be used with the Main InternalWindow
@@ -217,10 +262,9 @@ int main(int argc, char **argv)
         MainInternalWindowBackground->setColor(Color4f(1.0,1.0,1.0,0.5));
         InternalWindowRefPtr MainInternalWindow = OSG::InternalWindow::create();
         LayoutRefPtr MainInternalWindowLayout = OSG::FlowLayout::create();
-        MainInternalWindow->pushToChildren(TheEditor);
-        MainInternalWindow->pushToChildren(UndoRedoScrollPanel);
-        MainInternalWindow->pushToChildren(UndoButton);
-        MainInternalWindow->pushToChildren(RedoButton);
+        MainInternalWindow->pushToChildren(EditedLabel);
+        MainInternalWindow->pushToChildren(EditorPanel);
+        MainInternalWindow->pushToChildren(UndoPanel);
         MainInternalWindow->setLayout(MainInternalWindowLayout);
         MainInternalWindow->setBackgrounds(MainInternalWindowBackground);
         MainInternalWindow->setAlignmentInDrawingSurface(Vec2f(0.5f,0.5f));

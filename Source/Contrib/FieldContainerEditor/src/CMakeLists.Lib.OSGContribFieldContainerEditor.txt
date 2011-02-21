@@ -84,7 +84,7 @@ OSG_ADD_DIRECTORY("${CMAKE_BINARY_DIR}/Source/${PROJECT_NAME}")
 ##############################################################################
 # setup documentation
 ##############################################################################
-SET(OSG_${PROJECT_NAME}_DOXY_EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/FieldContainerEditors)
+SET(OSG_${PROJECT_NAME}_DOXY_EXAMPLES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/FieldContainerEditor)
 
 SET(OSG_${PROJECT_NAME}_DOXY_EXTERNAL_INCLUDE ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/Include/${PROJECT_NAME}.include)
 
