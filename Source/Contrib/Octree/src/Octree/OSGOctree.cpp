@@ -57,6 +57,88 @@
 #include "OSGPhysicsTriMeshGeom.h"
 #include "OSGCollisionEventDetails.h"
 
+/*!\class OSG::Octree
+ *
+ * \brief Class for constructing a subdivision of a geometric space in an Octree
+ * hierarchy.
+ *
+ * From <a href="http://en.wikipedia.org/wiki/Octree">Wikipedia</a>:
+ *
+ * An octree is a tree data structure in which each internal node has exactly
+ * eight children. Octrees are most often used to partition a three dimensional
+ * space by recursively subdividing it into eight octants. Octrees are the
+ * three-dimensional analog of quadtrees.
+ *
+ * \b Examples:
+ *
+ *  - \example_link{01OctreeConstruction, Octree construction and visualization}
+ *
+ */
+/*!\fn OctreePtr Octree::buildTree(Node* const RootNode,
+                    UInt32 TravMask,
+                    UInt32 MaxDepth,
+                    Real32 MinSideLength = 0.0f,
+                    bool uniformSideLengths = true)
+ * \brief Construct an octree using the given geometry.
+ *
+ * Depending on the complexity of the scene-graph node given, traversal mask,
+ * and the max depth, this function may take a considerable amount of time to
+ * complete.
+ *
+ * \param[in] RootNode The scene graph node containing the geometry to subdivide
+ * \param[in] TravMask The traversal mask to use when determining if nodes are
+ * intersectable
+ * \param[in] MaxDepth The maximum depth of the tree
+ * \param[in] MinSideLength The minimum length of the root Octree node
+ * \param[in] uniformSideLengths If true, all of the 3-sides of octree nodes
+ * will be the same length.
+ *
+ * \returns A pointer to the newly created octree
+ */
+
+/*!\fn OTNodePtr Octree::getRoot(void) const
+ * \brief Get the root node of this Octree
+ */
+
+/*!\fn OTNodePtr Octree::getNodeThatContains(const Pnt3f Location) const
+ * \brief Get the octree node that contains the given location
+ *
+ * \param[in] Location The location to look for
+ *
+ * \returns The Octree node that contains the given location.  Returns NULL if
+ * the location is not contained
+ */
+
+/*!\fn UInt32 Octree::getDepth(void) const
+ * \brief Get the maximum depth of the Octree
+ */
+
+/*!\fn UInt32 Octree::getNodeCount(void) const
+ * \brief Get the number of nodes in the Octree
+ */
+
+/*!\fn UInt32 Octree::getLeafNodeCount(void) const
+ * \brief Get the number of leaf nodes.
+ *
+ * Leaf nodes are nodes that do not contain any children nodes.
+ */
+
+/*!\fn UInt32 Octree::getBranchNodeCount(void) const
+ * \brief Geth the number of branch nodes.
+ *
+ * Branch nodes are nodes that contain children nodes.
+ */
+
+/*!\fn UInt32 Octree::getIntersectingNodeCount(void) const
+ * \brief Get the number of nodes that intersect with the geometry.
+ */
+
+/*!\fn UInt32 Octree::getIntersectingLeafNodeCount(void) const
+ * \brief Get the number of leaf nodes that intersect with the geometry
+ *
+ * Leaf nodes are nodes that do not contain any children nodes.
+ */
+
 
 OSG_BEGIN_NAMESPACE
 

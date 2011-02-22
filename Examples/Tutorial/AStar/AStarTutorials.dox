@@ -1,10 +1,26 @@
-#include "OSGConfig.h"
+include "OSGConfig.h"
 
 using namespace OSG;
 
 /*! 
    \example 01AStarPathing.cpp  Example
+   \n
+   \toolbox_video{81rLf05u4qU}
+   \n
+
    \example 02AnimatedPathing.cpp  Example
+   \n
+   \toolbox_video{vzMgD5he60E}
+   \n
+
    \example 03MultiplePaths.cpp  Example
+   \n
+   \toolbox_video{bTuGfP7_zMY}
+   \n
+
    \example 04AStarHeuristics.cpp  Example
+   \n
+   \toolbox_video{6nvAj8gKn5g}
+   \n
+
  */
