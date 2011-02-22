@@ -10,9 +10,9 @@ TOOLBOX_REPO_DIR=$AUTOBUILD_DIR/OpenSGToolbox
 OSG_REPO_DIR=$AUTOBUILD_DIR/OpenSGDevMaster
 TOOLBOX_REPO_URL=git://github.com/djkabala/OpenSGToolbox.git
 OSG_REPO_URL=git://github.com/djkabala/OpenSGDevMaster_Toolbox.git
-CMAKE_SETUP_FILE=~/Work/ScheduledBuilds/OpenSGToolbox/OpenSGToolboxCMakeSetup.txt
-
-CMAKE_INSTALL_PREFIX=~/public_html/OpenSGToolbox/V2
+CPACK_PACKAGE_TYPE=TGZ
+PUBLISH_URL=~/public_html
+CMAKE_SETUP_FILE=$AUTOBUILD_DIR/KeymakerCMakeSetup.txt
 
 BUILD_DIR=$OSG_REPO_DIR/LocalBuild
 
@@ -26,7 +26,8 @@ rm OpenSGToolboxBuild-*.log
 
 #Log to to a log file
 DATE_TIME=`date "+%Y-%m-%dT%H:%M:%S"`
-exec &> $AUTOBUILD_DIR/OpenSGToolboxBuild-$DATE_TIME.log
+LOG_FILE=$AUTOBUILD_DIR/OpenSGToolboxBuild-$DATE_TIME.log
+exec &> $LOG_FILE
 
 #pring to stdout too
 #tail -f capture.txt >/dev/tty7 &
@@ -50,16 +51,28 @@ pushd .
     cd $BUILD_DIR/Release
 
     #Run the cmake configuration
-    cmake -C $CMAKE_SETUP_FILE ../..
+    cmake -C "$CMAKE_SETUP_FILE" ../..
 
-    #Make the documentation
-    make install -j2
+    #Make the libraries
+    make OSGAllLibs -j2
+    make OSGAllExamples -j2 -i
+
+    make install/fast
+
+    #Run the tests
+    ctest
 
     #Package the Build
+    cpack -G $CPACK_PACKAGE_TYPE
+
+    #Move the package
+    mv *.tar.gz $AUTOBUILD_DIR
 
 popd 
 
 #Publish the Build
+cp *.tar.gz $PUBLISH_URL
+cp $LOG_FILE $PUBLISH_URL
 
 #End time
 date
