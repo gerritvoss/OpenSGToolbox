@@ -3,11 +3,25 @@
 using namespace OSG;
 
 /*! 
-   \example 01PlainDocumentModel.cpp  Example
-   \example 02StyledDocumentModel.cpp  Example
-   \example 03TextDomArea.cpp  Example
-   \example 04SyntaxHighlighter.cpp  Example
-   \example 05SearchWindow.cpp  Example
-   \example 06Editor.cpp  Example
-   \example 07UIRectTextDomArea.cpp  Example
+   \example 01PlainDocumentModel.cpp  This example loads a text file and saves it internally as a Plain TextDOM ('Plain' because it does not hold any formatting information). The structure of the Plain TableDom is given below
+   \n
+   
+   \example 02StyledDocumentModel.cpp  The Styled Document model loads in rtf files and saves it internally as a Styled TextDOM ('Styled' because it holds specific formatting information.).
+   \n
+   
+   \example 03TextDomArea.cpp  In this example we create a sample TextDomArea that is similar to a TextArea in notepad. 
+   \n
+   
+   \example 04SyntaxHighlighter.cpp  This example shows some of the highlighting capabilities of the AdvancedTextDomArea(AdvancedTextDomArea is nothing but the TextDomArea with the gutter region and few extra features.).
+   \n
+   
+   \example 05SearchWindow.cpp  This example displays the capabilities of the Search Window. It makes use of the Regex library to do the searching.
+   \n
+   
+   \example 06Editor.cpp  This is a complete example that shows an AdvancedTextDomArea and has several buttons that perform functions on the same. (Example: Loading/Saving a file, Viewing the Copy Clipboard)
+   \n
+   
+   \example 07UIRectTextDomArea.cpp  This is the same example as the previous one (06Editor) just that the editor is applied to a UIRectangle and it is viewed in a 3D scene.
+   \n
+   
  */
