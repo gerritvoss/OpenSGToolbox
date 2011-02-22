@@ -3,41 +3,265 @@
 using namespace OSG;
 
 /*! 
-   \example 01ParticleSystemDrawers.cpp Example
-   \example 02DynamicDistributions.cpp Example using OSG::Distribution
-   \htmlonly
-   <br>
-   <iframe title="YouTube video player" class="youtube-player" type="text/html" width="600" height="450" src="http://www.youtube.com/embed/_rzUxT5mAFc" frameborder="0" allowFullScreen></iframe>
-   <br>
-   \endhtmlonly
-   \example 03RateParticleGenerator.cpp Example
-   \example 04BurstParticleGenerator.cpp Example
-   \example 05aQuadSequenceParticleDrawer.cpp Example
-   \example 05bQuadSequenceParticleDrawer.cpp Example
-   \example 05QuadParticleDrawer.cpp Example
-   \example 06Explosion.cpp Example
-   \example 07AgeSizeParticleAffector.cpp Example
-   \example 08DistanceFadeAffector.cpp Example
-   \example 09DistanceKillParticleAffector.cpp Example
-   \example 10GravityParticleSystemAffector.cpp Example
-   \example 11DistanceAttractRepelParticleAffector.cpp Example
-   \example 12NodeParticleDrawer.cpp Example
-   \example 13GeometryCollision.cpp Example
-   \example 14ParticleSorting.cpp Example
+   \example 01ParticleSystemDrawers.cpp Example showing the basic creation of a OSG::ParticleSystem, adding
+   particles to the system, and attaching the system to the scene graph.
+   \n
+   \toolbox_video{S1kcsvVK8Yc}
+   \n
+
+
+
+
+   \example 02DynamicDistributions.cpp Example showing how the use of OSG::Distribution can be used to randomly distribute
+   the values created for a particles position, velocity, acceleration, color, size, lifespan, etc.
+   \n
+   \toolbox_video{Wmck8NQz3yc}
+   \n
+
+
+
+
+   \example 03RateParticleGenerator.cpp Example showing the use of a OSG::RateParticleGenerator.
+   \n
+   \toolbox_video{-IURmSHM6fc}
+   \n
+
+
+
+
+   \example 04BurstParticleGenerator.cpp Example showing the use of a OSG::BurstParticleGenerator.
+   \n
+   \toolbox_video{pIMBl-ZBmyQ}
+   \n
+
+
+
+
+   \example 05aQuadSequenceParticleDrawer.cpp Example showing how a OSG::QuadSequenceParticleSystemDrawer can be
+   used to animate the texture used to draw the quad as the age of the particle changes.
+   \n
+   \toolbox_video{9MfLwwFSCuA}
+   \n
+
+
+
+
+   \example 05bQuadSequenceParticleDrawer.cpp Example showing how a OSG::QuadSequenceParticleSystemDrawer can be
+   used to animate the texture used to draw the quad as the attributes of the particle changes
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
+   \example 05QuadParticleDrawer.cpp Example showing the use of OSG::QuadParticleSystemDrawer
+   \n
+   \toolbox_video{JW6GzkQD3LM}
+   \n
+
+
+
+
+   \example 06Explosion.cpp Example combining multiple particle systems and OSG::ParticleGenerator,
+   OSG::QuadSequenceParticleSystemDrawer, and OSG::ParticleAffector to make an explosion effect.
+   \n
+   \toolbox_video{MwIDfK1h1mw}
+   \n
+
+
+
+
+   \example 07AgeSizeParticleAffector.cpp Example showing the use of OSG::AgeSizeParticleAffector
+   \n
+   \toolbox_video{Q_WClN_YctE}
+   \n
+
+
+
+
+   \example 08DistanceFadeAffector.cpp Example showing the use of OSG::DistanceFadeParticleAffector.
+   \n
+   \toolbox_video{JUfl6gv3BeI}
+   \n
+
+
+
+
+   \example 09DistanceKillParticleAffector.cpp Example showing the use of OSG::DistanceKillParticleAffector.
+   \n
+   \toolbox_video{YcMhS3_QTD4}
+   \n
+
+
+
+
+   \example 10GravityParticleSystemAffector.cpp Example showing the use of OSG::CollectiveGravityParticleSystemAffector.
+   \n
+   \toolbox_video{j6ToYSgCZ-k}
+   \n
+
+
+
+
+   \example 11DistanceAttractRepelParticleAffector.cpp Example showing the use of OSG::.
+   \n
+   \toolbox_video{2v0FNfldkfg}
+   \n
+
+
+
+
+   \example 12NodeParticleDrawer.cpp Example showing the use of OSG::DistanceAttractRepelParticleAffector.
+   \n
+   \toolbox_video{Fl7pEm41QX8}
+   \n
+
+
+
+
+   \example 13GeometryCollision.cpp Example showing the use of OSG::CollisionParticleSystemAffector.
+   \n
+   \toolbox_video{2TX2lFeJtmo}
+   \n
+
+
+
+
+   \example 14ParticleSorting.cpp Example showing the options for sorting the rendering of a OSG::ParticleSystem
+   \n
+   \toolbox_video{mY_es-XTB-c}
+   \n
+
+
+
+
    \example 15FCFileTypeIO.cpp Example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
    \example 16FullTest.cpp Example
-   \example 17RandomMovement.cpp Example
-   \example 18GravityFieldParticleAffector.cpp Example
-   \example 19UniformFieldParticleAffector.cpp Example
+   \n
+   \toolbox_video{}
+   \n
+
+
+
+
+   \example 17RandomMovement.cpp Example showing the use of OSG::RandomMovementParticleAffector.
+   \n
+   \toolbox_video{gvCuISlTn3s}
+   \n
+
+
+
+
+   \example 18GravityFieldParticleAffector.cpp Example showing the use of OSG::GravityParticleAffector.
+   \n
+   \toolbox_video{Vm4tZ5of-RA}
+   \n
+
+
+
+
+   \example 19UniformFieldParticleAffector.cpp Example showing the use of OSG::UniformParticleAffectorBase.
+   \n
+   \toolbox_video{fNTyQTRiSnA}
+   \n
+
+
+
+
    \example 20RocketLauncher.cpp Example
+   \n
+   \toolbox_video{fT-27BHYdAQ}
+   \n
+
+
+
+
    \example 21Fireworks.cpp Example
-   \example 22VortexParticleAffector.cpp Example
-   \example 23RadialFieldParticleAffector.cpp Example
-   \example 24NewtonFieldParticleAffector.cpp Example
-   \example 25AirFieldParticleAffector.cpp Example
-   \example 26DragParticleAffector.cpp Example
-   \example 27TurbulenceParticleAffector.cpp Example
-   \example 28ConserveVelocityParticleAffector.cpp Example
-   \example 29AgeFadeAffector.cpp Example
-   \example 30SineWaveParticleAffector.cpp Example
+   \n
+   \toolbox_video{vaRknyIX5F0}
+   \n
+
+
+
+
+   \example 22VortexParticleAffector.cpp Example showing the use of OSG::VortexParticleAffector.
+   \n
+   \toolbox_video{6Ea3rOeHdxs}
+   \n
+
+
+
+
+   \example 23RadialFieldParticleAffector.cpp Example showing the use of OSG::RadialParticleAffector.
+   \n
+   \toolbox_video{t8xjE3bycsg}
+   \n
+
+
+
+
+   \example 24NewtonFieldParticleAffector.cpp Example showing the use of OSG::NewtonParticleAffector.
+   \n
+   \toolbox_video{jfRMszJNJ3Q}
+   \n
+
+
+
+
+   \example 25AirFieldParticleAffector.cpp Example showing the use of OSG::AirParticleAffector.
+   \n
+   \toolbox_video{nA98jnN4GIc}
+   \n
+
+
+
+
+   \example 26DragParticleAffector.cpp Example showing the use of OSG::DragParticleAffector.
+   \n
+   \toolbox_video{fMCrVtGM0AU}
+   \n
+
+
+
+
+   \example 27TurbulenceParticleAffector.cpp Example showing the use of OSG::TurbulenceParticleAffector.
+   \n
+   \toolbox_video{bbgZFK08d_k}
+   \n
+
+
+
+
+   \example 28ConserveVelocityParticleAffector.cpp Example showing the use of OSG::ConserveVelocityParticleAffector.
+   \n
+   \toolbox_video{VFyPH9yAnEI}
+   \n
+
+
+
+
+   \example 29AgeFadeAffector.cpp Example showing the use of OSG::AgeFadeParticleAffector.
+   \n
+   \toolbox_video{ur2RS-OCJiI}
+   \n
+
+
+
+
+   \example 30SineWaveParticleAffector.cpp Example showing the use of OSG::SineWaveParticleAffector.
+   \n
+   \toolbox_video{y_QHlCpbRaI}
+   \n
+
+
+
+
  */
