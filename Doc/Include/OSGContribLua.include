@@ -2,3 +2,5 @@
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/LuaMainPage.dox
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/Lua/Lua.dox
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Lua/LuaTutorials.dox
+
+IMAGE_PATH += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/Lua/Data

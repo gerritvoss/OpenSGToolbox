@@ -2,3 +2,5 @@
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Doc/ParticleSystemMainPage.dox
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Source/Contrib/ParticleSystem/ParticleSystem.dox
 INPUT += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/ParticleSystem/ParticleSystemTutorials.dox
+
+IMAGE_PATH += ${CMAKE_CURRENT_SOURCE_DIR}/../../../../Examples/Tutorial/ParticleSystem/Data
