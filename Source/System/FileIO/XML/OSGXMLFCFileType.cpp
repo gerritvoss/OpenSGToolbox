@@ -143,13 +143,13 @@ void XMLFCFileType::printXMLSemanticError(const std::string& ErrorDesc,
 
 std::string XMLFCFileType::getName(void) const
 {
-	return std::string("XMLFCFileType");
+    return std::string("XMLFCFileType");
 }
 
 XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
-	                     const std::string& FileNameOrExtension) const
+                                              const std::string& FileNameOrExtension) const
 {
-	std::string StreamText;
+    std::string StreamText;
     //Load the text stream into data
     {
         std::stringstream StringStreamText;
@@ -157,7 +157,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         StreamText = StringStreamText.str();
     }
 
-	FCPtrStore Result;
+    FCPtrStore Result;
 
     //Create the Xml document from the text
     rapidxml::xml_document<char> doc;    // character type defaults to char
@@ -184,14 +184,14 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
     IDLookupMap::iterator FCInfoIter;
     UInt32 CurrentFieldContainerOldId;
     //xmlpp::xmlattributes::const_iterator SearchItor;
-    
+
     rapidxml::attribute_iterator<char> AttributeIterator;
 
     XMLHandlerMap::const_iterator HandlerSearchItor;
 
-        //Create all of the Fields
+    //Create all of the Fields
     TheIDLookupMap = createFieldContainers(rapidxml::node_iterator<char>(doc.first_node(RootFCXMLToken.c_str())), rapidxml::node_iterator<char>(), FileNameOrExtension);
-    
+
     FieldContainerFactory::the()->setMapper(&TheFCIdMapper);
 
     //Vector to hold the Mask of fields changed for each read FieldContainer
@@ -219,10 +219,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         if(FCInfoIter == TheIDLookupMap.end())
         {
             printXMLSemanticError("No matching container found for ID " +
-                                   std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
-                                   StreamText,
-                                   IdAttrib->value() - StreamText.c_str(),
-                                   FileNameOrExtension);
+                                  std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
+                                  StreamText,
+                                  IdAttrib->value() - StreamText.c_str(),
+                                  FileNameOrExtension);
 
             continue;
         }
@@ -230,12 +230,12 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         if(FCInfoIter->second._Read)
         {
             printXMLSemanticError("A FieldContainer by this Id has already been written to.  Subsequent definitions will overwrite the previous ones. Original ID: " +
-                                   boost::lexical_cast<std::string>(CurrentFieldContainerOldId) +
-                                   ", new ID: " +
-                                   boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
-                                   StreamText,
-                                   IdAttrib->value() - StreamText.c_str(),
-                                   FileNameOrExtension);
+                                  boost::lexical_cast<std::string>(CurrentFieldContainerOldId) +
+                                  ", new ID: " +
+                                  boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
+                                  StreamText,
+                                  IdAttrib->value() - StreamText.c_str(),
+                                  FileNameOrExtension);
         }
         NewFieldContainer = FCInfoIter->second._Ptr;
 
@@ -258,10 +258,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                 if(Desc == NULL)
                 {
                     printXMLSemanticError(" There is no Field named: " + FieldName +
-                        ", for FieldContainers of Type: " + NewFieldContainer->getType().getCName(),
-                                                                       StreamText,
-                                                                       AttributeIterator->value() - StreamText.c_str(),
-                                                                       FileNameOrExtension);
+                                          ", for FieldContainers of Type: " + NewFieldContainer->getType().getCName(),
+                                          StreamText,
+                                          AttributeIterator->value() - StreamText.c_str(),
+                                          FileNameOrExtension);
                 }
                 else
                 {
@@ -271,8 +271,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     {
                         continue;
                     }
-					if(Desc->getFieldType().getClass() != FieldType::PtrField &&
-						Desc->getFieldType().getClass() != FieldType::ChildPtrField)
+                    if(Desc->getFieldType().getClass() != FieldType::PtrField &&
+                       Desc->getFieldType().getClass() != FieldType::ChildPtrField)
                     {
                         //Single fields
                         if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
@@ -293,7 +293,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             }
                         }
                         else if(Desc->getFieldType().getCardinality() == FieldType::MultiField &&
-                            !FieldValue.empty())
+                                !FieldValue.empty())
                         {
                             //Multi fields
                             std::vector< std::string > SplitVec;
@@ -320,8 +320,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     }
                 }
             }
-		}
-	}
+        }
+    }
     for(rapidxml::node_iterator<char> NodeListItor(doc.first_node(RootFCXMLToken.c_str())) ; NodeListItor!=rapidxml::node_iterator<char>() ; ++NodeListItor)
     {
         //Find the FieldContainerId Token
@@ -340,10 +340,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         if(FCInfoIter == TheIDLookupMap.end())
         {
             printXMLSemanticError("No matching container found for ID " +
-                                   std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
-                                   StreamText,
-                                   IdAttrib->value() - StreamText.c_str(),
-                                   FileNameOrExtension);
+                                  std::string(IdAttrib->value(), IdAttrib->value_size()) + "." ,
+                                  StreamText,
+                                  IdAttrib->value() - StreamText.c_str(),
+                                  FileNameOrExtension);
 
             continue;
         }
@@ -351,12 +351,12 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         if(FCInfoIter->second._Read)
         {
             printXMLSemanticError("A FieldContainer by this Id has already been written to.  Subsequent definitions will overwrite the previous ones. Original ID: " +
-                                   boost::lexical_cast<std::string>(CurrentFieldContainerOldId) +
-                                   ", new ID: " +
-                                   boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
-                                   StreamText,
-                                   IdAttrib->value() - StreamText.c_str(),
-                                   FileNameOrExtension);
+                                  boost::lexical_cast<std::string>(CurrentFieldContainerOldId) +
+                                  ", new ID: " +
+                                  boost::lexical_cast<std::string>(FCInfoIter->second._NewId),
+                                  StreamText,
+                                  IdAttrib->value() - StreamText.c_str(),
+                                  FileNameOrExtension);
         }
         NewFieldContainer = FCInfoIter->second._Ptr;
 
@@ -376,7 +376,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                 FieldValue = std::string(AttributeIterator->value(), AttributeIterator->value_size());
 
                 if(NewFieldContainer->getType().isDerivedFrom(AttachmentContainer::getClassType()) &&
-                        FieldName.compare(AttachmentsXMLToken) == 0)
+                   FieldName.compare(AttachmentsXMLToken) == 0)
                 {
                     //Get all of the attachments
                     FieldContainerUnrecPtr TheFC;
@@ -430,10 +430,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             else
                             {
                                 printXMLSemanticError( "Attempting to add a FieldContainer that is not derived from Attachment to the attachments.  Type of Field container with id: "
-                                     + FieldValue + " attemped to assign: " + TheFC->getType().getCName(),
-                                                                                   StreamText,
-                                                                                   AttributeIterator->value() - StreamText.c_str(),
-                                                                                   FileNameOrExtension);
+                                                       + FieldValue + " attemped to assign: " + TheFC->getType().getCName(),
+                                                       StreamText,
+                                                       AttributeIterator->value() - StreamText.c_str(),
+                                                       FileNameOrExtension);
                             }
                         }
                     }
@@ -443,10 +443,10 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                 if(Desc == NULL)
                 {
                     printXMLSemanticError(" There is no Field named: " + FieldName +
-                        ", for FieldContainers of Type: " + NewFieldContainer->getType().getCName(),
-                                                                       StreamText,
-                                                                       AttributeIterator->value() - StreamText.c_str(),
-                                                                       FileNameOrExtension);
+                                          ", for FieldContainers of Type: " + NewFieldContainer->getType().getCName(),
+                                          StreamText,
+                                          AttributeIterator->value() - StreamText.c_str(),
+                                          FileNameOrExtension);
                 }
                 else
                 {
@@ -455,8 +455,8 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                     {
                         continue;
                     }
-					if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-						Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+                    if(Desc->getFieldType().getClass() == FieldType::PtrField ||
+                       Desc->getFieldType().getClass() == FieldType::ChildPtrField)
                     {
                         //Single Fields
                         if(Desc->getFieldType().getCardinality() == FieldType::SingleField)
@@ -472,9 +472,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                     if(FCId != 0)
                                     {
                                         printXMLSemanticError("Could not find Container referenced with Id: " + FieldValue,
-                                                               StreamText,
-                                                               AttributeIterator->value() - StreamText.c_str(),
-                                                               FileNameOrExtension);
+                                                              StreamText,
+                                                              AttributeIterator->value() - StreamText.c_str(),
+                                                              FileNameOrExtension);
                                     }
                                     TheFC = NULL;
                                 }
@@ -489,9 +489,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                 if(TheFC == NULL)
                                 {
                                     printXMLSemanticError("Could not find Container referenced with Id: " + FieldValue,
-                                                           StreamText,
-                                                           AttributeIterator->value() - StreamText.c_str(),
-                                                           FileNameOrExtension);
+                                                          StreamText,
+                                                          AttributeIterator->value() - StreamText.c_str(),
+                                                          FileNameOrExtension);
                                 }
                             }
                             if(TheFC != NULL)
@@ -501,9 +501,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                 if(!isFieldContentDerivedFrom( Desc->getFieldType(),&(TheFC->getType())))
                                 {
                                     printXMLSemanticError( "Attempting to assign a FieldContainerUnrecPtr to field: " 
-                                                            + std::string(Desc->getCName()) + " of different types. Type of field: " 
-                                                            + std::string(Desc->getFieldType().getContentType().getCName()) + ". Type of Field container with id: " 
-                                                            + FieldValue + " attemped to assign: " + std::string(TheFC->getType().getCName()),
+                                                           + std::string(Desc->getCName()) + " of different types. Type of field: " 
+                                                           + std::string(Desc->getFieldType().getContentType().getCName()) + ". Type of Field container with id: " 
+                                                           + FieldValue + " attemped to assign: " + std::string(TheFC->getType().getCName()),
                                                            StreamText,
                                                            AttributeIterator->value() - StreamText.c_str(),
                                                            FileNameOrExtension);
@@ -521,7 +521,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                         }
                         //Multi Fields
                         else if(Desc->getFieldType().getCardinality() == FieldType::MultiField &&
-                            !FieldValue.empty())
+                                !FieldValue.empty())
                         {
                             std::vector< std::string > SplitVec;
                             boost::algorithm::split( SplitVec, FieldValue,
@@ -529,7 +529,7 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                             for(UInt32 SplitIndex(0); SplitIndex<SplitVec.size() ; ++SplitIndex)
                             {
                                 FieldContainerUnrecPtr TheFC;
-								UInt32 FCId;
+                                UInt32 FCId;
                                 try
                                 {
                                     FCId = boost::lexical_cast<UInt32>(SplitVec[SplitIndex].c_str());
@@ -539,9 +539,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                         if(FCId != 0)
                                         {
                                             printXMLSemanticError("Could not find Container referenced with Id: " + SplitVec[SplitIndex],
-                                                                   StreamText,
-                                                                   AttributeIterator->value() - StreamText.c_str(),
-                                                                   FileNameOrExtension);
+                                                                  StreamText,
+                                                                  AttributeIterator->value() - StreamText.c_str(),
+                                                                  FileNameOrExtension);
                                         }
                                         TheFC = NULL;
                                     }
@@ -556,9 +556,9 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                     if(TheFC == NULL)
                                     {
                                         printXMLSemanticError("Could not find Container referenced with Id: " + SplitVec[SplitIndex],
-                                                               StreamText,
-                                                               AttributeIterator->value() - StreamText.c_str(),
-                                                               FileNameOrExtension);
+                                                              StreamText,
+                                                              AttributeIterator->value() - StreamText.c_str(),
+                                                              FileNameOrExtension);
                                     }
                                 }
                                 if(TheFC != NULL)
@@ -573,34 +573,34 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
                                         }
                                         else if( Desc->getFieldType().getClass() == FieldType::ChildPtrField)
                                         {
-                                           static_cast<ChildPointerMField <FieldContainer *, UnrecordedRefCountPolicy,1>*>(NewFieldContainer->editField(Desc->getFieldId())->getField())->push_back(TheFC);
+                                            static_cast<ChildPointerMField <FieldContainer *, UnrecordedRefCountPolicy,1>*>(NewFieldContainer->editField(Desc->getFieldId())->getField())->push_back(TheFC);
                                         }
                                     }
                                     else
                                     {
                                         printXMLSemanticError( "Attempting to assign a FieldContainerPtr to a field of different types. Type of field: " 
-                                                                + std::string(Desc->getFieldType().getContentType().getCName()) + ". Type of Field container with id: " 
-                                                                + SplitVec[SplitIndex] + " attemped to assign: " + TheFC->getType().getCName(),
+                                                               + std::string(Desc->getFieldType().getContentType().getCName()) + ". Type of Field container with id: " 
+                                                               + SplitVec[SplitIndex] + " attemped to assign: " + TheFC->getType().getCName(),
                                                                StreamText,
                                                                AttributeIterator->value() - StreamText.c_str(),
                                                                FileNameOrExtension);
                                     }
                                 }
-								else if(FCId == 0)
-								{
-									//Push NULL
+                                else if(FCId == 0)
+                                {
+                                    //Push NULL
                                     if(Desc->getFieldType().getClass() == FieldType::PtrField)
                                     {
                                         static_cast<EditMFieldHandle<FieldContainerPtrMFieldBase>*>(NewFieldContainer->editField(Desc->getFieldId()).get())->add(NULL);
                                     }
                                     else if( Desc->getFieldType().getClass() == FieldType::ChildPtrField)
                                     {
-                                       static_cast<ChildPointerMField
-                                           <FieldContainer *,
-                                           UnrecordedRefCountPolicy,1>*>(NewFieldContainer->editField(Desc->getFieldId())->getField())->push_back(NULL);
+                                        static_cast<ChildPointerMField
+                                            <FieldContainer *,
+                                            UnrecordedRefCountPolicy,1>*>(NewFieldContainer->editField(Desc->getFieldId())->getField())->push_back(NULL);
                                     }
-								}
-                                
+                                }
+
                             }
                         }
                     }
@@ -627,25 +627,25 @@ XMLFCFileType::FCPtrStore XMLFCFileType::read(std::istream &InputStream,
         else
         {
             printXMLSemanticError("Could not create FieldContainer of type name " + std::string(NodeListItor->name(),NodeListItor->name_size()) +
-                ", because no such Field Container types are registered in the Field Container Factory",
-                                                               StreamText,
-                                                               AttributeIterator->value() - StreamText.c_str(),
-                                                               FileNameOrExtension);
+                                  ", because no such Field Container types are registered in the Field Container Factory",
+                                  StreamText,
+                                  AttributeIterator->value() - StreamText.c_str(),
+                                  FileNameOrExtension);
         }
     }
-    
+
 
     FieldContainerFactory::the()->setMapper(NULL);
-	return Result;
+    return Result;
 }
 
 XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_iterator<char> Begin, rapidxml::node_iterator<char> End,
-	                     const std::string& FileNameOrExtension) const
+                                                                const std::string& FileNameOrExtension) const
 {
-	//FieldContainerFactory::TypeIdMap ContainerOldIdMap;
-	FCInfoStruct NewFCInfo;
-	UInt32 OldFCId;
-	IDLookupMap OldToNewFCLookupMap;
+    //FieldContainerFactory::TypeIdMap ContainerOldIdMap;
+    FCInfoStruct NewFCInfo;
+    UInt32 OldFCId;
+    IDLookupMap OldToNewFCLookupMap;
     const FieldContainerType *FCType;
     BoostPath RootPath = FCFileHandler::the()->getRootFilePath();
     //Create all of the Fields
@@ -679,9 +679,9 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
                         {
                             SWARNING <<
                                 "ERROR in XMLFCFileType::read():" <<
-                                "could not load type: " << FCType->getCName() <<
-                                " from file " <<TheFilePath.string() <<
-                                std::endl;
+                                    "could not load type: " << FCType->getCName() <<
+                                     " from file " <<TheFilePath.string() <<
+                                     std::endl;
                         }
                         else
                         {
@@ -692,18 +692,18 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
                     {
                         SWARNING <<
                             "ERROR in XMLFCFileType::read():" <<
-                            "could not load type: " << FCType->getCName() <<
-                            " from file " <<TheFilePath.string() << " because that file does not exist." <<
-                            std::endl;
+                                "could not load type: " << FCType->getCName() <<
+                                 " from file " <<TheFilePath.string() << " because that file does not exist." <<
+                                 std::endl;
                     }
                 }
                 catch(boost::filesystem::basic_filesystem_error<BoostPath>& e)
                 {
                     SWARNING <<
                         "ERROR in XMLFCFileType::read():" <<
-                        "could not load type: " << FCType->getCName() <<
-                        " from file " <<TheFilePath.string() << " because that file does not exist." << ". Error: " << e.what() <<
-                        std::endl;
+                            "could not load type: " << FCType->getCName() <<
+                             " from file " <<TheFilePath.string() << " because that file does not exist." << ". Error: " << e.what() <<
+                             std::endl;
                 }
             }
         }
@@ -741,12 +741,12 @@ XMLFCFileType::IDLookupMap XMLFCFileType::createFieldContainers(rapidxml::node_i
             if(OldToNewFCLookupMap.insert(std::make_pair(OldFCId, NewFCInfo)).second == false)
             {
                 SFATAL << FileNameOrExtension << ": Could not create another FieldContainer with id: " << OldFCId
-                       << " because there is already a FieldContainer defined with that id." <<
+                    << " because there is already a FieldContainer defined with that id." <<
                     std::endl;
             }
         }
     }
-	return OldToNewFCLookupMap;
+    return OldToNewFCLookupMap;
 }
 
 bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStream,
@@ -771,7 +771,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                                        false);
 
     //Normalize the FieldContainer Ids for the file
-    std::map<UInt32,UInt32> RunTimeToFileIDMap;
+    BasicFCIdMapper RunTimeToFileIDMap;
     UInt32 i(1);
     for(FCFileType::FCPtrStore::iterator StoreItor(AllContainers.begin()) ; StoreItor!=AllContainers.end() ; ++StoreItor, ++i)
     {
@@ -794,9 +794,10 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
         child = doc.allocate_node(rapidxml::node_element, (*FCItor)->getType().getCName());
         root->append_node(child);
 
-		FieldContainer* FCAddr = (*FCItor);
+        FieldContainer* FCAddr = (*FCItor);
 
-        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>(RunTimeToFileIDMap[(*FCItor)->getId()]).c_str());
+        alloc_str =
+            doc.allocate_string(boost::lexical_cast<std::string>(RunTimeToFileIDMap.map((*FCItor)->getId())).c_str());
         attr = doc.allocate_attribute(FieldContainerIDXMLToken.c_str(),
                                       alloc_str);
         child->append_attribute(attr);
@@ -826,7 +827,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                 bool RecurseWrite(true);
                 //Write FC File type
                 if((!getOptionAs<bool>(getOptions(), "RecurseWriteDepFCFiles", RecurseWrite) ||
-                   RecurseWrite) &&
+                    RecurseWrite) &&
                    FCFileHandler::the()->getFileType(*FilePath,FCFileType::OSG_WRITE_SUPPORTED) != NULL)
                 {
                     FCPtrStore store;
@@ -871,7 +872,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                    MapItor->second->getType() != FilePathAttachment::getClassType() &&
                    MapItor->second->getType() != DrawableStatsAttachment::getClassType())
                 {
-                    AttachmentIds.push_back(boost::lexical_cast<std::string>(RunTimeToFileIDMap[MapItor->second->getId()]));
+                    AttachmentIds.push_back(boost::lexical_cast<std::string>(RunTimeToFileIDMap.map(MapItor->second->getId())));
                 }
             }
 
@@ -907,7 +908,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             if(Desc->isInternal())
             {
                 if((*FCItor)->getType().isDerivedFrom(Node::getClassType()) &&
-                    Desc == Node::getClassType().getFieldDesc(i))
+                   Desc == Node::getClassType().getFieldDesc(i))
                 {
                 }
                 else
@@ -924,19 +925,18 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
             }
             TheField = TheFieldHandle->getField();
             if(Desc->getFieldType().getClass() == FieldType::PtrField ||
-                Desc->getFieldType().getClass() == FieldType::ChildPtrField)
+               Desc->getFieldType().getClass() == FieldType::ChildPtrField)
             {
                 if(TheFieldHandle->getCardinality() == FieldType::SingleField)
                 {
                     if(static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue() == NULL ||
-                        std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getTypeId()) != IgnoreTypes.end())
+                       std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const SFUnrecFieldContainerPtr *>(TheField)->getValue()->getTypeId()) != IgnoreTypes.end())
                     {
                         alloc_str = doc.allocate_string("0");
                     }
                     else
                     {
-                        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>(
-                            RunTimeToFileIDMap[static_cast<const SFUnrecFieldContainerPtr*>(TheField)->getValue()->getId()]).c_str());
+                        alloc_str = doc.allocate_string(boost::lexical_cast<std::string>(RunTimeToFileIDMap.map(static_cast<const SFUnrecFieldContainerPtr*>(TheField)->getValue()->getId())).c_str());
                     }
                 }
                 else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
@@ -949,13 +949,14 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                             IdListStr += ";";
                         }
                         if(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index) == NULL ||
-                            std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getTypeId()) != IgnoreTypes.end())
+                           std::find(IgnoreTypes.begin(), IgnoreTypes.end(), static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getTypeId()) != IgnoreTypes.end())
                         {
                             IdListStr += boost::lexical_cast<std::string>(0);
                         }
                         else
                         {
-                            IdListStr += boost::lexical_cast<std::string>(RunTimeToFileIDMap[static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId()]);
+                            IdListStr +=
+                                boost::lexical_cast<std::string>(RunTimeToFileIDMap.map(static_cast<const MFUnrecFieldContainerPtr *>(TheField)->operator[](Index)->getId()));
                         }
                     }
                     alloc_str = doc.allocate_string(IdListStr.c_str());
@@ -964,6 +965,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                                               alloc_str);
                 child->append_attribute(attr);
             }
+            //Special case for BoostPath types
             else if(TheFieldHandle->getType() == SFBoostPath::getClassType())
             {
                 BoostPath FilePath = boost::filesystem::system_complete(static_cast<const SFBoostPath*>(TheField)->getValue());
@@ -994,6 +996,7 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                                               alloc_str);
                 child->append_attribute(attr);
             }
+            //Special case for String types
             else if(TheFieldHandle->getType() == SFString::getClassType())
             {
                 attr = doc.allocate_attribute(Desc->getCName(),
@@ -1001,57 +1004,69 @@ bool XMLFCFileType::write(const FCPtrStore &Containers, std::ostream &OutputStre
                                               SFString*>(TheField)->getValue().c_str());
                 child->append_attribute(attr);
             }
-            else
+            //Special case for FieldContainerMap types
+            else if(TheFieldHandle->getType() == SFFieldContainerMap::getClassType())
             {
-                //if(TheFieldHandle->getCardinality() == FieldType::SingleField)
-                //{
-                    //FieldValue.clear();
-                    //TheField->pushValueToString(FieldValue);
-                    //boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
-                    //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" << FieldValue << "\"" << std::endl;
+                std::ostringstream sstrm;
+                OutStream OSGOutputStream(sstrm);
+
+                FieldTraits<FieldContainerMap>::putToStream(static_cast<const SFFieldContainerMap*>(TheField)->getValue(),
+                                                            OSGOutputStream,
+                                                            RunTimeToFileIDMap);
+
+                alloc_str = doc.allocate_string(sstrm.str().c_str());
+
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              alloc_str);
+                child->append_attribute(attr);
+            }
+            else if(TheFieldHandle->getType() == MFFieldContainerMap::getClassType())
+            {
+                for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
+                {
                     std::ostringstream sstrm;
                     OutStream OSGOutputStream(sstrm);
-                    TheFieldHandle->pushValueToStream(OSGOutputStream);
+
+                    FieldTraits<FieldContainerMap>::putToStream((*static_cast<const MFFieldContainerMap*>(TheField))[Index],
+                                                                OSGOutputStream,
+                                                                RunTimeToFileIDMap);
+                    if(Index!=0)
+                    {
+                        OSGOutputStream << ";";
+                    }
                     alloc_str = doc.allocate_string(sstrm.str().c_str());
+
                     attr = doc.allocate_attribute(Desc->getCName(),
                                                   alloc_str);
                     child->append_attribute(attr);
-
-                //}
-                //else if(TheFieldHandle->getCardinality() == FieldType::MultiField)
-                //{
-                    //OSGOutputStream << "\t\t" << Desc->getCName() << "=\"" ;
-                    //for(UInt32 Index(0) ; Index<TheFieldHandle->size() ; ++Index)
-                    //{
-                        ////FieldValue.clear();
-                        ////TheField->pushValueToString(FieldValue, Index);
-                        ////boost::algorithm::trim_if(FieldValue, boost::algorithm::is_any_of(std::string("\"")));
-                        //if(Index!=0)
-                        //{
-                            //OSGOutputStream << ";";
-                        //}
-                        ////OSGOutputStream << FieldValue;
-                        //TheFieldHandle->pushValueToStream(OSGOutputStream, Index);
-                    //}
-                    //OSGOutputStream << "\"" << std::endl;
-                //}
+                }
+            }
+            else
+            {
+                std::ostringstream sstrm;
+                OutStream OSGOutputStream(sstrm);
+                TheFieldHandle->pushValueToStream(OSGOutputStream);
+                alloc_str = doc.allocate_string(sstrm.str().c_str());
+                attr = doc.allocate_attribute(Desc->getCName(),
+                                              alloc_str);
+                child->append_attribute(attr);
             }
         }
 
         XMLHandlerMap::const_iterator XMLHandlerMapItor = _HandlerMap.find(&TheFCType);
         //TODO: Add Write Handler Code
         //if(XMLHandlerMapItor != _HandlerMap.end())
-            //(XMLHandlerMapItor->second.second)(*FCItor,OutputStream);
+        //(XMLHandlerMapItor->second.second)(*FCItor,OutputStream);
     }
 
     rapidxml::print(OutputStream, doc, rapidxml::print_newline_attributes);
 
-	return true;
+    return true;
 }
 
 bool XMLFCFileType::registerHandler(const FieldContainerType* HandleFCType, OpenSGToolboxXMLReadHandler TheReadHandler, OpenSGToolboxXMLWriteHandler TheWriteHandler)
 {
-	if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
+    if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
     {
         SWARNING << "XMLFCFileType: Could not register XML Handler for XML token " << HandleFCType->getName() << " because a handler for that token is already registered."  << std::endl;
         return false;
@@ -1062,7 +1077,7 @@ bool XMLFCFileType::registerHandler(const FieldContainerType* HandleFCType, Open
         return true;
     }
 }
-     
+
 bool XMLFCFileType::unregisterHandler(const FieldContainerType* HandleFCType)
 {
     if(_HandlerMap.find(HandleFCType) != _HandlerMap.end())
@@ -1107,9 +1122,9 @@ XMLFCFileType::FCIdMapper::FCIdMapper(IDLookupMap *m): _PtrMap(m)
 {
 }
 
-UInt32 XMLFCFileType::FCIdMapper::map(UInt32 uiId)
+UInt32 XMLFCFileType::FCIdMapper::map(UInt32 uiId) const
 {
-    UInt32 id = 0;
+    UInt32 id(0);
     IDLookupMap::const_iterator iterID = _PtrMap->find(uiId);
     if(!(iterID == _PtrMap->end()))
     {
@@ -1118,6 +1133,23 @@ UInt32 XMLFCFileType::FCIdMapper::map(UInt32 uiId)
 
     return id;
 }
+
+XMLFCFileType::BasicFCIdMapper::BasicFCIdMapper()
+{
+}
+
+UInt32 XMLFCFileType::BasicFCIdMapper::map(UInt32 uiId) const
+{
+    UInt32 id(0);
+    MapType::const_iterator iterID = _IdMap.find(uiId);
+    if(!(iterID == _IdMap.end()))
+    {
+        id = iterID->second;
+    }
+
+    return id;
+}
+
 
 OSG_END_NAMESPACE
 

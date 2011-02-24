@@ -34,4 +34,16 @@ void XMLFCFileType::operator =(const XMLFCFileType& source)
 	SWARNING << "In XMLFCFileType operator =" << std::endl;
 }
 
+inline 
+std::pair<XMLFCFileType::BasicFCIdMapper::MapType::iterator, bool> XMLFCFileType::BasicFCIdMapper::insert(const MapType::value_type& x)
+{
+    return _IdMap.insert(x);
+}
+
+inline 
+XMLFCFileType::BasicFCIdMapper::MapType::size_type XMLFCFileType::BasicFCIdMapper::erase(const MapType::key_type& k)
+{
+    return _IdMap.erase(k);
+}
+
 OSG_END_NAMESPACE

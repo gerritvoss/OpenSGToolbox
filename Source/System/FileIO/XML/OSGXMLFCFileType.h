@@ -80,7 +80,24 @@ public:
             const IDLookupMap *_PtrMap;
             FCIdMapper(IDLookupMap *m);
 
-            virtual UInt32 map(UInt32 uiId);
+            virtual UInt32 map(UInt32 uiId) const;
+    };
+
+    struct BasicFCIdMapper : public ContainerIdMapper
+    {
+      public:
+        typedef std::map<UInt32, UInt32> MapType;
+
+        BasicFCIdMapper(void);
+
+        virtual UInt32 map(UInt32 uiId) const;
+
+        std::pair<MapType::iterator, bool> insert(const MapType::value_type& x);
+
+        MapType::size_type erase(const MapType::key_type& k);
+
+      private:
+        MapType _IdMap;
     };
 
     typedef boost::function<bool ( rapidxml::xml_node<char>& , const IDLookupMap&, FieldContainerUnrecPtr )> OpenSGToolboxXMLReadHandler;
