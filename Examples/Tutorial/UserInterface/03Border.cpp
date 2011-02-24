@@ -407,37 +407,27 @@ CompoundBorders, etc.
 
         ExampleBevelBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleBevelBorderButton->setText("Bevel Border");
-        ExampleBevelBorderButton->setBorder(ExampleBevelBorder);
-        ExampleBevelBorderButton->setActiveBorder(ExampleBevelBorder);
-        ExampleBevelBorderButton->setRolloverBorder(ExampleBevelBorder);
+        ExampleBevelBorderButton->setBorders(ExampleBevelBorder);
 
         ExampleCompoundBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleCompoundBorderButton->setText("Compound Border");
-        ExampleCompoundBorderButton->setBorder(ExampleCompoundBorder);
-        ExampleCompoundBorderButton->setActiveBorder(ExampleCompoundBorder);
-        ExampleCompoundBorderButton->setRolloverBorder(ExampleCompoundBorder);
+        ExampleCompoundBorderButton->setBorders(ExampleCompoundBorder);
 
         ExampleEmptyBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleEmptyBorderButton->setText("Empty Border");
-        ExampleEmptyBorderButton->setBorder(ExampleEmptyBorder);
-        ExampleEmptyBorderButton->setActiveBorder(ExampleEmptyBorder);
-        ExampleEmptyBorderButton->setRolloverBorder(ExampleEmptyBorder);
+        ExampleEmptyBorderButton->setBorders(ExampleEmptyBorder);
 
         ExampleEtchedBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleEtchedBorderButton->setText("Etched Border");
-        ExampleEtchedBorderButton->setBorder(ExampleEtchedBorder);
-        ExampleEtchedBorderButton->setActiveBorder(ExampleEtchedBorder);
-        ExampleEtchedBorderButton->setRolloverBorder(ExampleEtchedBorder);
+        ExampleEtchedBorderButton->setBorders(ExampleEtchedBorder);
 
         ExampleLineBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleLineBorderButton->setText("Line Border");
-        ExampleLineBorderButton->setBorder(ExampleLineBorder);
-        ExampleLineBorderButton->setActiveBorder(ExampleLineBorder);
-        ExampleLineBorderButton->setRolloverBorder(ExampleLineBorder);
+        ExampleLineBorderButton->setBorders(ExampleLineBorder);
 
         ExampleMatteBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleMatteBorderButton->setText("Matte Border");
-        ExampleMatteBorderButton->setBorder(ExampleMatteBorder);
+        ExampleMatteBorderButton->setBorders(ExampleMatteBorder);
         ExampleMatteBorderButton->setRolloverBorder(ExampleMatteBorder);
         // Note that when ExampleMatteBorderButton is pressed, the Border will revert to the 
         // default Border for Buttons, a "pressed" BevelBorder.  This is because no
@@ -445,27 +435,20 @@ CompoundBorders, etc.
 
         ExampleMultiColorMatteBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleMultiColorMatteBorderButton->setText("Multi-Color Matte Border");
-        ExampleMultiColorMatteBorderButton->setBorder(ExampleMultiColorMatteBorder);
-        ExampleMultiColorMatteBorderButton->setActiveBorder(ExampleMultiColorMatteBorder);
-        ExampleMultiColorMatteBorderButton->setRolloverBorder(ExampleMultiColorMatteBorder);
+        ExampleMultiColorMatteBorderButton->setBorders(ExampleMultiColorMatteBorder);
 
         ExampleoundedCornerLineBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleoundedCornerLineBorderButton->setText("Rounded Border");
-        ExampleoundedCornerLineBorderButton->setBorder(ExampleRoundedCornerLineBorder);
-        ExampleoundedCornerLineBorderButton->setActiveBorder(ExampleRoundedCornerLineBorder);
-        ExampleoundedCornerLineBorderButton->setRolloverBorder(ExampleRoundedCornerLineBorder);
+        ExampleoundedCornerLineBorderButton->setBorders(ExampleRoundedCornerLineBorder);
 
         ExampleShadowBorderButton->setPreferredSize(Vec2f(100,50));
         ExampleShadowBorderButton->setText("Shadow Border");
-        ExampleShadowBorderButton->setBorder(ExampleShadowBorder);
-        ExampleShadowBorderButton->setActiveBorder(ExampleShadowBorder);
-        ExampleShadowBorderButton->setRolloverBorder(ExampleShadowBorder);
+        ExampleShadowBorderButton->setBorders(ExampleShadowBorder);
+        ExampleShadowBorderButton->setFocusedBorder(NULL);
 
         ExamplePolygonBorderButton->setPreferredSize(Vec2f(100,50));
         ExamplePolygonBorderButton->setText("Polygon Border");    
-        ExamplePolygonBorderButton->setBorder(ExamplePolygonBorder);
-        ExamplePolygonBorderButton->setActiveBorder(ExamplePolygonBorder);
-        ExamplePolygonBorderButton->setRolloverBorder(ExamplePolygonBorder);
+        ExamplePolygonBorderButton->setBorders(ExamplePolygonBorder);
 
 
         // Create The Main InternalWindow
