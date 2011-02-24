@@ -340,6 +340,21 @@ void WindowsLookAndFeel::init(void)
     WindowsRolloverButtonBackground->setStartPosition(Vec2f(0.0f,0.0f));
     WindowsRolloverButtonBackground->setEndPosition(Vec2f(0.0f,1.0f));
 
+    //Focused Border
+    EmptyBorderRefPtr WindowsButtonFocusEmptyBorder = EmptyBorder::create();
+    WindowsButtonFocusEmptyBorder->setTopWidth(3);
+    WindowsButtonFocusEmptyBorder->setBottomWidth(3);
+    WindowsButtonFocusEmptyBorder->setRightWidth(3);
+    WindowsButtonFocusEmptyBorder->setLeftWidth(3);
+
+    LineBorderRefPtr WindowsButtonFocusLineBorder = LineBorder::create();
+    WindowsButtonFocusLineBorder->setWidth(1);
+    WindowsButtonFocusLineBorder->setColor(Color4f(0.6, 0.6, 0.6 ,0.8));
+
+    CompoundBorderRefPtr WindowsButtonFocusBorder = CompoundBorder::create();
+    WindowsButtonFocusBorder->setInnerBorder(WindowsButtonFocusLineBorder);
+    WindowsButtonFocusBorder->setOuterBorder(WindowsButtonFocusEmptyBorder);
+
     //Windows Button
     WindowsButton->setEnabled(true);
     WindowsButton->setVisible(true);
@@ -353,7 +368,7 @@ void WindowsLookAndFeel::init(void)
     //Border
     WindowsButton->setBorder(WindowsButtonBorder);
     WindowsButton->setRolloverBorder(WindowsRolloverButtonBorder);
-    WindowsButton->setFocusedBorder(WindowsButtonBorder);
+    WindowsButton->setFocusedBorder(WindowsButtonFocusBorder);
     WindowsButton->setDisabledBorder(WindowsDisabledButtonBorder);
     WindowsButton->setActiveBorder(WindowsActiveButtonBorder);
 
@@ -1560,7 +1575,7 @@ void WindowsLookAndFeel::init(void)
     //Border
     WindowsToggleButton->setBorder(WindowsButtonBorder);
     WindowsToggleButton->setRolloverBorder(WindowsRolloverButtonBorder);
-    WindowsToggleButton->setFocusedBorder(WindowsButtonBorder);
+    WindowsToggleButton->setFocusedBorder(WindowsButtonFocusBorder);
     WindowsToggleButton->setDisabledBorder(WindowsDisabledButtonBorder);
     WindowsToggleButton->setActiveBorder(WindowsActiveButtonBorder);
 

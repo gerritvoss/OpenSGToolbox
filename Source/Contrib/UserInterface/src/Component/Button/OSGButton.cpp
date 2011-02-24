@@ -465,6 +465,13 @@ void Button::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 
         drawText(TheGraphics, AlignedPosition, Opacity);
     }
+
+    //Focus Border
+    if(getFocused() && getFocusedBorder() != NULL)
+    {
+        getFocusedBorder()->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+        drawBorder(TheGraphics, getFocusedBorder(), Opacity);
+    }
 }
 
 void Button::drawText(Graphics* const TheGraphics, const Pnt2f& TopLeft, Real32 Opacity) const
