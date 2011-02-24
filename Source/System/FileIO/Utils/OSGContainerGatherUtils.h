@@ -27,6 +27,7 @@
 
 #include "OSGFieldContainer.h"
 #include "OSGFCFileType.h"
+#include "OSGFieldContainerMapFields.h"
 #include <set>
 #include <vector>
 
@@ -43,6 +44,20 @@ OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const FCFileType::FCPtrStore& Contain
                                            const FCFileType::FCPtrStore& IgnoreContainers,
                                            const std::vector<UInt32>& IgnoreTypes,
                                            bool RecurseFilePathAttachedContainers=false);
+
+void OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(FieldContainer* const TheContainer,
+                                                const FCFileType::FCPtrStore& Containers,
+                                                FCFileType::FCPtrStore& AllContainers,
+                                                FCFileType::FCPtrStore& IgnoreContainers,
+                                                const std::vector<UInt32>& IgnoreTypes,
+                                                bool RecurseFilePathAttachedContainers);
+
+void OSG_TBFILEIO_DLLMAPPING getAllDependantFCs(const FieldContainerMap& TheContainerMap,
+                                                const FCFileType::FCPtrStore& Containers,
+                                                FCFileType::FCPtrStore& AllContainers,
+                                                FCFileType::FCPtrStore& IgnoreContainers,
+                                                const std::vector<UInt32>& IgnoreTypes,
+                                                bool RecurseFilePathAttachedContainers);
 
 OSG_END_NAMESPACE
 
