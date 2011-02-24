@@ -380,15 +380,17 @@ void SpringLayout::setParent(ComponentContainerRefPtr p)
     constraints->setNorth(LayoutSpring::constant(0));
 
     LayoutSpringRefPtr Width = constraints->getWidth();
-    if(Width->getType() == ComponentWidthLayoutSpring::getClassType() &&
-        dynamic_pointer_cast<ComponentWidthLayoutSpring>(Width)->getComponent() == p)
+    if(Width == NULL ||
+       (Width->getType() == ComponentWidthLayoutSpring::getClassType() &&
+        dynamic_pointer_cast<ComponentWidthLayoutSpring>(Width)->getComponent() == p))
     {
         constraints->setWidth(LayoutSpring::constant(0,0,TypeTraits<Real32>::getMax()));
     }
     
     LayoutSpringRefPtr Height = constraints->getHeight();
-    if(Height->getType() == ComponentHeightLayoutSpring::getClassType() &&
-        dynamic_pointer_cast<ComponentHeightLayoutSpring>(Height)->getComponent() == p)
+    if(Height == NULL ||
+       (Height->getType() == ComponentHeightLayoutSpring::getClassType() &&
+        dynamic_pointer_cast<ComponentHeightLayoutSpring>(Height)->getComponent() == p))
     {
         constraints->setHeight(LayoutSpring::constant(0,0,TypeTraits<Real32>::getMax()));
     }
