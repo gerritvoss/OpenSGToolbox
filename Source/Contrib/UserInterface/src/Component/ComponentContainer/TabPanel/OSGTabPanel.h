@@ -111,9 +111,10 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TabPanel : public TabPanelBase
     //Returns the currently selected index for this tabpanel.
     void setSelectedIndex(const Int32& Index);
 
-    virtual Component* getNextSiblingOfChild(Component* const Child) const;
+    virtual bool allowFocusToLeave(void) const;
 
-    virtual Component* getPrevSiblingOfChild(Component* const Child) const;
+    virtual Component* getLeftmostDecendent(void) const;
+    virtual Component* getRightmostDecendent(void) const;
     /*=========================  PROTECTED  ===============================*/
 
   protected:

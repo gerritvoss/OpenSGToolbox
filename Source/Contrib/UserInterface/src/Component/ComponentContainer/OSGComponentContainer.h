@@ -122,6 +122,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentContainer : public ComponentC
 
     std::vector<Component*> getNamedDecendents(const std::string & Name) const;
 
+    virtual bool allowFocusToLeave(void) const;
+
     virtual Component* getNextSiblingOfChild(Component* const Child) const;
 
     virtual Component* getPrevSiblingOfChild(Component* const Child) const;

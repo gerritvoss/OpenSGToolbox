@@ -153,8 +153,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING Component : public ComponentBase
     //Component graph
     Component* getNextSibling(void) const;
     Component* getPrevSibling(void) const;
-    Component* getLeftmostDecendent(void) const;
-    Component* getRightmostDecendent(void) const;
+    virtual Component* getLeftmostDecendent(void) const;
+    virtual Component* getRightmostDecendent(void) const;
     Component* getNextDepthFirstComponent(void) const;
     Component* getPrevDepthFirstComponent(void) const;
     

@@ -132,7 +132,7 @@ void Component::moveFocus(Int32 MoveAmount)
     ComponentUnrecPtr ComponentToFocus = ComponentUnrecPtr(this);
     if(MoveAmount > 0)
     {
-        //Focus forward the the given amount
+        //Focus forward the given amount
         for(Int32 i(0) ; i<MoveAmount ; ++i)
         {
             //Find the next component that is Focus Interactable
@@ -140,8 +140,8 @@ void Component::moveFocus(Int32 MoveAmount)
             {
                 ComponentToFocus = ComponentToFocus->getNextDepthFirstComponent();
             }while(ComponentToFocus != NULL &&               //None found
-                  ComponentToFocus != this &&               //Looped back to this component
-                  !ComponentToFocus->isFocusInteractable());
+                   ComponentToFocus != this &&               //Looped back to this component
+                   !ComponentToFocus->isFocusInteractable());
 
             //Has the Depth first order reached the end
             if(ComponentToFocus == NULL &&
@@ -149,11 +149,25 @@ void Component::moveFocus(Int32 MoveAmount)
             {
                 ComponentToFocus = getParentWindow()->getLeftmostDecendent();
             }
+
+            //Is the focus allowed to go here
+            ComponentContainer* ParentTest(getParentContainer());
+            while(ParentTest != NULL &&
+                  !ParentTest->isDecendent(ComponentToFocus))
+            {
+                if(!ParentTest->allowFocusToLeave())
+                {
+                    //Change the focus to the first child of this parent
+                    ComponentToFocus = ParentTest->getLeftmostDecendent();
+                    break;
+                }
+                ParentTest = ParentTest->getParentContainer();
+            }
         }
     }
     else if(MoveAmount < 0)
     {
-        //Focus forward the the given amount
+        //Focus backward the given amount
         for(Int32 i(0) ; i>MoveAmount ; --i)
         {
             //Find the next component that is Focus Interactable
@@ -161,14 +175,28 @@ void Component::moveFocus(Int32 MoveAmount)
             {
                 ComponentToFocus = ComponentToFocus->getPrevDepthFirstComponent();
             }while(ComponentToFocus != NULL &&               //None found
-                  ComponentToFocus != this &&               //Looped back to this component
-                  !ComponentToFocus->isFocusInteractable());
+                   ComponentToFocus != this &&               //Looped back to this component
+                   !ComponentToFocus->isFocusInteractable());
 
             //Has the Depth first order reached the first
             if(ComponentToFocus == NULL &&
                getParentWindow() != NULL)
             {
                 ComponentToFocus = getParentWindow()->getRightmostDecendent();
+            }
+
+            //Is the focus allowed to go here
+            ComponentContainer* ParentTest(getParentContainer());
+            while(ParentTest != NULL &&
+                  !ParentTest->isDecendent(ComponentToFocus))
+            {
+                if(!ParentTest->allowFocusToLeave())
+                {
+                    //Change the focus to the first child of this parent
+                    ComponentToFocus = ParentTest->getRightmostDecendent();
+                    break;
+                }
+                ParentTest = ParentTest->getParentContainer();
             }
         }
     }

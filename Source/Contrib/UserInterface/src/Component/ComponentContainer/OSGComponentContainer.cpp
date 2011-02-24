@@ -53,10 +53,10 @@
 
 OSG_BEGIN_NAMESPACE
 
-// Documentation for this class is emitted in the
-// OSGComponentContainerBase.cpp file.
-// To modify it, please change the .fcd file (OSGComponentContainer.fcd) and
-// regenerate the base file.
+/*!\fn bool ComponentContainer::allowFocusToLeave(void) const
+ * \brief Is focus progression allowed to non-descendent Components of this
+ * container.
+ */
 
 /***************************************************************************\
  *                           Class variables                               *
@@ -79,16 +79,18 @@ void ComponentContainer::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+bool ComponentContainer::allowFocusToLeave(void) const
+{
+    return true;
+}
+
 Component* ComponentContainer::getNextSiblingOfChild(Component* const Child) const
 {
-    if(getParentContainer() != NULL)
+    Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
+    if(ChildIndex >= 0 &&
+       ChildIndex+1 < getMFChildren()->size())
     {
-        Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
-        if(ChildIndex >= 0 &&
-           ChildIndex+1 < getMFChildren()->size())
-        {
-            return getChildren(ChildIndex+1);
-        }
+        return getChildren(ChildIndex+1);
     }
 
     return NULL;
@@ -96,13 +98,10 @@ Component* ComponentContainer::getNextSiblingOfChild(Component* const Child) con
 
 Component* ComponentContainer::getPrevSiblingOfChild(Component* const Child) const
 {
-    if(getParentContainer() != NULL)
+    Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
+    if(ChildIndex > 0)
     {
-        Int32 ChildIndex = getMFChildren()->findIndex(const_cast<Component*>(Child));
-        if(ChildIndex > 0)
-        {
-            return getChildren(ChildIndex-1);
-        }
+        return getChildren(ChildIndex-1);
     }
 
     return NULL;

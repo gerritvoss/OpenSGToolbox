@@ -81,13 +81,28 @@ void TabPanel::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
-Component* TabPanel::getNextSiblingOfChild(Component* const Child) const
+bool TabPanel::allowFocusToLeave(void) const
 {
+    return false;
+}
+
+Component* TabPanel::getLeftmostDecendent(void) const
+{
+    if(getMFTabContents()->size() > 0 &&
+       getSelectedIndex() != -1)
+    {
+        return getTabContents(getSelectedIndex())->getLeftmostDecendent();
+    }
     return NULL;
 }
 
-Component* TabPanel::getPrevSiblingOfChild(Component* const Child) const
+Component* TabPanel::getRightmostDecendent(void) const
 {
+    if(getMFTabContents()->size() > 0 &&
+       getSelectedIndex() != -1)
+    {
+        return getTabContents(getSelectedIndex())->getRightmostDecendent();
+    }
     return NULL;
 }
 
