@@ -367,6 +367,16 @@ void TextField::detachFromEventProducer(void)
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
 
+void TextField::resolveLinks(void)
+{
+    Inherited::resolveLinks();
+
+    _CaretUpdateConnection.disconnect();
+    _MouseDownKeyTypedConnection.disconnect();
+    _MouseDownMouseReleasedConnection.disconnect();
+    _MouseDownMouseDraggedConnection.disconnect();
+}
+
 /*----------------------- constructors & destructors ----------------------*/
 
 TextField::TextField(void) :
