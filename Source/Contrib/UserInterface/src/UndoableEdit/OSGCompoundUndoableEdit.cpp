@@ -86,18 +86,16 @@ bool CompoundUndoableEdit::addEdit(const UndoableEditPtr anEdit)
 					_Edits.pop_back();
 				}
 				_Edits.push_back(anEdit);
+                return true;
 			}
 		}
 		else
 		{
 			_Edits.push_back(anEdit);
+            return true;
 		}
-		return true;
 	}
-	else
-	{
-		return false;
-	}
+    return false;
 }
 
 bool CompoundUndoableEdit::canRedo(void) const

@@ -109,13 +109,16 @@ bool UndoManager::addEdit(const UndoableEditPtr anEdit)
 	if(_IsInProgress)
 	{
 		trimEdits(_IndexOfNextAdd, _Edits.size()-1);
-		Inherited::addEdit(anEdit);
-		_IndexOfNextAdd = _Edits.size();
+		bool Result(Inherited::addEdit(anEdit));
+        if(Result)
+        {
+            _IndexOfNextAdd = _Edits.size();
 
-		trimForLimit();
-		produceStateChanged();
+            trimForLimit();
+            produceStateChanged();
+        }
 
-		return true;
+		return Result;
 	}
 	else
 	{
