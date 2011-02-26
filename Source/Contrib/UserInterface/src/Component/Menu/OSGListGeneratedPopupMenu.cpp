@@ -128,7 +128,8 @@ UInt32 ListGeneratedPopupMenu::getNumItems(void) const
 {
 	if(getModel() != NULL)
 	{
-		return getModel()->getSize();
+		//return getModel()->getSize();
+		return _MenuPanel->getMFChildren()->size();
 	}
 	else
 	{
