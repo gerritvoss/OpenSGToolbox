@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<FieldContainer
+	name="ScenePreviewFieldContainerEditor"
+	parent="AbstractFieldContainerEditor"
+    library="ContribFieldContainerEditor"
+    pointerfieldtypes="both"
+	structure="abstract"
+    systemcomponent="true"
+    parentsystemcomponent="true"
+	decoratable="false"
+    useLocalIncludes="false"
+    isNodeCore="false"
+    authors="David Kabala (djkabala@gmail.com)"
+>
+Abstract class that can be extended to provide a preview of a 3D scene 
+allong with the FieldEditors provided by GenericFieldContainerEditor.
+	<Field
+		name="GUIViewport"
+		type="GLViewport"
+		category="pointer"
+		cardinality="single"
+		visibility="external"
+		access="protected"
+        defaultValue="NULL"
+	>
+    The GLViewport to render the scene in.
+	</Field>
+	<Field
+		name="PreviewPanelSize"
+		type="Real32"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		access="public"
+        defaultValue="150.0f"
+	>
+    The height of the preview panel.
+	</Field>
+</FieldContainer>
