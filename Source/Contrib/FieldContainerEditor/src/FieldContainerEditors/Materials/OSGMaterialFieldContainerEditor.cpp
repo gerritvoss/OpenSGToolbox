@@ -46,11 +46,19 @@
 #include <OSGConfig.h>
 
 #include "OSGMaterialFieldContainerEditor.h"
+#include "OSGBaseFunctions.h"
 #include "OSGFieldContainerFactory.h"
 #include "OSGFieldContainerEditorFactory.h"
 #include "OSGFieldEditorFactory.h"
 #include "OSGSpringLayout.h"
 #include "OSGSpringLayoutConstraints.h"
+#include "OSGSplitPanel.h"
+#include "OSGScrollPanel.h"
+#include "OSGUIDrawObjectCanvas.h"
+#include "OSGGLViewport.h"
+#include "OSGGeometry.h"
+#include "OSGSwitch.h"
+#include "OSGMaterialGroup.h"
 
 #include "OSGNode.h"
 #include "OSGGroup.h"
@@ -114,6 +122,13 @@ void MaterialFieldContainerEditor::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+void MaterialFieldContainerEditor::setShape(Int32 TheShape)
+{
+    _Shape = osgClamp<UInt32>(FIRST_SHAPE,TheShape,LAST_SHAPE);
+    _GeoChoiceCore->setChoice(_Shape);
+	_MaterialViewport->showAll();
+}
+
 Vec2f MaterialFieldContainerEditor::getContentRequestedSize(void) const
 {
     return _GenericEditor->getContentRequestedSize() +
@@ -134,7 +149,7 @@ bool MaterialFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     }
 
     //Attach the material
-    _MaterialGeometry->setMaterial(dynamic_cast<Material*>(fc));
+    _MatGroupCore->setMaterial(dynamic_cast<Material*>(fc));
 	_MaterialViewport->showAll();
 
     return true;
@@ -143,42 +158,81 @@ bool MaterialFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
 bool MaterialFieldContainerEditor::dettachFieldContainer(void)
 {
     //Dettach the material
-    _MaterialGeometry->setMaterial(NULL);
+    _MatGroupCore->setMaterial(NULL);
 
     return Inherited::dettachFieldContainer();
+}
+
+bool MaterialFieldContainerEditor::getScrollableTracksViewportHeight(void)
+{
+    return true;
+}
+
+bool MaterialFieldContainerEditor::getScrollableTracksViewportWidth(void)
+{
+    return true;
+}
+
+bool MaterialFieldContainerEditor::getScrollableHeightMinTracksViewport(void)
+{
+    return true;
+}
+
+bool MaterialFieldContainerEditor::getScrollableWidthMinTracksViewport(void)
+{
+    return true;
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
-void MaterialFieldContainerEditor::createGeometry(void)
+NodeTransitPtr MaterialFieldContainerEditor::createMatNode(void)
 {
-    // Make Torus Node (creates Torus in background of scene)
-    switch(getMaterialShape())
+    //Make the Switch Node
+    _GeoChoiceCore = Switch::create();
+    _GeoChoiceCore->setChoice(FIRST_SHAPE);
+
+    NodeRecPtr GeoChoiceNode = makeNodeFor(_GeoChoiceCore);
+
+    // Make geometry
+    for(Int32 ShapeType(FIRST_SHAPE) ; ShapeType<=LAST_SHAPE ; ++ShapeType)
     {
-    case PLANE_SHAPE:
-        _MaterialGeometry = makePlaneGeo(5.0f,5.0f, 5, 5);
-        break;
-    case BOX_SHAPE:
-        _MaterialGeometry = makeBoxGeo(5.0f,5.0f,5.0f, 5, 5, 5);
-        break;
-    case TEAPOT_SHAPE:
-        _MaterialGeometry = makeTeapotGeo(2, 1.0f);
-        break;
-    case CONE_SHAPE:
-        _MaterialGeometry = makeConeGeo(5.0f, 1.0f, 24, true, true);
-        break;
-    case CYLINDER_SHAPE:
-        _MaterialGeometry = makeCylinderGeo(5.0f, 1.0f, 24, true, true, true);
-        break;
-    case TORUS_SHAPE:
-        _MaterialGeometry = makeTorusGeo(.6, 2.5f, 32, 32);
-        break;
-    case SPHERE_SHAPE:
-    default:
-        _MaterialGeometry = makeSphereGeo(3, 2.5f);
-        break;
+        NodeRecPtr GeoNode;
+        switch(ShapeType)
+        {
+            case PLANE_SHAPE:
+                GeoNode = makePlane(5.0f,5.0f, 5, 5);
+                break;
+            case BOX_SHAPE:
+                GeoNode = makeBox(5.0f,5.0f,5.0f, 5, 5, 5);
+                break;
+            case TEAPOT_SHAPE:
+                GeoNode = makeTeapot(4, 1.0f);
+                break;
+            case CONE_SHAPE:
+                GeoNode = makeCone(5.0f, 1.0f, 24, true, true);
+                break;
+            case CYLINDER_SHAPE:
+                GeoNode = makeCylinder(5.0f, 1.0f, 24, true, true, true);
+                break;
+            case TORUS_SHAPE:
+                GeoNode = makeTorus(.6, 2.5f, 32, 32);
+                break;
+            default:
+            case SPHERE_SHAPE:
+                GeoNode = makeSphere(3, 2.5f);
+                break;
+            
+        }
+        GeoChoiceNode->addChild(GeoNode);
     }
+
+    //Make the Material group node
+    _MatGroupCore = MaterialGroup::create();
+    NodeRecPtr MatGroupCoreNode = makeNodeFor(_MatGroupCore);
+    MatGroupCoreNode->addChild(GeoChoiceNode);
+
+    return NodeTransitPtr(MatGroupCoreNode);
 }
 
 void MaterialFieldContainerEditor::createGLViewport(void)
@@ -192,10 +246,7 @@ void MaterialFieldContainerEditor::createGLViewport(void)
     NodeRefPtr CameraBeaconNode = Node::create();
     CameraBeaconNode->setCore(CameraBeaconTransform);
 
-    createGeometry();
-    
-    NodeRefPtr GeometryNode = Node::create();
-    GeometryNode->setCore(_MaterialGeometry);
+    NodeRefPtr MatNode = createMatNode();
 
     //Camera
     PerspectiveCameraRefPtr DefaultCamera = PerspectiveCamera::create();
@@ -217,7 +268,7 @@ void MaterialFieldContainerEditor::createGLViewport(void)
 
     NodeRefPtr LightNode = Node::create();
     LightNode->setCore(DefaultLight);
-    LightNode->addChild(GeometryNode);
+    LightNode->addChild(MatNode);
 
     // Make Main Scene Node and add the Torus
     NodeRefPtr DefaultRootNode = OSG::Node::create();
@@ -240,6 +291,8 @@ void MaterialFieldContainerEditor::createGLViewport(void)
 
     _MaterialViewport = GLViewport::create();
     _MaterialViewport->setPort(DefaultViewport);
+    _ViewportKeyTypedConnection =
+        _MaterialViewport->connectKeyTyped(boost::bind(&MaterialFieldContainerEditor::handleViewportKeyTyped, this, _1));
 }
 
 void MaterialFieldContainerEditor::onCreate(const MaterialFieldContainerEditor *Id)
@@ -247,26 +300,28 @@ void MaterialFieldContainerEditor::onCreate(const MaterialFieldContainerEditor *
 	Inherited::onCreate(Id);
     if(Id != NULL)
     {
-        pushToChildren(_GenericEditor);
-
         //Create the Viewport, geometry, camera, light
         createGLViewport();
 
-        //Create the viewport to view the material in
-        _MaterialViewport->setPreferredSize(Vec2f(150.0f,150.0f));
+        ScrollPanelRecPtr EditorScrollPanel = ScrollPanel::create();
+        EditorScrollPanel->setViewComponent(_GenericEditor);
+
+        _MainSplitPanel = SplitPanel::create();
+        _MainSplitPanel->setOrientation(SplitPanel::VERTICAL_ORIENTATION);
+        _MainSplitPanel->setDividerPosition(150.0f); 
+        _MainSplitPanel->setMinComponent(_MaterialViewport);
+        _MainSplitPanel->setMaxComponent(EditorScrollPanel);
+
+        pushToChildren(_MainSplitPanel);
 
         SpringLayoutRefPtr TheLayout = SpringLayout::create();
 
-        TheLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE,_MaterialViewport, 0,SpringLayoutConstraints::NORTH_EDGE, this);
-        TheLayout->putConstraint(SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE,_MaterialViewport, 0,SpringLayoutConstraints::HORIZONTAL_CENTER_EDGE, this);
-
-        TheLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE,_GenericEditor, 1,SpringLayoutConstraints::SOUTH_EDGE, _MaterialViewport);
-        TheLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE,_GenericEditor, 0,SpringLayoutConstraints::SOUTH_EDGE, this);
-        TheLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE,_GenericEditor, 0,SpringLayoutConstraints::EAST_EDGE, this);
-        TheLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _GenericEditor, 0,SpringLayoutConstraints::WEST_EDGE, this);
+        TheLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE,_MainSplitPanel, 0,SpringLayoutConstraints::NORTH_EDGE, this);
+        TheLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE,_MainSplitPanel, 0,SpringLayoutConstraints::SOUTH_EDGE, this);
+        TheLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE,_MainSplitPanel, 0,SpringLayoutConstraints::EAST_EDGE, this);
+        TheLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, _MainSplitPanel, 0,SpringLayoutConstraints::WEST_EDGE, this);
 
         setLayout(TheLayout);
-        pushToChildren(_MaterialViewport);
     }
 }
 
@@ -278,9 +333,20 @@ void MaterialFieldContainerEditor::resolveLinks(void)
 {
     Inherited::resolveLinks();
 
-    _MaterialViewport = NULL;
+    _ViewportKeyTypedConnection.disconnect();
 
-    _MaterialGeometry = NULL;
+    _MainSplitPanel = NULL;
+    _MaterialViewport = NULL;
+    _GeoChoiceCore = NULL;
+    _MatGroupCore = NULL;
+}
+
+void MaterialFieldContainerEditor::handleViewportKeyTyped(KeyEventDetails* const details)
+{
+    if(details->getKey() == KeyEventDetails::KEY_S)
+    {
+        toggleShape();
+    }
 }
 
 /*----------------------- constructors & destructors ----------------------*/
@@ -306,11 +372,6 @@ void MaterialFieldContainerEditor::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
-
-    if(whichField & MaterialShapeFieldMask)
-    {
-        createGeometry();
-    }
 }
 
 void MaterialFieldContainerEditor::dump(      UInt32    ,

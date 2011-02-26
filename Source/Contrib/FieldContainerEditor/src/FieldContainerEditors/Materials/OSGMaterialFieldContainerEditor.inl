@@ -40,4 +40,16 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+Int32 MaterialFieldContainerEditor::getShape(void) const
+{
+    return _Shape;
+}
+
+inline
+void MaterialFieldContainerEditor::toggleShape(void)
+{
+    setShape((getShape()+1) % LAST_SHAPE);
+}
+
 OSG_END_NAMESPACE

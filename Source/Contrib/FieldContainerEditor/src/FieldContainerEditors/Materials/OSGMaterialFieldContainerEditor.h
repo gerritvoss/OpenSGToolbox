@@ -43,8 +43,10 @@
 #endif
 
 #include "OSGMaterialFieldContainerEditorBase.h"
-#include "OSGGLViewport.h"
-#include "OSGGeometry.h"
+#include "OSGGLViewportFields.h"
+#include "OSGSplitPanelFields.h"
+#include "OSGSwitchFields.h"
+#include "OSGMaterialGroupFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -61,13 +63,15 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
   public:
     enum MaterialShapes
     {
-        SPHERE_SHAPE   = 0,
-        PLANE_SHAPE    = 1,
-        BOX_SHAPE      = 2,
-        TEAPOT_SHAPE   = 3,
-        CONE_SHAPE     = 4,
-        CYLINDER_SHAPE = 5,
-        TORUS_SHAPE    = 6
+        FIRST_SHAPE    = 0,
+        SPHERE_SHAPE   = FIRST_SHAPE,
+        PLANE_SHAPE    = SPHERE_SHAPE   + 1,
+        BOX_SHAPE      = PLANE_SHAPE    + 1,
+        TEAPOT_SHAPE   = BOX_SHAPE      + 1,
+        CONE_SHAPE     = TEAPOT_SHAPE   + 1,
+        CYLINDER_SHAPE = CONE_SHAPE     + 1,
+        TORUS_SHAPE    = CYLINDER_SHAPE + 1,
+        LAST_SHAPE     = TORUS_SHAPE
     };
 
     typedef MaterialFieldContainerEditorBase Inherited;
@@ -96,6 +100,26 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
     virtual bool dettachFieldContainer(void);
 
 	virtual Vec2f getContentRequestedSize(void) const;
+
+    void setShape(Int32 TheShape);
+    Int32 getShape(void) const;
+    void toggleShape(void);
+
+    //Return true if a viewport should always force the height of this
+    //Scrollable to match the height of the viewport.
+    virtual bool getScrollableTracksViewportHeight(void);
+
+    //Return true if a viewport should always force the width of this
+    //Scrollable to match the width of the viewport.
+    virtual bool getScrollableTracksViewportWidth(void);
+
+    //Return true if a viewport should always force the height of this
+    //Scrollable to be at at least the height of the viewport.
+    virtual bool getScrollableHeightMinTracksViewport(void);
+
+    //Return true if a viewport should always force the width of this
+    //Scrollable to be at at least the width of the viewport.
+    virtual bool getScrollableWidthMinTracksViewport(void);
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -139,12 +163,20 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING MaterialFieldContainerEditor : 
     /*! \}                                                                 */
     void updateMaterialViewport(void);
     void createGLViewport(void);
-    void createGeometry(void);
+    NodeTransitPtr createMatNode(void);
 
     static std::vector<const FieldContainerType*> _EditableTypes;
 
-    GLViewportRefPtr _MaterialViewport;
-    GeometryRefPtr  _MaterialGeometry;
+    SplitPanelRecPtr    _MainSplitPanel;
+    GLViewportRecPtr    _MaterialViewport;
+    SwitchRecPtr        _GeoChoiceCore;
+    MaterialGroupRecPtr _MatGroupCore;
+    Int32               _Shape;
+
+
+    void handleViewportKeyTyped(KeyEventDetails* const details);
+
+    boost::signals2::connection _ViewportKeyTypedConnection;
     /*==========================  PRIVATE  ================================*/
 
   private:

@@ -14,17 +14,6 @@
     authors="David Kabala (djkabala@gmail.com)                             "
 >
 	<Field
-		name="MaterialShape"
-		type="UInt32"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-        defaultValue="MaterialFieldContainerEditor::SPHERE_SHAPE"
-	>
-    The Geometric shape used to present the material.
-	</Field>
-	<Field
 		name="AnimateRate"
 		type="Real32"
 		category="data"
