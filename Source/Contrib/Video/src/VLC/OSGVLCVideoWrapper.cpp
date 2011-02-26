@@ -465,9 +465,17 @@ bool VLCVideoWrapper::stop(void)
 
 bool VLCVideoWrapper::close(void)
 {
-    libvlc_media_player_release(_MediaPlayer);// releases the media player itself
+    if(_MediaPlayer != NULL)
+    {
+        libvlc_media_player_release(_MediaPlayer);// releases the media player itself
+        _MediaPlayer = NULL;
+    }
 
-    libvlc_release(_VLCInstance);
+    if(_VLCInstance != NULL)
+    {
+        libvlc_release(_VLCInstance);
+        _VLCInstance = NULL;
+    }
 
     // player is no longer initialized
     _Initialized = false;
