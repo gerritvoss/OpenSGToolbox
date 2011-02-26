@@ -28,6 +28,7 @@
 
 #ifdef __APPLE__
 //#include "Folders.h"
+#include <CoreServices/CoreServices.h>
 #endif
 
 #ifdef WIN32
@@ -41,16 +42,59 @@ OSG_BEGIN_NAMESPACE
 /********************** OS X **************************/
 #ifdef __APPLE__
 
+std::string FSRef2String(const FSRef& foundRef)
+{
+    std::string Result("");
+
+    CFURLRef tURL;
+    tURL = CFURLCreateFromFSRef(kCFAllocatorDefault, &foundRef);
+
+    CFStringRef tCFString = CFURLCopyFileSystemPath(tURL,
+                                                    kCFURLPOSIXPathStyle);
+
+    CFIndex buf_len = 1 + CFStringGetMaximumSizeForEncoding(CFStringGetLength(tCFString), 
+                                                            kCFStringEncodingUTF8);
+    char *buffer  = new char[buf_len];
+    CFStringGetCString(tCFString, buffer, buf_len,
+                       kCFStringEncodingUTF8);
+
+    Result = std::string(buffer);
+
+    delete[] buffer;
+    CFRelease(tCFString);
+    CFRelease(tURL);
+
+    return Result;
+}
+
 BoostPath getPlatformUserAppDataDir(void)
 {
-    return BoostPath(getenv("HOME")) / "/Library/Application Support";
+    BoostPath Result("");
+
+    //Carbon
+    FSRef foundRef;
+    OSErr err = FSFindFolder(kUserDomain, kApplicationSupportFolderType,
+                             kDontCreateFolder, &foundRef);
+    if (err == noErr)
+    {
+        Result = BoostPath(FSRef2String(foundRef));
+    }
+    return Result;
 }
 
 BoostPath getPlatformTempDataDir(void)
 {
+    BoostPath Result("");
+
     //Carbon
-    //FSFindFolder();
-    return BoostPath("/tmp");
+    FSRef foundRef;
+    OSErr err = FSFindFolder(kUserDomain, kTemporaryFolderType,
+                             kDontCreateFolder, &foundRef);
+    if (err == noErr)
+    {
+        Result = BoostPath(FSRef2String(foundRef));
+    }
+    return Result;
 }
 
 #endif
