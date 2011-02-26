@@ -225,7 +225,10 @@ void UIViewport::changed(ConstFieldMaskArg whichField,
 
     if(whichField & SizeFieldMask &&
        getViewComponent() != NULL &&
-       (getViewComponent()->getScrollableTracksViewportHeight() || getViewComponent()->getScrollableTracksViewportWidth()))
+       (getViewComponent()->getScrollableTracksViewportHeight() ||
+        getViewComponent()->getScrollableTracksViewportWidth() ||
+        getViewComponent()->getScrollableHeightMinTracksViewport() ||
+        getViewComponent()->getScrollableWidthMinTracksViewport()))
     {
         updateViewComponentSize();
     }
