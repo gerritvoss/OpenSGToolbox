@@ -702,7 +702,7 @@ void FModSound::changed(ConstFieldMaskArg whichField,
     if(whichField & LoopingFieldMask)
     {
         FMOD_RESULT      result;
-        result = _FModSound->setLoopCount(getLooping());
+        result = _FModSound->setLoopCount(getLooping() - 1);
         FMOD_ERRCHECK(result,"FModSound::changed()");
     }
 }
