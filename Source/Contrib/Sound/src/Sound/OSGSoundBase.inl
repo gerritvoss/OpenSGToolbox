@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,6 +47,8 @@
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
+
+#include "OSGSoundEventDetails.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -645,6 +647,50 @@ inline
 void SoundBase::produceSoundEnded(SoundEndedEventDetailsType* const e)
 {
     produceEvent(SoundEndedEventId, e);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundSeeked(const SoundSeekedEventType::slot_type &listener, 
+                                                                               boost::signals2::connect_position at)
+{
+    return _SoundSeekedEvent.connect(listener, at);
+}
+
+inline
+boost::signals2::connection  SoundBase::connectSoundSeeked(const SoundSeekedEventType::group_type &group,
+                                                    const SoundSeekedEventType::slot_type &listener, boost::signals2::connect_position at)
+{
+    return _SoundSeekedEvent.connect(group, listener, at);
+}
+
+inline
+void  SoundBase::disconnectSoundSeeked(const SoundSeekedEventType::group_type &group)
+{
+    _SoundSeekedEvent.disconnect(group);
+}
+
+inline
+void  SoundBase::disconnectAllSlotsSoundSeeked(void)
+{
+    _SoundSeekedEvent.disconnect_all_slots();
+}
+
+inline
+bool  SoundBase::isEmptySoundSeeked(void) const
+{
+    return _SoundSeekedEvent.empty();
+}
+
+inline
+UInt32  SoundBase::numSlotsSoundSeeked(void) const
+{
+    return _SoundSeekedEvent.num_slots();
+}
+
+inline
+void SoundBase::produceSoundSeeked(SoundSeekedEventDetailsType* const e)
+{
+    produceEvent(SoundSeekedEventId, e);
 }
 
 OSG_GEN_CONTAINERPTR(Sound);

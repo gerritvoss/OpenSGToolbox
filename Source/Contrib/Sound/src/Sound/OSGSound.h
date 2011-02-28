@@ -154,6 +154,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING Sound : public SoundBase
     void produceSoundUnpaused(UInt32 TheChannel);
     void produceSoundLooped(UInt32 TheChannel);
     void produceSoundEnded(UInt32 TheChannel);
+    void produceSoundSeeked(UInt32 TheChannel);
     /*==========================  PRIVATE  ================================*/
 
   private:

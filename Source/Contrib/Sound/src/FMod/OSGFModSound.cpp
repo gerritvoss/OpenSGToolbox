@@ -286,6 +286,8 @@ void FModSound::seek(Real32 pos, UInt32 ChannelID)
         FMOD_RESULT result;
         result = channel->setPosition(position, FMOD_TIMEUNIT_MS);
         FMOD_ERRCHECK(result,"FModSound::seek()");
+
+        produceSoundSeeked(ChannelID);
     }
 }
 

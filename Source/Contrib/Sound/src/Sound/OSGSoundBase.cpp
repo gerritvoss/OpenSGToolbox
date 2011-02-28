@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -57,8 +57,6 @@
 #include "OSGConfig.h"
 
 
-#include "OSGSoundEventDetails.h"
-
 
 
 #include "OSGSoundBase.h"
@@ -79,7 +77,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::Sound
-    A Sound Interface.
+    A Sound interface that can be used to load, play, stop, and configure an audio output.
  */
 
 /***************************************************************************\
@@ -87,19 +85,19 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \var Pnt3f           SoundBase::_sfPosition
-    Initial position of this sound.
+    Initial position of this sound in local space.
 */
 
 /*! \var Vec3f           SoundBase::_sfVelocity
-    Initial velocity of this sound.
+    Initial velocity of this sound in local space.
 */
 
 /*! \var Real32          SoundBase::_sfVolume
-    Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.
+    Volume of the sound.
 */
 
 /*! \var Real32          SoundBase::_sfPan
-    Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.
+    Set the Left-to-right panning of the sound.
 */
 
 /*! \var Real32          SoundBase::_sfFrequency
@@ -107,11 +105,12 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var Int32           SoundBase::_sfLooping
-    Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.
+    Number of times to play the sound in a loop. Values <0 will loop the sound infinitely.
 */
 
 /*! \var bool            SoundBase::_sfStreaming
-    Whether or not this sound should be streamed.
+    Whether or not this sound should be streamed.  Generally short sounds that may be played in multiple channels simultaneousely
+    should not be streamed.  However, long sounds that are not played simultaneously, like music, should be streamed.
 */
 
 /*! \var BoostPath       SoundBase::_sfFile
@@ -153,7 +152,7 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFPnt3f::Description(
         SFPnt3f::getClassType(),
         "Position",
-        "Initial position of this sound.\n",
+        "Initial position of this sound in local space.\n",
         PositionFieldId, PositionFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -165,7 +164,7 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec3f::Description(
         SFVec3f::getClassType(),
         "Velocity",
-        "Initial velocity of this sound.\n",
+        "Initial velocity of this sound in local space.\n",
         VelocityFieldId, VelocityFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -177,6 +176,8 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Volume",
+        "Volume of the sound.\n"
+        "\n"
         "Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.\n",
         VolumeFieldId, VolumeFieldMask,
         false,
@@ -189,6 +190,8 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Pan",
+        "Set the Left-to-right panning of the sound.\n"
+        "\n"
         "Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.\n",
         PanFieldId, PanFieldMask,
         false,
@@ -213,7 +216,7 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFInt32::Description(
         SFInt32::getClassType(),
         "Looping",
-        "Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.\n",
+        "Number of times to play the sound in a loop. Values <0 will loop the sound infinitely.\n",
         LoopingFieldId, LoopingFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -225,7 +228,8 @@ void SoundBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Streaming",
-        "Whether or not this sound should be streamed.\n",
+        "Whether or not this sound should be streamed.  Generally short sounds that may be played in multiple channels simultaneousely\n"
+        "should not be streamed.  However, long sounds that are not played simultaneously, like music, should be streamed.\n",
         StreamingFieldId, StreamingFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -284,9 +288,9 @@ SoundBase::TypeObject SoundBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
-    "A Sound Interface.\n"
+    "A Sound interface that can be used to load, play, stop, and configure an audio output.\n"
     "\t<Field\n"
     "\t\tname=\"Position\"\n"
     "\t\ttype=\"Pnt3f\"\n"
@@ -296,7 +300,7 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"0.0,0.0,0.0\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
-    "    Initial position of this sound.\n"
+    "    Initial position of this sound in local space.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Velocity\"\n"
@@ -307,7 +311,7 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"0.0,0.0,0.0\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
-    "    Initial velocity of this sound.\n"
+    "    Initial velocity of this sound in local space.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Volume\"\n"
@@ -318,6 +322,8 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"1.0\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
+    "    Volume of the sound.\n"
+    "\n"
     "    Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -329,6 +335,8 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"0.0\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
+    "    Set the Left-to-right panning of the sound.\n"
+    "\n"
     "    Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.\n"
     "\t</Field>\n"
     "\t<Field\n"
@@ -351,7 +359,7 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"1\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
-    "    Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.\n"
+    "    Number of times to play the sound in a loop. Values &lt; 0 will loop the sound infinitely.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"Streaming\"\n"
@@ -362,7 +370,8 @@ SoundBase::TypeObject SoundBase::_type(
     "        defaultValue=\"false\"\n"
     "\t\taccess=\"public\"\n"
     "\t>\n"
-    "    Whether or not this sound should be streamed.\n"
+    "    Whether or not this sound should be streamed.  Generally short sounds that may be played in multiple channels simultaneousely\n"
+    "    should not be streamed.  However, long sounds that are not played simultaneously, like music, should be streamed.\n"
     "\t</Field>\n"
     "\t<Field\n"
     "\t\tname=\"File\"\n"
@@ -389,39 +398,54 @@ SoundBase::TypeObject SoundBase::_type(
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has begun playing.\n"
     "\t</ProducedEvent>\n"
     "\t<ProducedEvent\n"
     "\t\tname=\"SoundStopped\"\n"
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has been stopped, this is different that SoundEnded.\n"
     "\t</ProducedEvent>\n"
     "\t<ProducedEvent\n"
     "\t\tname=\"SoundPaused\"\n"
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has been paused.\n"
     "\t</ProducedEvent>\n"
     "\t<ProducedEvent\n"
     "\t\tname=\"SoundUnpaused\"\n"
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has been unpaused.\n"
     "\t</ProducedEvent>\n"
     "\t<ProducedEvent\n"
     "\t\tname=\"SoundLooped\"\n"
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has reached the end and is looping back to the begining. This is only relavent for sounds that loop.\n"
     "\t</ProducedEvent>\n"
     "\t<ProducedEvent\n"
     "\t\tname=\"SoundEnded\"\n"
     "\t\tdetailsType=\"SoundEventDetails\"\n"
     "\t\tconsumable=\"true\"\n"
     "\t>\n"
+    "    The sound has reached the end.  Sounds that are looping do not produce a SoundEnded event until all of the loops have ended.\n"
+    "    This means that sounds that loop infinitely will never produce a SoundEnded event.  Also, if a sound is stopped then it will \n"
+    "    not produce this event.\n"
+    "\t</ProducedEvent>\n"
+    "\t<ProducedEvent\n"
+    "\t\tname=\"SoundSeeked\"\n"
+    "\t\tdetailsType=\"SoundEventDetails\"\n"
+    "\t\tconsumable=\"true\"\n"
+    "\t>\n"
+    "    The sound has been seeked to a new time position in the sound.\n"
     "\t</ProducedEvent>\n"
     "</FieldContainer>\n",
-    "A Sound Interface.\n"
+    "A Sound interface that can be used to load, play, stop, and configure an audio output.\n"
     );
 
 //! Sound Produced Events
@@ -429,46 +453,55 @@ SoundBase::TypeObject SoundBase::_type(
 EventDescription *SoundBase::_eventDesc[] =
 {
     new EventDescription("SoundPlayed", 
-                          "",
+                          "The sound has begun playing.\n",
                           SoundPlayedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&SoundBase::getHandleSoundPlayedSignal)),
 
     new EventDescription("SoundStopped", 
-                          "",
+                          "The sound has been stopped, this is different that SoundEnded.\n",
                           SoundStoppedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&SoundBase::getHandleSoundStoppedSignal)),
 
     new EventDescription("SoundPaused", 
-                          "",
+                          "The sound has been paused.\n",
                           SoundPausedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&SoundBase::getHandleSoundPausedSignal)),
 
     new EventDescription("SoundUnpaused", 
-                          "",
+                          "The sound has been unpaused.\n",
                           SoundUnpausedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&SoundBase::getHandleSoundUnpausedSignal)),
 
     new EventDescription("SoundLooped", 
-                          "",
+                          "The sound has reached the end and is looping back to the begining. This is only relavent for sounds that loop.\n",
                           SoundLoopedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&SoundBase::getHandleSoundLoopedSignal)),
 
     new EventDescription("SoundEnded", 
-                          "",
+                          "The sound has reached the end.  Sounds that are looping do not produce a SoundEnded event until all of the loops have ended.\n"
+                          "This means that sounds that loop infinitely will never produce a SoundEnded event.  Also, if a sound is stopped then it will \n"
+                          "not produce this event.\n",
                           SoundEndedEventId, 
                           FieldTraits<SoundEventDetails *>::getType(),
                           true,
-                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundEndedSignal))
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundEndedSignal)),
+
+    new EventDescription("SoundSeeked", 
+                          "The sound has been seeked to a new time position in the sound.\n",
+                          SoundSeekedEventId, 
+                          FieldTraits<SoundEventDetails *>::getType(),
+                          true,
+                          static_cast<EventGetMethod>(&SoundBase::getHandleSoundSeekedSignal))
 
 };
 
@@ -722,38 +755,47 @@ void SoundBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (PositionFieldMask & whichField))
     {
+        editSField(PositionFieldMask);
         _sfPosition.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (VelocityFieldMask & whichField))
     {
+        editSField(VelocityFieldMask);
         _sfVelocity.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (VolumeFieldMask & whichField))
     {
+        editSField(VolumeFieldMask);
         _sfVolume.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (PanFieldMask & whichField))
     {
+        editSField(PanFieldMask);
         _sfPan.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FrequencyFieldMask & whichField))
     {
+        editSField(FrequencyFieldMask);
         _sfFrequency.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (LoopingFieldMask & whichField))
     {
+        editSField(LoopingFieldMask);
         _sfLooping.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (StreamingFieldMask & whichField))
     {
+        editSField(StreamingFieldMask);
         _sfStreaming.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FileFieldMask & whichField))
     {
+        editSField(FileFieldMask);
         _sfFile.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (Enable3DFieldMask & whichField))
     {
+        editSField(Enable3DFieldMask);
         _sfEnable3D.copyFromBin(pMem);
     }
 }
@@ -801,8 +843,14 @@ void SoundBase::produceEvent(UInt32 eventId, EventDetails* const e)
         _SoundEndedEvent.set_combiner(ConsumableEventCombiner(e));
         _SoundEndedEvent(dynamic_cast<SoundEndedEventDetailsType* const>(e), SoundEndedEventId);
         break;
+    case SoundSeekedEventId:
+        OSG_ASSERT(dynamic_cast<SoundSeekedEventDetailsType* const>(e));
+
+        _SoundSeekedEvent.set_combiner(ConsumableEventCombiner(e));
+        _SoundSeekedEvent(dynamic_cast<SoundSeekedEventDetailsType* const>(e), SoundSeekedEventId);
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -831,8 +879,11 @@ boost::signals2::connection SoundBase::connectEvent(UInt32 eventId,
     case SoundEndedEventId:
         return _SoundEndedEvent.connect(listener, at);
         break;
+    case SoundSeekedEventId:
+        return _SoundSeekedEvent.connect(listener, at);
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -865,8 +916,11 @@ boost::signals2::connection  SoundBase::connectEvent(UInt32 eventId,
     case SoundEndedEventId:
         return _SoundEndedEvent.connect(group, listener, at);
         break;
+    case SoundSeekedEventId:
+        return _SoundSeekedEvent.connect(group, listener, at);
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return boost::signals2::connection();
         break;
     }
@@ -896,8 +950,11 @@ void  SoundBase::disconnectEvent(UInt32 eventId, const BaseEventType::group_type
     case SoundEndedEventId:
         _SoundEndedEvent.disconnect(group);
         break;
+    case SoundSeekedEventId:
+        _SoundSeekedEvent.disconnect(group);
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -924,8 +981,11 @@ void  SoundBase::disconnectAllSlotsEvent(UInt32 eventId)
     case SoundEndedEventId:
         _SoundEndedEvent.disconnect_all_slots();
         break;
+    case SoundSeekedEventId:
+        _SoundSeekedEvent.disconnect_all_slots();
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         break;
     }
 }
@@ -952,8 +1012,11 @@ bool  SoundBase::isEmptyEvent(UInt32 eventId) const
     case SoundEndedEventId:
         return _SoundEndedEvent.empty();
         break;
+    case SoundSeekedEventId:
+        return _SoundSeekedEvent.empty();
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return true;
         break;
     }
@@ -981,8 +1044,11 @@ UInt32  SoundBase::numSlotsEvent(UInt32 eventId) const
     case SoundEndedEventId:
         return _SoundEndedEvent.num_slots();
         break;
+    case SoundSeekedEventId:
+        return _SoundSeekedEvent.num_slots();
+        break;
     default:
-        SWARNING << "No event defined with that ID";
+        SWARNING << "No event defined with ID " << eventId << std::endl;
         return 0;
         break;
     }
@@ -1314,6 +1380,17 @@ GetEventHandlePtr SoundBase::getHandleSoundEndedSignal(void) const
         new  GetTypedEventHandle<SoundEndedEventType>(
              const_cast<SoundEndedEventType *>(&_SoundEndedEvent),
              _producerType.getEventDescription(SoundEndedEventId),
+             const_cast<SoundBase *>(this)));
+
+    return returnValue;
+}
+
+GetEventHandlePtr SoundBase::getHandleSoundSeekedSignal(void) const
+{
+    GetEventHandlePtr returnValue(
+        new  GetTypedEventHandle<SoundSeekedEventType>(
+             const_cast<SoundSeekedEventType *>(&_SoundSeekedEvent),
+             _producerType.getEventDescription(SoundSeekedEventId),
              const_cast<SoundBase *>(this)));
 
     return returnValue;

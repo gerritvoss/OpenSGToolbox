@@ -125,6 +125,13 @@ void Sound::produceSoundEnded(UInt32 TheChannel)
     Inherited::produceSoundEnded(Details);
 }
 
+void Sound::produceSoundSeeked(UInt32 TheChannel)
+{
+    SoundEventDetailsUnrecPtr Details = SoundEventDetails::create(this,getTimeStamp(), TheChannel);
+   
+    Inherited::produceSoundSeeked(Details);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/

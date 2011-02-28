@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -102,6 +102,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     typedef SoundEventDetails  SoundUnpausedEventDetailsType;
     typedef SoundEventDetails  SoundLoopedEventDetailsType;
     typedef SoundEventDetails  SoundEndedEventDetailsType;
+    typedef SoundEventDetails  SoundSeekedEventDetailsType;
 
     typedef boost::signals2::signal<void (EventDetails* const            , UInt32)> BaseEventType;
     typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundPlayedEventType;
@@ -110,6 +111,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundUnpausedEventType;
     typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundLoopedEventType;
     typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundEndedEventType;
+    typedef boost::signals2::signal<void (SoundEventDetails* const, UInt32), ConsumableEventCombiner> SoundSeekedEventType;
 
     /*==========================  PUBLIC  =================================*/
 
@@ -168,7 +170,8 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
         SoundUnpausedEventId = SoundPausedEventId + 1,
         SoundLoopedEventId = SoundUnpausedEventId + 1,
         SoundEndedEventId = SoundLoopedEventId + 1,
-        NextProducedEventId = SoundEndedEventId + 1
+        SoundSeekedEventId = SoundEndedEventId + 1,
+        NextProducedEventId = SoundSeekedEventId + 1
     };
 
     /*---------------------------------------------------------------------*/
@@ -380,6 +383,17 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     bool   isEmptySoundEnded                (void) const;
     UInt32 numSlotsSoundEnded               (void) const;
     
+    //SoundSeeked
+    boost::signals2::connection connectSoundSeeked    (const SoundSeekedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    boost::signals2::connection connectSoundSeeked    (const SoundSeekedEventType::group_type &group,
+                                                       const SoundSeekedEventType::slot_type &listener,
+                                                       boost::signals2::connect_position at= boost::signals2::at_back);
+    void   disconnectSoundSeeked            (const SoundSeekedEventType::group_type &group);
+    void   disconnectAllSlotsSoundSeeked    (void);
+    bool   isEmptySoundSeeked               (void) const;
+    UInt32 numSlotsSoundSeeked              (void) const;
+    
     
     /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
@@ -396,6 +410,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     SoundUnpausedEventType _SoundUnpausedEvent;
     SoundLoopedEventType _SoundLoopedEvent;
     SoundEndedEventType _SoundEndedEvent;
+    SoundSeekedEventType _SoundSeekedEvent;
     /*! \}                                                                 */
 
     static TypeObject _type;
@@ -473,6 +488,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     GetEventHandlePtr getHandleSoundUnpausedSignal(void) const;
     GetEventHandlePtr getHandleSoundLoopedSignal(void) const;
     GetEventHandlePtr getHandleSoundEndedSignal(void) const;
+    GetEventHandlePtr getHandleSoundSeekedSignal(void) const;
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                     Event Producer Firing                    */
@@ -486,6 +502,7 @@ class OSG_CONTRIBSOUND_DLLMAPPING SoundBase : public AttachmentContainer
     void produceSoundUnpaused       (SoundUnpausedEventDetailsType* const e);
     void produceSoundLooped         (SoundLoopedEventDetailsType* const e);
     void produceSoundEnded          (SoundEndedEventDetailsType* const e);
+    void produceSoundSeeked         (SoundSeekedEventDetailsType* const e);
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
     /*! \name                       Sync                                   */

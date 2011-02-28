@@ -11,9 +11,9 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
 >
-A Sound Interface.
+A Sound interface that can be used to load, play, stop, and configure an audio output.
 	<Field
 		name="Position"
 		type="Pnt3f"
@@ -23,7 +23,7 @@ A Sound Interface.
         defaultValue="0.0,0.0,0.0"
 		access="public"
 	>
-    Initial position of this sound.
+    Initial position of this sound in local space.
 	</Field>
 	<Field
 		name="Velocity"
@@ -34,7 +34,7 @@ A Sound Interface.
         defaultValue="0.0,0.0,0.0"
 		access="public"
 	>
-    Initial velocity of this sound.
+    Initial velocity of this sound in local space.
 	</Field>
 	<Field
 		name="Volume"
@@ -45,6 +45,8 @@ A Sound Interface.
         defaultValue="1.0"
 		access="public"
 	>
+    Volume of the sound.
+
     Values from 0.0 to 1.0.  0.0 = Silent, 1.0 = Full Volume.
 	</Field>
 	<Field
@@ -56,6 +58,8 @@ A Sound Interface.
         defaultValue="0.0"
 		access="public"
 	>
+    Set the Left-to-right panning of the sound.
+
     Values from -1.0 to 1.0. -1.0 = Full Left, 0.0 = Full Center, 1.0 = Full Right.
 	</Field>
 	<Field
@@ -78,7 +82,7 @@ A Sound Interface.
         defaultValue="1"
 		access="public"
 	>
-    Number of times to loop this sound. 1 = play the sound once, Values less than 0 = Inifinite loop. Values 2 greater than plays the sound that many times.
+    Number of times to play the sound in a loop. Values &lt; 0 will loop the sound infinitely.
 	</Field>
 	<Field
 		name="Streaming"
@@ -89,7 +93,8 @@ A Sound Interface.
         defaultValue="false"
 		access="public"
 	>
-    Whether or not this sound should be streamed.
+    Whether or not this sound should be streamed.  Generally short sounds that may be played in multiple channels simultaneousely
+    should not be streamed.  However, long sounds that are not played simultaneously, like music, should be streamed.
 	</Field>
 	<Field
 		name="File"
@@ -116,35 +121,50 @@ A Sound Interface.
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has begun playing.
 	</ProducedEvent>
 	<ProducedEvent
 		name="SoundStopped"
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has been stopped, this is different that SoundEnded.
 	</ProducedEvent>
 	<ProducedEvent
 		name="SoundPaused"
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has been paused.
 	</ProducedEvent>
 	<ProducedEvent
 		name="SoundUnpaused"
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has been unpaused.
 	</ProducedEvent>
 	<ProducedEvent
 		name="SoundLooped"
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has reached the end and is looping back to the begining. This is only relavent for sounds that loop.
 	</ProducedEvent>
 	<ProducedEvent
 		name="SoundEnded"
 		detailsType="SoundEventDetails"
 		consumable="true"
 	>
+    The sound has reached the end.  Sounds that are looping do not produce a SoundEnded event until all of the loops have ended.
+    This means that sounds that loop infinitely will never produce a SoundEnded event.  Also, if a sound is stopped then it will 
+    not produce this event.
+	</ProducedEvent>
+	<ProducedEvent
+		name="SoundSeeked"
+		detailsType="SoundEventDetails"
+		consumable="true"
+	>
+    The sound has been seeked to a new time position in the sound.
 	</ProducedEvent>
 </FieldContainer>
