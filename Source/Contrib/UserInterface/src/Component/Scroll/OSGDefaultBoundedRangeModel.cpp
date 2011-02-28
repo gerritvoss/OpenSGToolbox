@@ -232,7 +232,7 @@ void DefaultBoundedRangeModel::changed(ConstFieldMaskArg whichField,
        (whichField & InternalMinimumFieldMask) ||
        (whichField & InternalExtentFieldMask))
     {
-        ChangeEventDetailsUnrecPtr Details(ChangeEventDetails::create(NULL, getSystemTime()));
+        ChangeEventDetailsUnrecPtr Details(ChangeEventDetails::create(this, getSystemTime()));
         produceStateChanged(Details);
     }
 }
