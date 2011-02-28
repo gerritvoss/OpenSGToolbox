@@ -52,12 +52,20 @@
 #include "OSGBorderLayout.h"
 #include "OSGBorderLayoutConstraints.h"
 #include "OSGPanel.h"
+#include "OSGTextArea.h"
+#include "OSGSeparator.h"
+#include "OSGFlowLayout.h"
+#include "OSGSpringLayout.h"
+#include "OSGSpringLayoutConstraints.h"
+#include "OSGLookAndFeelManager.h"
 #include "OSGColorLayer.h"
 #include <boost/lexical_cast.hpp>
 #include "OSGImage.h"
 
 #include "OSGGridBagLayout.h"
 #include "OSGGridBagLayoutConstraints.h"
+
+#include "OSGDocumentationUtils.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -131,6 +139,7 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     FieldDescriptionBase* Desc;
     FieldEditorComponentUnrecPtr TheEditor;
     LabelUnrecPtr TheLabel;
+    ComponentRecPtr TheToolTip;
     GridBagLayoutConstraintsRefPtr LayoutConstraints;
     PanelRefPtr FieldPanel;
     UInt32 NumRows(0),NumRowsForField(1);
@@ -155,6 +164,8 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     _ContainerTypeLabel->setBackgrounds(NULL);
     _ContainerTypeLabel->setConstraints(WestConstraint);
     _ContainerTypeLabel->setPreferredSize(Vec2f(160.0f,22.0f));
+    TheToolTip = createFCToolTip(getEditingFC()->getType());
+    _ContainerTypeLabel->setToolTip(TheToolTip);
 
     _ContainerIdLabel->setText(boost::lexical_cast<std::string>(getEditingFC()->getId()));
     _ContainerIdLabel->setBackgrounds(NULL);
@@ -216,7 +227,7 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     for(UInt32 i(1) ; i<=NumFields ; ++i)
     {
         Desc = fc->getFieldDescription(i);
-        if(Desc != 0 &&
+        if(Desc != NULL &&
            !Desc->isInternal() &&
            Desc->getFieldType().getClass() != FieldType::ParentPtrField &&
            //HACK: Stop the pixel field from being editable on Images
@@ -237,6 +248,8 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
                 TheLabel->setBackgrounds(NULL);
                 TheLabel->setConstraints(WestConstraint);
                 TheLabel->setPreferredSize(Vec2f(160.0f,22.0f));
+                TheToolTip = createFieldToolTip(Desc);
+                TheLabel->setToolTip(TheToolTip);
 
                 //Create the Panel
                 LayoutConstraints = GridBagLayoutConstraints::create();
@@ -273,6 +286,295 @@ bool GenericFieldContainerEditor::attachFieldContainer(FieldContainer* fc)
     dynamic_cast<GridBagLayout*>(getLayout())->setRows(NumRows);
 
     return true;
+}
+
+ComponentTransitPtr GenericFieldContainerEditor::createFieldToolTip(const FieldDescriptionBase *FieldDesc)
+{
+    std::string FieldDoc(doxygenToPlainFormatting(FieldDesc->getDocumentation()));
+
+    //FieldName
+    LabelRecPtr FieldLabel = Label::create();
+    FieldLabel->setText(FieldDesc->getName());
+    FieldLabel->setAlignment(Vec2f(0.0f,0.5f));
+    FieldLabel->setBackgrounds(NULL);
+
+    //CardinalityName
+    LabelRecPtr CardinalityLabel = Label::create();
+    std::string CardString;
+    if(FieldDesc->getFieldType().getCardinality() == FieldType::SingleField)
+    {
+        CardString = "Single";
+    }
+    else
+    {
+        CardString = "Multi";
+    }
+    CardinalityLabel->setText(CardString);
+    CardinalityLabel->setAlignment(Vec2f(0.5f,0.5f));
+    CardinalityLabel->setBackgrounds(NULL);
+
+    //TypeName
+    LabelRecPtr TypeLabel = Label::create();
+    TypeLabel->setText(FieldDesc->getFieldType().getContentType().getName());
+    TypeLabel->setAlignment(Vec2f(1.0f,0.5f));
+    TypeLabel->setBackgrounds(NULL);
+
+    //Separator
+    SeparatorRecPtr MainSeparator = Separator::create();
+    MainSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    MainSeparator->setSeparatorSize(1.0f);
+    MainSeparator->setPreferredSize(Vec2f(1.0f,5.0f));
+    MainSeparator->setBackgrounds(NULL);
+
+    //Set the layout constraints
+    BorderLayoutConstraintsRecPtr CenterConstraints = BorderLayoutConstraints::create();
+    CenterConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    //Description Panel
+    LabelRecPtr DescriptionLabel = Label::create();
+    DescriptionLabel->setText("Description");
+    DescriptionLabel->setBackgrounds(NULL);
+
+    TextAreaRecPtr DescriptionTextArea = TextArea::create();
+    DescriptionTextArea->setText(FieldDoc);
+    DescriptionTextArea->setEditable(false);
+    DescriptionTextArea->setBorders(NULL);
+    DescriptionTextArea->setBackgrounds(NULL);
+    DescriptionTextArea->setConstraints(CenterConstraints);
+
+    //Description Panel
+    PanelRecPtr DescriptionPanel = Panel::create();
+    BorderLayoutRecPtr DescriptionPanelLayout = BorderLayout::create();
+    DescriptionPanel->setAllInsets(5.0f);
+    DescriptionPanel->setLayout(DescriptionPanelLayout);
+    DescriptionPanel->pushToChildren(DescriptionTextArea);
+    DescriptionPanel->setBackgrounds(NULL);
+
+
+    //ToolTip Layout
+    PanelRecPtr ToolTipPanel = Panel::createEmpty();
+
+    SpringLayoutRecPtr MainLayout = SpringLayout::create();
+
+    //FieldLabel    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, FieldLabel, 5,
+                              SpringLayoutConstraints::NORTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, FieldLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, FieldLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //CardinalityLabel    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, CardinalityLabel, 5,
+                              SpringLayoutConstraints::NORTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, CardinalityLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, CardinalityLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //TypeLabel    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TypeLabel, 5,
+                              SpringLayoutConstraints::NORTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TypeLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TypeLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //MainSeparator    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MainSeparator, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, TypeLabel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MainSeparator, -15,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MainSeparator, 15,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //DescriptionTextArea
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DescriptionLabel, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, MainSeparator);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, DescriptionLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DescriptionLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //DescriptionTextArea
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DescriptionPanel, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, DescriptionLabel);
+    MainLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, DescriptionPanel, -5,
+                              SpringLayoutConstraints::SOUTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, DescriptionPanel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DescriptionPanel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //ToolTip Panel
+
+    Component* DefaultToolTip(LookAndFeelManager::the()->getLookAndFeel()->getDefaultToolTip());
+    ToolTipPanel->setBorders(DefaultToolTip->getBorder());
+    ToolTipPanel->setBackgrounds(DefaultToolTip->getBackground());
+    ToolTipPanel->setForegrounds(DefaultToolTip->getForeground());
+    //ToolTipPanel->setPreferredSize(ToolTipTextArea->getRequestedSize() +
+                                   //(2.0f * Insets));
+    ToolTipPanel->setPreferredSize(Vec2f(300.0f,300.0f));
+    ToolTipPanel->setLayout(MainLayout);
+    ToolTipPanel->pushToChildren(FieldLabel);
+    ToolTipPanel->pushToChildren(CardinalityLabel);
+    ToolTipPanel->pushToChildren(TypeLabel);
+    ToolTipPanel->pushToChildren(MainSeparator);
+    ToolTipPanel->pushToChildren(DescriptionLabel);
+    ToolTipPanel->pushToChildren(DescriptionPanel);
+
+    Real32 Height(100.0f + DescriptionTextArea->getLineHeight()
+                  * (DescriptionTextArea->getText().size()/40));
+    ToolTipPanel->setPreferredSize(Vec2f(300.0f,Height));
+
+
+    return ComponentTransitPtr(ToolTipPanel);
+}
+
+ComponentTransitPtr GenericFieldContainerEditor::createFCToolTip(const FieldContainerType &FCType)
+{
+    std::string FieldDoc(doxygenToPlainFormatting(FCType.getDocumentation()));
+
+    //TypeName
+    LabelRecPtr TypeLabel = Label::create();
+    TypeLabel->setText(FCType.getName());
+    TypeLabel->setAlignment(Vec2f(0.5f,0.5f));
+    TypeLabel->setBackgrounds(NULL);
+
+    //Separator
+    SeparatorRecPtr MainSeparator = Separator::create();
+    MainSeparator->setOrientation(Separator::HORIZONTAL_ORIENTATION);
+    MainSeparator->setSeparatorSize(1.0f);
+    MainSeparator->setPreferredSize(Vec2f(1.0f,5.0f));
+    MainSeparator->setBackgrounds(NULL);
+
+    //Inheritance Panel Layout
+    //LabelRecPtr InheritanceLabel = Label::create();
+    //InheritanceLabel->setText("Inheritance");
+
+    //FlowLayoutRecPtr InheritancePanelLayout = FlowLayout::create();
+    //InheritancePanelLayout->setOrientation(FlowLayout::VERTICAL_ORIENTATION);
+    //InheritancePanelLayout->setVerticalGap(3.0f);
+    //InheritancePanelLayout->setMajorAxisAlignment(0.0f);
+    //InheritancePanelLayout->setMinorAxisAlignment(0.5f);
+    //InheritancePanelLayout->setComponentAlignment(0.5f);
+
+    ////Inheritance Panel
+    //PanelRecPtr InheritancePanel = Panel::createEmpty();
+    //InheritancePanel->setAllInsets(5.0f);
+    //InheritancePanel->setLayout(InheritancePanelLayout);
+
+    //const TypeBase *ParentType(&FCType);
+    ////while()
+    ////{
+        ////ToolTipPanel->pushToChildren(DescriptionTextArea);
+    ////}
+    //LabelRecPtr TypeNameLabel = Label::create();
+    //TypeNameLabel->setText(FCType.getName());
+    //TypeNameLabel->setAlignment(Vec2f(0.5f,0.5f));
+
+    //InheritancePanel->pushToChildren(TypeNameLabel);
+
+    //Set the layout constraints
+    BorderLayoutConstraintsRecPtr CenterConstraints = BorderLayoutConstraints::create();
+    CenterConstraints->setRegion(BorderLayoutConstraints::BORDER_CENTER);
+
+    //Description Panel
+    LabelRecPtr DescriptionLabel = Label::create();
+    DescriptionLabel->setText("Description");
+    DescriptionLabel->setBackgrounds(NULL);
+
+    TextAreaRecPtr DescriptionTextArea = TextArea::create();
+    DescriptionTextArea->setText(FieldDoc);
+    DescriptionTextArea->setEditable(false);
+    DescriptionTextArea->setBorders(NULL);
+    DescriptionTextArea->setBackgrounds(NULL);
+    DescriptionTextArea->setConstraints(CenterConstraints);
+
+    //Description Panel
+    PanelRecPtr DescriptionPanel = Panel::create();
+    BorderLayoutRecPtr DescriptionPanelLayout = BorderLayout::create();
+    DescriptionPanel->setAllInsets(5.0f);
+    DescriptionPanel->setLayout(DescriptionPanelLayout);
+    DescriptionPanel->pushToChildren(DescriptionTextArea);
+    DescriptionPanel->setBackgrounds(NULL);
+
+
+    //ToolTip Layout
+    PanelRecPtr ToolTipPanel = Panel::createEmpty();
+
+    SpringLayoutRecPtr MainLayout = SpringLayout::create();
+
+    //TypeLabel    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, TypeLabel, 5,
+                              SpringLayoutConstraints::NORTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, TypeLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, TypeLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //MainSeparator    
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, MainSeparator, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, TypeLabel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, MainSeparator, -15,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, MainSeparator, 15,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    ////InheritancePanel
+    //MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, InheritanceLabel, 1,
+                              //SpringLayoutConstraints::SOUTH_EDGE, MainSeparator);
+    //MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, InheritanceLabel, 0,
+                              //SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    //MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, InheritanceLabel, 0,
+                              //SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    ////InheritancePanel
+    //MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, InheritancePanel, 1,
+                              //SpringLayoutConstraints::SOUTH_EDGE, InheritanceLabel);
+    //MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, InheritancePanel, 0,
+                              //SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    //MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, InheritancePanel, 0,
+                              //SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+
+    //DescriptionTextArea
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DescriptionLabel, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, MainSeparator);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, DescriptionLabel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DescriptionLabel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //DescriptionTextArea
+    MainLayout->putConstraint(SpringLayoutConstraints::NORTH_EDGE, DescriptionPanel, 1,
+                              SpringLayoutConstraints::SOUTH_EDGE, DescriptionLabel);
+    MainLayout->putConstraint(SpringLayoutConstraints::SOUTH_EDGE, DescriptionPanel, -5,
+                              SpringLayoutConstraints::SOUTH_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::EAST_EDGE, DescriptionPanel, -5,
+                              SpringLayoutConstraints::EAST_EDGE, ToolTipPanel);
+    MainLayout->putConstraint(SpringLayoutConstraints::WEST_EDGE, DescriptionPanel, 5,
+                              SpringLayoutConstraints::WEST_EDGE, ToolTipPanel);
+
+    //ToolTip Panel
+
+    Component* DefaultToolTip(LookAndFeelManager::the()->getLookAndFeel()->getDefaultToolTip());
+    ToolTipPanel->setBorders(DefaultToolTip->getBorder());
+    ToolTipPanel->setBackgrounds(DefaultToolTip->getBackground());
+    ToolTipPanel->setForegrounds(DefaultToolTip->getForeground());
+    ToolTipPanel->setLayout(MainLayout);
+    ToolTipPanel->pushToChildren(TypeLabel);
+    ToolTipPanel->pushToChildren(MainSeparator);
+    //ToolTipPanel->pushToChildren(InheritanceLabel);
+    //ToolTipPanel->pushToChildren(InheritancePanel);
+    ToolTipPanel->pushToChildren(DescriptionLabel);
+    ToolTipPanel->pushToChildren(DescriptionPanel);
+
+    Real32 Height(100.0f + DescriptionTextArea->getLineHeight()
+                  * (DescriptionTextArea->getText().size()/40));
+    ToolTipPanel->setPreferredSize(Vec2f(300.0f,Height));
+
+    return ComponentTransitPtr(ToolTipPanel);
 }
 
 bool GenericFieldContainerEditor::dettachFieldContainer(void)

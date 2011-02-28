@@ -150,6 +150,8 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
     virtual void resolveLinks(void);
 
     /*! \}                                                                 */
+    ComponentTransitPtr createFieldToolTip(const FieldDescriptionBase *FieldDesc);
+    ComponentTransitPtr createFCToolTip   (const FieldContainerType &FCType);
 
     static std::vector<const FieldContainerType*> _EditableTypes;
 
