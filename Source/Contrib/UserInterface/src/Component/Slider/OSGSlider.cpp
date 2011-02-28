@@ -52,6 +52,7 @@
 #include "OSGUIDrawingSurface.h"
 #include "OSGInternalWindow.h"
 #include "OSGLabel.h"
+#include "OSGDefaultBoundedRangeModel.h"
 #include <sstream>
 
 #include <boost/bind.hpp>
@@ -480,7 +481,8 @@ void Slider::onCreate(const Slider * Id)
 {
 	Inherited::onCreate(Id);
 
-    if(Id != NULL)
+    if(GlobalSystemState != Startup &&
+       Id != NULL)
     {
         FieldContainerUnrecPtr TheFC(NULL);
 
@@ -505,6 +507,9 @@ void Slider::onCreate(const Slider * Id)
             setMaxTrackDrawObject(dynamic_pointer_cast<UIDrawObjectCanvas>(TheFC));
         }
         setLabelPrototype(Id->getLabelPrototype());
+
+        BoundedRangeModelRecPtr RangeModel = DefaultBoundedRangeModel::create();
+        setRangeModel(RangeModel);
     }
 }
 
@@ -685,7 +690,10 @@ void Slider::handleKnobMousePressed(MouseEventDetails* const e)
        getParentWindow()->getParentDrawingSurface()->getEventProducer() != NULL)
     {
 		_InitialValue = getValue();
-        _KnobMousePressedConnection.disconnect();
+        //_KnobMousePressedConnection.disconnect();
+        _KnobDragMouseDraggedConnection.disconnect();
+        _KnobDragMouseReleasedConnection.disconnect();
+        _KnobDragkeyTypedConnection.disconnect();
         _KnobDragMouseDraggedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseDragged(boost::bind(&Slider::handleKnobDragMouseDragged, this, _1));
         _KnobDragMouseReleasedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectMouseReleased(boost::bind(&Slider::handleKnobDragMouseReleased, this, _1));
         _KnobDragkeyTypedConnection = getParentWindow()->getParentDrawingSurface()->getEventProducer()->connectKeyTyped(boost::bind(&Slider::handleKnobDragKeyTyped, this, _1));
@@ -698,7 +706,7 @@ void Slider::handleKnobDragMouseReleased(MouseEventDetails* const e)
     if(e->getButton() == MouseEventDetails::BUTTON1)
     {
         _KnobDragMouseDraggedConnection.disconnect();
-        _KnobMousePressedConnection = getKnobButton()->connectMousePressed(boost::bind(&Slider::handleKnobMousePressed, this, _1));
+        //_KnobMousePressedConnection = getKnobButton()->connectMousePressed(boost::bind(&Slider::handleKnobMousePressed, this, _1));
         _KnobDragMouseReleasedConnection.disconnect();
         _KnobDragkeyTypedConnection.disconnect();
         getRangeModel()->setValueIsAdjusting(false);
@@ -711,7 +719,7 @@ void Slider::handleKnobDragKeyTyped(KeyEventDetails* const e)
 	{
 		setValue(_InitialValue);
         _KnobDragMouseDraggedConnection.disconnect();
-        _KnobMousePressedConnection = getKnobButton()->connectMousePressed(boost::bind(&Slider::handleKnobMousePressed, this, _1));
+        //_KnobMousePressedConnection = getKnobButton()->connectMousePressed(boost::bind(&Slider::handleKnobMousePressed, this, _1));
         _KnobDragMouseReleasedConnection.disconnect();
         _KnobDragkeyTypedConnection.disconnect();
         getRangeModel()->setValueIsAdjusting(false);
