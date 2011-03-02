@@ -81,7 +81,7 @@ UI Font.
         category="data"
 		cardinality="single"
 		visibility="external"
-		defaultValue="true"
+		defaultValue="false"
 		access="public"
 	>
 	</Field>

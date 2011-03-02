@@ -121,18 +121,18 @@ void UIFont::initText(void)
     {
         ImageRefPtr image = _face->getTexture();
         getTexture()->setImage(image);
-        getTexture()->setWrapS(GL_CLAMP);
-        getTexture()->setWrapT(GL_CLAMP);
-        //if(getAntiAliasing())
-        //{
-        getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
-        getTexture()->setMagFilter(GL_LINEAR);
-        //}
-        //else
-        //{
-        //getTexture()->setMinFilter(GL_NEAREST);
-        //getTexture()->setMagFilter(GL_NEAREST);
-        //}
+        getTexture()->setWrapS(GL_CLAMP_TO_EDGE);
+        getTexture()->setWrapT(GL_CLAMP_TO_EDGE);
+        if(getAntiAliasing())
+        {
+            getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
+            getTexture()->setMagFilter(GL_LINEAR);
+        }
+        else
+        {
+            getTexture()->setMinFilter(GL_NEAREST);
+            getTexture()->setMagFilter(GL_NEAREST);
+        }
         //getTexture()->setEnvMode(GL_MODULATE);
     }
 
@@ -156,8 +156,8 @@ void UIFont::getBounds(const std::string& Text, Pnt2f& TopLeft, Pnt2f& BottomRig
     layout(Text, layoutParam, layoutResult);
 
     //Vec2f BottomLeft, TopRight;
-    Vec2f size = Vec2f(layoutResult.textBounds.x()*getSize(),layoutResult.textBounds.y()*getSize());
-    // _face->calculateBoundingBox(layoutResult,BottomLeft, TopRight);
+    Real32 Scale( 1.0f/ _face->getScale());
+    Vec2f size = Vec2f(layoutResult.textBounds.x()*Scale,layoutResult.textBounds.y()*Scale);
 
     TopLeft.setValues(0, 0);
     BottomRight.setValue(size);
@@ -243,16 +243,16 @@ void UIFont::changed(ConstFieldMaskArg whichField,
     if((whichField & AntiAliasingFieldMask) &&
         getTexture() != NULL)
     {
-        //if(getAntiAliasing())
-        //{
+        if(getAntiAliasing())
+        {
             getTexture()->setMinFilter(GL_LINEAR_MIPMAP_NEAREST);
             getTexture()->setMagFilter(GL_LINEAR);
-        //}
-        //else
-        //{
-            //getTexture()->setMinFilter(GL_NEAREST);
-            //getTexture()->setMagFilter(GL_NEAREST);
-        //}
+        }
+        else
+        {
+            getTexture()->setMinFilter(GL_NEAREST);
+            getTexture()->setMagFilter(GL_NEAREST);
+        }
     }
 }
 

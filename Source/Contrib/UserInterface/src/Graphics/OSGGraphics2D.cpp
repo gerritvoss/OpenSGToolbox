@@ -488,7 +488,7 @@ void Graphics2D::drawTextUnderline(const Pnt2f& Position, const std::string& Tex
 void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, UIFont* const TheFont, const Color4f& Color, const Real32& Opacity) const
 {
     TextLayoutParam layoutParam;
-    layoutParam.spacing = 1.1;
+    layoutParam.spacing = 1.1f;
     layoutParam.majorAlignment = TextLayoutParam::ALIGN_BEGIN;
     layoutParam.minorAlignment = TextLayoutParam::ALIGN_BEGIN;
 
@@ -506,9 +506,11 @@ void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, UIFont
 
     glColor4f(Color.red(), Color.green(), Color.blue(), Alpha );
     glPushMatrix();
-    glTranslatef(Position.x(), Position.y(), 0.0);
-    glScalef(TheFont->getSize(), TheFont->getSize(), 1);
-    drawCharacters(layoutResult, TheFont);
+        glTranslatef(Position.x(), Position.y(), 0.0);
+        Real32 Scale( 1.0f/ TheFont->getTXFFace()->getScale());
+        glScalef(Scale, Scale, 1.0f);
+
+        drawCharacters(layoutResult, TheFont);
     glPopMatrix();
 
     TheFont->getTexture()->deactivate(getDrawEnv());
@@ -519,47 +521,46 @@ void Graphics2D::drawText(const Pnt2f& Position, const std::string& Text, UIFont
 
 void Graphics2D::drawCharacters( const TextLayoutResult& layoutResult, UIFont* const TheFont) const
 {
+
     glBegin(GL_QUADS);
 
     UInt32 i, numGlyphs = layoutResult.getNumGlyphs();
-    Real32 width, height;
     for(i = 0; i < numGlyphs; ++i)
     {
-        const TextTXFGlyph *glyph = TheFont->getTXFGlyph(layoutResult.indices[i]);
-        width = glyph->getWidth();
-        height = glyph->getHeight();
+        const TextTXFGlyph &glyph(*TheFont->getTXFGlyph(layoutResult.indices[i]));
+        Real32 width = glyph.getWidth();
+        Real32 height = glyph.getHeight();
         // No need to draw invisible glyphs
         if ((width <= 0.f) || (height <= 0.f))
             continue;
 
         // Calculate coordinates
         const Vec2f &pos = layoutResult.positions[i];
-        Real32 posLeft = pos.x();
-        Real32 posTop = -pos.y();
-        Real32 posRight = pos.x() + width;
+        Real32 posLeft   = pos.x();
+        Real32 posTop    = -pos.y();
+        Real32 posRight  = pos.x() + width;
         Real32 posBottom = -pos.y() + height;
-        Real32 texCoordLeft = glyph->getTexCoord(TextTXFGlyph::COORD_LEFT);
-        Real32 texCoordTop = glyph->getTexCoord(TextTXFGlyph::COORD_TOP);
-        Real32 texCoordRight = glyph->getTexCoord(TextTXFGlyph::COORD_RIGHT);
-        Real32 texCoordBottom = glyph->getTexCoord(TextTXFGlyph::COORD_BOTTOM);
+
+        Real32 texCoordLeft   = glyph.getTexCoord(TextTXFGlyph::COORD_LEFT);
+        Real32 texCoordTop    = glyph.getTexCoord(TextTXFGlyph::COORD_TOP);
+        Real32 texCoordRight  = glyph.getTexCoord(TextTXFGlyph::COORD_RIGHT);
+        Real32 texCoordBottom = glyph.getTexCoord(TextTXFGlyph::COORD_BOTTOM);
 
         // lower left corner
         glTexCoord2f(texCoordLeft, texCoordBottom);
         glVertex2f(posLeft, posBottom);
 
-        // upper left corner
-        glTexCoord2f(texCoordLeft, texCoordTop);
-        glVertex2f(posLeft, posTop);
+        // lower right corner
+        glTexCoord2f(texCoordRight, texCoordBottom);
+        glVertex2f(posRight, posBottom);
 
         // upper right corner
         glTexCoord2f(texCoordRight, texCoordTop);
         glVertex2f(posRight, posTop);
 
-        // lower right corner
-        glTexCoord2f(texCoordRight, texCoordBottom);
-        glVertex2f(posRight, posBottom);
-
-
+        // upper left corner
+        glTexCoord2f(texCoordLeft, texCoordTop);
+        glVertex2f(posLeft, posTop);
     }
 
     glEnd();

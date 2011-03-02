@@ -40,7 +40,7 @@
     DrawTitlebar="false"
     Resizable="false"
     Position="50 50"
-    PreferredSize="475 100"
+    PreferredSize="575 100"
     Background="201"
     FocusedBackground="201"
     DisabledBackground="201"

@@ -730,7 +730,7 @@ UIFontBase::UIFontBase(void) :
     _sfGap                    (UInt32(3)),
     _sfTextureWidth           (UInt32(0)),
     _sfStyle                  (UInt32(TextFace::STYLE_PLAIN)),
-    _sfAntiAliasing           (bool(true)),
+    _sfAntiAliasing           (bool(false)),
     _sfTexture                (NULL)
 {
 }

@@ -40,4 +40,10 @@
 
 OSG_BEGIN_NAMESPACE
 
+inline
+TextTXFFace* UIFont::getTXFFace(void) const
+{
+    return _face;
+}
+
 OSG_END_NAMESPACE

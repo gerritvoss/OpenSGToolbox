@@ -98,7 +98,11 @@ void UIForeground::draw(DrawEnv * env)
     glPushMatrix();
     glLoadIdentity();
      
-    glOrtho(0, env->getPixelWidth(), env->getPixelHeight(), 0 , 0, 1);
+    // Set viewport. We want to map one unit to one pixel on the
+    // screen. Some sources in the internet say that we should
+    // add an offset of -0.375 to prevent rounding errors. Don't
+    // know if that is true, but it seems to work.
+    glOrtho(0 - 0.375, env->getPixelWidth() - 0.375, env->getPixelHeight() - 0.375, 0 - 0.375, 0, 1);
 	
 	glMatrixMode(GL_MODELVIEW);
 
