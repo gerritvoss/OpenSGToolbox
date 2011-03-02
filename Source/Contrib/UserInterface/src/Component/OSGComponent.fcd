@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="Component"
-	parent="AttachmentContainer"
+    name="Component"
+    parent="AttachmentContainer"
     library="ContribUserInterface"
     pointerfieldtypes="both"
-	structure="abstract"
+    structure="abstract"
     systemcomponent="true"
     parentsystemcomponent="true"
     decoratable="true"
@@ -14,434 +14,549 @@
     fieldsUnmarkedOnCreate="EnabledFieldMask"
     authors="David Kabala (djkabala@gmail.com)"
     childFields="multi"
->
-A UI Component Interface.
-	<Field
-		name="Position"
-		type="Pnt2f"
-		category="data"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="0,0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ClipBounds"
-		type="Pnt4f"
-		category="data"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="0.0f,0.0f,0.0f,0.0f"
-		access="protected"
-	>
-	</Field>
-	<Field
-		name="MinSize"
-		type="Vec2f"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="0,0"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="MaxSize"
-		type="Vec2f"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="32767,32767"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="PreferredSize"
-		type="Vec2f"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="1,1"
-	>
-	</Field>
-	<Field
-		name="Size"
-		type="Vec2f"
-		category="data"
-		cardinality="single"
-		visibility="internal"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Visible"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="true"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Enabled"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="true"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Focused"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Constraints"
-		type="LayoutConstraints"
-		cardinality="single"
+    >
+    \brief An element of a graphical user interface.
+
+    A Component represents a single element of a user interface. In other
+    frameworks they may be called widgets or controls. All concrete GUI elements
+    inherit from Component, like OSG::Button, OSG::Label, OSG::TextField,
+    OSG::InternalWindow, etc.
+
+    \par Component states:
+    Components have states for Enabled, Focused,
+    MouseOver, and Visible.  If a Component has Enabled == false, it doesn't receive
+    or produce any events. If a Component has Visible == false, it is not drawn. 
+
+    \par Event response:
+    Components can respond to Mouse, Key, and Focus events.
+
+    \par Event production: Components produce Mouse, Key, Focus, Component, and
+    ToolTip events if enabled.
+
+    \par Drawing: Component handles setting up the clipping of a component, and
+    the drawing of the Border, Background, and Foreground.  The Border,
+    Background, and Foreground used when drawing a Component depends on it's
+    state, and can also be overridden by inheriting classes. There are separate
+    Border, Background, and Foregrounds for Disabled, Focused, Rollover, and No stat
+    states.
+
+    \par Layout: The position and size of a Component is controlled by the
+    OSG::ComponentContainer that contains it. For simple OSG::ComponentContainer
+    like OSG::Panel, the OSG::Layout attached to the container is used to control
+    the position and size of components.  For more complex containers like
+    OSG::SplitPanel, the position and size are controlled by the specific
+    behavior of the container.
+    \warning User code should never set the position or size of a Component
+    directly, this is controlled by the OSG::ComponentContainer of the Component.
+
+
+    \par Focus: Zero, or one Component can have focus in a OSG::InternalWindow.
+    Component has methods for taking, removing, or moving the focus.
+
+    \par ToolTips: A component can have a ToolTip that will appear after a
+    configurable amount of time passes with the mouse over the Component.
+
+    \par PopupMenus: A OSG::PopupMenu can be attached to a Component that will
+    be activated with a right-click mouse interaction.
+
+    \par Scrolling: Components can be contained in a OSG::Viewport or a
+    OSG::ScrollPanel for viewing large Components.
+
+    \par Inheriting: Concrete GUI elements that inherit from Component must
+    implement drawInternal().
+    <Field
+        name="Position"
+        type="Pnt2f"
+        category="data"
+        cardinality="single"
+        visibility="internal"
+        defaultValue="0,0"
+        access="public"
+        >
+        The position of the Component, relative to it parent container.
+    </Field>
+    <Field
+        name="ClipBounds"
+        type="Pnt4f"
+        category="data"
+        cardinality="single"
+        visibility="internal"
+        defaultValue="0.0f,0.0f,0.0f,0.0f"
+        access="protected"
+        >
+        The clipping bounds of the Component.  The indexing of the bounds are: 0=Left,
+        1=Right, 2=Top, 3=Bottom.
+    </Field>
+    <Field
+        name="MinSize"
+        type="Vec2f"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="0,0"
+        access="public"
+        >
+        The minimum suggested size that this Component should be assigned by a parent
+        container
+    </Field>
+    <Field
+        name="MaxSize"
+        type="Vec2f"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="32767,32767"
+        access="public"
+        >
+        The maximum suggested size that this Component should be assigned by a parent
+        container
+    </Field>
+    <Field
+        name="PreferredSize"
+        type="Vec2f"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="1,1"
+        >
+        The preferred suggested size that this Component should be assigned by a parent
+        container
+    </Field>
+    <Field
+        name="Size"
+        type="Vec2f"
+        category="data"
+        cardinality="single"
+        visibility="internal"
+        access="public"
+        >
+        The size of the Component.
+    </Field>
+    <Field
+        name="Visible"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="true"
+        access="public"
+        >
+        Controls if the component is drawn.  If true, the component is drawn.
+    </Field>
+    <Field
+        name="Enabled"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="true"
+        access="public"
+        >
+        Controls the response to events.  If false the Component will not respond
+        to any event.
+    </Field>
+    <Field
+        name="Focused"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="false"
+        access="public"
+        >
+        Indicates whether a Component has focus.
+    </Field>
+    <Field
+        name="Constraints"
+        type="LayoutConstraints"
+        cardinality="single"
         category="childpointer"
         childParentType="FieldContainer"
-		visibility="external"
-		access="public"
+        visibility="external"
+        access="public"
         ptrFieldAccess = "nullCheck"
         linkParentField="ParentComponent"
-	>
-	</Field>
-	<Field
-		name="Border"
-		type="Border"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Background"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DisabledBorder"
-		type="Border"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DisabledBackground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DragEnabled"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="false"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ScrollTrackingCharacteristics"
-		type="UInt16"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="Component::SCROLLABLE_TRACKING_OFF"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="FocusedBorder"
-		type="Border"
-		cardinality="single"
-		category="pointer"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="FocusedBackground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="RolloverBorder"
-		type="Border"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="RolloverBackground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="ToolTip"
-		type="Component"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="NULL"
-	>
-	</Field>
-	<Field
-		name="Opacity"
-		type="Real32"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="1.0"
-		access="public"
-	>
-	</Field>
-	<Field
-	   name="ParentContainer"
-	   type="FieldContainer"
-	   cardinality="single"
-	   visibility="external"
-	   access="none"
-       category="parentpointer"
-	   >
-	  The Component Container this Component is contained in.
-	</Field>
-	<Field
-		name="Clipping"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="true"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="PopupMenu"
-		type="PopupMenu"
-		category="pointer"
-		cardinality="single"
-		visibility="internal"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-   <Field
-		name="FocusedForeground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="RolloverForeground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="DisabledForeground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Foreground"
-		type="Layer"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Cursor"
-		type="UInt32"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		defaultValue="WindowEventProducer::CURSOR_POINTER"
-		defaultHeader="OSGWindowEventProducer.h"
-		access="public"
-	>
-	</Field>
-	<ProducedEvent
-		name="MouseMoved"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseDragged"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseClicked"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseEntered"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseExited"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MousePressed"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseReleased"
-		detailsType="MouseEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="MouseWheelMoved"
-		detailsType="MouseWheelEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="KeyPressed"
-		detailsType="KeyEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="KeyReleased"
-		detailsType="KeyEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="KeyTyped"
-		detailsType="KeyEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="FocusGained"
-		detailsType="FocusEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="FocusLost"
-		detailsType="FocusEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentHidden"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentVisible"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentMoved"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentResized"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentEnabled"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ComponentDisabled"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ToolTipActivated"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
-	<ProducedEvent
-		name="ToolTipDeactivated"
-		detailsType="ComponentEventDetails"
-		consumable="true"
-	>
-	</ProducedEvent>
+        >
+        Specific OSG::LayoutConstraints that may be used by the OSG::Layout of 
+        the parent container of this Component.
+    </Field>
+    <Field
+        name="Border"
+        type="Border"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The border to draw when this Component has no state.
+    </Field>
+    <Field
+        name="Background"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The background to draw when this Component has no state.
+    </Field>
+    <Field
+        name="DisabledBorder"
+        type="Border"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The border to draw when this Component is disabled.
+    </Field>
+    <Field
+        name="DisabledBackground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The background to draw when this Component is disabled.
+    </Field>
+    <Field
+        name="DragEnabled"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="false"
+        access="public"
+        >
+        Controls whether this Component creates drag-and-drop events when the 
+        mouse is dragged.
+    </Field>
+    <Field
+        name="ScrollTrackingCharacteristics"
+        type="UInt16"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="Component::SCROLLABLE_TRACKING_OFF"
+        access="public"
+        >
+        Controls scrolling characteristics.
+    </Field>
+    <Field
+        name="FocusedBorder"
+        type="Border"
+        cardinality="single"
+        category="pointer"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The border to draw when this Component is focused.
+    </Field>
+    <Field
+        name="FocusedBackground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The background to draw when this Component is focused.
+    </Field>
+    <Field
+        name="RolloverBorder"
+        type="Border"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The border to draw when the mouse is hovering over this component.
+    </Field>
+    <Field
+        name="RolloverBackground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The background to draw when the mouse is hovering over this component.
+    </Field>
+    <Field
+        name="FocusedForeground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The foreground to draw when this Component is focused.
+    </Field>
+    <Field
+        name="RolloverForeground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The foreground to draw when the mouse is hovering over this component.
+    </Field>
+    <Field
+        name="DisabledForeground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The foreground to draw when this Component is disabled.
+    </Field>
+    <Field
+        name="Foreground"
+        type="Layer"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The background to draw when this Component has no state.
+    </Field>
+    <Field
+        name="ToolTip"
+        type="Component"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="NULL"
+        >
+        The ToolTip used by this Component.  If NULL, then no ToolTip is used.
+    </Field>
+    <Field
+        name="Opacity"
+        type="Real32"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="1.0"
+        access="public"
+        >
+        The opacity this Compnent is drawn with.  0.0 = transparent, 1.0 = opaque.
+    </Field>
+    <Field
+        name="ParentContainer"
+        type="FieldContainer"
+        cardinality="single"
+        visibility="external"
+        access="none"
+        category="parentpointer"
+        >
+        The Component Container this Component is contained in.
+    </Field>
+    <Field
+        name="Clipping"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="true"
+        access="public"
+        >
+        Controls whether clipping is used when drawing this component. Under most
+        conditions this should be on, otherwise the Component may draw outside of its
+        boundaries.
+    </Field>
+    <Field
+        name="PopupMenu"
+        type="PopupMenu"
+        category="pointer"
+        cardinality="single"
+        visibility="internal"
+        defaultValue="NULL"
+        access="public"
+        >
+        The OSG::PopupMenu to use for this Component.
+    </Field>
+    <Field
+        name="Cursor"
+        type="UInt32"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        defaultValue="WindowEventProducer::CURSOR_POINTER"
+        defaultHeader="OSGWindowEventProducer.h"
+        access="public"
+        >
+        The cursor to use when the mouse is hovering over this Component.
+    </Field>
+    <ProducedEvent
+        name="MouseMoved"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and moves.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseDragged"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and moves 
+        when a mouse button is down.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseClicked"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and a 
+        mouse button is clicked.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseEntered"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse enters this Component.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseExited"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse exits this Component.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MousePressed"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and a 
+        mouse button is pressed.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseReleased"
+        detailsType="MouseEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and a 
+        mouse button is released.
+    </ProducedEvent>
+    <ProducedEvent
+        name="MouseWheelMoved"
+        detailsType="MouseWheelEventDetails"
+        consumable="true"
+        >
+        Event produced when the mouse is hovering over this Component and the
+        mouse wheel is moved.
+    </ProducedEvent>
+    <ProducedEvent
+        name="KeyPressed"
+        detailsType="KeyEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component has focused and a keyboard key is 
+        pressed.
+    </ProducedEvent>
+    <ProducedEvent
+        name="KeyReleased"
+        detailsType="KeyEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component has focused and a keyboard key is 
+        released.
+    </ProducedEvent>
+    <ProducedEvent
+        name="KeyTyped"
+        detailsType="KeyEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component has focused and a keyboard key is 
+        typed.
+    </ProducedEvent>
+    <ProducedEvent
+        name="FocusGained"
+        detailsType="FocusEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component gains focus.
+    </ProducedEvent>
+    <ProducedEvent
+        name="FocusLost"
+        detailsType="FocusEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component loses focus.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentHidden"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Visible field is set to false.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentVisible"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Visible field is set to true.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentMoved"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Position field changes.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentResized"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Size field changes.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentEnabled"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Enabled field is set to true.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ComponentDisabled"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when this Component's Enabled field is set to false.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ToolTipActivated"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when the ToolTip for this Component is activated.
+    </ProducedEvent>
+    <ProducedEvent
+        name="ToolTipDeactivated"
+        detailsType="ComponentEventDetails"
+        consumable="true"
+        >
+        Event produced when the ToolTip for this Component is deactivated.
+    </ProducedEvent>
 </FieldContainer>

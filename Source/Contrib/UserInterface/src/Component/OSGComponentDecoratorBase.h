@@ -256,6 +256,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual       SFUnrecBorderPtr    *editSFRolloverBorder (void);
     virtual const SFUnrecLayerPtr     *getSFRolloverBackground(void) const;
     virtual       SFUnrecLayerPtr     *editSFRolloverBackground(void);
+    virtual const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFFocusedForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFRolloverForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFRolloverForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFDisabledForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFDisabledForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFForeground     (void) const;
+    virtual       SFUnrecLayerPtr     *editSFForeground     (void);
     virtual const SFUnrecComponentPtr *getSFToolTip        (void) const;
     virtual       SFUnrecComponentPtr *editSFToolTip        (void);
 
@@ -266,14 +274,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual const SFBool              *getSFClipping        (void) const;
     virtual const SFUnrecPopupMenuPtr *getSFPopupMenu      (void) const;
     virtual       SFUnrecPopupMenuPtr *editSFPopupMenu      (void);
-    virtual const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFFocusedForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFRolloverForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFRolloverForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFDisabledForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFDisabledForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFForeground     (void) const;
-    virtual       SFUnrecLayerPtr     *editSFForeground     (void);
 
     virtual       SFUInt32            *editSFCursor         (void);
     virtual const SFUInt32            *getSFCursor          (void) const;
@@ -328,6 +328,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
 
     virtual       Layer * getRolloverBackground(void) const;
 
+    virtual       Layer * getFocusedForeground(void) const;
+
+    virtual       Layer * getRolloverForeground(void) const;
+
+    virtual       Layer * getDisabledForeground(void) const;
+
+    virtual       Layer * getForeground     (void) const;
+
     virtual       Component * getToolTip        (void) const;
 
     virtual       Real32              &editOpacity        (void);
@@ -337,14 +345,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual       bool                 getClipping        (void) const;
 
     virtual       PopupMenu * getPopupMenu      (void) const;
-
-    virtual       Layer * getFocusedForeground(void) const;
-
-    virtual       Layer * getRolloverForeground(void) const;
-
-    virtual       Layer * getDisabledForeground(void) const;
-
-    virtual       Layer * getForeground     (void) const;
 
     virtual       UInt32              &editCursor         (void);
     virtual       UInt32               getCursor          (void) const;
@@ -374,14 +374,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     virtual void setFocusedBackground(Layer * const value);
     virtual void setRolloverBorder (Border * const value);
     virtual void setRolloverBackground(Layer * const value);
-    virtual void setToolTip        (Component * const value);
-    virtual void setOpacity        (const Real32 value);
-    virtual void setClipping       (const bool value);
-    virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setFocusedForeground(Layer * const value);
     virtual void setRolloverForeground(Layer * const value);
     virtual void setDisabledForeground(Layer * const value);
     virtual void setForeground     (Layer * const value);
+    virtual void setToolTip        (Component * const value);
+    virtual void setOpacity        (const Real32 value);
+    virtual void setClipping       (const bool value);
+    virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setCursor         (const UInt32 value);
 
     /*! \}                                                                 */
@@ -800,6 +800,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     EditFieldHandlePtr editHandleRolloverBorder (void);
     GetFieldHandlePtr  getHandleRolloverBackground (void) const;
     EditFieldHandlePtr editHandleRolloverBackground(void);
+    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
+    EditFieldHandlePtr editHandleFocusedForeground(void);
+    GetFieldHandlePtr  getHandleRolloverForeground (void) const;
+    EditFieldHandlePtr editHandleRolloverForeground(void);
+    GetFieldHandlePtr  getHandleDisabledForeground (void) const;
+    EditFieldHandlePtr editHandleDisabledForeground(void);
+    GetFieldHandlePtr  getHandleForeground      (void) const;
+    EditFieldHandlePtr editHandleForeground     (void);
     GetFieldHandlePtr  getHandleToolTip         (void) const;
     EditFieldHandlePtr editHandleToolTip        (void);
     GetFieldHandlePtr  getHandleOpacity         (void) const;
@@ -810,14 +818,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentDecoratorBase : public Compon
     EditFieldHandlePtr editHandleClipping       (void);
     GetFieldHandlePtr  getHandlePopupMenu       (void) const;
     EditFieldHandlePtr editHandlePopupMenu      (void);
-    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
-    EditFieldHandlePtr editHandleFocusedForeground(void);
-    GetFieldHandlePtr  getHandleRolloverForeground (void) const;
-    EditFieldHandlePtr editHandleRolloverForeground(void);
-    GetFieldHandlePtr  getHandleDisabledForeground (void) const;
-    EditFieldHandlePtr editHandleDisabledForeground(void);
-    GetFieldHandlePtr  getHandleForeground      (void) const;
-    EditFieldHandlePtr editHandleForeground     (void);
     GetFieldHandlePtr  getHandleCursor          (void) const;
     EditFieldHandlePtr editHandleCursor         (void);
 

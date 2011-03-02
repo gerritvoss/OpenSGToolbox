@@ -1,31 +1,31 @@
 /*---------------------------------------------------------------------------*\
- *                                OpenSG                                     *
+ *                             OpenSGToolbox                                 *
  *                                                                           *
  *                                                                           *
- *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
+ *               Copyright (C) 2007-2011                                     *
  *                                                                           *
- *                            www.opensg.org                                 *
+ *                        www.opensgtoolbox.org                              *
  *                                                                           *
  *   contact:  David Kabala (djkabala@gmail.com)                             *
  *                                                                           *
-\*---------------------------------------------------------------------------*/
+ \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
  *                                License                                    *
  *                                                                           *
  * This library is free software; you can redistribute it and/or modify it   *
- * under the terms of the GNU Library General Public License as published    *
- * by the Free Software Foundation, version 2.                               *
+ * under the terms of the GNU Library Lesser General Public License as       *
+ * published  by the Free Software Foundation, version 3.                    *
  *                                                                           *
  * This library is distributed in the hope that it will be useful, but       *
  * WITHOUT ANY WARRANTY; without even the implied warranty of                *
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU         *
- * Library General Public License for more details.                          *
+ * Library Lesser General Public License for more details.                   *
  *                                                                           *
- * You should have received a copy of the GNU Library General Public         *
+ * You should have received a copy of the GNU Library Lesser General Public  *
  * License along with this library; if not, write to the Free Software       *
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.                 *
  *                                                                           *
-\*---------------------------------------------------------------------------*/
+ \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
  *                                Changes                                    *
  *                                                                           *
@@ -112,8 +112,166 @@ void Component::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+
+bool Component::setupClipping(Graphics* const Graphics) const
+{
+    if(getClipping())
+    {    
+        //Get Clipping initial settings
+        Pnt2f ClipTopLeft,ClipBottomRight;
+        getClipBounds(ClipTopLeft,ClipBottomRight);
+
+        Vec4d LeftPlaneEquation  (1.0,0.0,0.0, -ClipTopLeft.x()     + Graphics->getClipPlaneOffset()),
+              RightPlaneEquation (-1.0,0.0,0.0, ClipBottomRight.x() + Graphics->getClipPlaneOffset()),
+              TopPlaneEquation   (0.0,1.0,0.0, -ClipTopLeft.y()     + Graphics->getClipPlaneOffset()),
+              BottomPlaneEquation(0.0,-1.0,0.0, ClipBottomRight.y() + Graphics->getClipPlaneOffset());
+
+        //glClipPlane
+        //Clip with the Intersection of this components RenderingSurface bounds
+        //and its parents RenderingSurface bounds
+        if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
+        {
+            return false;
+        }
+
+        if(!glIsEnabled(GL_CLIP_PLANE0)) { glEnable(GL_CLIP_PLANE0); }
+        if(!glIsEnabled(GL_CLIP_PLANE1)) { glEnable(GL_CLIP_PLANE1); }
+        if(!glIsEnabled(GL_CLIP_PLANE2)) { glEnable(GL_CLIP_PLANE2); }
+        if(!glIsEnabled(GL_CLIP_PLANE3)) { glEnable(GL_CLIP_PLANE3); }
+
+        //Clip Plane Equations
+        //Clip Planes get transformed by the ModelViewMatrix when set
+        //So we can rely on the fact that our current coordinate space
+        //is relative to the this components position
+
+        glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
+        glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
+    }
+    else
+    {
+        if(glIsEnabled(GL_CLIP_PLANE0)) { glDisable(GL_CLIP_PLANE0); }
+        if(glIsEnabled(GL_CLIP_PLANE1)) { glDisable(GL_CLIP_PLANE1); }
+        if(glIsEnabled(GL_CLIP_PLANE2)) { glDisable(GL_CLIP_PLANE2); }
+        if(glIsEnabled(GL_CLIP_PLANE3)) { glDisable(GL_CLIP_PLANE3); }
+    }
+    return true;
+}
+
+void Component::draw(Graphics* const TheGraphics, Real32 Opacity) const
+{
+    //If not visible then don't draw
+    if (!getVisible())
+        return;
+
+    //Grab the initial transformation
+    GLdouble InitMat[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, InitMat);
+
+    //Translate to my position
+    glTranslatef(getPosition().x(), getPosition().y(), 0);
+
+    if(setupClipping(TheGraphics))
+    {
+
+        //Activate My Border Drawing constraints
+        Border* DrawnBorder = getDrawnBorder();
+        if(DrawnBorder != NULL)
+        {
+            DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
+        }
+
+
+        //Draw My Background
+        drawBackground(TheGraphics, getDrawnBackground(), Opacity);
+
+        //Draw Internal
+        drawInternal(TheGraphics, Opacity);
+
+        //Make sure the clipping is reset
+        setupClipping(TheGraphics);
+
+        //Draw My Foreground
+        drawForeground(TheGraphics, getDrawnForeground(), Opacity);
+
+        //Draw all parts that should not be clipped against
+        drawUnclipped(TheGraphics, Opacity);
+    }
+
+    //Reset the transformation
+    glLoadMatrixd(InitMat);
+}
+
+
+void Component::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
+{
+    //Draw Border
+    drawBorder(TheGraphics, getDrawnBorder(), Opacity);
+}
+
+
+void Component::updateClipBounds(void)
+{
+    Pnt2f TopLeft, BottomRight;
+    if((getParentContainer() == NULL && useBoundsForClipping()) ||
+       (getParentContainer() && getParentContainer()->getType() == RotatedComponent::getClassType()))
+    {
+        //If I have no parent container use my bounds
+        getBounds(TopLeft, BottomRight);
+    }
+    else if(getParentContainer() != NULL)
+    {
+        //Get the intersection of:
+        //     My Bounds
+        //     My Parent Containers Clip Bounds
+        //     My Parent Containers Inset Bounds
+        Pnt2f MyTopLeft,MyBottomRight;
+        getBounds(MyTopLeft,MyBottomRight);
+
+        //Get Parent ComponentContainer's Clip Bounds
+        Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
+        dynamic_cast<ComponentContainer*>(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
+
+        //Parent ComponentContainer's Clip Bounds are in the Parent ComponentContainer's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerClipTopLeft -= Vec2f(getPosition());
+        ContainerClipBottomRight -= Vec2f(getPosition());
+
+        //Get Parent ComponentContainer's Inset Bounds
+        Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
+        dynamic_cast<ComponentContainer*>(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
+
+        //Parent ComponentContainer's Inset Bounds are in the Parent ComponentContainer's Coordinate space
+        //We need to convert them to this Components Coordinate space
+        ContainerInsetTopLeft -= Vec2f(getPosition());
+        ContainerInsetBottomRight -= Vec2f(getPosition());
+
+        //Get the intersection of my bounds with my parent containers clip bounds
+        quadIntersection(MyTopLeft,MyBottomRight,
+                         ContainerClipTopLeft,ContainerClipBottomRight,
+                         TopLeft, BottomRight);
+
+        quadIntersection(TopLeft,BottomRight,
+                         ContainerInsetTopLeft,ContainerInsetBottomRight,
+                         TopLeft, BottomRight);
+    }
+
+    //The Clip Bounds calculated are in my Parent Containers coordinate space
+    //Translate these bounds into my own coordinate space
+    if(getClipTopLeft() != TopLeft)
+    {
+        setClipTopLeft(TopLeft);
+    }
+    if(getClipBottomRight() != BottomRight)
+    {
+        setClipBottomRight(BottomRight);
+    }
+}
+
 bool Component::isAncestor(Component* const TheComponent) const
 {
+    //Move up the tree until the Root or the component testing for is found
     const Component* TestComponent(getParentContainer());
     while(TestComponent != NULL)
     {
@@ -272,7 +430,7 @@ Component* Component::getNextDepthFirstComponent(void) const
             {
                 TestComp = TestComp->getParentContainer();
             }
-            
+
             if(TestComp != NULL)
             {
                 TestComp = TestComp->getNextSibling();
@@ -306,7 +464,7 @@ Component* Component::getPrevDepthFirstComponent(void) const
             {
                 TestComp = TestComp->getParentContainer();
             }
-            
+
             if(TestComp != NULL)
             {
                 TestComp = TestComp->getPrevSibling();
@@ -316,7 +474,7 @@ Component* Component::getPrevDepthFirstComponent(void) const
         if(TestComp != NULL &&
            TestComp->getType().isDerivedFrom(ComponentContainer::getClassType()))
         {
-                return TestComp->getRightmostDecendent();
+            return TestComp->getRightmostDecendent();
         }
         else
         {
@@ -331,7 +489,7 @@ Component* Component::getNextSibling(void) const
 {
     if(getParentContainer() != NULL)
     {
-        return getParentContainer()->getNextSiblingOfChild(const_cast<Component*const>(this));
+        return getParentContainer()->getNextSiblingOfChild(const_cast<Component* const>(this));
     }
 
     return NULL;
@@ -341,7 +499,7 @@ Component* Component::getPrevSibling(void) const
 {
     if(getParentContainer() != NULL)
     {
-        return getParentContainer()->getPrevSiblingOfChild(const_cast<Component*const>(this));
+        return getParentContainer()->getPrevSiblingOfChild(const_cast<Component* const>(this));
     }
 
     return NULL;
@@ -424,7 +582,7 @@ Component* Component::getNextSiblingInNegX(void) const
         {
             if(getParentContainer()->getChildren(i)->getPosition().x() <= getPosition().x() &&
                (TestComponent == NULL ||
-               getParentContainer()->getChildren(i)->getPosition().x() >= TestComponent->getPosition().x()))
+                getParentContainer()->getChildren(i)->getPosition().x() >= TestComponent->getPosition().x()))
             {
                 TestComponent = getParentContainer()->getChildren(i);
             }
@@ -450,7 +608,7 @@ Component* Component::getNextSiblingInPosY(void) const
         {
             if(getParentContainer()->getChildren(i)->getPosition().y() >= getPosition().y() &&
                (TestComponent == NULL ||
-               getParentContainer()->getChildren(i)->getPosition().y() <= TestComponent->getPosition().y()))
+                getParentContainer()->getChildren(i)->getPosition().y() <= TestComponent->getPosition().y()))
             {
                 TestComponent = getParentContainer()->getChildren(i);
             }
@@ -476,7 +634,7 @@ Component* Component::getNextSiblingInNegY(void) const
         {
             if(getParentContainer()->getChildren(i)->getPosition().y() <= getPosition().y() &&
                (TestComponent == NULL ||
-               getParentContainer()->getChildren(i)->getPosition().y() >= TestComponent->getPosition().y()))
+                getParentContainer()->getChildren(i)->getPosition().y() >= TestComponent->getPosition().y()))
             {
                 TestComponent = getParentContainer()->getChildren(i);
             }
@@ -576,26 +734,26 @@ Vec2f Component::getBorderingLength(void) const
 
 void Component::setBorders(Border* const TheBorder)
 {
-    setBorder(TheBorder);
+    setBorder        (TheBorder);
     setDisabledBorder(TheBorder);
-    setFocusedBorder(TheBorder);
+    setFocusedBorder (TheBorder);
     setRolloverBorder(TheBorder);
 }
 
 void Component::setBackgrounds(Layer* const TheBackground)
 {
-    setBackground(TheBackground);
+    setBackground        (TheBackground);
     setDisabledBackground(TheBackground);
-    setFocusedBackground(TheBackground);
+    setFocusedBackground (TheBackground);
     setRolloverBackground(TheBackground);
 }
 
 
 void Component::setForegrounds(Layer* const TheForeground)
 {
-    setForeground(TheForeground);
+    setForeground        (TheForeground);
     setDisabledForeground(TheForeground);
-    setFocusedForeground(TheForeground);
+    setFocusedForeground (TheForeground);
     setRolloverForeground(TheForeground);
 }
 
@@ -714,7 +872,7 @@ ComponentTransitPtr Component::createDefaultToolTip(void)
 
         Result = dynamic_pointer_cast<Component>(tmpPtr);
     }
-    
+
     return Result;
 }
 
@@ -776,162 +934,6 @@ void Component::drawForeground(Graphics* const TheGraphics, const Layer* Foregro
         Pnt2f TopLeft, BottomRight;
         getInsideBorderBounds(TopLeft, BottomRight);
         Foreground->draw(TheGraphics, TopLeft, BottomRight, getOpacity()*Opacity);
-    }
-}
-
-bool Component::setupClipping(Graphics* const Graphics) const
-{
-
-    if(getClipping())
-    {    
-        //Get Clipping initial settings
-        Pnt2f ClipTopLeft,ClipBottomRight;
-        getClipBounds(ClipTopLeft,ClipBottomRight);
-
-        Vec4d LeftPlaneEquation(1.0,0.0,0.0,-ClipTopLeft.x()+ Graphics->getClipPlaneOffset()),
-              RightPlaneEquation(-1.0,0.0,0.0,ClipBottomRight.x() + Graphics->getClipPlaneOffset()),
-              TopPlaneEquation(0.0,1.0,0.0,-ClipTopLeft.y() + Graphics->getClipPlaneOffset()),
-              BottomPlaneEquation(0.0,-1.0,0.0,ClipBottomRight.y() + Graphics->getClipPlaneOffset());
-
-        //glClipPlane
-        //Clip with the Intersection of this components RenderingSurface bounds
-        //and its parents RenderingSurface bounds
-        if(ClipBottomRight.x()-ClipTopLeft.x() <= 0 || ClipBottomRight.y()-ClipTopLeft.y()<= 0)
-        {
-            return false;
-        }
-
-        if(!glIsEnabled(GL_CLIP_PLANE0)) { glEnable(GL_CLIP_PLANE0); }
-        if(!glIsEnabled(GL_CLIP_PLANE1)) { glEnable(GL_CLIP_PLANE1); }
-        if(!glIsEnabled(GL_CLIP_PLANE2)) { glEnable(GL_CLIP_PLANE2); }
-        if(!glIsEnabled(GL_CLIP_PLANE3)) { glEnable(GL_CLIP_PLANE3); }
-
-        //Clip Plane Equations
-        //Clip Planes get transformed by the ModelViewMatrix when set
-        //So we can rely on the fact that our current coordinate space
-        //is relative to the this components position
-
-        glClipPlane(GL_CLIP_PLANE0,LeftPlaneEquation.getValues());
-        glClipPlane(GL_CLIP_PLANE1,RightPlaneEquation.getValues());
-        glClipPlane(GL_CLIP_PLANE2,TopPlaneEquation.getValues());
-        glClipPlane(GL_CLIP_PLANE3,BottomPlaneEquation.getValues());
-    }
-    else
-    {
-        if(glIsEnabled(GL_CLIP_PLANE0)) { glDisable(GL_CLIP_PLANE0); }
-        if(glIsEnabled(GL_CLIP_PLANE1)) { glDisable(GL_CLIP_PLANE1); }
-        if(glIsEnabled(GL_CLIP_PLANE2)) { glDisable(GL_CLIP_PLANE2); }
-        if(glIsEnabled(GL_CLIP_PLANE3)) { glDisable(GL_CLIP_PLANE3); }
-    }
-    return true;
-}
-
-void Component::draw(Graphics* const TheGraphics, Real32 Opacity) const
-{
-    if (!getVisible())
-        return;
-
-    GLdouble InitMat[16];
-    glGetDoublev(GL_MODELVIEW_MATRIX, InitMat);
-    //Translate to my position
-    glTranslatef(getPosition().x(), getPosition().y(), 0);
-
-    if(setupClipping(TheGraphics))
-    {
-
-        //Activate My Border Drawing constraints
-        Border* DrawnBorder = getDrawnBorder();
-        if(DrawnBorder != NULL)
-        {
-            DrawnBorder->activateInternalDrawConstraints(TheGraphics,0,0,getSize().x(),getSize().y());
-        }
-
-
-        //Draw My Background
-        drawBackground(TheGraphics, getDrawnBackground(), Opacity);
-
-        //Draw Internal
-        drawInternal(TheGraphics, Opacity);
-	
-        //Make sure the clipping is reset
-        setupClipping(TheGraphics);
-
-        //Draw My Foreground
-        drawForeground(TheGraphics, getDrawnForeground(), Opacity);
-
-        //Draw all parts that should not be clipped against
-        drawUnclipped(TheGraphics, Opacity);
-    }
-
-    //Undo the Translation to Component Space
-    glLoadMatrixd(InitMat);
-}
-
-
-void Component::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
-{
-    //Draw Border
-    drawBorder(TheGraphics, getDrawnBorder(), Opacity);
-}
-
-
-void Component::updateClipBounds(void)
-{
-    Pnt2f TopLeft, BottomRight;
-    if((getParentContainer() == NULL && useBoundsForClipping()) ||
-       (getParentContainer() && getParentContainer()->getType() == RotatedComponent::getClassType()))
-    {
-        //If I have no parent container use my bounds
-        getBounds(TopLeft, BottomRight);
-    }
-    else if(getParentContainer() != NULL)
-    {
-        //Get the intersection of:
-        //My Bounds
-        //My Parent Containers Clip Bounds
-        //My Parent Containers Inset Bounds
-        Pnt2f MyTopLeft,MyBottomRight;
-        getBounds(MyTopLeft,MyBottomRight);
-
-        //Update my Parent ComponentContainer's Clip Bounds
-        //dynamic_cast<ComponentContainer*>(getParentContainer())->updateClipBounds();
-
-        //Get Parent ComponentContainer's Clip Bounds
-        Pnt2f ContainerClipTopLeft, ContainerClipBottomRight;
-        dynamic_cast<ComponentContainer*>(getParentContainer())->getClipBounds(ContainerClipTopLeft,ContainerClipBottomRight);
-
-        //Parent ComponentContainer's Clip Bounds are in the Parent ComponentContainer's Coordinate space
-        //We need to convert them to this Components Coordinate space
-        ContainerClipTopLeft -= Vec2f(getPosition());
-        ContainerClipBottomRight -= Vec2f(getPosition());
-
-        //Get Parent ComponentContainer's Inset Bounds
-        Pnt2f ContainerInsetTopLeft, ContainerInsetBottomRight;
-        dynamic_cast<ComponentContainer*>(getParentContainer())->getInsideInsetsBounds(ContainerInsetTopLeft, ContainerInsetBottomRight);
-
-        //Parent ComponentContainer's Inset Bounds are in the Parent ComponentContainer's Coordinate space
-        //We need to convert them to this Components Coordinate space
-        ContainerInsetTopLeft -= Vec2f(getPosition());
-        ContainerInsetBottomRight -= Vec2f(getPosition());
-
-        //Get the intersection of my bounds with my parent containers clip bounds
-        quadIntersection(MyTopLeft,MyBottomRight,
-                         ContainerClipTopLeft,ContainerClipBottomRight,
-                         TopLeft, BottomRight);
-
-        quadIntersection(TopLeft,BottomRight,
-                         ContainerInsetTopLeft,ContainerInsetBottomRight,
-                         TopLeft, BottomRight);
-    }
-    //The Clip Bounds calculated are in my Parent Containers coordinate space
-    //Translate these bounds into my own coordinate space
-    if(getClipTopLeft() != TopLeft)
-    {
-        setClipTopLeft(TopLeft);
-    }
-    if(getClipBottomRight() != BottomRight)
-    {
-        setClipBottomRight(BottomRight);
     }
 }
 
@@ -1075,7 +1077,7 @@ bool Component::takeFocus(bool Temporary)
 
 Real32 Component::getBaseline(const Real32& x, const Real32& y) const
 {
-    return -1;
+    return -1.0f;
 }
 
 Vec2f Component::getPreferredScrollableViewportSize(void)
@@ -1330,56 +1332,56 @@ void Component::dump(      UInt32    ,
 void Component::produceComponentResized(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentResized(Details);
 }
 
 void Component::produceComponentMoved(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentMoved(Details);
 }
 
 void Component::produceComponentEnabled(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentEnabled(Details);
 }
 
 void Component::produceComponentDisabled(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentDisabled(Details);
 }
 
 void Component::produceComponentVisible(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentVisible(Details);
 }
 
 void Component::produceComponentHidden(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceComponentHidden(Details);
 }
 
 void Component::produceToolTipActivated  (void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceToolTipActivated(Details);
 }
 
 void Component::produceToolTipDeactivated(void)
 {
     ComponentEventDetailsUnrecPtr Details(ComponentEventDetails::create(this,getSystemTime()));
-    
+
     Inherited::produceToolTipDeactivated(Details);
 }
 
@@ -1482,7 +1484,7 @@ void Component::handleToolTipActivateUpdate(UpdateEventDetails* const e)
             Vec2f DefaultToolTipOffset(5,18);
 
             Location = DrawingSurfaceToComponent(getParentWindow()->getParentDrawingSurface()->getMousePosition(),this)
-                         + DefaultToolTipOffset;
+                + DefaultToolTipOffset;
         }
 
         setToolTipLocation(Location);

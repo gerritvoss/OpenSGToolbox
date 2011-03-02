@@ -161,6 +161,18 @@ void ComponentBase::execSync (      ComponentBase *pFrom,
     if(FieldBits::NoField != (RolloverBackgroundFieldMask & whichField))
         _sfRolloverBackground.syncWith(pFrom->_sfRolloverBackground);
 
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+        _sfFocusedForeground.syncWith(pFrom->_sfFocusedForeground);
+
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+        _sfRolloverForeground.syncWith(pFrom->_sfRolloverForeground);
+
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+        _sfDisabledForeground.syncWith(pFrom->_sfDisabledForeground);
+
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+        _sfForeground.syncWith(pFrom->_sfForeground);
+
     if(FieldBits::NoField != (ToolTipFieldMask & whichField))
         _sfToolTip.syncWith(pFrom->_sfToolTip);
 
@@ -175,18 +187,6 @@ void ComponentBase::execSync (      ComponentBase *pFrom,
 
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
         _sfPopupMenu.syncWith(pFrom->_sfPopupMenu);
-
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-        _sfFocusedForeground.syncWith(pFrom->_sfFocusedForeground);
-
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-        _sfRolloverForeground.syncWith(pFrom->_sfRolloverForeground);
-
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-        _sfDisabledForeground.syncWith(pFrom->_sfDisabledForeground);
-
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-        _sfForeground.syncWith(pFrom->_sfForeground);
 
     if(FieldBits::NoField != (CursorFieldMask & whichField))
         _sfCursor.syncWith(pFrom->_sfCursor);

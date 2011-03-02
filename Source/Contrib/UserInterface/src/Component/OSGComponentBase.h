@@ -176,16 +176,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         FocusedBackgroundFieldId = FocusedBorderFieldId + 1,
         RolloverBorderFieldId = FocusedBackgroundFieldId + 1,
         RolloverBackgroundFieldId = RolloverBorderFieldId + 1,
-        ToolTipFieldId = RolloverBackgroundFieldId + 1,
+        FocusedForegroundFieldId = RolloverBackgroundFieldId + 1,
+        RolloverForegroundFieldId = FocusedForegroundFieldId + 1,
+        DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
+        ForegroundFieldId = DisabledForegroundFieldId + 1,
+        ToolTipFieldId = ForegroundFieldId + 1,
         OpacityFieldId = ToolTipFieldId + 1,
         ParentContainerFieldId = OpacityFieldId + 1,
         ClippingFieldId = ParentContainerFieldId + 1,
         PopupMenuFieldId = ClippingFieldId + 1,
-        FocusedForegroundFieldId = PopupMenuFieldId + 1,
-        RolloverForegroundFieldId = FocusedForegroundFieldId + 1,
-        DisabledForegroundFieldId = RolloverForegroundFieldId + 1,
-        ForegroundFieldId = DisabledForegroundFieldId + 1,
-        CursorFieldId = ForegroundFieldId + 1,
+        CursorFieldId = PopupMenuFieldId + 1,
         NextFieldId = CursorFieldId + 1
     };
 
@@ -229,6 +229,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << RolloverBorderFieldId);
     static const OSG::BitVector RolloverBackgroundFieldMask =
         (TypeTraits<BitVector>::One << RolloverBackgroundFieldId);
+    static const OSG::BitVector FocusedForegroundFieldMask =
+        (TypeTraits<BitVector>::One << FocusedForegroundFieldId);
+    static const OSG::BitVector RolloverForegroundFieldMask =
+        (TypeTraits<BitVector>::One << RolloverForegroundFieldId);
+    static const OSG::BitVector DisabledForegroundFieldMask =
+        (TypeTraits<BitVector>::One << DisabledForegroundFieldId);
+    static const OSG::BitVector ForegroundFieldMask =
+        (TypeTraits<BitVector>::One << ForegroundFieldId);
     static const OSG::BitVector ToolTipFieldMask =
         (TypeTraits<BitVector>::One << ToolTipFieldId);
     static const OSG::BitVector OpacityFieldMask =
@@ -239,14 +247,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
         (TypeTraits<BitVector>::One << ClippingFieldId);
     static const OSG::BitVector PopupMenuFieldMask =
         (TypeTraits<BitVector>::One << PopupMenuFieldId);
-    static const OSG::BitVector FocusedForegroundFieldMask =
-        (TypeTraits<BitVector>::One << FocusedForegroundFieldId);
-    static const OSG::BitVector RolloverForegroundFieldMask =
-        (TypeTraits<BitVector>::One << RolloverForegroundFieldId);
-    static const OSG::BitVector DisabledForegroundFieldMask =
-        (TypeTraits<BitVector>::One << DisabledForegroundFieldId);
-    static const OSG::BitVector ForegroundFieldMask =
-        (TypeTraits<BitVector>::One << ForegroundFieldId);
     static const OSG::BitVector CursorFieldMask =
         (TypeTraits<BitVector>::One << CursorFieldId);
     static const OSG::BitVector NextFieldMask =
@@ -272,15 +272,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     typedef SFUnrecLayerPtr   SFFocusedBackgroundType;
     typedef SFUnrecBorderPtr  SFRolloverBorderType;
     typedef SFUnrecLayerPtr   SFRolloverBackgroundType;
+    typedef SFUnrecLayerPtr   SFFocusedForegroundType;
+    typedef SFUnrecLayerPtr   SFRolloverForegroundType;
+    typedef SFUnrecLayerPtr   SFDisabledForegroundType;
+    typedef SFUnrecLayerPtr   SFForegroundType;
     typedef SFUnrecComponentPtr SFToolTipType;
     typedef SFReal32          SFOpacityType;
     typedef SFParentFieldContainerPtr SFParentContainerType;
     typedef SFBool            SFClippingType;
     typedef SFUnrecPopupMenuPtr SFPopupMenuType;
-    typedef SFUnrecLayerPtr   SFFocusedForegroundType;
-    typedef SFUnrecLayerPtr   SFRolloverForegroundType;
-    typedef SFUnrecLayerPtr   SFDisabledForegroundType;
-    typedef SFUnrecLayerPtr   SFForegroundType;
     typedef SFUInt32          SFCursorType;
 
     enum
@@ -382,6 +382,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual       SFUnrecBorderPtr    *editSFRolloverBorder (void);
     virtual const SFUnrecLayerPtr     *getSFRolloverBackground(void) const;
     virtual       SFUnrecLayerPtr     *editSFRolloverBackground(void);
+    virtual const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFFocusedForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFRolloverForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFRolloverForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFDisabledForeground(void) const;
+    virtual       SFUnrecLayerPtr     *editSFDisabledForeground(void);
+    virtual const SFUnrecLayerPtr     *getSFForeground     (void) const;
+    virtual       SFUnrecLayerPtr     *editSFForeground     (void);
     virtual const SFUnrecComponentPtr *getSFToolTip        (void) const;
     virtual       SFUnrecComponentPtr *editSFToolTip        (void);
 
@@ -392,14 +400,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual const SFBool              *getSFClipping        (void) const;
     virtual const SFUnrecPopupMenuPtr *getSFPopupMenu      (void) const;
     virtual       SFUnrecPopupMenuPtr *editSFPopupMenu      (void);
-    virtual const SFUnrecLayerPtr     *getSFFocusedForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFFocusedForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFRolloverForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFRolloverForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFDisabledForeground(void) const;
-    virtual       SFUnrecLayerPtr     *editSFDisabledForeground(void);
-    virtual const SFUnrecLayerPtr     *getSFForeground     (void) const;
-    virtual       SFUnrecLayerPtr     *editSFForeground     (void);
 
     virtual       SFUInt32            *editSFCursor         (void);
     virtual const SFUInt32            *getSFCursor          (void) const;
@@ -453,6 +453,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
 
     virtual       Layer * getRolloverBackground(void) const;
 
+    virtual       Layer * getFocusedForeground(void) const;
+
+    virtual       Layer * getRolloverForeground(void) const;
+
+    virtual       Layer * getDisabledForeground(void) const;
+
+    virtual       Layer * getForeground     (void) const;
+
     virtual       Component * getToolTip        (void) const;
 
     virtual       Real32              &editOpacity        (void);
@@ -462,14 +470,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual       bool                 getClipping        (void) const;
 
     virtual       PopupMenu * getPopupMenu      (void) const;
-
-    virtual       Layer * getFocusedForeground(void) const;
-
-    virtual       Layer * getRolloverForeground(void) const;
-
-    virtual       Layer * getDisabledForeground(void) const;
-
-    virtual       Layer * getForeground     (void) const;
 
     virtual       UInt32              &editCursor         (void);
     virtual       UInt32               getCursor          (void) const;
@@ -498,14 +498,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     virtual void setFocusedBackground(Layer * const value);
     virtual void setRolloverBorder (Border * const value);
     virtual void setRolloverBackground(Layer * const value);
-    virtual void setToolTip        (Component * const value);
-    virtual void setOpacity        (const Real32 value);
-    virtual void setClipping       (const bool value);
-    virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setFocusedForeground(Layer * const value);
     virtual void setRolloverForeground(Layer * const value);
     virtual void setDisabledForeground(Layer * const value);
     virtual void setForeground     (Layer * const value);
+    virtual void setToolTip        (Component * const value);
+    virtual void setOpacity        (const Real32 value);
+    virtual void setClipping       (const bool value);
+    virtual void setPopupMenu      (PopupMenu * const value);
     virtual void setCursor         (const UInt32 value);
 
     /*! \}                                                                 */
@@ -853,15 +853,15 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     SFUnrecLayerPtr   _sfFocusedBackground;
     SFUnrecBorderPtr  _sfRolloverBorder;
     SFUnrecLayerPtr   _sfRolloverBackground;
+    SFUnrecLayerPtr   _sfFocusedForeground;
+    SFUnrecLayerPtr   _sfRolloverForeground;
+    SFUnrecLayerPtr   _sfDisabledForeground;
+    SFUnrecLayerPtr   _sfForeground;
     SFUnrecComponentPtr _sfToolTip;
     SFReal32          _sfOpacity;
     SFParentFieldContainerPtr _sfParentContainer;
     SFBool            _sfClipping;
     SFUnrecPopupMenuPtr _sfPopupMenu;
-    SFUnrecLayerPtr   _sfFocusedForeground;
-    SFUnrecLayerPtr   _sfRolloverForeground;
-    SFUnrecLayerPtr   _sfDisabledForeground;
-    SFUnrecLayerPtr   _sfForeground;
     SFUInt32          _sfCursor;
 
     /*! \}                                                                 */
@@ -950,6 +950,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     EditFieldHandlePtr editHandleRolloverBorder (void);
     GetFieldHandlePtr  getHandleRolloverBackground (void) const;
     EditFieldHandlePtr editHandleRolloverBackground(void);
+    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
+    EditFieldHandlePtr editHandleFocusedForeground(void);
+    GetFieldHandlePtr  getHandleRolloverForeground (void) const;
+    EditFieldHandlePtr editHandleRolloverForeground(void);
+    GetFieldHandlePtr  getHandleDisabledForeground (void) const;
+    EditFieldHandlePtr editHandleDisabledForeground(void);
+    GetFieldHandlePtr  getHandleForeground      (void) const;
+    EditFieldHandlePtr editHandleForeground     (void);
     GetFieldHandlePtr  getHandleToolTip         (void) const;
     EditFieldHandlePtr editHandleToolTip        (void);
     GetFieldHandlePtr  getHandleOpacity         (void) const;
@@ -960,14 +968,6 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING ComponentBase : public AttachmentConta
     EditFieldHandlePtr editHandleClipping       (void);
     GetFieldHandlePtr  getHandlePopupMenu       (void) const;
     EditFieldHandlePtr editHandlePopupMenu      (void);
-    GetFieldHandlePtr  getHandleFocusedForeground (void) const;
-    EditFieldHandlePtr editHandleFocusedForeground(void);
-    GetFieldHandlePtr  getHandleRolloverForeground (void) const;
-    EditFieldHandlePtr editHandleRolloverForeground(void);
-    GetFieldHandlePtr  getHandleDisabledForeground (void) const;
-    EditFieldHandlePtr editHandleDisabledForeground(void);
-    GetFieldHandlePtr  getHandleForeground      (void) const;
-    EditFieldHandlePtr editHandleForeground     (void);
     GetFieldHandlePtr  getHandleCursor          (void) const;
     EditFieldHandlePtr editHandleCursor         (void);
 

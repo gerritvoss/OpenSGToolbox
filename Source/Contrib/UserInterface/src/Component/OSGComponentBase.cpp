@@ -84,7 +84,54 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::Component
-    A UI Component Interface.
+    \brief An element of a graphical user interface.
+
+    A Component represents a single element of a user interface. In other
+    frameworks they may be called widgets or controls. All concrete GUI elements
+    inherit from Component, like OSG::Button, OSG::Label, OSG::TextField,
+    OSG::InternalWindow, etc.
+
+    \par Component states:
+    Components have states for Enabled, Focused,
+    MouseOver, and Visible.  If a Component has Enabled == false, it doesn't receive
+    or produce any events. If a Component has Visible == false, it is not drawn. 
+
+    \par Event response:
+    Components can respond to Mouse, Key, and Focus events.
+
+    \par Event production: Components produce Mouse, Key, Focus, Component, and
+    ToolTip events if enabled.
+
+    \par Drawing: Component handles setting up the clipping of a component, and
+    the drawing of the Border, Background, and Foreground.  The Border,
+    Background, and Foreground used when drawing a Component depends on it's
+    state, and can also be overridden by inheriting classes. There are separate
+    Border, Background, and Foregrounds for Disabled, Focused, Rollover, and No stat
+    states.
+
+    \par Layout: The position and size of a Component is controlled by the
+    OSG::ComponentContainer that contains it. For simple OSG::ComponentContainer
+    like OSG::Panel, the OSG::Layout attached to the container is used to control
+    the position and size of components.  For more complex containers like
+    OSG::SplitPanel, the position and size are controlled by the specific
+    behavior of the container.
+    \warning User code should never set the position or size of a Component
+    directly, this is controlled by the OSG::ComponentContainer of the Component.
+
+    \par Focus: Zero, or one Component can have focus in a OSG::InternalWindow.
+    Component has methods for taking, removing, or moving the focus.
+
+    \par ToolTips: A component can have a ToolTip that will appear after a
+    configurable amount of time passes with the mouse over the Component.
+
+    \par PopupMenus: A OSG::PopupMenu can be attached to a Component that will
+    be activated with a right-click mouse interaction.
+
+    \par Scrolling: Components can be contained in a OSG::Viewport or a
+    OSG::ScrollPanel for viewing large Components.
+
+    \par Inheriting: Concrete GUI elements that inherit from Component must
+    implement drawInternal().
  */
 
 /***************************************************************************\
@@ -92,91 +139,114 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \var Pnt2f           ComponentBase::_sfPosition
-    
+    The position of the Component, relative to it parent container.
 */
 
 /*! \var Pnt4f           ComponentBase::_sfClipBounds
-    
+    The clipping bounds of the Component.  The indexing of the bounds are: 0=Left,
+    1=Right, 2=Top, 3=Bottom.
 */
 
 /*! \var Vec2f           ComponentBase::_sfMinSize
-    
+    The minimum suggested size that this Component should be assigned by a parent
+    container
 */
 
 /*! \var Vec2f           ComponentBase::_sfMaxSize
-    
+    The maximum suggested size that this Component should be assigned by a parent
+    container
 */
 
 /*! \var Vec2f           ComponentBase::_sfPreferredSize
-    
+    The preferred suggested size that this Component should be assigned by a parent
+    container
 */
 
 /*! \var Vec2f           ComponentBase::_sfSize
-    
+    The size of the Component.
 */
 
 /*! \var bool            ComponentBase::_sfVisible
-    
+    Controls if the component is drawn.  If true, the component is drawn.
 */
 
 /*! \var bool            ComponentBase::_sfEnabled
-    
+    Controls the response to events.  If false the Component will not respond
+    to any event.
 */
 
 /*! \var bool            ComponentBase::_sfFocused
-    
+    Indicates whether a Component has focus.
 */
 
 /*! \var LayoutConstraints * ComponentBase::_sfConstraints
-    
+    Specific OSG::LayoutConstraints that may be used by the OSG::Layout of 
+    the parent container of this Component.
 */
 
 /*! \var Border *        ComponentBase::_sfBorder
-    
+    The border to draw when this Component has no state.
 */
 
 /*! \var Layer *         ComponentBase::_sfBackground
-    
+    The background to draw when this Component has no state.
 */
 
 /*! \var Border *        ComponentBase::_sfDisabledBorder
-    
+    The border to draw when this Component is disabled.
 */
 
 /*! \var Layer *         ComponentBase::_sfDisabledBackground
-    
+    The background to draw when this Component is disabled.
 */
 
 /*! \var bool            ComponentBase::_sfDragEnabled
-    
+    Controls whether this Component creates drag-and-drop events when the 
+    mouse is dragged.
 */
 
 /*! \var UInt16          ComponentBase::_sfScrollTrackingCharacteristics
-    
+    Controls scrolling characteristics.
 */
 
 /*! \var Border *        ComponentBase::_sfFocusedBorder
-    
+    The border to draw when this Component is focused.
 */
 
 /*! \var Layer *         ComponentBase::_sfFocusedBackground
-    
+    The background to draw when this Component is focused.
 */
 
 /*! \var Border *        ComponentBase::_sfRolloverBorder
-    
+    The border to draw when the mouse is hovering over this component.
 */
 
 /*! \var Layer *         ComponentBase::_sfRolloverBackground
-    
+    The background to draw when the mouse is hovering over this component.
+*/
+
+/*! \var Layer *         ComponentBase::_sfFocusedForeground
+    The foreground to draw when this Component is focused.
+*/
+
+/*! \var Layer *         ComponentBase::_sfRolloverForeground
+    The foreground to draw when the mouse is hovering over this component.
+*/
+
+/*! \var Layer *         ComponentBase::_sfDisabledForeground
+    The foreground to draw when this Component is disabled.
+*/
+
+/*! \var Layer *         ComponentBase::_sfForeground
+    The background to draw when this Component has no state.
 */
 
 /*! \var Component *     ComponentBase::_sfToolTip
-    
+    The ToolTip used by this Component.  If NULL, then no ToolTip is used.
 */
 
 /*! \var Real32          ComponentBase::_sfOpacity
-    
+    The opacity this Compnent is drawn with.  0.0 = transparent, 1.0 = opaque.
 */
 
 /*! \var FieldContainer * ComponentBase::_sfParentContainer
@@ -184,31 +254,17 @@ OSG_BEGIN_NAMESPACE
 */
 
 /*! \var bool            ComponentBase::_sfClipping
-    
+    Controls whether clipping is used when drawing this component. Under most
+    conditions this should be on, otherwise the Component may draw outside of its
+    boundaries.
 */
 
 /*! \var PopupMenu *     ComponentBase::_sfPopupMenu
-    
-*/
-
-/*! \var Layer *         ComponentBase::_sfFocusedForeground
-    
-*/
-
-/*! \var Layer *         ComponentBase::_sfRolloverForeground
-    
-*/
-
-/*! \var Layer *         ComponentBase::_sfDisabledForeground
-    
-*/
-
-/*! \var Layer *         ComponentBase::_sfForeground
-    
+    The OSG::PopupMenu to use for this Component.
 */
 
 /*! \var UInt32          ComponentBase::_sfCursor
-    
+    The cursor to use when the mouse is hovering over this Component.
 */
 
 
@@ -254,7 +310,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFPnt2f::Description(
         SFPnt2f::getClassType(),
         "Position",
-        "",
+        "The position of the Component, relative to it parent container.\n",
         PositionFieldId, PositionFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -266,7 +322,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFPnt4f::Description(
         SFPnt4f::getClassType(),
         "ClipBounds",
-        "",
+        "The clipping bounds of the Component.  The indexing of the bounds are: 0=Left,\n"
+        "1=Right, 2=Top, 3=Bottom.\n",
         ClipBoundsFieldId, ClipBoundsFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -278,7 +335,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "MinSize",
-        "",
+        "The minimum suggested size that this Component should be assigned by a parent\n"
+        "container\n",
         MinSizeFieldId, MinSizeFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -290,7 +348,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "MaxSize",
-        "",
+        "The maximum suggested size that this Component should be assigned by a parent\n"
+        "container\n",
         MaxSizeFieldId, MaxSizeFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -302,7 +361,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "PreferredSize",
-        "",
+        "The preferred suggested size that this Component should be assigned by a parent\n"
+        "container\n",
         PreferredSizeFieldId, PreferredSizeFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -314,7 +374,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "Size",
-        "",
+        "The size of the Component.\n",
         SizeFieldId, SizeFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -326,7 +386,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Visible",
-        "",
+        "Controls if the component is drawn.  If true, the component is drawn.\n",
         VisibleFieldId, VisibleFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -338,7 +398,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Enabled",
-        "",
+        "Controls the response to events.  If false the Component will not respond\n"
+        "to any event.\n",
         EnabledFieldId, EnabledFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -350,7 +411,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Focused",
-        "",
+        "Indicates whether a Component has focus.\n",
         FocusedFieldId, FocusedFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -362,7 +423,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecChildLayoutConstraintsPtr::Description(
         SFUnrecChildLayoutConstraintsPtr::getClassType(),
         "Constraints",
-        "",
+        "Specific OSG::LayoutConstraints that may be used by the OSG::Layout of \n"
+        "the parent container of this Component.\n",
         ConstraintsFieldId, ConstraintsFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FNullCheckAccess),
@@ -374,7 +436,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "Border",
-        "",
+        "The border to draw when this Component has no state.\n",
         BorderFieldId, BorderFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -386,7 +448,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "Background",
-        "",
+        "The background to draw when this Component has no state.\n",
         BackgroundFieldId, BackgroundFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -398,7 +460,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "DisabledBorder",
-        "",
+        "The border to draw when this Component is disabled.\n",
         DisabledBorderFieldId, DisabledBorderFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -410,7 +472,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "DisabledBackground",
-        "",
+        "The background to draw when this Component is disabled.\n",
         DisabledBackgroundFieldId, DisabledBackgroundFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -422,7 +484,8 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "DragEnabled",
-        "",
+        "Controls whether this Component creates drag-and-drop events when the \n"
+        "mouse is dragged.\n",
         DragEnabledFieldId, DragEnabledFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -434,7 +497,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUInt16::Description(
         SFUInt16::getClassType(),
         "ScrollTrackingCharacteristics",
-        "",
+        "Controls scrolling characteristics.\n",
         ScrollTrackingCharacteristicsFieldId, ScrollTrackingCharacteristicsFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -446,7 +509,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "FocusedBorder",
-        "",
+        "The border to draw when this Component is focused.\n",
         FocusedBorderFieldId, FocusedBorderFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -458,7 +521,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "FocusedBackground",
-        "",
+        "The background to draw when this Component is focused.\n",
         FocusedBackgroundFieldId, FocusedBackgroundFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -470,7 +533,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecBorderPtr::Description(
         SFUnrecBorderPtr::getClassType(),
         "RolloverBorder",
-        "",
+        "The border to draw when the mouse is hovering over this component.\n",
         RolloverBorderFieldId, RolloverBorderFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -482,7 +545,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecLayerPtr::Description(
         SFUnrecLayerPtr::getClassType(),
         "RolloverBackground",
-        "",
+        "The background to draw when the mouse is hovering over this component.\n",
         RolloverBackgroundFieldId, RolloverBackgroundFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -491,10 +554,58 @@ void ComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "FocusedForeground",
+        "The foreground to draw when this Component is focused.\n",
+        FocusedForegroundFieldId, FocusedForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleFocusedForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleFocusedForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "RolloverForeground",
+        "The foreground to draw when the mouse is hovering over this component.\n",
+        RolloverForegroundFieldId, RolloverForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleRolloverForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleRolloverForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "DisabledForeground",
+        "The foreground to draw when this Component is disabled.\n",
+        DisabledForegroundFieldId, DisabledForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleDisabledForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleDisabledForeground));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFUnrecLayerPtr::Description(
+        SFUnrecLayerPtr::getClassType(),
+        "Foreground",
+        "The background to draw when this Component has no state.\n",
+        ForegroundFieldId, ForegroundFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&Component::editHandleForeground),
+        static_cast<FieldGetMethodSig >(&Component::getHandleForeground));
+
+    oType.addInitialDesc(pDesc);
+
     pDesc = new SFUnrecComponentPtr::Description(
         SFUnrecComponentPtr::getClassType(),
         "ToolTip",
-        "",
+        "The ToolTip used by this Component.  If NULL, then no ToolTip is used.\n",
         ToolTipFieldId, ToolTipFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -506,7 +617,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFReal32::Description(
         SFReal32::getClassType(),
         "Opacity",
-        "",
+        "The opacity this Compnent is drawn with.  0.0 = transparent, 1.0 = opaque.\n",
         OpacityFieldId, OpacityFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -530,7 +641,9 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Clipping",
-        "",
+        "Controls whether clipping is used when drawing this component. Under most\n"
+        "conditions this should be on, otherwise the Component may draw outside of its\n"
+        "boundaries.\n",
         ClippingFieldId, ClippingFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -542,7 +655,7 @@ void ComponentBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecPopupMenuPtr::Description(
         SFUnrecPopupMenuPtr::getClassType(),
         "PopupMenu",
-        "",
+        "The OSG::PopupMenu to use for this Component.\n",
         PopupMenuFieldId, PopupMenuFieldMask,
         true,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -551,58 +664,10 @@ void ComponentBase::classDescInserter(TypeObject &oType)
 
     oType.addInitialDesc(pDesc);
 
-    pDesc = new SFUnrecLayerPtr::Description(
-        SFUnrecLayerPtr::getClassType(),
-        "FocusedForeground",
-        "",
-        FocusedForegroundFieldId, FocusedForegroundFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleFocusedForeground),
-        static_cast<FieldGetMethodSig >(&Component::getHandleFocusedForeground));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUnrecLayerPtr::Description(
-        SFUnrecLayerPtr::getClassType(),
-        "RolloverForeground",
-        "",
-        RolloverForegroundFieldId, RolloverForegroundFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleRolloverForeground),
-        static_cast<FieldGetMethodSig >(&Component::getHandleRolloverForeground));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUnrecLayerPtr::Description(
-        SFUnrecLayerPtr::getClassType(),
-        "DisabledForeground",
-        "",
-        DisabledForegroundFieldId, DisabledForegroundFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleDisabledForeground),
-        static_cast<FieldGetMethodSig >(&Component::getHandleDisabledForeground));
-
-    oType.addInitialDesc(pDesc);
-
-    pDesc = new SFUnrecLayerPtr::Description(
-        SFUnrecLayerPtr::getClassType(),
-        "Foreground",
-        "",
-        ForegroundFieldId, ForegroundFieldMask,
-        false,
-        (Field::SFDefaultFlags | Field::FStdAccess),
-        static_cast<FieldEditMethodSig>(&Component::editHandleForeground),
-        static_cast<FieldGetMethodSig >(&Component::getHandleForeground));
-
-    oType.addInitialDesc(pDesc);
-
     pDesc = new SFUInt32::Description(
         SFUInt32::getClassType(),
         "Cursor",
-        "",
+        "The cursor to use when the mouse is hovering over this Component.\n",
         CursorFieldId, CursorFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -627,11 +692,11 @@ ComponentBase::TypeObject ComponentBase::_type(
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"Component\"\n"
-    "\tparent=\"AttachmentContainer\"\n"
+    "    name=\"Component\"\n"
+    "    parent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
-    "\tstructure=\"abstract\"\n"
+    "    structure=\"abstract\"\n"
     "    systemcomponent=\"true\"\n"
     "    parentsystemcomponent=\"true\"\n"
     "    decoratable=\"true\"\n"
@@ -640,438 +705,601 @@ ComponentBase::TypeObject ComponentBase::_type(
     "    fieldsUnmarkedOnCreate=\"EnabledFieldMask\"\n"
     "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     "    childFields=\"multi\"\n"
-    ">\n"
-    "A UI Component Interface.\n"
-    "\t<Field\n"
-    "\t\tname=\"Position\"\n"
-    "\t\ttype=\"Pnt2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\tdefaultValue=\"0,0\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ClipBounds\"\n"
-    "\t\ttype=\"Pnt4f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\tdefaultValue=\"0.0f,0.0f,0.0f,0.0f\"\n"
-    "\t\taccess=\"protected\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"MinSize\"\n"
-    "\t\ttype=\"Vec2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"0,0\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"MaxSize\"\n"
-    "\t\ttype=\"Vec2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"32767,32767\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"PreferredSize\"\n"
-    "\t\ttype=\"Vec2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"1,1\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Size\"\n"
-    "\t\ttype=\"Vec2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Visible\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"true\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Enabled\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"true\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Focused\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"false\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Constraints\"\n"
-    "\t\ttype=\"LayoutConstraints\"\n"
-    "\t\tcardinality=\"single\"\n"
+    "    >\n"
+    "    \\brief An element of a graphical user interface.\n"
+    "\n"
+    "    A Component represents a single element of a user interface. In other\n"
+    "    frameworks they may be called widgets or controls. All concrete GUI elements\n"
+    "    inherit from Component, like OSG::Button, OSG::Label, OSG::TextField,\n"
+    "    OSG::InternalWindow, etc.\n"
+    "\n"
+    "    \\par Component states:\n"
+    "    Components have states for Enabled, Focused,\n"
+    "    MouseOver, and Visible.  If a Component has Enabled == false, it doesn't receive\n"
+    "    or produce any events. If a Component has Visible == false, it is not drawn. \n"
+    "\n"
+    "    \\par Event response:\n"
+    "    Components can respond to Mouse, Key, and Focus events.\n"
+    "\n"
+    "    \\par Event production: Components produce Mouse, Key, Focus, Component, and\n"
+    "    ToolTip events if enabled.\n"
+    "\n"
+    "    \\par Drawing: Component handles setting up the clipping of a component, and\n"
+    "    the drawing of the Border, Background, and Foreground.  The Border,\n"
+    "    Background, and Foreground used when drawing a Component depends on it's\n"
+    "    state, and can also be overridden by inheriting classes. There are separate\n"
+    "    Border, Background, and Foregrounds for Disabled, Focused, Rollover, and No stat\n"
+    "    states.\n"
+    "\n"
+    "    \\par Layout: The position and size of a Component is controlled by the\n"
+    "    OSG::ComponentContainer that contains it. For simple OSG::ComponentContainer\n"
+    "    like OSG::Panel, the OSG::Layout attached to the container is used to control\n"
+    "    the position and size of components.  For more complex containers like\n"
+    "    OSG::SplitPanel, the position and size are controlled by the specific\n"
+    "    behavior of the container.\n"
+    "    \\warning User code should never set the position or size of a Component\n"
+    "    directly, this is controlled by the OSG::ComponentContainer of the Component.\n"
+    "\n"
+    "\n"
+    "    \\par Focus: Zero, or one Component can have focus in a OSG::InternalWindow.\n"
+    "    Component has methods for taking, removing, or moving the focus.\n"
+    "\n"
+    "    \\par ToolTips: A component can have a ToolTip that will appear after a\n"
+    "    configurable amount of time passes with the mouse over the Component.\n"
+    "\n"
+    "    \\par PopupMenus: A OSG::PopupMenu can be attached to a Component that will\n"
+    "    be activated with a right-click mouse interaction.\n"
+    "\n"
+    "    \\par Scrolling: Components can be contained in a OSG::Viewport or a\n"
+    "    OSG::ScrollPanel for viewing large Components.\n"
+    "\n"
+    "    \\par Inheriting: Concrete GUI elements that inherit from Component must\n"
+    "    implement drawInternal().\n"
+    "    <Field\n"
+    "        name=\"Position\"\n"
+    "        type=\"Pnt2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"internal\"\n"
+    "        defaultValue=\"0,0\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The position of the Component, relative to it parent container.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ClipBounds\"\n"
+    "        type=\"Pnt4f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"internal\"\n"
+    "        defaultValue=\"0.0f,0.0f,0.0f,0.0f\"\n"
+    "        access=\"protected\"\n"
+    "        >\n"
+    "        The clipping bounds of the Component.  The indexing of the bounds are: 0=Left,\n"
+    "        1=Right, 2=Top, 3=Bottom.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MinSize\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"0,0\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The minimum suggested size that this Component should be assigned by a parent\n"
+    "        container\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MaxSize\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"32767,32767\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The maximum suggested size that this Component should be assigned by a parent\n"
+    "        container\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"PreferredSize\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"1,1\"\n"
+    "        >\n"
+    "        The preferred suggested size that this Component should be assigned by a parent\n"
+    "        container\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Size\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"internal\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The size of the Component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Visible\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Controls if the component is drawn.  If true, the component is drawn.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Enabled\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Controls the response to events.  If false the Component will not respond\n"
+    "        to any event.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Focused\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Indicates whether a Component has focus.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Constraints\"\n"
+    "        type=\"LayoutConstraints\"\n"
+    "        cardinality=\"single\"\n"
     "        category=\"childpointer\"\n"
     "        childParentType=\"FieldContainer\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
     "        ptrFieldAccess = \"nullCheck\"\n"
     "        linkParentField=\"ParentComponent\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Border\"\n"
-    "\t\ttype=\"Border\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Background\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"DisabledBorder\"\n"
-    "\t\ttype=\"Border\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"DisabledBackground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"DragEnabled\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"false\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ScrollTrackingCharacteristics\"\n"
-    "\t\ttype=\"UInt16\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"Component::SCROLLABLE_TRACKING_OFF\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"FocusedBorder\"\n"
-    "\t\ttype=\"Border\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"FocusedBackground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"RolloverBorder\"\n"
-    "\t\ttype=\"Border\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"RolloverBackground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"ToolTip\"\n"
-    "\t\ttype=\"Component\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Opacity\"\n"
-    "\t\ttype=\"Real32\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"1.0\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t   name=\"ParentContainer\"\n"
-    "\t   type=\"FieldContainer\"\n"
-    "\t   cardinality=\"single\"\n"
-    "\t   visibility=\"external\"\n"
-    "\t   access=\"none\"\n"
-    "       category=\"parentpointer\"\n"
-    "\t   >\n"
-    "\t  The Component Container this Component is contained in.\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Clipping\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"true\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"PopupMenu\"\n"
-    "\t\ttype=\"PopupMenu\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"internal\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "   <Field\n"
-    "\t\tname=\"FocusedForeground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"RolloverForeground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"DisabledForeground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Foreground\"\n"
-    "\t\ttype=\"Layer\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Cursor\"\n"
-    "\t\ttype=\"UInt32\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"WindowEventProducer::CURSOR_POINTER\"\n"
-    "\t\tdefaultHeader=\"OSGWindowEventProducer.h\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseMoved\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseDragged\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseClicked\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseEntered\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseExited\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MousePressed\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseReleased\"\n"
-    "\t\tdetailsType=\"MouseEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"MouseWheelMoved\"\n"
-    "\t\tdetailsType=\"MouseWheelEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"KeyPressed\"\n"
-    "\t\tdetailsType=\"KeyEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"KeyReleased\"\n"
-    "\t\tdetailsType=\"KeyEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"KeyTyped\"\n"
-    "\t\tdetailsType=\"KeyEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"FocusGained\"\n"
-    "\t\tdetailsType=\"FocusEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"FocusLost\"\n"
-    "\t\tdetailsType=\"FocusEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentHidden\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentVisible\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentMoved\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentResized\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentEnabled\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ComponentDisabled\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ToolTipActivated\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
-    "\t<ProducedEvent\n"
-    "\t\tname=\"ToolTipDeactivated\"\n"
-    "\t\tdetailsType=\"ComponentEventDetails\"\n"
-    "\t\tconsumable=\"true\"\n"
-    "\t>\n"
-    "\t</ProducedEvent>\n"
+    "        >\n"
+    "        Specific OSG::LayoutConstraints that may be used by the OSG::Layout of \n"
+    "        the parent container of this Component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Border\"\n"
+    "        type=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The border to draw when this Component has no state.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Background\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The background to draw when this Component has no state.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DisabledBorder\"\n"
+    "        type=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The border to draw when this Component is disabled.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DisabledBackground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The background to draw when this Component is disabled.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DragEnabled\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"false\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Controls whether this Component creates drag-and-drop events when the \n"
+    "        mouse is dragged.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ScrollTrackingCharacteristics\"\n"
+    "        type=\"UInt16\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"Component::SCROLLABLE_TRACKING_OFF\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Controls scrolling characteristics.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"FocusedBorder\"\n"
+    "        type=\"Border\"\n"
+    "        cardinality=\"single\"\n"
+    "        category=\"pointer\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The border to draw when this Component is focused.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"FocusedBackground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The background to draw when this Component is focused.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RolloverBorder\"\n"
+    "        type=\"Border\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The border to draw when the mouse is hovering over this component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RolloverBackground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The background to draw when the mouse is hovering over this component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"FocusedForeground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The foreground to draw when this Component is focused.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"RolloverForeground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The foreground to draw when the mouse is hovering over this component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"DisabledForeground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The foreground to draw when this Component is disabled.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Foreground\"\n"
+    "        type=\"Layer\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The background to draw when this Component has no state.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ToolTip\"\n"
+    "        type=\"Component\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        >\n"
+    "        The ToolTip used by this Component.  If NULL, then no ToolTip is used.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Opacity\"\n"
+    "        type=\"Real32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"1.0\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The opacity this Compnent is drawn with.  0.0 = transparent, 1.0 = opaque.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ParentContainer\"\n"
+    "        type=\"FieldContainer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"none\"\n"
+    "        category=\"parentpointer\"\n"
+    "        >\n"
+    "        The Component Container this Component is contained in.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Clipping\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Controls whether clipping is used when drawing this component. Under most\n"
+    "        conditions this should be on, otherwise the Component may draw outside of its\n"
+    "        boundaries.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"PopupMenu\"\n"
+    "        type=\"PopupMenu\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"internal\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The OSG::PopupMenu to use for this Component.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Cursor\"\n"
+    "        type=\"UInt32\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"WindowEventProducer::CURSOR_POINTER\"\n"
+    "        defaultHeader=\"OSGWindowEventProducer.h\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The cursor to use when the mouse is hovering over this Component.\n"
+    "    </Field>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseMoved\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and moves.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseDragged\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and moves \n"
+    "        when a mouse button is down.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseClicked\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and a \n"
+    "        mouse button is clicked.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseEntered\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse enters this Component.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseExited\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse exits this Component.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MousePressed\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and a \n"
+    "        mouse button is pressed.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseReleased\"\n"
+    "        detailsType=\"MouseEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and a \n"
+    "        mouse button is released.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"MouseWheelMoved\"\n"
+    "        detailsType=\"MouseWheelEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the mouse is hovering over this Component and the\n"
+    "        mouse wheel is moved.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"KeyPressed\"\n"
+    "        detailsType=\"KeyEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component has focused and a keyboard key is \n"
+    "        pressed.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"KeyReleased\"\n"
+    "        detailsType=\"KeyEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component has focused and a keyboard key is \n"
+    "        released.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"KeyTyped\"\n"
+    "        detailsType=\"KeyEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component has focused and a keyboard key is \n"
+    "        typed.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"FocusGained\"\n"
+    "        detailsType=\"FocusEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component gains focus.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"FocusLost\"\n"
+    "        detailsType=\"FocusEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component loses focus.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentHidden\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Visible field is set to false.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentVisible\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Visible field is set to true.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentMoved\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Position field changes.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentResized\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Size field changes.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentEnabled\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Enabled field is set to true.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ComponentDisabled\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when this Component's Enabled field is set to false.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ToolTipActivated\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the ToolTip for this Component is activated.\n"
+    "    </ProducedEvent>\n"
+    "    <ProducedEvent\n"
+    "        name=\"ToolTipDeactivated\"\n"
+    "        detailsType=\"ComponentEventDetails\"\n"
+    "        consumable=\"true\"\n"
+    "        >\n"
+    "        Event produced when the ToolTip for this Component is deactivated.\n"
+    "    </ProducedEvent>\n"
     "</FieldContainer>\n",
-    "A UI Component Interface.\n"
+    "\\brief An element of a graphical user interface.\n"
+    "\n"
+    "A Component represents a single element of a user interface. In other\n"
+    "frameworks they may be called widgets or controls. All concrete GUI elements\n"
+    "inherit from Component, like OSG::Button, OSG::Label, OSG::TextField,\n"
+    "OSG::InternalWindow, etc.\n"
+    "\n"
+    "\\par Component states:\n"
+    "Components have states for Enabled, Focused,\n"
+    "MouseOver, and Visible.  If a Component has Enabled == false, it doesn't receive\n"
+    "or produce any events. If a Component has Visible == false, it is not drawn. \n"
+    "\n"
+    "\\par Event response:\n"
+    "Components can respond to Mouse, Key, and Focus events.\n"
+    "\n"
+    "\\par Event production: Components produce Mouse, Key, Focus, Component, and\n"
+    "ToolTip events if enabled.\n"
+    "\n"
+    "\\par Drawing: Component handles setting up the clipping of a component, and\n"
+    "the drawing of the Border, Background, and Foreground.  The Border,\n"
+    "Background, and Foreground used when drawing a Component depends on it's\n"
+    "state, and can also be overridden by inheriting classes. There are separate\n"
+    "Border, Background, and Foregrounds for Disabled, Focused, Rollover, and No stat\n"
+    "states.\n"
+    "\n"
+    "\\par Layout: The position and size of a Component is controlled by the\n"
+    "OSG::ComponentContainer that contains it. For simple OSG::ComponentContainer\n"
+    "like OSG::Panel, the OSG::Layout attached to the container is used to control\n"
+    "the position and size of components.  For more complex containers like\n"
+    "OSG::SplitPanel, the position and size are controlled by the specific\n"
+    "behavior of the container.\n"
+    "\\warning User code should never set the position or size of a Component\n"
+    "directly, this is controlled by the OSG::ComponentContainer of the Component.\n"
+    "\n"
+    "\n"
+    "\\par Focus: Zero, or one Component can have focus in a OSG::InternalWindow.\n"
+    "Component has methods for taking, removing, or moving the focus.\n"
+    "\n"
+    "\\par ToolTips: A component can have a ToolTip that will appear after a\n"
+    "configurable amount of time passes with the mouse over the Component.\n"
+    "\n"
+    "\\par PopupMenus: A OSG::PopupMenu can be attached to a Component that will\n"
+    "be activated with a right-click mouse interaction.\n"
+    "\n"
+    "\\par Scrolling: Components can be contained in a OSG::Viewport or a\n"
+    "OSG::ScrollPanel for viewing large Components.\n"
+    "\n"
+    "\\par Inheriting: Concrete GUI elements that inherit from Component must\n"
+    "implement drawInternal().\n"
     );
 
 //! Component Produced Events
@@ -1079,147 +1307,155 @@ ComponentBase::TypeObject ComponentBase::_type(
 EventDescription *ComponentBase::_eventDesc[] =
 {
     new EventDescription("MouseMoved", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and moves.\n",
                           MouseMovedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseMovedSignal)),
 
     new EventDescription("MouseDragged", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and moves \n"
+                          "when a mouse button is down.\n",
                           MouseDraggedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseDraggedSignal)),
 
     new EventDescription("MouseClicked", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and a \n"
+                          "mouse button is clicked.\n",
                           MouseClickedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseClickedSignal)),
 
     new EventDescription("MouseEntered", 
-                          "",
+                          "Event produced when the mouse enters this Component.\n",
                           MouseEnteredEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseEnteredSignal)),
 
     new EventDescription("MouseExited", 
-                          "",
+                          "Event produced when the mouse exits this Component.\n",
                           MouseExitedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseExitedSignal)),
 
     new EventDescription("MousePressed", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and a \n"
+                          "mouse button is pressed.\n",
                           MousePressedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMousePressedSignal)),
 
     new EventDescription("MouseReleased", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and a \n"
+                          "mouse button is released.\n",
                           MouseReleasedEventId, 
                           FieldTraits<MouseEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseReleasedSignal)),
 
     new EventDescription("MouseWheelMoved", 
-                          "",
+                          "Event produced when the mouse is hovering over this Component and the\n"
+                          "mouse wheel is moved.\n",
                           MouseWheelMovedEventId, 
                           FieldTraits<MouseWheelEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleMouseWheelMovedSignal)),
 
     new EventDescription("KeyPressed", 
-                          "",
+                          "Event produced when this Component has focused and a keyboard key is \n"
+                          "pressed.\n",
                           KeyPressedEventId, 
                           FieldTraits<KeyEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleKeyPressedSignal)),
 
     new EventDescription("KeyReleased", 
-                          "",
+                          "Event produced when this Component has focused and a keyboard key is \n"
+                          "released.\n",
                           KeyReleasedEventId, 
                           FieldTraits<KeyEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleKeyReleasedSignal)),
 
     new EventDescription("KeyTyped", 
-                          "",
+                          "Event produced when this Component has focused and a keyboard key is \n"
+                          "typed.\n",
                           KeyTypedEventId, 
                           FieldTraits<KeyEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleKeyTypedSignal)),
 
     new EventDescription("FocusGained", 
-                          "",
+                          "Event produced when this Component gains focus.\n",
                           FocusGainedEventId, 
                           FieldTraits<FocusEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleFocusGainedSignal)),
 
     new EventDescription("FocusLost", 
-                          "",
+                          "Event produced when this Component loses focus.\n",
                           FocusLostEventId, 
                           FieldTraits<FocusEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleFocusLostSignal)),
 
     new EventDescription("ComponentHidden", 
-                          "",
+                          "Event produced when this Component's Visible field is set to false.\n",
                           ComponentHiddenEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentHiddenSignal)),
 
     new EventDescription("ComponentVisible", 
-                          "",
+                          "Event produced when this Component's Visible field is set to true.\n",
                           ComponentVisibleEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentVisibleSignal)),
 
     new EventDescription("ComponentMoved", 
-                          "",
+                          "Event produced when this Component's Position field changes.\n",
                           ComponentMovedEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentMovedSignal)),
 
     new EventDescription("ComponentResized", 
-                          "",
+                          "Event produced when this Component's Size field changes.\n",
                           ComponentResizedEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentResizedSignal)),
 
     new EventDescription("ComponentEnabled", 
-                          "",
+                          "Event produced when this Component's Enabled field is set to true.\n",
                           ComponentEnabledEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentEnabledSignal)),
 
     new EventDescription("ComponentDisabled", 
-                          "",
+                          "Event produced when this Component's Enabled field is set to false.\n",
                           ComponentDisabledEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleComponentDisabledSignal)),
 
     new EventDescription("ToolTipActivated", 
-                          "",
+                          "Event produced when the ToolTip for this Component is activated.\n",
                           ToolTipActivatedEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
                           static_cast<EventGetMethod>(&ComponentBase::getHandleToolTipActivatedSignal)),
 
     new EventDescription("ToolTipDeactivated", 
-                          "",
+                          "Event produced when the ToolTip for this Component is deactivated.\n",
                           ToolTipDeactivatedEventId, 
                           FieldTraits<ComponentEventDetails *>::getType(),
                           true,
@@ -1520,6 +1756,58 @@ SFUnrecLayerPtr     *ComponentBase::editSFRolloverBackground(void)
     return &_sfRolloverBackground;
 }
 
+//! Get the Component::_sfFocusedForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFFocusedForeground(void) const
+{
+    return &_sfFocusedForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFFocusedForeground(void)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    return &_sfFocusedForeground;
+}
+
+//! Get the Component::_sfRolloverForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFRolloverForeground(void) const
+{
+    return &_sfRolloverForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFRolloverForeground(void)
+{
+    editSField(RolloverForegroundFieldMask);
+
+    return &_sfRolloverForeground;
+}
+
+//! Get the Component::_sfDisabledForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFDisabledForeground(void) const
+{
+    return &_sfDisabledForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFDisabledForeground(void)
+{
+    editSField(DisabledForegroundFieldMask);
+
+    return &_sfDisabledForeground;
+}
+
+//! Get the Component::_sfForeground field.
+const SFUnrecLayerPtr *ComponentBase::getSFForeground(void) const
+{
+    return &_sfForeground;
+}
+
+SFUnrecLayerPtr     *ComponentBase::editSFForeground     (void)
+{
+    editSField(ForegroundFieldMask);
+
+    return &_sfForeground;
+}
+
 //! Get the Component::_sfToolTip field.
 const SFUnrecComponentPtr *ComponentBase::getSFToolTip(void) const
 {
@@ -1571,58 +1859,6 @@ SFUnrecPopupMenuPtr *ComponentBase::editSFPopupMenu      (void)
     editSField(PopupMenuFieldMask);
 
     return &_sfPopupMenu;
-}
-
-//! Get the Component::_sfFocusedForeground field.
-const SFUnrecLayerPtr *ComponentBase::getSFFocusedForeground(void) const
-{
-    return &_sfFocusedForeground;
-}
-
-SFUnrecLayerPtr     *ComponentBase::editSFFocusedForeground(void)
-{
-    editSField(FocusedForegroundFieldMask);
-
-    return &_sfFocusedForeground;
-}
-
-//! Get the Component::_sfRolloverForeground field.
-const SFUnrecLayerPtr *ComponentBase::getSFRolloverForeground(void) const
-{
-    return &_sfRolloverForeground;
-}
-
-SFUnrecLayerPtr     *ComponentBase::editSFRolloverForeground(void)
-{
-    editSField(RolloverForegroundFieldMask);
-
-    return &_sfRolloverForeground;
-}
-
-//! Get the Component::_sfDisabledForeground field.
-const SFUnrecLayerPtr *ComponentBase::getSFDisabledForeground(void) const
-{
-    return &_sfDisabledForeground;
-}
-
-SFUnrecLayerPtr     *ComponentBase::editSFDisabledForeground(void)
-{
-    editSField(DisabledForegroundFieldMask);
-
-    return &_sfDisabledForeground;
-}
-
-//! Get the Component::_sfForeground field.
-const SFUnrecLayerPtr *ComponentBase::getSFForeground(void) const
-{
-    return &_sfForeground;
-}
-
-SFUnrecLayerPtr     *ComponentBase::editSFForeground     (void)
-{
-    editSField(ForegroundFieldMask);
-
-    return &_sfForeground;
 }
 
 SFUInt32 *ComponentBase::editSFCursor(void)
@@ -1728,6 +1964,22 @@ UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfRolloverBackground.getBinSize();
     }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        returnValue += _sfFocusedForeground.getBinSize();
+    }
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        returnValue += _sfRolloverForeground.getBinSize();
+    }
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        returnValue += _sfDisabledForeground.getBinSize();
+    }
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        returnValue += _sfForeground.getBinSize();
+    }
     if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
         returnValue += _sfToolTip.getBinSize();
@@ -1747,22 +1999,6 @@ UInt32 ComponentBase::getBinSize(ConstFieldMaskArg whichField)
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         returnValue += _sfPopupMenu.getBinSize();
-    }
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-    {
-        returnValue += _sfFocusedForeground.getBinSize();
-    }
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-    {
-        returnValue += _sfRolloverForeground.getBinSize();
-    }
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-    {
-        returnValue += _sfDisabledForeground.getBinSize();
-    }
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-    {
-        returnValue += _sfForeground.getBinSize();
     }
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
@@ -1857,6 +2093,22 @@ void ComponentBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfRolloverBackground.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        _sfFocusedForeground.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        _sfRolloverForeground.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        _sfDisabledForeground.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        _sfForeground.copyToBin(pMem);
+    }
     if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
         _sfToolTip.copyToBin(pMem);
@@ -1876,22 +2128,6 @@ void ComponentBase::copyToBin(BinaryDataHandler &pMem,
     if(FieldBits::NoField != (PopupMenuFieldMask & whichField))
     {
         _sfPopupMenu.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-    {
-        _sfFocusedForeground.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-    {
-        _sfRolloverForeground.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-    {
-        _sfDisabledForeground.copyToBin(pMem);
-    }
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-    {
-        _sfForeground.copyToBin(pMem);
     }
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
@@ -2004,6 +2240,26 @@ void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
         editSField(RolloverBackgroundFieldMask);
         _sfRolloverBackground.copyFromBin(pMem);
     }
+    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
+    {
+        editSField(FocusedForegroundFieldMask);
+        _sfFocusedForeground.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
+    {
+        editSField(RolloverForegroundFieldMask);
+        _sfRolloverForeground.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
+    {
+        editSField(DisabledForegroundFieldMask);
+        _sfDisabledForeground.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
+    {
+        editSField(ForegroundFieldMask);
+        _sfForeground.copyFromBin(pMem);
+    }
     if(FieldBits::NoField != (ToolTipFieldMask & whichField))
     {
         editSField(ToolTipFieldMask);
@@ -2028,26 +2284,6 @@ void ComponentBase::copyFromBin(BinaryDataHandler &pMem,
     {
         editSField(PopupMenuFieldMask);
         _sfPopupMenu.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (FocusedForegroundFieldMask & whichField))
-    {
-        editSField(FocusedForegroundFieldMask);
-        _sfFocusedForeground.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (RolloverForegroundFieldMask & whichField))
-    {
-        editSField(RolloverForegroundFieldMask);
-        _sfRolloverForeground.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (DisabledForegroundFieldMask & whichField))
-    {
-        editSField(DisabledForegroundFieldMask);
-        _sfDisabledForeground.copyFromBin(pMem);
-    }
-    if(FieldBits::NoField != (ForegroundFieldMask & whichField))
-    {
-        editSField(ForegroundFieldMask);
-        _sfForeground.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (CursorFieldMask & whichField))
     {
@@ -2673,15 +2909,15 @@ ComponentBase::ComponentBase(void) :
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
     _sfRolloverBackground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfRolloverForeground     (NULL),
+    _sfDisabledForeground     (NULL),
+    _sfForeground             (NULL),
     _sfToolTip                (NULL),
     _sfOpacity                (Real32(1.0)),
     _sfParentContainer        (NULL),
     _sfClipping               (bool(true)),
     _sfPopupMenu              (NULL),
-    _sfFocusedForeground      (NULL),
-    _sfRolloverForeground     (NULL),
-    _sfDisabledForeground     (NULL),
-    _sfForeground             (NULL),
     _sfCursor                 (UInt32(WindowEventProducer::CURSOR_POINTER))
 {
 }
@@ -2710,15 +2946,15 @@ ComponentBase::ComponentBase(const ComponentBase &source) :
     _sfFocusedBackground      (NULL),
     _sfRolloverBorder         (NULL),
     _sfRolloverBackground     (NULL),
+    _sfFocusedForeground      (NULL),
+    _sfRolloverForeground     (NULL),
+    _sfDisabledForeground     (NULL),
+    _sfForeground             (NULL),
     _sfToolTip                (NULL),
     _sfOpacity                (source._sfOpacity                ),
     _sfParentContainer        (NULL),
     _sfClipping               (source._sfClipping               ),
     _sfPopupMenu              (NULL),
-    _sfFocusedForeground      (NULL),
-    _sfRolloverForeground     (NULL),
-    _sfDisabledForeground     (NULL),
-    _sfForeground             (NULL),
     _sfCursor                 (source._sfCursor                 )
 {
 }
@@ -2877,10 +3113,6 @@ void ComponentBase::onCreate(const Component *source)
 
         pThis->setRolloverBackground(source->getRolloverBackground());
 
-        pThis->setToolTip(source->getToolTip());
-
-        pThis->setPopupMenu(source->getPopupMenu());
-
         pThis->setFocusedForeground(source->getFocusedForeground());
 
         pThis->setRolloverForeground(source->getRolloverForeground());
@@ -2888,6 +3120,10 @@ void ComponentBase::onCreate(const Component *source)
         pThis->setDisabledForeground(source->getDisabledForeground());
 
         pThis->setForeground(source->getForeground());
+
+        pThis->setToolTip(source->getToolTip());
+
+        pThis->setPopupMenu(source->getPopupMenu());
     }
 }
 
@@ -3418,6 +3654,118 @@ EditFieldHandlePtr ComponentBase::editHandleRolloverBackground(void)
     return returnValue;
 }
 
+GetFieldHandlePtr ComponentBase::getHandleFocusedForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleFocusedForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfFocusedForeground,
+             this->getType().getFieldDesc(FocusedForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setFocusedForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(FocusedForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleRolloverForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfRolloverForeground,
+             this->getType().getFieldDesc(RolloverForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleRolloverForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfRolloverForeground,
+             this->getType().getFieldDesc(RolloverForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setRolloverForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(RolloverForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleDisabledForeground (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfDisabledForeground,
+             this->getType().getFieldDesc(DisabledForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleDisabledForeground(void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfDisabledForeground,
+             this->getType().getFieldDesc(DisabledForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setDisabledForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(DisabledForegroundFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr ComponentBase::getHandleForeground      (void) const
+{
+    SFUnrecLayerPtr::GetHandlePtr returnValue(
+        new  SFUnrecLayerPtr::GetHandle(
+             &_sfForeground,
+             this->getType().getFieldDesc(ForegroundFieldId),
+             const_cast<ComponentBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr ComponentBase::editHandleForeground     (void)
+{
+    SFUnrecLayerPtr::EditHandlePtr returnValue(
+        new  SFUnrecLayerPtr::EditHandle(
+             &_sfForeground,
+             this->getType().getFieldDesc(ForegroundFieldId),
+             this));
+
+    returnValue->setSetMethod(
+        boost::bind(&Component::setForeground,
+                    static_cast<Component *>(this), _1));
+
+    editSField(ForegroundFieldMask);
+
+    return returnValue;
+}
+
 GetFieldHandlePtr ComponentBase::getHandleToolTip         (void) const
 {
     SFUnrecComponentPtr::GetHandlePtr returnValue(
@@ -3534,118 +3882,6 @@ EditFieldHandlePtr ComponentBase::editHandlePopupMenu      (void)
                     static_cast<Component *>(this), _1));
 
     editSField(PopupMenuFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentBase::getHandleFocusedForeground (void) const
-{
-    SFUnrecLayerPtr::GetHandlePtr returnValue(
-        new  SFUnrecLayerPtr::GetHandle(
-             &_sfFocusedForeground,
-             this->getType().getFieldDesc(FocusedForegroundFieldId),
-             const_cast<ComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentBase::editHandleFocusedForeground(void)
-{
-    SFUnrecLayerPtr::EditHandlePtr returnValue(
-        new  SFUnrecLayerPtr::EditHandle(
-             &_sfFocusedForeground,
-             this->getType().getFieldDesc(FocusedForegroundFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setFocusedForeground,
-                    static_cast<Component *>(this), _1));
-
-    editSField(FocusedForegroundFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentBase::getHandleRolloverForeground (void) const
-{
-    SFUnrecLayerPtr::GetHandlePtr returnValue(
-        new  SFUnrecLayerPtr::GetHandle(
-             &_sfRolloverForeground,
-             this->getType().getFieldDesc(RolloverForegroundFieldId),
-             const_cast<ComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentBase::editHandleRolloverForeground(void)
-{
-    SFUnrecLayerPtr::EditHandlePtr returnValue(
-        new  SFUnrecLayerPtr::EditHandle(
-             &_sfRolloverForeground,
-             this->getType().getFieldDesc(RolloverForegroundFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setRolloverForeground,
-                    static_cast<Component *>(this), _1));
-
-    editSField(RolloverForegroundFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentBase::getHandleDisabledForeground (void) const
-{
-    SFUnrecLayerPtr::GetHandlePtr returnValue(
-        new  SFUnrecLayerPtr::GetHandle(
-             &_sfDisabledForeground,
-             this->getType().getFieldDesc(DisabledForegroundFieldId),
-             const_cast<ComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentBase::editHandleDisabledForeground(void)
-{
-    SFUnrecLayerPtr::EditHandlePtr returnValue(
-        new  SFUnrecLayerPtr::EditHandle(
-             &_sfDisabledForeground,
-             this->getType().getFieldDesc(DisabledForegroundFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setDisabledForeground,
-                    static_cast<Component *>(this), _1));
-
-    editSField(DisabledForegroundFieldMask);
-
-    return returnValue;
-}
-
-GetFieldHandlePtr ComponentBase::getHandleForeground      (void) const
-{
-    SFUnrecLayerPtr::GetHandlePtr returnValue(
-        new  SFUnrecLayerPtr::GetHandle(
-             &_sfForeground,
-             this->getType().getFieldDesc(ForegroundFieldId),
-             const_cast<ComponentBase *>(this)));
-
-    return returnValue;
-}
-
-EditFieldHandlePtr ComponentBase::editHandleForeground     (void)
-{
-    SFUnrecLayerPtr::EditHandlePtr returnValue(
-        new  SFUnrecLayerPtr::EditHandle(
-             &_sfForeground,
-             this->getType().getFieldDesc(ForegroundFieldId),
-             this));
-
-    returnValue->setSetMethod(
-        boost::bind(&Component::setForeground,
-                    static_cast<Component *>(this), _1));
-
-    editSField(ForegroundFieldMask);
 
     return returnValue;
 }
@@ -3949,10 +4185,6 @@ void ComponentBase::resolveLinks(void)
 
     static_cast<Component *>(this)->setRolloverBackground(NULL);
 
-    static_cast<Component *>(this)->setToolTip(NULL);
-
-    static_cast<Component *>(this)->setPopupMenu(NULL);
-
     static_cast<Component *>(this)->setFocusedForeground(NULL);
 
     static_cast<Component *>(this)->setRolloverForeground(NULL);
@@ -3960,6 +4192,10 @@ void ComponentBase::resolveLinks(void)
     static_cast<Component *>(this)->setDisabledForeground(NULL);
 
     static_cast<Component *>(this)->setForeground(NULL);
+
+    static_cast<Component *>(this)->setToolTip(NULL);
+
+    static_cast<Component *>(this)->setPopupMenu(NULL);
 
 
 }
@@ -4346,6 +4582,62 @@ void ComponentBase::setRolloverBackground(Layer * const value)
     _sfRolloverBackground.setValue(value);
 }
 
+//! Get the value of the Component::_sfFocusedForeground field.
+Layer * ComponentBase::getFocusedForeground(void) const
+{
+    return _sfFocusedForeground.getValue();
+}
+
+//! Set the value of the Component::_sfFocusedForeground field.
+void ComponentBase::setFocusedForeground(Layer * const value)
+{
+    editSField(FocusedForegroundFieldMask);
+
+    _sfFocusedForeground.setValue(value);
+}
+
+//! Get the value of the Component::_sfRolloverForeground field.
+Layer * ComponentBase::getRolloverForeground(void) const
+{
+    return _sfRolloverForeground.getValue();
+}
+
+//! Set the value of the Component::_sfRolloverForeground field.
+void ComponentBase::setRolloverForeground(Layer * const value)
+{
+    editSField(RolloverForegroundFieldMask);
+
+    _sfRolloverForeground.setValue(value);
+}
+
+//! Get the value of the Component::_sfDisabledForeground field.
+Layer * ComponentBase::getDisabledForeground(void) const
+{
+    return _sfDisabledForeground.getValue();
+}
+
+//! Set the value of the Component::_sfDisabledForeground field.
+void ComponentBase::setDisabledForeground(Layer * const value)
+{
+    editSField(DisabledForegroundFieldMask);
+
+    _sfDisabledForeground.setValue(value);
+}
+
+//! Get the value of the Component::_sfForeground field.
+Layer * ComponentBase::getForeground(void) const
+{
+    return _sfForeground.getValue();
+}
+
+//! Set the value of the Component::_sfForeground field.
+void ComponentBase::setForeground(Layer * const value)
+{
+    editSField(ForegroundFieldMask);
+
+    _sfForeground.setValue(value);
+}
+
 //! Get the value of the Component::_sfToolTip field.
 Component * ComponentBase::getToolTip(void) const
 {
@@ -4418,62 +4710,6 @@ void ComponentBase::setPopupMenu(PopupMenu * const value)
     editSField(PopupMenuFieldMask);
 
     _sfPopupMenu.setValue(value);
-}
-
-//! Get the value of the Component::_sfFocusedForeground field.
-Layer * ComponentBase::getFocusedForeground(void) const
-{
-    return _sfFocusedForeground.getValue();
-}
-
-//! Set the value of the Component::_sfFocusedForeground field.
-void ComponentBase::setFocusedForeground(Layer * const value)
-{
-    editSField(FocusedForegroundFieldMask);
-
-    _sfFocusedForeground.setValue(value);
-}
-
-//! Get the value of the Component::_sfRolloverForeground field.
-Layer * ComponentBase::getRolloverForeground(void) const
-{
-    return _sfRolloverForeground.getValue();
-}
-
-//! Set the value of the Component::_sfRolloverForeground field.
-void ComponentBase::setRolloverForeground(Layer * const value)
-{
-    editSField(RolloverForegroundFieldMask);
-
-    _sfRolloverForeground.setValue(value);
-}
-
-//! Get the value of the Component::_sfDisabledForeground field.
-Layer * ComponentBase::getDisabledForeground(void) const
-{
-    return _sfDisabledForeground.getValue();
-}
-
-//! Set the value of the Component::_sfDisabledForeground field.
-void ComponentBase::setDisabledForeground(Layer * const value)
-{
-    editSField(DisabledForegroundFieldMask);
-
-    _sfDisabledForeground.setValue(value);
-}
-
-//! Get the value of the Component::_sfForeground field.
-Layer * ComponentBase::getForeground(void) const
-{
-    return _sfForeground.getValue();
-}
-
-//! Set the value of the Component::_sfForeground field.
-void ComponentBase::setForeground(Layer * const value)
-{
-    editSField(ForegroundFieldMask);
-
-    _sfForeground.setValue(value);
 }
 //! Get the value of the Component::_sfCursor field.
 
