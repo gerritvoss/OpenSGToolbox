@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -82,6 +82,14 @@ OSG_BEGIN_NAMESPACE
  *                        Field Documentation                              *
 \***************************************************************************/
 
+/*! \var bool            GenericFieldContainerEditorBase::_sfShowFields
+    Show the fields of the attached FieldContainer.
+*/
+
+/*! \var bool            GenericFieldContainerEditorBase::_sfShowEvents
+    Show the produced events of the attached FieldContainer.
+*/
+
 
 /***************************************************************************\
  *                      FieldType/FieldTrait Instantiation                 *
@@ -107,6 +115,32 @@ OSG_EXPORT_PTR_MFIELD_FULL(PointerMField,
 
 void GenericFieldContainerEditorBase::classDescInserter(TypeObject &oType)
 {
+    FieldDescriptionBase *pDesc = NULL;
+
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowFields",
+        "Show the fields of the attached FieldContainer.\n",
+        ShowFieldsFieldId, ShowFieldsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GenericFieldContainerEditor::editHandleShowFields),
+        static_cast<FieldGetMethodSig >(&GenericFieldContainerEditor::getHandleShowFields));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "ShowEvents",
+        "Show the produced events of the attached FieldContainer.\n",
+        ShowEventsFieldId, ShowEventsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&GenericFieldContainerEditor::editHandleShowEvents),
+        static_cast<FieldGetMethodSig >(&GenericFieldContainerEditor::getHandleShowEvents));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -134,8 +168,30 @@ GenericFieldContainerEditorBase::TypeObject GenericFieldContainerEditorBase::_ty
     "\tdecoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
-    ">\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    >\n"
+    "    <Field\n"
+    "        name=\"ShowFields\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Show the fields of the attached FieldContainer.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"ShowEvents\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"true\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        Show the produced events of the attached FieldContainer.\n"
+    "    </Field>\n"
     "</FieldContainer>\n",
     ""
     );
@@ -160,6 +216,32 @@ UInt32 GenericFieldContainerEditorBase::getContainerSize(void) const
 /*------------------------- decorator get ------------------------------*/
 
 
+SFBool *GenericFieldContainerEditorBase::editSFShowFields(void)
+{
+    editSField(ShowFieldsFieldMask);
+
+    return &_sfShowFields;
+}
+
+const SFBool *GenericFieldContainerEditorBase::getSFShowFields(void) const
+{
+    return &_sfShowFields;
+}
+
+
+SFBool *GenericFieldContainerEditorBase::editSFShowEvents(void)
+{
+    editSField(ShowEventsFieldMask);
+
+    return &_sfShowEvents;
+}
+
+const SFBool *GenericFieldContainerEditorBase::getSFShowEvents(void) const
+{
+    return &_sfShowEvents;
+}
+
+
 
 
 
@@ -170,6 +252,14 @@ UInt32 GenericFieldContainerEditorBase::getBinSize(ConstFieldMaskArg whichField)
 {
     UInt32 returnValue = Inherited::getBinSize(whichField);
 
+    if(FieldBits::NoField != (ShowFieldsFieldMask & whichField))
+    {
+        returnValue += _sfShowFields.getBinSize();
+    }
+    if(FieldBits::NoField != (ShowEventsFieldMask & whichField))
+    {
+        returnValue += _sfShowEvents.getBinSize();
+    }
 
     return returnValue;
 }
@@ -179,6 +269,14 @@ void GenericFieldContainerEditorBase::copyToBin(BinaryDataHandler &pMem,
 {
     Inherited::copyToBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ShowFieldsFieldMask & whichField))
+    {
+        _sfShowFields.copyToBin(pMem);
+    }
+    if(FieldBits::NoField != (ShowEventsFieldMask & whichField))
+    {
+        _sfShowEvents.copyToBin(pMem);
+    }
 }
 
 void GenericFieldContainerEditorBase::copyFromBin(BinaryDataHandler &pMem,
@@ -186,6 +284,16 @@ void GenericFieldContainerEditorBase::copyFromBin(BinaryDataHandler &pMem,
 {
     Inherited::copyFromBin(pMem, whichField);
 
+    if(FieldBits::NoField != (ShowFieldsFieldMask & whichField))
+    {
+        editSField(ShowFieldsFieldMask);
+        _sfShowFields.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (ShowEventsFieldMask & whichField))
+    {
+        editSField(ShowEventsFieldMask);
+        _sfShowEvents.copyFromBin(pMem);
+    }
 }
 
 //! create a new instance of the class
@@ -260,7 +368,6 @@ GenericFieldContainerEditor *GenericFieldContainerEditorBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr GenericFieldContainerEditorBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -306,16 +413,19 @@ FieldContainerTransitPtr GenericFieldContainerEditorBase::shallowCopy(void) cons
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 GenericFieldContainerEditorBase::GenericFieldContainerEditorBase(void) :
-    Inherited()
+    Inherited(),
+    _sfShowFields             (bool(true)),
+    _sfShowEvents             (bool(true))
 {
 }
 
 GenericFieldContainerEditorBase::GenericFieldContainerEditorBase(const GenericFieldContainerEditorBase &source) :
-    Inherited(source)
+    Inherited(source),
+    _sfShowFields             (source._sfShowFields             ),
+    _sfShowEvents             (source._sfShowEvents             )
 {
 }
 
@@ -324,6 +434,57 @@ GenericFieldContainerEditorBase::GenericFieldContainerEditorBase(const GenericFi
 
 GenericFieldContainerEditorBase::~GenericFieldContainerEditorBase(void)
 {
+}
+
+
+GetFieldHandlePtr GenericFieldContainerEditorBase::getHandleShowFields      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowFields,
+             this->getType().getFieldDesc(ShowFieldsFieldId),
+             const_cast<GenericFieldContainerEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GenericFieldContainerEditorBase::editHandleShowFields     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowFields,
+             this->getType().getFieldDesc(ShowFieldsFieldId),
+             this));
+
+
+    editSField(ShowFieldsFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr GenericFieldContainerEditorBase::getHandleShowEvents      (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfShowEvents,
+             this->getType().getFieldDesc(ShowEventsFieldId),
+             const_cast<GenericFieldContainerEditorBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr GenericFieldContainerEditorBase::editHandleShowEvents     (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfShowEvents,
+             this->getType().getFieldDesc(ShowEventsFieldId),
+             this));
+
+
+    editSField(ShowEventsFieldMask);
+
+    return returnValue;
 }
 
 

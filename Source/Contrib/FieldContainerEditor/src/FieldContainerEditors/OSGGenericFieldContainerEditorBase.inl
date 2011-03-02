@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -48,6 +48,7 @@
  *****************************************************************************
 \*****************************************************************************/
 
+
 OSG_BEGIN_NAMESPACE
 
 
@@ -73,6 +74,56 @@ OSG::UInt16 GenericFieldContainerEditorBase::getClassGroupId(void)
 
 /*------------------------------ get -----------------------------------*/
 
+//! Get the value of the GenericFieldContainerEditor::_sfShowFields field.
+
+inline
+bool &GenericFieldContainerEditorBase::editShowFields(void)
+{
+    editSField(ShowFieldsFieldMask);
+
+    return _sfShowFields.getValue();
+}
+
+//! Get the value of the GenericFieldContainerEditor::_sfShowFields field.
+inline
+      bool  GenericFieldContainerEditorBase::getShowFields(void) const
+{
+    return _sfShowFields.getValue();
+}
+
+//! Set the value of the GenericFieldContainerEditor::_sfShowFields field.
+inline
+void GenericFieldContainerEditorBase::setShowFields(const bool value)
+{
+    editSField(ShowFieldsFieldMask);
+
+    _sfShowFields.setValue(value);
+}
+//! Get the value of the GenericFieldContainerEditor::_sfShowEvents field.
+
+inline
+bool &GenericFieldContainerEditorBase::editShowEvents(void)
+{
+    editSField(ShowEventsFieldMask);
+
+    return _sfShowEvents.getValue();
+}
+
+//! Get the value of the GenericFieldContainerEditor::_sfShowEvents field.
+inline
+      bool  GenericFieldContainerEditorBase::getShowEvents(void) const
+{
+    return _sfShowEvents.getValue();
+}
+
+//! Set the value of the GenericFieldContainerEditor::_sfShowEvents field.
+inline
+void GenericFieldContainerEditorBase::setShowEvents(const bool value)
+{
+    editSField(ShowEventsFieldMask);
+
+    _sfShowEvents.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -84,6 +135,12 @@ void GenericFieldContainerEditorBase::execSync (      GenericFieldContainerEdito
                                   const UInt32             uiSyncInfo)
 {
     Inherited::execSync(pFrom, whichField, oOffsets, syncMode, uiSyncInfo);
+
+    if(FieldBits::NoField != (ShowFieldsFieldMask & whichField))
+        _sfShowFields.syncWith(pFrom->_sfShowFields);
+
+    if(FieldBits::NoField != (ShowEventsFieldMask & whichField))
+        _sfShowEvents.syncWith(pFrom->_sfShowEvents);
 }
 #endif
 

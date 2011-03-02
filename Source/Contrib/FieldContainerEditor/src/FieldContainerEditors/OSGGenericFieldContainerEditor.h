@@ -44,7 +44,9 @@
 
 #include "OSGGenericFieldContainerEditorBase.h"
 #include "OSGGenericNameAttachmentEditor.h"
-#include "OSGLabel.h"
+#include "OSGLabelFields.h"
+#include "OSGUIFontFields.h"
+#include "OSGComponentContainerFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -152,11 +154,19 @@ class OSG_CONTRIBFIELDCONTAINEREDITOR_DLLMAPPING GenericFieldContainerEditor : p
     /*! \}                                                                 */
     ComponentTransitPtr createFieldToolTip(const FieldDescriptionBase *FieldDesc);
     ComponentTransitPtr createFCToolTip   (const FieldContainerType &FCType);
+    ComponentTransitPtr createEventToolTip(const EventDescription *EventDesc);
+
+    void updateFieldsPanel(FieldContainer* fc);
+    void updateProducedEventsPanel(FieldContainer* fc);
+    void updateShownPanels(void);
 
     static std::vector<const FieldContainerType*> _EditableTypes;
 
+    UIFontRefPtr _BoldFont;
     LabelRefPtr _ContainerTypeLabel;
     LabelRefPtr _ContainerIdLabel;
+    ComponentContainerRefPtr _FieldsContainer;
+    ComponentContainerRefPtr _ProducedEventsContainer;
     GenericNameAttachmentEditorRefPtr _GenericNameAttachmentEditor;
     /*==========================  PRIVATE  ================================*/
 
