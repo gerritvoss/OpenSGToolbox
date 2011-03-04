@@ -572,7 +572,14 @@ void DirectShowVideoWrapper::enableAudio(void)
 
             //Remove the Null Renderer
 		    IPin* ipin;
-            GetPin(pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+            hr = GetPin(pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Audio Renderer in pin, error: " << szErr << std::endl;
+				return;
+			}
+
 		    IPin* opin = NULL;
 		    //find out who the renderer is connected to and disconnect from them
 		    hr = ipin->ConnectedTo(&opin);
@@ -616,8 +623,14 @@ void DirectShowVideoWrapper::enableAudio(void)
                 return;
             }
 
-		    //get the input pin of the Color Space Converter
-		    GetPin(_pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+		    //get the input pin of the Audio Renderer
+		    hr = GetPin(_pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Audio Renderer in pin, error: " << szErr << std::endl;
+				return;
+			}
 
             //Connect an Audio renderer
 		    hr = _pGraphBuilder->Connect(opin, ipin);
@@ -652,7 +665,13 @@ void DirectShowVideoWrapper::enableAudio(void)
             stop();
             //Remove the Renderer
 		    IPin* ipin;
-            GetPin(pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+            hr = GetPin(pAudioRenderer, PINDIR_INPUT, 0, &ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Audio Renderer in pin, error: " << szErr << std::endl;
+				return;
+			}
 		    IPin* opin = NULL;
 		    //find out who the renderer is connected to and disconnect from them
 		    hr = ipin->ConnectedTo(&opin);
@@ -697,7 +716,13 @@ void DirectShowVideoWrapper::enableAudio(void)
             }
 
 		    //get the input pin of the Color Space Converter
-		    GetPin(_pNullAudioFilter, PINDIR_INPUT, 0, &ipin);
+		    hr = GetPin(_pNullAudioFilter, PINDIR_INPUT, 0, &ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Null Audio in pin, error: " << szErr << std::endl;
+				return;
+			}
 
             //Connect an Audio renderer
 		    hr = _pGraphBuilder->Connect(opin, ipin);
@@ -715,9 +740,6 @@ bool DirectShowVideoWrapper::isAudioEnabled(void) const
 {
     if(isInitialized() && hasAudio())
     {
-		HRESULT hr;
-        TCHAR szErr[MAX_ERROR_TEXT_LEN];
-
         IBaseFilter* pAudioRenderer = NULL;
         _pGraphBuilder->FindFilterByName(L"NULL Audio Renderer",&pAudioRenderer);
 
@@ -1094,20 +1116,7 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
     TCHAR szErr[MAX_ERROR_TEXT_LEN];
     
     // Register the graph in the Running Object Table (for debug purposes)
-    //AddGraphToROT(_pGraphBuilder, &dwROT);
-
-    // Create the Sample Grabber which we will use
-    // To take each frame for texture generation
-    if(_pCSCFilter == NULL)
-    {
-        hr = _pCSCFilter.CoCreateInstance(CLSID_Colour, NULL, CLSCTX_INPROC_SERVER);
-        if (FAILED(hr))
-        {
-            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-            SWARNING << "Could not create Color Space Converter Filter, error: " << szErr << std::endl;
-            return hr;
-        }
-    }
+    AddGraphToROT(_pGraphBuilder, &dwROT);
 
     // Create the Sample Grabber which we will use
     // To take each frame for texture generation
@@ -1172,12 +1181,19 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
         SWARNING << "error: " << szErr << std::endl;
         return hr;
     }
+
 	if(pVidRenderer)
 	{
         SLOG << "Removing default video renderer" << std::endl;
 		//get input pin of video renderer
 		IPin* ipin;
-        GetPin(pVidRenderer, PINDIR_INPUT, 0, &ipin);
+        hr = GetPin(pVidRenderer, PINDIR_INPUT, 0, &ipin);
+		if (FAILED(hr))
+		{
+			AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+			SWARNING << "Get Vidio Renderer in pin, error: " << szErr << std::endl;
+			return hr;
+		}
 		IPin* opin = NULL;
 		//find out who the renderer is connected to and disconnect from them
 		hr = ipin->ConnectedTo(&opin);
@@ -1187,6 +1203,26 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
             SWARNING << "error: " << szErr << std::endl;
             return hr;
         }
+
+		//Get the filter of the opin
+		PIN_INFO OpinInfo;
+		opin->QueryPinInfo(&OpinInfo);
+		IBaseFilter* LastFilter(OpinInfo.pFilter);
+
+		FILTER_INFO LastFilterInfo;
+		LastFilter->QueryFilterInfo(&LastFilterInfo);
+		CLSID LastFilterClassID;
+		LastFilter->GetClassID(&LastFilterClassID);
+		SLOG << "Last filter name: " << LastFilterInfo.achName 
+			<< ", ClassID " << LastFilterClassID.Data1 << "-" << LastFilterClassID.Data2 << "-" << LastFilterClassID.Data3 << "-" << LastFilterClassID.Data4
+			 << std::endl;
+		LPWSTR *VendorInfo;
+		LastFilter->QueryVendorInfo(VendorInfo);
+		if(VendorInfo)
+		{
+			SLOG << "Last filter vendor: " << *VendorInfo << std::endl;
+		}
+		
 		hr = ipin->Disconnect();
         if (FAILED(hr))
         {
@@ -1216,52 +1252,81 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
 
 		//see if the video renderer was originally connected to 
 		//a color space converter
-		//IBaseFilter* pColorConverter = NULL;
-		//m_pGraph->FindFilterByName(L"Color Space Converter", &pColorConverter);
-		//if(pColorConverter)
-		//{
-		//	SAFE_RELEASE(opin);
+		_pGraphBuilder->FindFilterByName(L"Color Space Converter", &_pCSCFilter);
+		if(_pCSCFilter == NULL)
+		{
+			// Create the Color Space filter
+			hr = _pCSCFilter.CoCreateInstance(CLSID_Colour, NULL, CLSCTX_INPROC_SERVER);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Could not create Color Space Converter Filter, error: " << szErr << std::endl;
+				return hr;
+			}
 
-		//	//remove the converter from the graph as well
-		//	ipin = GetPin(pColorConverter, PINDIR_INPUT);
+			hr = _pGraphBuilder->AddFilter(_pCSCFilter, L"Color Space Converter");
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Could not add Color Space Converter Filter, error: " << szErr << std::endl;
+				return hr;
+			}
 
-		//	ipin->ConnectedTo(&opin);
-		//	ipin->Disconnect();
-		//	opin->Disconnect();
+			//get the output pin of the last filter
+			hr = GetPin(LastFilter, PINDIR_OUTPUT, 0, &opin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Last filter out pin, error: " << szErr << std::endl;
+				return hr;
+			}
 
-		//	SAFE_RELEASE(ipin);
-		//	
-		//	m_pGraph->RemoveFilter(pColorConverter);
-		//	SAFE_RELEASE(pColorConverter);
-		//}
+			//get the input pin of the Color Space Converter
+			hr = GetPin(_pCSCFilter, PINDIR_INPUT, 0, &ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Get Color Space Converter In Pin, error: " << szErr << std::endl;
+				return hr;
+			}
 
-  //      if (FAILED(hr =_pGraphBuilder->AddFilter(_pSampleGrabberFilter, L"Sample Grabber")))
-  //      {
-  //          AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-  //          SWARNING << "Could not add SampleGrabberFilter, error: " << szErr << std::endl;
-  //          return hr;
-  //      }
-        hr = _pGraphBuilder->AddFilter(_pCSCFilter, L"Color Space Converter");
-		//get the input pin of the Color Space Converter
-		GetPin(_pCSCFilter, PINDIR_INPUT, 0, &ipin);
+			//connect the filter that was originally connected to the default renderer
+			//to the Color Space Converter
+			SLOG << "Attaching Color Space Converter Filter. "
+				 << opin
+				 << " -> " << ipin << std::endl;
+			hr = _pGraphBuilder->Connect(opin, ipin);
+			if (FAILED(hr))
+			{
+				AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+				SWARNING << "Could not attach Color Space Converter Filter so it won't be used, error: " << szErr << std::endl;
+				//return hr;
+			}
+			else
+			{
+				LastFilter = _pCSCFilter;
+			}
+		}
 
-		//connect the filter that was originally connected to the default renderer
-		//to the Color Space Converter
-        SLOG << "Attaching Color Space Converter Filter." << std::endl;
-		hr = _pGraphBuilder->Connect(opin, ipin);
-        if (FAILED(hr))
-        {
-            AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
-            SWARNING << "error: " << szErr << std::endl;
-            return hr;
-        }
         hr = _pGraphBuilder->AddFilter(_pSampleGrabberFilter, L"Video Sample Grabber");
         
 		//get the input pin of the Sample Grabber
-		GetPin(_pSampleGrabberFilter, PINDIR_INPUT, 0, &ipin);
+		hr = GetPin(_pSampleGrabberFilter, PINDIR_INPUT, 0, &ipin);
+		if (FAILED(hr))
+		{
+			AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+			SWARNING << "Get Sample Grabber In Pin, error: " << szErr << std::endl;
+			return hr;
+		}
 
-		//get the output pin of the Color Space Converter
-		GetPin(_pCSCFilter, PINDIR_OUTPUT, 0, &opin);
+		//get the output pin of the last filter in the graph
+		hr = GetPin(LastFilter, PINDIR_OUTPUT, 0, &opin);
+		if (FAILED(hr))
+		{
+			AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+			SWARNING << "Get Color Space Converter out pin, error: " << szErr << std::endl;
+			return hr;
+		}
 
         SLOG << "Attaching video sample grabber filter." << std::endl;
 		hr = _pGraphBuilder->Connect(opin, ipin);
@@ -1278,9 +1343,16 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
 		//SAFE_RELEASE(opin);
 
 		//get output pin of sample grabber
-		GetPin(_pSampleGrabberFilter, PINDIR_OUTPUT, 0, &opin);
+		hr = GetPin(_pSampleGrabberFilter, PINDIR_OUTPUT, 0, &opin);
+		if (FAILED(hr))
+		{
+			AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+			SWARNING << "Get Sample Grabber out pin, error: " << szErr << std::endl;
+			return hr;
+		}
         
-
+		
+        SLOG << "Attaching Video Null Renderer." << std::endl;
         hr = _pGraphBuilder->AddFilter(_pVideoRenderer, L"Video Null Renderer");
         if (FAILED(hr))
         {
@@ -1290,7 +1362,13 @@ HRESULT DirectShowVideoWrapper::ConnectSampleGrabber(void)
         }
 
 		//get input pin of null renderer
-		GetPin(_pVideoRenderer, PINDIR_INPUT, 0, &ipin);
+		hr = GetPin(_pVideoRenderer, PINDIR_INPUT, 0, &ipin);
+		if (FAILED(hr))
+		{
+			AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
+			SWARNING << "Get Null Renderer in pin, error: " << szErr << std::endl;
+			return hr;
+		}
 
 		//connect them
         SLOG << "Attaching null video renderer." << std::endl;
@@ -1436,7 +1514,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         {
             AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
             SWARNING << "Unable to Create FilterGraph object, error: " << szErr << std::endl;
-            return hr;
+            return !FAILED(hr);
         }
     }
 
@@ -1448,7 +1526,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         {
             AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
             SWARNING << "Unable to Create CaptureFilterGraph object, error: " << szErr << std::endl;
-            return hr;
+            return !FAILED(hr);
         }
     }
 
@@ -1457,7 +1535,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
     {
         AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
         SWARNING << "Unable to attach FilterGraph object, error: " << szErr << std::endl;
-        return hr;
+        return !FAILED(hr);
     }
 
     
@@ -1469,7 +1547,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         if (FAILED(hr))
         {
             SWARNING << "Could not connect wmv file: " << ThePath << std::endl;
-            return false;
+            return !FAILED(hr);
         }
     }
     else if(isMPG) 
@@ -1478,7 +1556,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         if (FAILED(hr))
         {
             SWARNING << "Could not connect mpg file: " << ThePath << std::endl;
-            return false;
+            return !FAILED(hr);
         }
     }
     else if(isAVCHD) 
@@ -1487,7 +1565,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         if (FAILED(hr))
         {
             SWARNING << "Could not connect AVCHD file: " << ThePath << std::endl;
-            return false;
+            return !FAILED(hr);
         }
     }
     else
@@ -1498,7 +1576,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         if (FAILED(hr))
         {
             SWARNING << "Could not connect avi file: " << ThePath << std::endl;
-            return false;
+            return !FAILED(hr);
         }
     }
 
@@ -1510,7 +1588,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
         {
             AMGetErrorText(hr, szErr, MAX_ERROR_TEXT_LEN);
             SWARNING << "Unable to create Null Audio Renderer, error: " << szErr << std::endl;
-            return hr;
+            return !FAILED(hr);
         }
     }
 
@@ -1524,11 +1602,11 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
 
     if(FAILED(ConnectSampleGrabber()))
     {
-        /*std::wstring WideFileName;
+       /* std::wstring WideFileName;
         WideFileName.assign(ThePath.begin(), ThePath.end());
         std::wstring WideFileNameGrf = WideFileName + L".grf";
         SaveGraphFile(_pGraphBuilder, const_cast<WCHAR*>(WideFileNameGrf.c_str()));*/
-        return false;
+        return !FAILED(hr);
     }
 
 
@@ -1538,7 +1616,7 @@ bool DirectShowVideoWrapper::open(const std::string& ThePath, Window* const wind
 	produceOpened();
 
     // Register the graph in the Running Object Table (for debug purposes)
-    //AddGraphToROT(_pGraphBuilder, &dwROT);
+    AddGraphToROT(_pGraphBuilder, &dwROT);
 
     return true;
 }
