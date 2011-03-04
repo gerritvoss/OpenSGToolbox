@@ -121,6 +121,12 @@ void PhysicsBoxGeom::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     if(whichField & LengthsFieldMask)
     {
         dGeomBoxSetLengths(_GeomID, getLengths().x(),getLengths().y(),getLengths().z() );

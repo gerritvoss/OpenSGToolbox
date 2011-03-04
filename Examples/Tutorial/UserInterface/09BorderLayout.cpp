@@ -46,13 +46,13 @@ void reshape(Vec2f Size, SimpleSceneManager *mgr);
 #include "OSGBorderLayout.h"
 #include "OSGBorderLayoutConstraints.h"
 
-    void keyPressed(KeyEventDetails* const details)
+void keyPressed(KeyEventDetails* const details)
+{
+    if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
     {
-        if(details->getKey() == KeyEventDetails::KEY_Q && details->getModifiers() & KeyEventDetails::KEY_MODIFIER_COMMAND)
-        {
-            dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
-        }
+        dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
+}
 
 int main(int argc, char **argv)
 {

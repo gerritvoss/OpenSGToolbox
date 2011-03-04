@@ -362,6 +362,12 @@ void SceneGraphTreeModel::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     if(whichField & InternalRootFieldMask)
     {
         produceTreeStructureChanged(createPath(getRootNode()),std::vector<UInt32>(1, 0),std::vector<boost::any>(1, boost::any(getRootNode())));

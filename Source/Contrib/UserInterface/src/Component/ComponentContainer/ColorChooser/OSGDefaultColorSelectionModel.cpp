@@ -116,6 +116,12 @@ void DefaultColorSelectionModel::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     if(whichField & ColorFieldMask)
     {
         produceStateChanged();

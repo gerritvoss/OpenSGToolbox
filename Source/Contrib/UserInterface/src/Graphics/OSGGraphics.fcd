@@ -11,7 +11,7 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
 >
 A UI Graphics Interface.
 	<Field
@@ -46,6 +46,16 @@ A UI Graphics Interface.
 	</Field>
 	<Field
 		name="EnablePolygonAntiAliasing"
+		type="bool"
+        category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	</Field>
+	<Field
+		name="EnableFontAntiAliasing"
 		type="bool"
         category="data"
 		cardinality="single"

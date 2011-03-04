@@ -988,6 +988,12 @@ void GenericFieldContainerEditor::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     if( whichField & ChildrenFieldMask)
     {
         //Layout needs to be recalculated for my parent ComponentContainer

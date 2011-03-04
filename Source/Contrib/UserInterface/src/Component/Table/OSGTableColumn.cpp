@@ -117,6 +117,12 @@ void TableColumn::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     //Produce a FieldChanged Event for each Field that was changed
     for(UInt32 i(0) ; i<getType().getNumFieldDescs() ; ++i)
     {

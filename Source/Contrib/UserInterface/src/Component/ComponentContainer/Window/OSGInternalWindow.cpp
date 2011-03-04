@@ -743,17 +743,17 @@ void InternalWindow::drawInternal(Graphics* const TheGraphics, Real32 Opacity) c
     {
         getMenuBar()->draw(TheGraphics, Opacity*getOpacity());
     }
+}
+
+void InternalWindow::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
+{
+    Inherited::drawUnclipped(TheGraphics, Opacity);
 
     //Draw all ToolTips
     for(UInt32 i(0) ; i<getMFToolTips()->size() ; ++i)
     {
         getToolTips(i)->draw(TheGraphics, Opacity*getOpacity());
     }
-}
-
-void InternalWindow::drawUnclipped(Graphics* const TheGraphics, Real32 Opacity) const
-{
-    Inherited::drawUnclipped(TheGraphics, Opacity);
 
     //If I have an active popupMenu then draw it
     for(UInt32 i(0) ; i<getMFActivePopupMenus()->size() ; ++i)
@@ -979,6 +979,12 @@ void InternalWindow::changed(ConstFieldMaskArg whichField,
                              UInt32            origin,
                              BitVector         details)
 {
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
     if( ((whichField & FocusedFieldMask) ||
          (whichField & TitlebarFieldMask))&&
          getTitlebar() != NULL &&

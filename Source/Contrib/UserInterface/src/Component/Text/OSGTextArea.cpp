@@ -85,6 +85,11 @@ void TextArea::initMethod(InitPhase ePhase)
  *                           Instance methods                              *
 \***************************************************************************/
 
+Vec2f TextArea::getContentRequestedSize(void) const
+{
+	return Vec2f(getPreferredSize().x(),getLineHeight() * static_cast<Real32>(numLines()));
+}
+
 void TextArea::drawInternal(Graphics* const TheGraphics, Real32 Opacity) const
 {	
     //Text Color

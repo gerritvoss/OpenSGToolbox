@@ -287,6 +287,8 @@ void keyPressed(KeyEventDetails* const e,
         mgr->getRoot()->subChild(ExampleUIRectangleNode);
 
         TutorialUIForeground->setDrawingSurface(TutorialDrawingSurface);
+
+        //Switch all fonts to disable anti-aliasing
     }
     if(e->getKey() == KeyEventDetails::KEY_F2)
     {
@@ -297,6 +299,8 @@ void keyPressed(KeyEventDetails* const e,
         mgr->getRoot()->addChild(ExampleUIRectangleNode);
 
         ExampleUIRectangle->setDrawingSurface(TutorialDrawingSurface);
+
+        //Switch all fonts to enable anti-aliasing
     }
 }
 

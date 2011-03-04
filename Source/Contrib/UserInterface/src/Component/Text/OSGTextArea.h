@@ -96,6 +96,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING TextArea : public TextAreaBase
 	virtual void focusGained(FocusEventDetails* const e);
 	virtual void focusLost(FocusEventDetails* const e);
 
+    virtual Vec2f getContentRequestedSize(void) const;
+
     //Components that display logical rows or columns should compute the scroll increment that will completely expose one block of rows or columns, depending on the value of orientation.
     virtual Int32 getScrollableBlockIncrement(const Pnt2f& VisibleRectTopLeft, const Pnt2f& VisibleRectBottomRight, const UInt32& orientation, const Int32& direction);
 

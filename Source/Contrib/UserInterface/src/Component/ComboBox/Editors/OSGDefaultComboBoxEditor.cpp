@@ -166,6 +166,12 @@ void DefaultComboBoxEditor::changed(ConstFieldMaskArg whichField,
 {
     Inherited::changed(whichField, origin, details);
 
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
+
 	if((whichField & EditorFieldMask) && getEditor() != NULL)
 	{
         _TextFieldFocusGainedConnection = getEditor()->connectFocusGained(boost::bind(&DefaultComboBoxEditor::handleTextFieldFocusGained, this, _1));
