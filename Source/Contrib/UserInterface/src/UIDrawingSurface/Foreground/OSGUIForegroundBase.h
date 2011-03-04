@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -67,6 +67,7 @@
 
 #include "OSGUIDrawingSurfaceFields.h"  // DrawingSurface type
 #include "OSGUIForegroundMouseTransformFunctorFields.h" // MouseTransformFunctor type
+#include "OSGSysFields.h"               // Tile type
 
 #include "OSGUIForegroundFields.h"
 
@@ -87,6 +88,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
     typedef TypeObject::InitPhase InitPhase;
 
     OSG_GEN_INTERNALPTR(UIForeground);
+    
+    
 
     /*==========================  PUBLIC  =================================*/
 
@@ -96,18 +99,22 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
     {
         DrawingSurfaceFieldId = Inherited::NextFieldId,
         MouseTransformFunctorFieldId = DrawingSurfaceFieldId + 1,
-        NextFieldId = MouseTransformFunctorFieldId + 1
+        TileFieldId = MouseTransformFunctorFieldId + 1,
+        NextFieldId = TileFieldId + 1
     };
 
     static const OSG::BitVector DrawingSurfaceFieldMask =
         (TypeTraits<BitVector>::One << DrawingSurfaceFieldId);
     static const OSG::BitVector MouseTransformFunctorFieldMask =
         (TypeTraits<BitVector>::One << MouseTransformFunctorFieldId);
+    static const OSG::BitVector TileFieldMask =
+        (TypeTraits<BitVector>::One << TileFieldId);
     static const OSG::BitVector NextFieldMask =
         (TypeTraits<BitVector>::One << NextFieldId);
         
     typedef SFUnrecUIDrawingSurfacePtr SFDrawingSurfaceType;
     typedef SFUnrecUIForegroundMouseTransformFunctorPtr SFMouseTransformFunctorType;
+    typedef SFBool            SFTileType;
 
     /*---------------------------------------------------------------------*/
     /*! \name                    Class Get                                 */
@@ -135,8 +142,14 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
             const SFUnrecUIDrawingSurfacePtr *getSFDrawingSurface (void) const;
                   SFUnrecUIDrawingSurfacePtr *editSFDrawingSurface (void);
 
+                  SFBool              *editSFTile           (void);
+            const SFBool              *getSFTile            (void) const;
+
 
                   UIDrawingSurface * getDrawingSurface (void) const;
+
+                  bool                &editTile           (void);
+                  bool                 getTile            (void) const;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -144,6 +157,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
     /*! \{                                                                 */
 
             void setDrawingSurface (UIDrawingSurface * const value);
+            void setTile           (const bool value);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -210,6 +224,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
 
     SFUnrecUIDrawingSurfacePtr _sfDrawingSurface;
     SFUnrecUIForegroundMouseTransformFunctorPtr _sfMouseTransformFunctor;
+    SFBool            _sfTile;
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/
@@ -242,6 +257,8 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForegroundBase : public Foreground
     EditFieldHandlePtr editHandleDrawingSurface (void);
     GetFieldHandlePtr  getHandleMouseTransformFunctor (void) const;
     EditFieldHandlePtr editHandleMouseTransformFunctor(void);
+    GetFieldHandlePtr  getHandleTile            (void) const;
+    EditFieldHandlePtr editHandleTile           (void);
 
     /*! \}                                                                 */
     /*---------------------------------------------------------------------*/

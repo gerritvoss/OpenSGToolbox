@@ -117,6 +117,11 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIForeground : public UIForegroundBase
 	void onDestroy();
 	
 	/*! \}                                                                 */
+    void beginOrthoRender(DrawEnv *pEnv,
+                          UInt32  &fullWidth,
+                          UInt32  &fullHeight);
+
+    void endOrthoRender(DrawEnv *pEnv);
     /*==========================  PRIVATE  ================================*/
 
   private:

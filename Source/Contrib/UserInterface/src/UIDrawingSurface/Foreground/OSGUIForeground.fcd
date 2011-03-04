@@ -11,9 +11,9 @@
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
+    authors="David Kabala (djkabala@gmail.com)"
 >
-A Foreground for rendering a UI on.
+A Foreground for rendering an OSG::UIDrawingSurface on.
 	<Field
 		name="DrawingSurface"
 		type="UIDrawingSurface"
@@ -33,5 +33,16 @@ A Foreground for rendering a UI on.
 		defaultValue="NULL"
 		access="protected"
 	>
+	</Field>
+	<Field
+		name="Tile"
+		type="bool"
+		category="data"
+		cardinality="single"
+		visibility="external"
+		defaultValue="false"
+		access="public"
+	>
+	Should this foreground be tilable
 	</Field>
 </FieldContainer>

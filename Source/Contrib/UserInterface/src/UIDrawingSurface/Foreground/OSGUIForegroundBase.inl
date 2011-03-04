@@ -4,7 +4,7 @@
  *                                                                           *
  *               Copyright (C) 2000-2006 by the OpenSG Forum                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -47,6 +47,7 @@
  **                                                                         **
  *****************************************************************************
 \*****************************************************************************/
+
 
 OSG_BEGIN_NAMESPACE
 
@@ -105,6 +106,31 @@ void UIForegroundBase::setMouseTransformFunctor(UIForegroundMouseTransformFuncto
 
     _sfMouseTransformFunctor.setValue(value);
 }
+//! Get the value of the UIForeground::_sfTile field.
+
+inline
+bool &UIForegroundBase::editTile(void)
+{
+    editSField(TileFieldMask);
+
+    return _sfTile.getValue();
+}
+
+//! Get the value of the UIForeground::_sfTile field.
+inline
+      bool  UIForegroundBase::getTile(void) const
+{
+    return _sfTile.getValue();
+}
+
+//! Set the value of the UIForeground::_sfTile field.
+inline
+void UIForegroundBase::setTile(const bool value)
+{
+    editSField(TileFieldMask);
+
+    _sfTile.setValue(value);
+}
 
 
 #ifdef OSG_MT_CPTR_ASPECT
@@ -122,6 +148,9 @@ void UIForegroundBase::execSync (      UIForegroundBase *pFrom,
 
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
         _sfMouseTransformFunctor.syncWith(pFrom->_sfMouseTransformFunctor);
+
+    if(FieldBits::NoField != (TileFieldMask & whichField))
+        _sfTile.syncWith(pFrom->_sfTile);
 }
 #endif
 

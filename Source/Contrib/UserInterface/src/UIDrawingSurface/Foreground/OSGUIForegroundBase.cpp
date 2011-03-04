@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -77,7 +77,7 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::UIForeground
-    A Foreground for rendering a UI on.
+    A Foreground for rendering an OSG::UIDrawingSurface on.
  */
 
 /***************************************************************************\
@@ -90,6 +90,10 @@ OSG_BEGIN_NAMESPACE
 
 /*! \var UIForegroundMouseTransformFunctor * UIForegroundBase::_sfMouseTransformFunctor
     
+*/
+
+/*! \var bool            UIForegroundBase::_sfTile
+    Should this foreground be tilable
 */
 
 
@@ -143,6 +147,18 @@ void UIForegroundBase::classDescInserter(TypeObject &oType)
         static_cast<FieldGetMethodSig >(&UIForeground::getHandleMouseTransformFunctor));
 
     oType.addInitialDesc(pDesc);
+
+    pDesc = new SFBool::Description(
+        SFBool::getClassType(),
+        "Tile",
+        "Should this foreground be tilable\n",
+        TileFieldId, TileFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIForeground::editHandleTile),
+        static_cast<FieldGetMethodSig >(&UIForeground::getHandleTile));
+
+    oType.addInitialDesc(pDesc);
 }
 
 
@@ -170,9 +186,9 @@ UIForegroundBase::TypeObject UIForegroundBase::_type(
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
     ">\n"
-    "A Foreground for rendering a UI on.\n"
+    "A Foreground for rendering an OSG::UIDrawingSurface on.\n"
     "\t<Field\n"
     "\t\tname=\"DrawingSurface\"\n"
     "\t\ttype=\"UIDrawingSurface\"\n"
@@ -193,8 +209,19 @@ UIForegroundBase::TypeObject UIForegroundBase::_type(
     "\t\taccess=\"protected\"\n"
     "\t>\n"
     "\t</Field>\n"
+    "\t<Field\n"
+    "\t\tname=\"Tile\"\n"
+    "\t\ttype=\"bool\"\n"
+    "\t\tcategory=\"data\"\n"
+    "\t\tcardinality=\"single\"\n"
+    "\t\tvisibility=\"external\"\n"
+    "\t\tdefaultValue=\"false\"\n"
+    "\t\taccess=\"public\"\n"
+    "\t>\n"
+    "\tShould this foreground be tilable\n"
+    "\t</Field>\n"
     "</FieldContainer>\n",
-    "A Foreground for rendering a UI on.\n"
+    "A Foreground for rendering an OSG::UIDrawingSurface on.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -243,6 +270,19 @@ SFUnrecUIForegroundMouseTransformFunctorPtr *UIForegroundBase::editSFMouseTransf
     return &_sfMouseTransformFunctor;
 }
 
+SFBool *UIForegroundBase::editSFTile(void)
+{
+    editSField(TileFieldMask);
+
+    return &_sfTile;
+}
+
+const SFBool *UIForegroundBase::getSFTile(void) const
+{
+    return &_sfTile;
+}
+
+
 
 
 
@@ -261,6 +301,10 @@ UInt32 UIForegroundBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfMouseTransformFunctor.getBinSize();
     }
+    if(FieldBits::NoField != (TileFieldMask & whichField))
+    {
+        returnValue += _sfTile.getBinSize();
+    }
 
     return returnValue;
 }
@@ -278,6 +322,10 @@ void UIForegroundBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfMouseTransformFunctor.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (TileFieldMask & whichField))
+    {
+        _sfTile.copyToBin(pMem);
+    }
 }
 
 void UIForegroundBase::copyFromBin(BinaryDataHandler &pMem,
@@ -287,11 +335,18 @@ void UIForegroundBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (DrawingSurfaceFieldMask & whichField))
     {
+        editSField(DrawingSurfaceFieldMask);
         _sfDrawingSurface.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
+        editSField(MouseTransformFunctorFieldMask);
         _sfMouseTransformFunctor.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (TileFieldMask & whichField))
+    {
+        editSField(TileFieldMask);
+        _sfTile.copyFromBin(pMem);
     }
 }
 
@@ -367,7 +422,6 @@ UIForeground *UIForegroundBase::createEmpty(void)
     return returnValue;
 }
 
-
 FieldContainerTransitPtr UIForegroundBase::shallowCopyLocal(
     BitVector bFlags) const
 {
@@ -413,20 +467,21 @@ FieldContainerTransitPtr UIForegroundBase::shallowCopy(void) const
 
 
 
-
 /*------------------------- constructors ----------------------------------*/
 
 UIForegroundBase::UIForegroundBase(void) :
     Inherited(),
     _sfDrawingSurface         (NULL),
-    _sfMouseTransformFunctor  (NULL)
+    _sfMouseTransformFunctor  (NULL),
+    _sfTile                   (bool(false))
 {
 }
 
 UIForegroundBase::UIForegroundBase(const UIForegroundBase &source) :
     Inherited(source),
     _sfDrawingSurface         (NULL),
-    _sfMouseTransformFunctor  (NULL)
+    _sfMouseTransformFunctor  (NULL),
+    _sfTile                   (source._sfTile                   )
 {
 }
 
@@ -506,6 +561,32 @@ EditFieldHandlePtr UIForegroundBase::editHandleMouseTransformFunctor(void)
 
     return returnValue;
 }
+
+GetFieldHandlePtr UIForegroundBase::getHandleTile            (void) const
+{
+    SFBool::GetHandlePtr returnValue(
+        new  SFBool::GetHandle(
+             &_sfTile,
+             this->getType().getFieldDesc(TileFieldId),
+             const_cast<UIForegroundBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIForegroundBase::editHandleTile           (void)
+{
+    SFBool::EditHandlePtr returnValue(
+        new  SFBool::EditHandle(
+             &_sfTile,
+             this->getType().getFieldDesc(TileFieldId),
+             this));
+
+
+    editSField(TileFieldMask);
+
+    return returnValue;
+}
+
 
 
 #ifdef OSG_MT_CPTR_ASPECT

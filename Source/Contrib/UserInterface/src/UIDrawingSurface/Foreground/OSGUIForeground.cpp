@@ -89,22 +89,21 @@ void UIForeground::draw(DrawEnv * env)
     if(getDrawingSurface()->getSize().x() != env->getPixelWidth() ||
        getDrawingSurface()->getSize().y() != env->getPixelHeight())
     {
-        getDrawingSurface()->setSize(Vec2f(env->getPixelWidth(), env->getPixelHeight()));
+        if(env->getTileFullSize()[0] != 0)
+        {
+            getDrawingSurface()->setSize(Vec2f(env->getTileFullSize()[0], env->getTileFullSize()[1]));
+        }
+        else
+        {
+            getDrawingSurface()->setSize(Vec2f(env->getPixelWidth(), env->getPixelHeight()));
+        }
     }
 
-	glPushMatrix();
-    glLoadIdentity();
-    glMatrixMode(GL_PROJECTION);
-    glPushMatrix();
-    glLoadIdentity();
-     
-    // Set viewport. We want to map one unit to one pixel on the
-    // screen. Some sources in the internet say that we should
-    // add an offset of -0.375 to prevent rounding errors. Don't
-    // know if that is true, but it seems to work.
-    glOrtho(0 - 0.375, env->getPixelWidth() - 0.375, env->getPixelHeight() - 0.375, 0 - 0.375, 0, 1);
-	
-	glMatrixMode(GL_MODELVIEW);
+
+    // setup ortho projection
+    UInt32 fullWidth;
+    UInt32 fullHeight;
+    beginOrthoRender(env, fullWidth, fullHeight);
 
 	//Render the UI to the Foreground
     getDrawingSurface()->getGraphics()->setDrawEnv(env);
@@ -121,15 +120,84 @@ void UIForeground::draw(DrawEnv * env)
 	//Call the PostDraw on the Graphics
 	getDrawingSurface()->getGraphics()->postDraw();
 
-	glPopMatrix();
-    glMatrixMode(GL_PROJECTION);
-    glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
+	//reset the matrices
+    endOrthoRender(env);
 }
 
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+/*! Sets up an ortho projection for rendering. It handles tiling
+    when a TileCameraDecorator is in use. When done you need to call
+    endOrthoRender to clean up changes to the OpenGL matrix stacks.
+
+    \param pEnv DrawEnv being used for rendering
+    \param normX Wether x coordinates are going to be normalized.
+    \param normY Wether y coordinates are going to be normalized.
+    \param[out] fullWidth width of the viewport
+    \param[out] fullHeight height of the viewport
+
+    \note When the TileCameraDecorator is in use, the width and height of the
+          viewport (fullWidth, fullHeight) are defined by the TileCameraDecorator.
+ */
+void UIForeground::beginOrthoRender(DrawEnv *pEnv,
+                                    UInt32  &fullWidth,
+                                    UInt32  &fullHeight)
+{
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glMatrixMode(GL_TEXTURE);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+
+    UInt32               width   = pEnv->getPixelWidth ();
+    UInt32               height  = pEnv->getPixelHeight();
+
+    fullWidth  = pEnv->getTileFullSize()[0];
+    fullHeight = pEnv->getTileFullSize()[1];
+
+    if(fullWidth == 0)
+    {
+        fullWidth  = width;
+        fullHeight = height;
+    }
+    else if(!getTile())
+    {
+        Matrix sm = pEnv->calcTileDecorationMatrix();
+
+        glLoadMatrixf(sm.getValues());
+    }
+
+    glOrtho(0 - 0.375,
+            static_cast<Real32>(fullWidth) - 0.375,
+            static_cast<Real32>(fullHeight) - 0.375,
+            0 - 0.375,
+            0,
+            1);
+
+    glMatrixMode(GL_MODELVIEW);
+}
+
+/*! Clean up changes to the OpenGL matrix stacks done by beginOrthoRender
+ */
+void UIForeground::endOrthoRender(DrawEnv *pEnv)
+{
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    
+    glMatrixMode(GL_TEXTURE);
+    glPopMatrix();
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+}
 
 void UIForeground::onCreate(const UIForeground * Id)
 {
@@ -170,6 +238,12 @@ void UIForeground::changed(ConstFieldMaskArg whichField,
                             BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
+
+    //Do not respond to changes that have a Sync origin
+    if(origin & ChangedOrigin::Sync)
+    {
+        return;
+    }
 	
 	if( (whichField & DrawingSurfaceFieldMask) &&
 		getDrawingSurface() != NULL)
