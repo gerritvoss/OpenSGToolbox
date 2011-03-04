@@ -46,6 +46,7 @@
 #include "OSGWindowEventProducer.h"
 #include "OSGGraphics.h"
 #include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
+#include "OSGUIDrawObjectCanvasFields.h"
 
 OSG_BEGIN_NAMESPACE
 
@@ -85,7 +86,7 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSur
 
     void detachFromEventProducer(void);
 
-	//Mouse Events
+    //Mouse Events
     void handleMouseClicked(MouseEventDetails* const e);
     void handleMouseEntered(MouseEventDetails* const e);
     void handleMouseExited(MouseEventDetails* const e);
@@ -93,47 +94,69 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSur
     void handleMouseReleased(MouseEventDetails* const e);
 
     boost::signals2::connection _MouseClickedConnection,
-                                _MouseEnteredConnection,
-                                _MouseExitedConnection,
-                                _MousePressedConnection,
-                                _MouseReleasedConnection;
+        _MouseEnteredConnection,
+        _MouseExitedConnection,
+        _MousePressedConnection,
+        _MouseReleasedConnection;
 
-	//Mouse Motion Events
+    //Mouse Motion Events
     void handleMouseMoved(MouseEventDetails* const e);
     void handleMouseDragged(MouseEventDetails* const e);
 
     boost::signals2::connection _MouseMovedConnection,
-                                _MouseDraggedConnection;
+        _MouseDraggedConnection;
 
-	//Mouse Wheel Events
+    //Mouse Wheel Events
     void handleMouseWheelMoved(MouseWheelEventDetails* const e);
     boost::signals2::connection _MouseWheelMovedConnection;
 
-	//Key Events
-	void handleKeyPressed(KeyEventDetails* const e);
-	void handleKeyReleased(KeyEventDetails* const e);
-	void handleKeyTyped(KeyEventDetails* const e);
+    //Key Events
+    void handleKeyPressed(KeyEventDetails* const e);
+    void handleKeyReleased(KeyEventDetails* const e);
+    void handleKeyTyped(KeyEventDetails* const e);
 
     boost::signals2::connection _KeyPressedConnection,
-                                _KeyReleasedConnection,
-                                _KeyTypedConnection;
+        _KeyReleasedConnection,
+        _KeyTypedConnection;
 
     virtual Pnt2f getMousePosition(void) const;
 
-	virtual UInt32 getNumWindowLayers(void) const;
-	virtual Int32 getWindowLayer(InternalWindow* const TheWindow) const;
-	virtual InternalWindow* getWindowAtLayer(const UInt32& Layer) const;
-	virtual void setWindowToLayer(InternalWindow* const TheWindow, const UInt32& Layer);
-	virtual void moveWindowUp(InternalWindow* const TheWindow);
-	virtual void moveWindowDown(InternalWindow* const TheWindow);
-	virtual void moveWindowToTop(InternalWindow* const TheWindow);
-	virtual void moveWindowToBottom(InternalWindow* const TheWindow);
+    virtual UInt32 getNumWindowLayers(void) const;
+    virtual Int32 getWindowLayer(InternalWindow* const TheWindow) const;
+    virtual InternalWindow* getWindowAtLayer(const UInt32& Layer) const;
+    virtual void setWindowToLayer(InternalWindow* const TheWindow, const UInt32& Layer);
+    virtual void moveWindowUp(InternalWindow* const TheWindow);
+    virtual void moveWindowDown(InternalWindow* const TheWindow);
+    virtual void moveWindowToTop(InternalWindow* const TheWindow);
+    virtual void moveWindowToBottom(InternalWindow* const TheWindow);
 
-	virtual void openWindow(InternalWindow* const TheWindow, const Int32 Layer = -1);
-	virtual void closeWindow(InternalWindow* const TheWindow);
+    virtual void openWindow(InternalWindow* const TheWindow, const Int32 Layer = -1);
+    virtual void closeWindow(InternalWindow* const TheWindow);
 
     void updateWindowLayouts(void);
     void updateWindowLayout(InternalWindow* const TheWindow);
+
+    void draw(void);
+
+    /*---------------------------------------------------------------------*/
+    /*! \name                     Cursor                                   */
+    /*! \{                                                                 */
+
+    void setCursorAsTexture(UInt32 CursorType,
+                            TextureObjChunk* const TheTexture,
+                            Vec2f Size   = Vec2f(-1.0f,-1.0f),
+                            Vec2f Offset = Vec2f(0.0f,0.0f));
+
+    void setCursorAsImage  (UInt32 CursorType,
+                            Image* const TheImage,
+                            Vec2f Size = Vec2f(-1.0f,-1.0f),
+                            Vec2f Offset = Vec2f(0.0f,0.0f));
+    
+    void setCursorAsImage  (UInt32 CursorType,
+                            const BoostPath& Path,
+                            Vec2f Size = Vec2f(-1.0f,-1.0f),
+                            Vec2f Offset = Vec2f(0.0f,0.0f));
+    /*! \}                                                                 */
     /*=========================  PROTECTED  ===============================*/
 
   protected:
@@ -162,12 +185,16 @@ class OSG_CONTRIBUSERINTERFACE_DLLMAPPING UIDrawingSurface : public UIDrawingSur
     static void initMethod(InitPhase ePhase);
 
     /*! \}                                                                 */
+    UIDrawObjectCanvasTransitPtr createTexturedDrawObjectCanvas(TextureObjChunk* const TheTexture,
+                                                                Vec2f Size,
+                                                                Vec2f Offset);
 
-	void checkMouseEnterExit(InputEventDetails* const e, const Pnt2f& MouseLocation, Viewport* const TheViewport);
+    void checkMouseEnterExit(InputEventDetails* const e, const Pnt2f& MouseLocation, Viewport* const TheViewport);
+    void closeWindows(void);
 
     std::set<InternalWindow*> _WindowsToClose;
     bool _IsProcessingEvents;
-    void closeWindows(void);
+    Pnt2f _CursorLocation;
 
     /*==========================  PRIVATE  ================================*/
 

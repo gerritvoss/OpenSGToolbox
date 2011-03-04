@@ -99,28 +99,18 @@ void UIForeground::draw(DrawEnv * env)
         }
     }
 
-
-    // setup ortho projection
+    //Setup the orthographic projection
     UInt32 fullWidth;
     UInt32 fullHeight;
     beginOrthoRender(env, fullWidth, fullHeight);
 
-	//Render the UI to the Foreground
+    //Give the draw environment to the Graphics of the drawing surface
     getDrawingSurface()->getGraphics()->setDrawEnv(env);
 
-	//Call The PreDraw on the Graphics
-	getDrawingSurface()->getGraphics()->preDraw();
+    //Draw the drawing surface
+    getDrawingSurface()->draw();
 
-	//Draw all of the InternalWindows
-	for(UInt32 i(0) ; i<getDrawingSurface()->getMFInternalWindows()->size() ; ++i)
-	{
-		getDrawingSurface()->getInternalWindows(i)->draw(getDrawingSurface()->getGraphics());
-	}
-
-	//Call the PostDraw on the Graphics
-	getDrawingSurface()->getGraphics()->postDraw();
-
-	//reset the matrices
+    //reset the matrices
     endOrthoRender(env);
 }
 
@@ -191,7 +181,7 @@ void UIForeground::endOrthoRender(DrawEnv *pEnv)
 {
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
-    
+
     glMatrixMode(GL_TEXTURE);
     glPopMatrix();
 
@@ -201,10 +191,10 @@ void UIForeground::endOrthoRender(DrawEnv *pEnv)
 
 void UIForeground::onCreate(const UIForeground * Id)
 {
-	Inherited::onCreate(Id);
+    Inherited::onCreate(Id);
 
     UIForegroundMouseTransformFunctorUnrecPtr TheTransFunc(UIForegroundMouseTransformFunctor::create());
-	setMouseTransformFunctor(TheTransFunc);
+    setMouseTransformFunctor(TheTransFunc);
     if(getMouseTransformFunctor() != NULL)
     {
         getMouseTransformFunctor()->setParent(this);
@@ -233,9 +223,9 @@ UIForeground::~UIForeground(void)
 
 /*----------------------------- class specific ----------------------------*/
 
-void UIForeground::changed(ConstFieldMaskArg whichField, 
-                            UInt32            origin,
-                            BitVector         details)
+void UIForeground::changed(ConstFieldMaskArg whichField,
+                           UInt32            origin,
+                           BitVector         details)
 {
     Inherited::changed(whichField, origin, details);
 
@@ -244,15 +234,15 @@ void UIForeground::changed(ConstFieldMaskArg whichField,
     {
         return;
     }
-	
-	if( (whichField & DrawingSurfaceFieldMask) &&
-		getDrawingSurface() != NULL)
+
+    if( (whichField & DrawingSurfaceFieldMask) &&
+        getDrawingSurface() != NULL)
     {
         getDrawingSurface()->setMouseTransformFunctor(getMouseTransformFunctor());
-	}
-	if((whichField & (ActiveFieldMask | DrawingSurfaceFieldMask)) && 
-        getDrawingSurface() != NULL &&
-        getDrawingSurface()->getActive() != getActive())
+    }
+    if((whichField & (ActiveFieldMask | DrawingSurfaceFieldMask)) &&
+       getDrawingSurface() != NULL &&
+       getDrawingSurface()->getActive() != getActive())
     {
         getDrawingSurface()->setActive(getActive());
     }

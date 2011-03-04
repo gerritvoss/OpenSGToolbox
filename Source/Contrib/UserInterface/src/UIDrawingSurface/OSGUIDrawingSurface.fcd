@@ -1,89 +1,116 @@
 <?xml version="1.0"?>
 
 <FieldContainer
-	name="UIDrawingSurface"
-	parent="AttachmentContainer"
+    name="UIDrawingSurface"
+    parent="AttachmentContainer"
     library="ContribUserInterface"
     pointerfieldtypes="both"
-	structure="concrete"
+    structure="concrete"
     systemcomponent="true"
     parentsystemcomponent="true"
     decoratable="false"
     useLocalIncludes="false"
     isNodeCore="false"
-    authors="David Kabala (djkabala@gmail.com)                             "
->
-A UI DrawingSurface.
-	<Field
-		name="InternalWindows"
-		type="InternalWindow"
-		cardinality="multi"
+    authors="David Kabala (djkabala@gmail.com)"
+    >
+    A virtual surface that a graphical user interface is drawn on.
+    The drawing surface manages a set of OSG::InternalWindows.  The 
+    UIDrawingSurface must be attached to an event producer to pass
+    mouse, key, and update events to the OSG::InternalWindows it contains.
+    <Field
+        name="InternalWindows"
+        type="InternalWindow"
+        cardinality="multi"
         category="childpointer"
         childParentType="FieldContainer"
-		visibility="external"
-		access="public"
+        visibility="external"
+        access="public"
         ptrFieldAccess = "nullCheck"
         linkParentField="ParentDrawingSurface"
-	>
-	</Field>
-	<Field
-		name="FocusedWindow"
-		type="InternalWindow"
-		category="weakpointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="EventProducer"
-		type="WindowEventProducer"
-		category="weakpointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Graphics"
-		type="Graphics"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="MouseTransformFunctor"
-		type="UIDrawingSurfaceMouseTransformFunctor"
-		category="pointer"
-		cardinality="single"
-		visibility="external"
-		defaultValue="NULL"
-		access="public"
-	>
-	</Field>
-	<Field
-		name="Size"
-		type="Vec2f"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="0.0f,0.0f"
-	>
-	</Field>
-	<Field
-		name="Active"
-		type="bool"
-		category="data"
-		cardinality="single"
-		visibility="external"
-		access="public"
-		defaultValue="true"
-	>
-	</Field>
+        >
+        The windows of the drawing surface.
+    </Field>
+    <Field
+        name="FocusedWindow"
+        type="InternalWindow"
+        category="weakpointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The window that has focus
+    </Field>
+    <Field
+        name="EventProducer"
+        type="WindowEventProducer"
+        category="weakpointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The event producer used by this DrawingSurface.  The event producer must 
+        produce mouse, key, and update events.  These events are processed and passed
+        to the windows of this drawing surface.
+    </Field>
+    <Field
+        name="Graphics"
+        type="Graphics"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        The OSG::Graphics object used for drawing.
+    </Field>
+    <Field
+        name="MouseTransformFunctor"
+        type="UIDrawingSurfaceMouseTransformFunctor"
+        category="pointer"
+        cardinality="single"
+        visibility="external"
+        defaultValue="NULL"
+        access="public"
+        >
+        A functor object used for transforming the mouse coordinates.
+        This is used by OSG::UIForeground and OSG::UIRectangle for transforming
+        the mouse coordinates when the DrawingSurface is connected to them.
+    </Field>
+    <Field
+        name="Size"
+        type="Vec2f"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="0.0f,0.0f"
+        >
+        The size of the DrawingSurface.
+    </Field>
+    <Field
+        name="Active"
+        type="bool"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        access="public"
+        defaultValue="true"
+        >
+        Controls whether this DrawingSurface responds to events.  If Active is false
+        then no mouse, key, or update events are processed.
+    </Field>
+    <Field
+        name="Cursors"
+        type="FieldContainerMap"
+        category="data"
+        cardinality="single"
+        visibility="external"
+        >
+        A map of the cursors for the DrawingSurface.  The UIDrawinSurface will query the 
+        WindowEventProducer it is attached to for the the current cursor type.  This is 
+        used as the key for this Cursor map.  If there is no value for the given key, then
+        no cursor is drawn.
+    </Field>
 </FieldContainer>

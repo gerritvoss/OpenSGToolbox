@@ -59,6 +59,12 @@ void keyPressed(KeyEventDetails* const details)
     {
         dynamic_cast<WindowEventProducer*>(details->getSource())->closeWindow();
     }
+
+    if(details->getKey() == KeyEventDetails::KEY_C)
+    {
+        bool ShowCursor(!dynamic_cast<WindowEventProducer*>(details->getSource())->getShowCursor());
+        dynamic_cast<WindowEventProducer*>(details->getSource())->setShowCursor(ShowCursor);
+    }
 }
 
 /******************************************************
@@ -171,7 +177,7 @@ int main(int argc, char **argv)
         TutorialWindow->connectMouseReleased(boost::bind(mouseReleased, _1, &sceneManager));
         TutorialWindow->connectMouseDragged(boost::bind(mouseDragged, _1, &sceneManager));
         TutorialWindow->connectMouseWheelMoved(boost::bind(mouseWheelMoved, _1, &sceneManager));
-        TutorialWindow->connectKeyTyped(boost::bind(keyPressed, _1));
+        TutorialWindow->connectKeyPressed(boost::bind(keyPressed, _1));
 
         // Tell the Manager what to manage
         sceneManager.setWindow(TutorialWindow);
@@ -202,6 +208,10 @@ int main(int argc, char **argv)
         UIDrawingSurfaceRecPtr TutorialDrawingSurface = UIDrawingSurface::create();
         TutorialDrawingSurface->setGraphics(TutorialGraphics);
         TutorialDrawingSurface->setEventProducer(TutorialWindow);
+        TutorialDrawingSurface->setCursorAsImage(WindowEventProducer::CURSOR_POINTER,
+                                                 BoostPath("./Data/cursor.png"),
+                                                 Vec2f(-1.0f,-1.0f),
+                                                 Vec2f(-12.0f,-20.0f));
 
         InternalWindowRecPtr MainUIWindow = createMainInternalWindow();
         TutorialDrawingSurface->openWindow(MainUIWindow);
@@ -272,7 +282,7 @@ int main(int argc, char **argv)
           to be just the UIRectangle (as
           commented out below).
 
-         ******************************************************/   	
+         ******************************************************/
         NodeRecPtr ExampleUIRectangleNode = Node::create();
         ExampleUIRectangleNode->setCore(ExampleUIRectangle);
 
@@ -293,7 +303,7 @@ int main(int argc, char **argv)
         Pnt2f WinPos((TutorialWindow->getDesktopSize() - WinSize) *0.5);
         TutorialWindow->openWindow(WinPos,
                                    WinSize,
-                                   "01RubberBandCamera");
+                                   "20UIRectangle");
 
         //Enter main Loop
         TutorialWindow->mainLoop();

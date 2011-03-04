@@ -6,7 +6,7 @@
  *                                                                           *
  *                            www.opensg.org                                 *
  *                                                                           *
- *   contact:  David Kabala (djkabala@gmail.com)                             *
+ * contact: David Kabala (djkabala@gmail.com)                                *
  *                                                                           *
 \*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*\
@@ -79,7 +79,10 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \class OSG::UIDrawingSurface
-    A UI DrawingSurface.
+    A virtual surface that a graphical user interface is drawn on.
+    The drawing surface manages a set of OSG::InternalWindows.  The 
+    UIDrawingSurface must be attached to an event producer to pass
+    mouse, key, and update events to the OSG::InternalWindows it contains.
  */
 
 /***************************************************************************\
@@ -87,31 +90,43 @@ OSG_BEGIN_NAMESPACE
 \***************************************************************************/
 
 /*! \var InternalWindow * UIDrawingSurfaceBase::_mfInternalWindows
-    
+    The windows of the drawing surface.
 */
 
 /*! \var InternalWindow * UIDrawingSurfaceBase::_sfFocusedWindow
-    
+    The window that has focus
 */
 
 /*! \var WindowEventProducer * UIDrawingSurfaceBase::_sfEventProducer
-    
+    The event producer used by this DrawingSurface.  The event producer must 
+    produce mouse, key, and update events.  These events are processed and passed
+    to the windows of this drawing surface.
 */
 
 /*! \var Graphics *      UIDrawingSurfaceBase::_sfGraphics
-    
+    The OSG::Graphics object used for drawing.
 */
 
 /*! \var UIDrawingSurfaceMouseTransformFunctor * UIDrawingSurfaceBase::_sfMouseTransformFunctor
-    
+    A functor object used for transforming the mouse coordinates.
+    This is used by OSG::UIForeground and OSG::UIRectangle for transforming
+    the mouse coordinates when the DrawingSurface is connected to them.
 */
 
 /*! \var Vec2f           UIDrawingSurfaceBase::_sfSize
-    
+    The size of the DrawingSurface.
 */
 
 /*! \var bool            UIDrawingSurfaceBase::_sfActive
-    
+    Controls whether this DrawingSurface responds to events.  If Active is false
+    then no mouse, key, or update events are processed.
+*/
+
+/*! \var FieldContainerMap UIDrawingSurfaceBase::_sfCursors
+    A map of the cursors for the DrawingSurface.  The UIDrawinSurface will query the 
+    WindowEventProducer it is attached to for the the current cursor type.  This is 
+    used as the key for this Cursor map.  If there is no value for the given key, then
+    no cursor is drawn.
 */
 
 
@@ -145,7 +160,7 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new MFUnrecChildInternalWindowPtr::Description(
         MFUnrecChildInternalWindowPtr::getClassType(),
         "InternalWindows",
-        "",
+        "The windows of the drawing surface.\n",
         InternalWindowsFieldId, InternalWindowsFieldMask,
         false,
         (Field::MFDefaultFlags | Field::FNullCheckAccess),
@@ -157,7 +172,7 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFWeakInternalWindowPtr::Description(
         SFWeakInternalWindowPtr::getClassType(),
         "FocusedWindow",
-        "",
+        "The window that has focus\n",
         FocusedWindowFieldId, FocusedWindowFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -169,7 +184,9 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFWeakWindowEventProducerPtr::Description(
         SFWeakWindowEventProducerPtr::getClassType(),
         "EventProducer",
-        "",
+        "The event producer used by this DrawingSurface.  The event producer must \n"
+        "produce mouse, key, and update events.  These events are processed and passed\n"
+        "to the windows of this drawing surface.\n",
         EventProducerFieldId, EventProducerFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -181,7 +198,7 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecGraphicsPtr::Description(
         SFUnrecGraphicsPtr::getClassType(),
         "Graphics",
-        "",
+        "The OSG::Graphics object used for drawing.\n",
         GraphicsFieldId, GraphicsFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -193,7 +210,9 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr::Description(
         SFUnrecUIDrawingSurfaceMouseTransformFunctorPtr::getClassType(),
         "MouseTransformFunctor",
-        "",
+        "A functor object used for transforming the mouse coordinates.\n"
+        "This is used by OSG::UIForeground and OSG::UIRectangle for transforming\n"
+        "the mouse coordinates when the DrawingSurface is connected to them.\n",
         MouseTransformFunctorFieldId, MouseTransformFunctorFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -205,7 +224,7 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFVec2f::Description(
         SFVec2f::getClassType(),
         "Size",
-        "",
+        "The size of the DrawingSurface.\n",
         SizeFieldId, SizeFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
@@ -217,12 +236,28 @@ void UIDrawingSurfaceBase::classDescInserter(TypeObject &oType)
     pDesc = new SFBool::Description(
         SFBool::getClassType(),
         "Active",
-        "",
+        "Controls whether this DrawingSurface responds to events.  If Active is false\n"
+        "then no mouse, key, or update events are processed.\n",
         ActiveFieldId, ActiveFieldMask,
         false,
         (Field::SFDefaultFlags | Field::FStdAccess),
         static_cast<FieldEditMethodSig>(&UIDrawingSurface::editHandleActive),
         static_cast<FieldGetMethodSig >(&UIDrawingSurface::getHandleActive));
+
+    oType.addInitialDesc(pDesc);
+
+    pDesc = new SFFieldContainerMap::Description(
+        SFFieldContainerMap::getClassType(),
+        "Cursors",
+        "A map of the cursors for the DrawingSurface.  The UIDrawinSurface will query the \n"
+        "WindowEventProducer it is attached to for the the current cursor type.  This is \n"
+        "used as the key for this Cursor map.  If there is no value for the given key, then\n"
+        "no cursor is drawn.\n",
+        CursorsFieldId, CursorsFieldMask,
+        false,
+        (Field::SFDefaultFlags | Field::FStdAccess),
+        static_cast<FieldEditMethodSig>(&UIDrawingSurface::editHandleCursors),
+        static_cast<FieldGetMethodSig >(&UIDrawingSurface::getHandleCursors));
 
     oType.addInitialDesc(pDesc);
 }
@@ -242,93 +277,123 @@ UIDrawingSurfaceBase::TypeObject UIDrawingSurfaceBase::_type(
     "<?xml version=\"1.0\"?>\n"
     "\n"
     "<FieldContainer\n"
-    "\tname=\"UIDrawingSurface\"\n"
-    "\tparent=\"AttachmentContainer\"\n"
+    "    name=\"UIDrawingSurface\"\n"
+    "    parent=\"AttachmentContainer\"\n"
     "    library=\"ContribUserInterface\"\n"
     "    pointerfieldtypes=\"both\"\n"
-    "\tstructure=\"concrete\"\n"
+    "    structure=\"concrete\"\n"
     "    systemcomponent=\"true\"\n"
     "    parentsystemcomponent=\"true\"\n"
     "    decoratable=\"false\"\n"
     "    useLocalIncludes=\"false\"\n"
     "    isNodeCore=\"false\"\n"
-    "    authors=\"David Kabala (djkabala@gmail.com)                             \"\n"
-    ">\n"
-    "A UI DrawingSurface.\n"
-    "\t<Field\n"
-    "\t\tname=\"InternalWindows\"\n"
-    "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcardinality=\"multi\"\n"
+    "    authors=\"David Kabala (djkabala@gmail.com)\"\n"
+    "    >\n"
+    "    A virtual surface that a graphical user interface is drawn on.\n"
+    "    The drawing surface manages a set of OSG::InternalWindows.  The \n"
+    "    UIDrawingSurface must be attached to an event producer to pass\n"
+    "    mouse, key, and update events to the OSG::InternalWindows it contains.\n"
+    "    <Field\n"
+    "        name=\"InternalWindows\"\n"
+    "        type=\"InternalWindow\"\n"
+    "        cardinality=\"multi\"\n"
     "        category=\"childpointer\"\n"
     "        childParentType=\"FieldContainer\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
     "        ptrFieldAccess = \"nullCheck\"\n"
     "        linkParentField=\"ParentDrawingSurface\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"FocusedWindow\"\n"
-    "\t\ttype=\"InternalWindow\"\n"
-    "\t\tcategory=\"weakpointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"EventProducer\"\n"
-    "\t\ttype=\"WindowEventProducer\"\n"
-    "\t\tcategory=\"weakpointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Graphics\"\n"
-    "\t\ttype=\"Graphics\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"MouseTransformFunctor\"\n"
-    "\t\ttype=\"UIDrawingSurfaceMouseTransformFunctor\"\n"
-    "\t\tcategory=\"pointer\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\tdefaultValue=\"NULL\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Size\"\n"
-    "\t\ttype=\"Vec2f\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"0.0f,0.0f\"\n"
-    "\t>\n"
-    "\t</Field>\n"
-    "\t<Field\n"
-    "\t\tname=\"Active\"\n"
-    "\t\ttype=\"bool\"\n"
-    "\t\tcategory=\"data\"\n"
-    "\t\tcardinality=\"single\"\n"
-    "\t\tvisibility=\"external\"\n"
-    "\t\taccess=\"public\"\n"
-    "\t\tdefaultValue=\"true\"\n"
-    "\t>\n"
-    "\t</Field>\n"
+    "        >\n"
+    "        The windows of the drawing surface.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"FocusedWindow\"\n"
+    "        type=\"InternalWindow\"\n"
+    "        category=\"weakpointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The window that has focus\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"EventProducer\"\n"
+    "        type=\"WindowEventProducer\"\n"
+    "        category=\"weakpointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The event producer used by this DrawingSurface.  The event producer must \n"
+    "        produce mouse, key, and update events.  These events are processed and passed\n"
+    "        to the windows of this drawing surface.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Graphics\"\n"
+    "        type=\"Graphics\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        The OSG::Graphics object used for drawing.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"MouseTransformFunctor\"\n"
+    "        type=\"UIDrawingSurfaceMouseTransformFunctor\"\n"
+    "        category=\"pointer\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        defaultValue=\"NULL\"\n"
+    "        access=\"public\"\n"
+    "        >\n"
+    "        A functor object used for transforming the mouse coordinates.\n"
+    "        This is used by OSG::UIForeground and OSG::UIRectangle for transforming\n"
+    "        the mouse coordinates when the DrawingSurface is connected to them.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Size\"\n"
+    "        type=\"Vec2f\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"0.0f,0.0f\"\n"
+    "        >\n"
+    "        The size of the DrawingSurface.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Active\"\n"
+    "        type=\"bool\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        access=\"public\"\n"
+    "        defaultValue=\"true\"\n"
+    "        >\n"
+    "        Controls whether this DrawingSurface responds to events.  If Active is false\n"
+    "        then no mouse, key, or update events are processed.\n"
+    "    </Field>\n"
+    "    <Field\n"
+    "        name=\"Cursors\"\n"
+    "        type=\"FieldContainerMap\"\n"
+    "        category=\"data\"\n"
+    "        cardinality=\"single\"\n"
+    "        visibility=\"external\"\n"
+    "        >\n"
+    "        A map of the cursors for the DrawingSurface.  The UIDrawinSurface will query the \n"
+    "        WindowEventProducer it is attached to for the the current cursor type.  This is \n"
+    "        used as the key for this Cursor map.  If there is no value for the given key, then\n"
+    "        no cursor is drawn.\n"
+    "    </Field>\n"
     "</FieldContainer>\n",
-    "A UI DrawingSurface.\n"
+    "A virtual surface that a graphical user interface is drawn on.\n"
+    "The drawing surface manages a set of OSG::InternalWindows.  The \n"
+    "UIDrawingSurface must be attached to an event producer to pass\n"
+    "mouse, key, and update events to the OSG::InternalWindows it contains.\n"
     );
 
 /*------------------------------ get -----------------------------------*/
@@ -432,6 +497,19 @@ SFBool *UIDrawingSurfaceBase::editSFActive(void)
 const SFBool *UIDrawingSurfaceBase::getSFActive(void) const
 {
     return &_sfActive;
+}
+
+
+SFFieldContainerMap *UIDrawingSurfaceBase::editSFCursors(void)
+{
+    editSField(CursorsFieldMask);
+
+    return &_sfCursors;
+}
+
+const SFFieldContainerMap *UIDrawingSurfaceBase::getSFCursors(void) const
+{
+    return &_sfCursors;
 }
 
 
@@ -574,6 +652,10 @@ UInt32 UIDrawingSurfaceBase::getBinSize(ConstFieldMaskArg whichField)
     {
         returnValue += _sfActive.getBinSize();
     }
+    if(FieldBits::NoField != (CursorsFieldMask & whichField))
+    {
+        returnValue += _sfCursors.getBinSize();
+    }
 
     return returnValue;
 }
@@ -611,6 +693,10 @@ void UIDrawingSurfaceBase::copyToBin(BinaryDataHandler &pMem,
     {
         _sfActive.copyToBin(pMem);
     }
+    if(FieldBits::NoField != (CursorsFieldMask & whichField))
+    {
+        _sfCursors.copyToBin(pMem);
+    }
 }
 
 void UIDrawingSurfaceBase::copyFromBin(BinaryDataHandler &pMem,
@@ -620,31 +706,43 @@ void UIDrawingSurfaceBase::copyFromBin(BinaryDataHandler &pMem,
 
     if(FieldBits::NoField != (InternalWindowsFieldMask & whichField))
     {
+        editMField(InternalWindowsFieldMask, _mfInternalWindows);
         _mfInternalWindows.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (FocusedWindowFieldMask & whichField))
     {
+        editSField(FocusedWindowFieldMask);
         _sfFocusedWindow.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (EventProducerFieldMask & whichField))
     {
+        editSField(EventProducerFieldMask);
         _sfEventProducer.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (GraphicsFieldMask & whichField))
     {
+        editSField(GraphicsFieldMask);
         _sfGraphics.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (MouseTransformFunctorFieldMask & whichField))
     {
+        editSField(MouseTransformFunctorFieldMask);
         _sfMouseTransformFunctor.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (SizeFieldMask & whichField))
     {
+        editSField(SizeFieldMask);
         _sfSize.copyFromBin(pMem);
     }
     if(FieldBits::NoField != (ActiveFieldMask & whichField))
     {
+        editSField(ActiveFieldMask);
         _sfActive.copyFromBin(pMem);
+    }
+    if(FieldBits::NoField != (CursorsFieldMask & whichField))
+    {
+        editSField(CursorsFieldMask);
+        _sfCursors.copyFromBin(pMem);
     }
 }
 
@@ -777,7 +875,8 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(void) :
     _sfGraphics               (NULL),
     _sfMouseTransformFunctor  (NULL),
     _sfSize                   (Vec2f(0.0f,0.0f)),
-    _sfActive                 (bool(true))
+    _sfActive                 (bool(true)),
+    _sfCursors                ()
 {
 }
 
@@ -791,7 +890,8 @@ UIDrawingSurfaceBase::UIDrawingSurfaceBase(const UIDrawingSurfaceBase &source) :
     _sfGraphics               (NULL),
     _sfMouseTransformFunctor  (NULL),
     _sfSize                   (source._sfSize                   ),
-    _sfActive                 (source._sfActive                 )
+    _sfActive                 (source._sfActive                 ),
+    _sfCursors                (source._sfCursors                )
 {
 }
 
@@ -827,8 +927,15 @@ bool UIDrawingSurfaceBase::unlinkChild(
                 return true;
             }
 
-            FWARNING(("UIDrawingSurfaceBase::unlinkParent: Child <-> "
-                      "Parent link inconsistent.\n"));
+            SWARNING << "Parent (["        << this
+                     << "] id ["           << this->getId()
+                     << "] type ["         << this->getType().getCName()
+                     << "] childFieldId [" << childFieldId
+                     << "]) - Child (["    << pChild
+                     << "] id ["           << pChild->getId()
+                     << "] type ["         << pChild->getType().getCName()
+                     << "]): link inconsistent!"
+                     << std::endl;
 
             return false;
         }
@@ -1074,6 +1181,31 @@ EditFieldHandlePtr UIDrawingSurfaceBase::editHandleActive         (void)
 
 
     editSField(ActiveFieldMask);
+
+    return returnValue;
+}
+
+GetFieldHandlePtr UIDrawingSurfaceBase::getHandleCursors         (void) const
+{
+    SFFieldContainerMap::GetHandlePtr returnValue(
+        new  SFFieldContainerMap::GetHandle(
+             &_sfCursors,
+             this->getType().getFieldDesc(CursorsFieldId),
+             const_cast<UIDrawingSurfaceBase *>(this)));
+
+    return returnValue;
+}
+
+EditFieldHandlePtr UIDrawingSurfaceBase::editHandleCursors        (void)
+{
+    SFFieldContainerMap::EditHandlePtr returnValue(
+        new  SFFieldContainerMap::EditHandle(
+             &_sfCursors,
+             this->getType().getFieldDesc(CursorsFieldId),
+             this));
+
+
+    editSField(CursorsFieldMask);
 
     return returnValue;
 }

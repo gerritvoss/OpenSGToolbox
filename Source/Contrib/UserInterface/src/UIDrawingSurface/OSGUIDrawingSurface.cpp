@@ -48,6 +48,10 @@
 #include "OSGUIDrawingSurface.h"
 #include "OSGUIDrawUtils.h"
 #include "OSGUIDrawingSurfaceMouseTransformFunctor.h"
+#include "OSGImageFileHandler.h"
+#include "OSGTextureObjChunk.h"
+#include "OSGUIDrawObjectCanvas.h"
+#include "OSGTexturedQuadUIDrawObject.h"
 
 #include "OSGInternalWindow.h"
 
@@ -79,6 +83,40 @@ void UIDrawingSurface::initMethod(InitPhase ePhase)
 /***************************************************************************\
  *                           Instance methods                              *
 \***************************************************************************/
+void UIDrawingSurface::draw(void)
+{
+    //Call The PreDraw on the Graphics
+    getGraphics()->preDraw();
+
+    //Draw all of the InternalWindows
+    for(UInt32 i(0) ; i<getMFInternalWindows()->size() ; ++i)
+    {
+        getInternalWindows(i)->draw(getGraphics());
+    }
+
+    //Get the Cursor type from the WindowEventProducer
+    UInt32 CursorType(getEventProducer()->getCursorType());
+    FieldContainerMap::const_iterator FindItor(getCursors().find(CursorType));
+
+    //Is there a DrawObject for that CursorType
+    if(FindItor == getCursors().end())
+    {
+        //Use the default CursorType
+        FindItor = getCursors().find(WindowEventProducer::CURSOR_POINTER);
+    }
+
+    //Draw the cursor if one was found
+    if(FindItor != getCursors().end())
+    {
+        glPushMatrix();
+            glTranslatef(_CursorLocation.x(), _CursorLocation.y(), 0.0f);
+            dynamic_pointer_cast<UIDrawObjectCanvas>(FindItor->second)->draw(getGraphics());
+        glPopMatrix();
+    }
+
+    //Call the PostDraw on the Graphics
+    getGraphics()->postDraw();
+}
 
 void UIDrawingSurface::openWindow(InternalWindow* const TheWindow, const Int32 Layer)
 {
@@ -277,11 +315,10 @@ void UIDrawingSurface::handleMouseClicked(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -312,11 +349,10 @@ void UIDrawingSurface::handleMouseEntered(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
     }
@@ -329,11 +365,10 @@ void UIDrawingSurface::handleMouseExited(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
     }
@@ -346,11 +381,10 @@ void UIDrawingSurface::handleMousePressed(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -395,11 +429,10 @@ void UIDrawingSurface::handleMouseReleased(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -431,11 +464,10 @@ void UIDrawingSurface::handleMouseMoved(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -466,11 +498,10 @@ void UIDrawingSurface::handleMouseDragged(MouseEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseEventDetailsUnrecPtr TransformedMouseEvent = MouseEventDetails::create(e->getSource(), e->getTimeStamp(), e->getButton(), e->getClickCount(),
-                                                                            ResultMouseLoc,e->getViewport());
+                                                                            _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -501,11 +532,10 @@ void UIDrawingSurface::handleMouseWheelMoved(MouseWheelEventDetails* const e)
 {
     _IsProcessingEvents = true;
 
-    Pnt2f ResultMouseLoc;
-    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), ResultMouseLoc))
+    if(getMouseTransformFunctor()->viewportToRenderingSurface(e->getLocation(),e->getViewport(), _CursorLocation))
     {
         MouseWheelEventDetailsUnrecPtr TransformedMouseEvent = MouseWheelEventDetails::create(e->getSource(), e->getTimeStamp(), e->getWheelRotation(), e->getScrollType(),e->getScrollOrientation(),
-                                                                                      ResultMouseLoc,e->getViewport());
+                                                                                      _CursorLocation,e->getViewport());
 
         checkMouseEnterExit(TransformedMouseEvent, TransformedMouseEvent->getLocation(),TransformedMouseEvent->getViewport());
 
@@ -694,9 +724,98 @@ void UIDrawingSurface::updateWindowLayouts(void)
     }
 }
 
+void UIDrawingSurface::setCursorAsTexture(UInt32 CursorType,
+                                          TextureObjChunk* const TheTexture,
+                                          Vec2f Size,
+                                          Vec2f Offset)
+{
+    UIDrawObjectCanvasRefPtr DrawObjectCanvas;
+    if(TheTexture == NULL)
+    {
+        DrawObjectCanvas = NULL;
+    }
+    else
+    {
+        DrawObjectCanvas = createTexturedDrawObjectCanvas(TheTexture, Size, Offset);
+    }
+
+    editCursors()[CursorType] = DrawObjectCanvas;
+}
+
+void UIDrawingSurface::setCursorAsImage(UInt32 CursorType,
+                                        Image* const TheImage,
+                                        Vec2f Size,
+                                        Vec2f Offset)
+{
+    TextureObjChunkRefPtr TextureObjChunk;
+    if(TheImage == NULL)
+    {
+        TextureObjChunk = NULL;
+    }
+    else
+    {
+        TextureObjChunk = TextureObjChunk::create();
+        TextureObjChunk->setImage(TheImage);
+        TextureObjChunk->setWrapS(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setWrapT(GL_CLAMP_TO_EDGE);
+        TextureObjChunk->setMinFilter(GL_LINEAR);
+        TextureObjChunk->setMagFilter(GL_LINEAR);
+    }
+
+    setCursorAsTexture(CursorType, TextureObjChunk, Size, Offset);
+}
+
+void UIDrawingSurface::setCursorAsImage(UInt32 CursorType,
+                                        const BoostPath& Path,
+                                        Vec2f Size,
+                                        Vec2f Offset)
+{
+    ImageRefPtr LoadedImage = ImageFileHandler::the()->read(Path.string().c_str());
+    setCursorAsImage(CursorType, LoadedImage, Size, Offset);
+}
+
 /*-------------------------------------------------------------------------*\
  -  private                                                                 -
 \*-------------------------------------------------------------------------*/
+
+UIDrawObjectCanvasTransitPtr 
+UIDrawingSurface::createTexturedDrawObjectCanvas(TextureObjChunk* const TheTexture,
+                                                 Vec2f Size,
+                                                 Vec2f Offset)
+{
+    UIDrawObjectCanvasRefPtr DrawObjectCanvas = UIDrawObjectCanvas::create();
+    TexturedQuadUIDrawObjectRefPtr TextureDrawObject = TexturedQuadUIDrawObject::create();
+
+    Vec2f ImageSize;
+    ImageSize.setValues(TheTexture->getImage()->getWidth(), TheTexture->getImage()->getHeight());
+
+    if(Size.x() > 0.0f)
+    {
+        ImageSize[0] = Size.x();
+    }
+    if(Size.y() > 0.0f)
+    {
+        ImageSize[1] = Size.y();
+    }
+
+    TextureDrawObject->setPoint1(Pnt2f(0,0) + Offset);
+    TextureDrawObject->setPoint2(Pnt2f(ImageSize.x(),0) + Offset);
+    TextureDrawObject->setPoint3(Pnt2f(ImageSize.x(),ImageSize.y()) + Offset);
+    TextureDrawObject->setPoint4(Pnt2f(0,ImageSize.y()) + Offset);
+
+    TextureDrawObject->setTexCoord1(Vec2f(0.0,0.0));
+    TextureDrawObject->setTexCoord2(Vec2f(1.0,0.0));
+    TextureDrawObject->setTexCoord3(Vec2f(1.0,1.0));
+    TextureDrawObject->setTexCoord4(Vec2f(0.0,1.0));
+
+    TextureDrawObject->setTexture(TheTexture);
+
+    TextureDrawObject->setOpacity(1.0);
+
+    DrawObjectCanvas->pushToDrawObjects(TextureDrawObject);
+
+    return UIDrawObjectCanvasTransitPtr(DrawObjectCanvas.get());
+}
 
 /*----------------------- constructors & destructors ----------------------*/
 
@@ -728,6 +847,18 @@ void UIDrawingSurface::changed(ConstFieldMaskArg whichField,
     if(origin & ChangedOrigin::Sync)
     {
         return;
+    }
+
+    if(whichField & CursorsFieldMask)
+    {
+        UIDrawObjectCanvasRecPtr DrawObjectCanvas;
+        for(FieldContainerMap::const_iterator MapItor(getCursors().begin()) ;
+            MapItor != getCursors().end();
+            ++MapItor)
+        {
+            DrawObjectCanvas = dynamic_pointer_cast<UIDrawObjectCanvas>(MapItor->second);
+            DrawObjectCanvas->setSize(DrawObjectCanvas->getRequestedSize());
+        }
     }
 
     if( (whichField & EventProducerFieldMask) &&
